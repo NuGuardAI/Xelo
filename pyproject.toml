@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vela"
+version = "0.1.0"
+description = "Deterministic AI SBOM generator with embedded schema"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "NuGuard" }]
+dependencies = [
+  "pydantic>=2.7.0,<3",
+]
+
+[project.optional-dependencies]
+# Accurate TypeScript/JavaScript AST parsing (highly recommended)
+# Without this, Velo falls back to regex-based TS parsing.
+ts = [
+  "tree-sitter>=0.23,<1",
+  "tree-sitter-javascript>=0.23,<1",
+  "tree-sitter-typescript>=0.23,<1",
+]
+# Standard SBOM generation via cyclonedx-py CLI (highest fidelity)
+cdx = [
+  "cyclonedx-bom>=4.4,<5",
+]
+# LLM-based enrichment: verification, confidence scoring, asset summaries
+# Supports any provider via litellm model strings (OpenAI, Anthropic, Ollama, etc.)
+# Required when using ExtractionConfig(deterministic_only=False)
+llm = [
+  "litellm>=1.40,<2",
+]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.8.0",
+  "mypy>=1.10.0",
+  "cyclonedx-bom>=4.4,<5",
+  "tree-sitter>=0.23,<1",
+  "tree-sitter-javascript>=0.23,<1",
+  "tree-sitter-typescript>=0.23,<1",
+  "litellm>=1.40,<2",
+]
+
+[project.scripts]
+velo = "ai_sbom.cli:main"
+ai-sbom = "ai_sbom.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"ai_sbom" = ["py.typed", "schemas/*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-q"
+markers = [
+  "smoke: end-to-end tests against live repositories (require network + git)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+pretty = true

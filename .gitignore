@@ -1,0 +1,26 @@
+# Credentials — never commit
+.env
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+src/*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Type-checker / linter caches
+.mypy_cache/
+.ruff_cache/
+
+# Test / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Editor
+.idea/
+.vscode/
+*.swp
