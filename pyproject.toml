@@ -3,16 +3,30 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vela"
+name = "xelo"
 version = "0.1.0"
-description = "Deterministic AI SBOM generator with embedded schema"
+description = "AI SBOM generator with portable schema"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
-authors = [{ name = "NuGuard" }]
+license = "Apache-2.0"
+authors = [{ name = "NuGuardAI" }]
+keywords = ["sbom", "aibom", "cyclonedx", "security", "llm", "agent"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security",
+  "Topic :: Software Development :: Build Tools",
+]
 dependencies = [
   "pydantic>=2.7.0,<3",
+  "structlog>=24.0,<26",
 ]
+
+[project.urls]
+Homepage = "https://nuguard.ai"
 
 [project.optional-dependencies]
 # Accurate TypeScript/JavaScript AST parsing (highly recommended)
