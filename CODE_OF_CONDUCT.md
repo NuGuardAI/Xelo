@@ -1,8 +1,19 @@
 # Code of Conduct
 
-This project follows the Contributor Covenant principles:
-- Be respectful and inclusive.
-- Assume good intent.
-- Focus on constructive technical discussion.
+This project expects respectful, inclusive, and constructive collaboration.
 
-Maintainers may remove content that violates these expectations.
+## Our Expectations
+
+- Be respectful in technical discussions
+- Assume good intent and ask clarifying questions
+- Focus feedback on code and behavior, not people
+
+## Unacceptable Behavior
+
+- Harassment, discrimination, or personal attacks
+- Disruptive or hostile communication
+- Sharing private or sensitive information without permission
+
+## Enforcement
+
+Maintainers may edit or remove content, and may restrict participation for behavior that violates this policy.
