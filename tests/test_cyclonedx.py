@@ -23,7 +23,7 @@ from ai_sbom.serializer import SbomSerializer
 from ai_sbom.types import ComponentType
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
-_PY_ONLY = ExtractionConfig(include_extensions={".py"})
+_PY_ONLY = ExtractionConfig(include_extensions={".py"}, deterministic_only=True)
 
 
 def _extract(app: str) -> AiBomDocument:

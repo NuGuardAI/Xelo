@@ -1,4 +1,28 @@
+import os
+
 from pydantic import BaseModel, Field
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    normalized = value.strip().lower()
+    if normalized in {"1", "true", "yes", "on"}:
+        return True
+    if normalized in {"0", "false", "no", "off"}:
+        return False
+    return default
+
+
+def _env_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    try:
+        return int(value)
+    except ValueError:
+        return default
 
 
 class ExtractionConfig(BaseModel):
@@ -13,8 +37,16 @@ class ExtractionConfig(BaseModel):
             ".json", ".yaml", ".yml", ".tf", ".md",
         }
     )
-    deterministic_only: bool = True
+    deterministic_only: bool = Field(
+        default_factory=lambda: _env_bool("AISBOM_DETERMINISTIC_ONLY", True)
+    )
     # LLM enrichment (used when deterministic_only=False)
-    llm_model: str = "gpt-4o-mini"
-    llm_api_key: str | None = None
-    llm_budget_tokens: int = 50_000
+    llm_model: str = Field(
+        default_factory=lambda: os.getenv("AISBOM_LLM_MODEL", "gpt-4o-mini")
+    )
+    llm_api_key: str | None = Field(
+        default_factory=lambda: os.getenv("AISBOM_LLM_API_KEY")
+    )
+    llm_budget_tokens: int = Field(
+        default_factory=lambda: _env_int("AISBOM_LLM_BUDGET_TOKENS", 50_000)
+    )

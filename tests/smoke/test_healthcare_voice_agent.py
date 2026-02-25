@@ -66,6 +66,7 @@ _REPO_REF = "main"
 _CONFIG = ExtractionConfig(
     include_extensions={".py", ".js", ".jsx", ".ts", ".tsx"},
     max_files=500,
+    deterministic_only=True,
 )
 
 

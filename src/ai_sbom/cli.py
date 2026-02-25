@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -50,6 +51,50 @@ def _setup_logging(verbose: bool, debug: bool) -> None:
     logging.root.addHandler(handler)
 
 
+def _load_dotenv(path: Path = Path(".env")) -> None:
+    """Load KEY=VALUE pairs from .env into process environment.
+
+    Existing environment variables are not overridden.
+    """
+    if not path.exists() or not path.is_file():
+        return
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return
+
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export "):].strip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key or key in os.environ:
+            continue
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        os.environ[key] = value
+
+
+def _build_extraction_config(args: argparse.Namespace) -> ExtractionConfig:
+    config = ExtractionConfig()
+    # CLI overrides env-backed defaults from ExtractionConfig.
+    if args.deterministic_only is not None:
+        config.deterministic_only = args.deterministic_only
+    if args.llm_model is not None:
+        config.llm_model = args.llm_model
+    if args.llm_budget_tokens is not None:
+        config.llm_budget_tokens = args.llm_budget_tokens
+    if args.llm_api_key is not None:
+        config.llm_api_key = args.llm_api_key
+    return config
+
+
 def _die(msg: str, args: argparse.Namespace | None = None) -> None:
     """Print an error and exit 1.  Show traceback only with --debug."""
     debug = getattr(args, "debug", False)
@@ -60,6 +105,7 @@ def _die(msg: str, args: argparse.Namespace | None = None) -> None:
 
 
 def main() -> None:
+    _load_dotenv()
     parser = argparse.ArgumentParser(
         prog="vela",
         description="Deterministic AI SBOM generator",
@@ -117,6 +163,37 @@ def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401
         help="Path to an existing CycloneDX BOM JSON to merge with (unified format only). "
              "If omitted, Velo generates one automatically.",
     )
+    llm_mode = p.add_mutually_exclusive_group()
+    llm_mode.add_argument(
+        "--deterministic-only",
+        dest="deterministic_only",
+        action="store_true",
+        default=None,
+        help="Disable LLM enrichment for this run (overrides .env).",
+    )
+    llm_mode.add_argument(
+        "--enable-llm",
+        dest="deterministic_only",
+        action="store_false",
+        default=None,
+        help="Enable LLM enrichment for this run (overrides .env).",
+    )
+    p.add_argument(
+        "--llm-model",
+        metavar="<model>",
+        help="LLM model string for enrichment (overrides AISBOM_LLM_MODEL).",
+    )
+    p.add_argument(
+        "--llm-budget-tokens",
+        type=int,
+        metavar="<n>",
+        help="Token budget for LLM enrichment (overrides AISBOM_LLM_BUDGET_TOKENS).",
+    )
+    p.add_argument(
+        "--llm-api-key",
+        metavar="<key>",
+        help="Direct API key for LLM calls (overrides AISBOM_LLM_API_KEY).",
+    )
 
 
 def _add_scan_repo_args(p: argparse.ArgumentParser) -> None:
@@ -125,11 +202,42 @@ def _add_scan_repo_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--format", choices=["json", "cyclonedx", "unified"], default="json")
     p.add_argument("--output", required=True, metavar="<file>")
     p.add_argument("--cdx-bom", metavar="<file>", dest="cdx_bom")
+    llm_mode = p.add_mutually_exclusive_group()
+    llm_mode.add_argument(
+        "--deterministic-only",
+        dest="deterministic_only",
+        action="store_true",
+        default=None,
+        help="Disable LLM enrichment for this run (overrides .env).",
+    )
+    llm_mode.add_argument(
+        "--enable-llm",
+        dest="deterministic_only",
+        action="store_false",
+        default=None,
+        help="Enable LLM enrichment for this run (overrides .env).",
+    )
+    p.add_argument(
+        "--llm-model",
+        metavar="<model>",
+        help="LLM model string for enrichment (overrides AISBOM_LLM_MODEL).",
+    )
+    p.add_argument(
+        "--llm-budget-tokens",
+        type=int,
+        metavar="<n>",
+        help="Token budget for LLM enrichment (overrides AISBOM_LLM_BUDGET_TOKENS).",
+    )
+    p.add_argument(
+        "--llm-api-key",
+        metavar="<key>",
+        help="Direct API key for LLM calls (overrides AISBOM_LLM_API_KEY).",
+    )
 
 
 def _handle_scan(args: argparse.Namespace) -> None:
     extractor = SbomExtractor()
-    config = ExtractionConfig()
+    config = _build_extraction_config(args)
     root: Path
 
     try:

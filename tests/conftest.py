@@ -24,7 +24,10 @@ APPS: Path = Path(__file__).parent / "fixtures" / "apps"
 FIXTURES: Path = Path(__file__).parent / "fixtures"
 
 #: Default config: Python-only, deterministic
-PY_ONLY: ExtractionConfig = ExtractionConfig(include_extensions={".py"})
+PY_ONLY: ExtractionConfig = ExtractionConfig(
+    include_extensions={".py"},
+    deterministic_only=True,
+)
 
 
 # ---------------------------------------------------------------------------
