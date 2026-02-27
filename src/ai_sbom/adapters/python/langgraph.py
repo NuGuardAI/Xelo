@@ -77,33 +77,7 @@ class LangGraphAdapter(FrameworkAdapter):
         tool_canonicals: list[str] = []
         node_name_map: dict[str, str] = {}  # node_name → canonical_name
 
-        # 1. StateGraph instantiations → AGENT (graph container)
-        for inst in parse_result.instantiations:
-            if inst.class_name in _STATEGRAPH_CLASSES:
-                var_name = inst.assigned_to or _infer_var_from_source(content, inst.line) or "workflow"
-                canon = canonicalize_text(f"langgraph:{var_name}")
-                det = ComponentDetection(
-                    component_type=ComponentType.AGENT,
-                    canonical_name=canon,
-                    display_name=var_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={
-                        "graph_type": inst.class_name,
-                        "is_agent_graph": True,
-                        "framework": "langgraph",
-                    },
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(...)",
-                    evidence_kind="ast_instantiation",
-                )
-                detected.append(det)
-                agent_canonicals.append(canon)
-                node_name_map[var_name] = canon
-
-        # 2. .add_node() calls → AGENT (graph nodes)
+        # 1. .add_node() calls → AGENT (graph nodes)
         for call in parse_result.function_calls:
             if call.function_name != "add_node":
                 continue

@@ -214,6 +214,57 @@
           "default": null,
           "title": "Deployment Target"
         },
+        "data_classification": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "PII/PHI classification labels detected in schemas stored in this datastore, e.g. ['PHI', 'PII'].  Null when no classified fields were found.",
+          "title": "Data Classification"
+        },
+        "classified_tables": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "SQL table or Python model names within this datastore that carry PII/PHI fields.",
+          "title": "Classified Tables"
+        },
+        "classified_fields": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Per-table/-model mapping of sensitive field names to their classification labels, e.g. {'patients': ['name', 'dob'], 'users': ['email', 'password']}.",
+          "title": "Classified Fields"
+        },
         "image_name": {
           "anyOf": [
             {
@@ -474,7 +525,7 @@
   },
   "$id": "https://nuguard.ai/schemas/aibom/1.0.0/aibom.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "AI Bill of Materials document produced by Vela.\n\nThis is the canonical output format.  Use ``SbomSerializer.to_json()``\nto serialise and ``AiBomDocument.model_validate()`` to parse and validate.",
+  "description": "AI Bill of Materials document produced by Xelo.\n\nThis is the canonical output format.  Use ``SbomSerializer.to_json()``\nto serialise and ``AiBomDocument.model_validate()`` to parse and validate.",
   "properties": {
     "schema_version": {
       "default": "1.0.0",
@@ -489,7 +540,7 @@
       "type": "string"
     },
     "generator": {
-      "default": "vela",
+      "default": "xelo",
       "description": "Tool that produced this document",
       "title": "Generator",
       "type": "string"

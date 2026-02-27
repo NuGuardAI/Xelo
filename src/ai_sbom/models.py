@@ -1,9 +1,10 @@
-"""Velo data models.
+"""Xelo data models.
 
 All public types are Pydantic ``BaseModel`` subclasses.  The JSON schema
-exported by the CLI (``velo schema``) is generated directly from these models
+exported by the CLI (``xelo schema``) is generated directly from these models
 so schema and code can never drift.
 """
+
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -26,11 +27,10 @@ class SourceLocation(BaseModel):
 class Evidence(BaseModel):
     """A single piece of detection evidence supporting a Node."""
 
-    kind: str = Field(
-        description="Detection method: 'ast', 'regex', 'config', 'iac', 'inferred'"
-    )
+    kind: str = Field(description="Detection method: 'ast', 'regex', 'config', 'iac', 'inferred'")
     confidence: float = Field(
-        ge=0.0, le=1.0,
+        ge=0.0,
+        le=1.0,
         description="Evidence-level confidence [0, 1]",
     )
     detail: str = Field(description="Short description: '<adapter>: <snippet>'")
@@ -48,12 +48,37 @@ class NodeMetadata(BaseModel):
     endpoint: str | None = Field(default=None)
     method: str | None = Field(default=None)
     deployment_target: str | None = Field(default=None)
+    # Data classification fields (populated on DATASTORE nodes by the classification adapters)
+    data_classification: list[str] | None = Field(
+        default=None,
+        description=(
+            "PII/PHI classification labels detected in schemas stored in this datastore, "
+            "e.g. ['PHI', 'PII'].  Null when no classified fields were found."
+        ),
+    )
+    classified_tables: list[str] | None = Field(
+        default=None,
+        description=(
+            "SQL table or Python model names within this datastore that carry PII/PHI fields."
+        ),
+    )
+    classified_fields: dict[str, list[str]] | None = Field(
+        default=None,
+        description=(
+            "Per-table/-model mapping of sensitive field names to their classification labels, "
+            "e.g. {'patients': ['name', 'dob'], 'users': ['email', 'password']}."
+        ),
+    )
     # Container image fields (populated by the Dockerfile adapter)
     image_name: str | None = Field(default=None, description="Container image name, e.g. 'python'")
     image_tag: str | None = Field(default=None, description="Image tag, e.g. '3.12-slim'")
     image_digest: str | None = Field(default=None, description="Image digest, e.g. 'sha256:abc…'")
-    registry: str | None = Field(default=None, description="Registry host, e.g. 'docker.io', 'gcr.io'")
-    base_image: str | None = Field(default=None, description="Full base image reference, e.g. 'python:3.12-slim'")
+    registry: str | None = Field(
+        default=None, description="Registry host, e.g. 'docker.io', 'gcr.io'"
+    )
+    base_image: str | None = Field(
+        default=None, description="Full base image reference, e.g. 'python:3.12-slim'"
+    )
     extras: dict[str, Any] = Field(
         default_factory=dict,
         description="Adapter-specific key/value pairs (provider, model_family, version, …)",
@@ -67,7 +92,8 @@ class Node(BaseModel):
     name: str = Field(description="Display name of the component")
     component_type: ComponentType
     confidence: float = Field(
-        ge=0.0, le=1.0,
+        ge=0.0,
+        le=1.0,
         description="Extraction confidence [0, 1]",
     )
     metadata: NodeMetadata = Field(default_factory=NodeMetadata)
@@ -145,7 +171,7 @@ class ScanSummary(BaseModel):
 
 
 class AiBomDocument(BaseModel):
-    """AI Bill of Materials document produced by Vela.
+    """AI Bill of Materials document produced by Xelo.
 
     This is the canonical output format.  Use ``SbomSerializer.to_json()``
     to serialise and ``AiBomDocument.model_validate()`` to parse and validate.
@@ -167,12 +193,10 @@ class AiBomDocument(BaseModel):
         description="ISO 8601 UTC timestamp when this document was generated",
     )
     generator: str = Field(
-        default="vela",
+        default="xelo",
         description="Tool that produced this document",
     )
-    target: str = Field(
-        description="Repository URL or local path that was scanned"
-    )
+    target: str = Field(description="Repository URL or local path that was scanned")
     nodes: list[Node] = Field(
         default_factory=list,
         description="Detected AI components",

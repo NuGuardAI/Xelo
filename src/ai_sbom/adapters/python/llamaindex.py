@@ -172,7 +172,7 @@ class LlamaIndexAdapter(FrameworkAdapter):
 
         # Class-method builders: VectorStoreIndex.from_documents(...) etc.
         for call in parse_result.function_calls:
-            if call.function_name == "from_args" and call.receiver in _QUERY_CLASSES:
+            if call.function_name in {"from_args", "from_tools"} and call.receiver in _QUERY_CLASSES:
                 var_name = call.assigned_to or f"query_{call.line}"
                 canon = canonicalize_text(f"llamaindex:agent:{var_name}")
                 detected.append(ComponentDetection(
@@ -186,6 +186,22 @@ class LlamaIndexAdapter(FrameworkAdapter):
                     file_path=file_path,
                     line=call.line,
                     snippet=f"{call.receiver}.from_args(...)",
+                    evidence_kind="ast_call",
+                ))
+            elif call.function_name == "from_defaults" and call.receiver in _TOOL_CLASSES:
+                var_name = call.assigned_to or f"tool_{call.line}"
+                canon = canonicalize_text(f"llamaindex:tool:{var_name}")
+                detected.append(ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name=canon,
+                    display_name=var_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={"tool_class": call.receiver, "framework": "llamaindex"},
+                    file_path=file_path,
+                    line=call.line,
+                    snippet=f"{call.receiver}.from_defaults(...)",
                     evidence_kind="ast_call",
                 ))
             elif call.function_name in {"from_documents", "from_vector_store"}:

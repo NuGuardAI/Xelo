@@ -95,13 +95,6 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
     adapters.extend(
         [
             RegexAdapter(
-                name="agent_generic",
-                component_type=ComponentType.AGENT,
-                priority=100,
-                patterns=(re.compile(r"\b(Agent|assistant|orchestrator)\b", re.IGNORECASE),),
-                canonical_name="agent:generic",
-            ),
-            RegexAdapter(
                 name="model_generic",
                 component_type=ComponentType.MODEL,
                 priority=110,
@@ -117,13 +110,6 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                     ),
                 ),
                 metadata={"normalizer": "model-name"},
-            ),
-            RegexAdapter(
-                name="tool_generic",
-                component_type=ComponentType.TOOL,
-                priority=120,
-                patterns=(re.compile(r"\btool\b", re.IGNORECASE),),
-                canonical_name="tool:generic",
             ),
             RegexAdapter(
                 name="datastore_generic",

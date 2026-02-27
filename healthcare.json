@@ -1,56 +1,11 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-02-24T00:45:09.096987Z",
-  "generator": "vela",
+  "generated_at": "2026-02-27T20:08:55.757739Z",
+  "generator": "xelo",
   "target": "https://github.com/NuGuardAI/Healthcare-voice-agent",
   "nodes": [
     {
-      "id": "380ca6cb-db4b-47ec-979c-fb28a18563a9",
-      "name": "generic",
-      "component_type": "AGENT",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "agent_generic",
-          "adapter": "agent_generic",
-          "evidence_count": 15
-        }
-      }
-    },
-    {
-      "id": "9f73207c-9571-42c8-b769-216ec3ae7f66",
-      "name": "builder",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "langgraph_builder",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "graph_type": "StateGraph",
-          "is_agent_graph": true,
-          "framework": "langgraph"
-        }
-      }
-    },
-    {
-      "id": "c8373291-2afe-4154-a1e5-4acb623a0585",
+      "id": "d0654909-7fd5-4856-9c0c-5d1bc5e798ef",
       "name": "fetch_doctor_details_agent",
       "component_type": "AGENT",
       "confidence": 0.85,
@@ -63,6 +18,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_fetch_doctor_details_agent",
           "adapter": "langgraph",
@@ -73,7 +36,7 @@
       }
     },
     {
-      "id": "5ffc4cf2-912e-41f4-85d5-df23008363f4",
+      "id": "d3e36573-e034-49be-ac5a-e02f890e6016",
       "name": "normalize_agent",
       "component_type": "AGENT",
       "confidence": 0.85,
@@ -86,6 +49,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_normalize_agent",
           "adapter": "langgraph",
@@ -96,7 +67,7 @@
       }
     },
     {
-      "id": "eb67c2c4-2b96-46e8-a9d5-fc391ac1ea72",
+      "id": "7c510fcb-1ac5-4fdc-ad4b-65e3a4fbf31d",
       "name": "prognosis_search_agent",
       "component_type": "AGENT",
       "confidence": 0.85,
@@ -109,6 +80,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_prognosis_search_agent",
           "adapter": "langgraph",
@@ -119,7 +98,7 @@
       }
     },
     {
-      "id": "96c5ebae-4a28-4ff5-b951-fb15603b4b36",
+      "id": "8c6d42fa-8b29-4e74-8aa1-8082181b0eb1",
       "name": "recommend_specialists_agent",
       "component_type": "AGENT",
       "confidence": 0.85,
@@ -132,6 +111,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_recommend_specialists_agent",
           "adapter": "langgraph",
@@ -142,7 +129,7 @@
       }
     },
     {
-      "id": "87d3e8da-d59a-45b2-a681-bed812b0e281",
+      "id": "8068b535-5e29-48b4-9071-a45c6f2af5e7",
       "name": "specialist_lookup_agent",
       "component_type": "AGENT",
       "confidence": 0.85,
@@ -155,6 +142,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_specialist_lookup_agent",
           "adapter": "langgraph",
@@ -165,7 +160,7 @@
       }
     },
     {
-      "id": "899b2d6e-e83e-46d1-a1df-6357435620c6",
+      "id": "c55922cd-e97f-4771-9e05-e03978c64fb7",
       "name": "generic",
       "component_type": "API_ENDPOINT",
       "confidence": 0.9,
@@ -178,6 +173,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "api_endpoint_generic",
           "adapter": "api_endpoint_generic",
@@ -186,7 +189,7 @@
       }
     },
     {
-      "id": "fbe2a925-bcf7-4905-9108-52c2d4f8269d",
+      "id": "41317daa-9257-405c-99c1-5d07cd6c414f",
       "name": "generic",
       "component_type": "AUTH",
       "confidence": 0.7,
@@ -199,6 +202,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "auth_generic",
           "adapter": "auth_generic",
@@ -207,10 +218,10 @@
       }
     },
     {
-      "id": "6f80b42a-b219-4ed6-975c-464be7a11552",
-      "name": "AppointmentRequest",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
+      "id": "815c6f93-a457-41ba-b9a6-058bfa63a58e",
+      "name": "node:20",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
       "metadata": {
         "framework": null,
         "model_name": null,
@@ -220,30 +231,32 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": "node",
+        "image_tag": "20",
+        "image_digest": null,
+        "registry": "docker.io",
+        "base_image": "node:20",
         "extras": {
-          "canonical_name": "datastore_model_appointmentrequest",
-          "adapter": "data_classification_py",
+          "canonical_name": "container_image_node_20",
+          "adapter": "dockerfile",
           "evidence_count": 1,
-          "model_name": "AppointmentRequest",
-          "source": "python_model",
-          "data_classification": [
-            "PHI",
-            "PII"
-          ],
-          "classified_fields": {
-            "patient_id": [
-              "PHI",
-              "PII"
-            ]
-          }
+          "base_image": "node:20",
+          "image_name": "node",
+          "image_tag": "20",
+          "image_digest": null,
+          "registry": "docker.io",
+          "dockerfile": "Dockerfile"
         }
       }
     },
     {
-      "id": "ce97026d-607e-4b2d-a741-3a661e373c9b",
-      "name": "LoginRequest",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
+      "id": "cfb88657-c7b1-4bc1-b05e-45bebca4b24d",
+      "name": "python:3.11-slim",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
       "metadata": {
         "framework": null,
         "model_name": null,
@@ -253,481 +266,29 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": "python",
+        "image_tag": "3.11-slim",
+        "image_digest": null,
+        "registry": "docker.io",
+        "base_image": "python:3.11-slim",
         "extras": {
-          "canonical_name": "datastore_model_loginrequest",
-          "adapter": "data_classification_py",
+          "canonical_name": "container_image_python_3_11_slim",
+          "adapter": "dockerfile",
           "evidence_count": 1,
-          "model_name": "LoginRequest",
-          "source": "python_model",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "email": [
-              "PII"
-            ],
-            "password": [
-              "PII"
-            ]
-          }
+          "base_image": "python:3.11-slim",
+          "image_name": "python",
+          "image_tag": "3.11-slim",
+          "image_digest": null,
+          "registry": "docker.io",
+          "dockerfile": "Dockerfile"
         }
       }
     },
     {
-      "id": "14a2bde0-e78d-433f-8b0a-5c653d23fc1c",
-      "name": "MedicalHistoryResponse",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_model_medicalhistoryresponse",
-          "adapter": "data_classification_py",
-          "evidence_count": 1,
-          "model_name": "MedicalHistoryResponse",
-          "source": "python_model",
-          "data_classification": [
-            "PHI"
-          ],
-          "classified_fields": {
-            "past_diagnoses": [
-              "PHI"
-            ],
-            "surgeries": [
-              "PHI"
-            ],
-            "hospital_admissions": [
-              "PHI"
-            ],
-            "immunization_records": [
-              "PHI"
-            ],
-            "family_medical_history": [
-              "PHI"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "b2e4d05f-8f06-4b34-8a23-20369e077e59",
-      "name": "PatientDetailsResponse",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_model_patientdetailsresponse",
-          "adapter": "data_classification_py",
-          "evidence_count": 1,
-          "model_name": "PatientDetailsResponse",
-          "source": "python_model",
-          "data_classification": [
-            "PHI",
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ],
-            "date_of_birth": [
-              "PII"
-            ],
-            "gender": [
-              "PII"
-            ],
-            "contact_number": [
-              "PII"
-            ],
-            "medical_record_number": [
-              "PHI",
-              "PII"
-            ],
-            "blood_group": [
-              "PHI"
-            ],
-            "marital_status": [
-              "PII"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "06e83c5e-b8ff-48f4-9211-02cbbf70f347",
-      "name": "appointments",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_appointments",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "appointments",
-          "source": "sql_schema",
-          "data_classification": [
-            "PHI",
-            "PII"
-          ],
-          "classified_fields": {
-            "patient_id": [
-              "PHI",
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "patient_id",
-            "doctor_id",
-            "slot_id",
-            "appointment_date",
-            "reason",
-            "created_at"
-          ]
-        }
-      }
-    },
-    {
-      "id": "60dde195-641f-49b5-9fa6-d2f5926de73f",
-      "name": "doctors",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_doctors",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "doctors",
-          "source": "sql_schema",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "name",
-            "specialist_id",
-            "hospital_id",
-            "specialization",
-            "experience",
-            "rating",
-            "fees"
-          ]
-        }
-      }
-    },
-    {
-      "id": "86fab7eb-4f2f-41a3-b742-44c2620ee312",
-      "name": "hospitals",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_hospitals",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "hospitals",
-          "source": "sql_schema",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ],
-            "address": [
-              "PII"
-            ],
-            "contact_number": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "name",
-            "address",
-            "contact_number",
-            "website"
-          ]
-        }
-      }
-    },
-    {
-      "id": "5fcbb491-9f61-4bb8-a162-1be8b605f568",
-      "name": "patient_history",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_patient_history",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "patient_history",
-          "source": "sql_schema",
-          "data_classification": [
-            "PHI",
-            "PII"
-          ],
-          "classified_fields": {
-            "patient_id": [
-              "PHI",
-              "PII"
-            ],
-            "past_diagnoses": [
-              "PHI"
-            ],
-            "surgeries": [
-              "PHI"
-            ],
-            "hospital_admissions": [
-              "PHI"
-            ],
-            "immunization_records": [
-              "PHI"
-            ],
-            "family_medical_history": [
-              "PHI"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "patient_id",
-            "past_diagnoses",
-            "surgeries",
-            "hospital_admissions",
-            "immunization_records",
-            "family_medical_history",
-            "lifestyle_factors",
-            "created_at"
-          ]
-        }
-      }
-    },
-    {
-      "id": "e053f647-d4cb-4c98-8b3d-bc9dc3f3d902",
-      "name": "patients",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_patients",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "patients",
-          "source": "sql_schema",
-          "data_classification": [
-            "PHI",
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ],
-            "date_of_birth": [
-              "PII"
-            ],
-            "gender": [
-              "PII"
-            ],
-            "contact_number": [
-              "PII"
-            ],
-            "medical_record_number": [
-              "PHI",
-              "PII"
-            ],
-            "blood_group": [
-              "PHI"
-            ],
-            "marital_status": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "user_id",
-            "name",
-            "date_of_birth",
-            "gender",
-            "contact_number",
-            "medical_record_number",
-            "blood_group",
-            "marital_status",
-            "created_at"
-          ]
-        }
-      }
-    },
-    {
-      "id": "65976594-e7fd-4335-93f0-2a8f0ff9ba17",
-      "name": "specialists",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_specialists",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "specialists",
-          "source": "sql_schema",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "name"
-          ]
-        }
-      }
-    },
-    {
-      "id": "89f40c7d-c828-4cbd-8305-b67541511cba",
-      "name": "symptoms",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_symptoms",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "symptoms",
-          "source": "sql_schema",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "name": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "name"
-          ]
-        }
-      }
-    },
-    {
-      "id": "52f8e62b-2323-4f8c-846e-38863ce59275",
-      "name": "users",
-      "component_type": "DATASTORE",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "datastore_sql_users",
-          "adapter": "data_classification_sql",
-          "evidence_count": 1,
-          "table_name": "users",
-          "source": "sql_schema",
-          "data_classification": [
-            "PII"
-          ],
-          "classified_fields": {
-            "email": [
-              "PII"
-            ],
-            "password": [
-              "PII"
-            ]
-          },
-          "all_columns": [
-            "id",
-            "email",
-            "password",
-            "created_at"
-          ]
-        }
-      }
-    },
-    {
-      "id": "2b0feaa3-5334-4580-8165-ec1acf4a58e9",
+      "id": "5702a970-1da5-4d51-8bb6-4698d37eccd5",
       "name": "postgres",
       "component_type": "DATASTORE",
       "confidence": 0.55,
@@ -740,16 +301,183 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": [
+          "PHI",
+          "PII"
+        ],
+        "classified_tables": [
+          "AppointmentRequest",
+          "LoginRequest",
+          "MedicalHistoryResponse",
+          "PatientDetailsResponse",
+          "appointments",
+          "doctors",
+          "hospitals",
+          "patient_history",
+          "patients",
+          "specialists",
+          "symptoms",
+          "users"
+        ],
+        "classified_fields": {
+          "LoginRequest": [
+            "email",
+            "password"
+          ],
+          "AppointmentRequest": [
+            "patient_id"
+          ],
+          "PatientDetailsResponse": [
+            "blood_group",
+            "contact_number",
+            "date_of_birth",
+            "gender",
+            "marital_status",
+            "medical_record_number",
+            "name"
+          ],
+          "MedicalHistoryResponse": [
+            "family_medical_history",
+            "hospital_admissions",
+            "immunization_records",
+            "past_diagnoses",
+            "surgeries"
+          ],
+          "users": [
+            "email",
+            "password"
+          ],
+          "patients": [
+            "blood_group",
+            "contact_number",
+            "date_of_birth",
+            "gender",
+            "marital_status",
+            "medical_record_number",
+            "name"
+          ],
+          "patient_history": [
+            "family_medical_history",
+            "hospital_admissions",
+            "immunization_records",
+            "past_diagnoses",
+            "patient_id",
+            "surgeries"
+          ],
+          "hospitals": [
+            "address",
+            "contact_number",
+            "name"
+          ],
+          "specialists": [
+            "name"
+          ],
+          "doctors": [
+            "name"
+          ],
+          "appointments": [
+            "patient_id"
+          ],
+          "symptoms": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "postgres",
           "adapter": "datastore_generic",
           "evidence_count": 1,
-          "normalizer": "datastore"
+          "normalizer": "datastore",
+          "data_classification": [
+            "PHI",
+            "PII"
+          ],
+          "classified_tables": [
+            "AppointmentRequest",
+            "LoginRequest",
+            "MedicalHistoryResponse",
+            "PatientDetailsResponse",
+            "appointments",
+            "doctors",
+            "hospitals",
+            "patient_history",
+            "patients",
+            "specialists",
+            "symptoms",
+            "users"
+          ],
+          "classified_fields": {
+            "LoginRequest": [
+              "email",
+              "password"
+            ],
+            "AppointmentRequest": [
+              "patient_id"
+            ],
+            "PatientDetailsResponse": [
+              "blood_group",
+              "contact_number",
+              "date_of_birth",
+              "gender",
+              "marital_status",
+              "medical_record_number",
+              "name"
+            ],
+            "MedicalHistoryResponse": [
+              "family_medical_history",
+              "hospital_admissions",
+              "immunization_records",
+              "past_diagnoses",
+              "surgeries"
+            ],
+            "users": [
+              "email",
+              "password"
+            ],
+            "patients": [
+              "blood_group",
+              "contact_number",
+              "date_of_birth",
+              "gender",
+              "marital_status",
+              "medical_record_number",
+              "name"
+            ],
+            "patient_history": [
+              "family_medical_history",
+              "hospital_admissions",
+              "immunization_records",
+              "past_diagnoses",
+              "patient_id",
+              "surgeries"
+            ],
+            "hospitals": [
+              "address",
+              "contact_number",
+              "name"
+            ],
+            "specialists": [
+              "name"
+            ],
+            "doctors": [
+              "name"
+            ],
+            "appointments": [
+              "patient_id"
+            ],
+            "symptoms": [
+              "name"
+            ]
+          }
         }
       }
     },
     {
-      "id": "9159771a-561a-4194-977f-706c1876b3ba",
+      "id": "15898cc6-0718-46fb-900b-4cca1c1bb22f",
       "name": "generic",
       "component_type": "DEPLOYMENT",
       "confidence": 0.95,
@@ -762,6 +490,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "deployment_generic",
           "adapter": "deployment_generic",
@@ -770,7 +506,7 @@
       }
     },
     {
-      "id": "aeb88d5a-fb6f-4921-ac23-0436e3f45c6e",
+      "id": "bdeeaa7b-e5da-4980-958a-8c9c71109062",
       "name": "langgraph",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
@@ -783,6 +519,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "framework_langgraph",
           "adapter": "langgraph",
@@ -793,7 +537,7 @@
       }
     },
     {
-      "id": "ae94e0d4-d7d8-4dd1-83ff-312fbfb10239",
+      "id": "ea427044-6e87-40cf-ac36-83a661b1bf06",
       "name": "framework:llm_clients_ts",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
@@ -806,6 +550,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "framework_llm_clients_ts",
           "adapter": "llm_clients_ts",
@@ -816,7 +568,7 @@
       }
     },
     {
-      "id": "5a35ab16-4cd7-466e-a270-21447a0f82ca",
+      "id": "d232e7dd-b993-47b7-90a4-30bfa2b04039",
       "name": "framework:prompt_ts",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
@@ -829,6 +581,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "framework_prompt_ts",
           "adapter": "prompt_ts",
@@ -839,7 +599,7 @@
       }
     },
     {
-      "id": "2b1085e4-9df2-4f8c-9bea-0657121b21a1",
+      "id": "182e4b6c-573e-40f0-a38e-ccca41b1ebdf",
       "name": "gemini-2.0",
       "component_type": "MODEL",
       "confidence": 0.55,
@@ -852,6 +612,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "gemini_2_0",
           "adapter": "model_generic",
@@ -861,7 +629,7 @@
       }
     },
     {
-      "id": "4ecd81e2-b8a4-4e31-b3cc-7b13ea3177a6",
+      "id": "ee51bb85-80dd-422b-8f03-b4f28c43572d",
       "name": "gemini-2.0-flash",
       "component_type": "MODEL",
       "confidence": 0.88,
@@ -874,6 +642,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "gemini_2_0_flash",
           "adapter": "llm_clients_ts",
@@ -887,7 +663,7 @@
       }
     },
     {
-      "id": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "id": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "name": "gpt-4",
       "component_type": "MODEL",
       "confidence": 0.9,
@@ -900,6 +676,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "gpt_4",
           "adapter": "langgraph",
@@ -915,7 +699,7 @@
       }
     },
     {
-      "id": "30a940ab-ab6c-4758-b693-9494246e216f",
+      "id": "11a77d21-0258-42bd-838d-b757dd8410ca",
       "name": "generic",
       "component_type": "PRIVILEGE",
       "confidence": 0.7,
@@ -928,6 +712,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "privilege_generic",
           "adapter": "privilege_generic",
@@ -936,7 +728,7 @@
       }
     },
     {
-      "id": "680f5758-a889-4501-8c07-761550e67e57",
+      "id": "61cc7c13-5317-4bad-b08a-d7af06ff9233",
       "name": "prompt_50",
       "component_type": "PROMPT",
       "confidence": 0.6,
@@ -949,6 +741,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "langchain_prompt_str_50",
           "adapter": "langgraph",
@@ -962,7 +762,7 @@
       }
     },
     {
-      "id": "78f19b56-1a7c-45f9-8a74-b1c92a66fcf8",
+      "id": "9d62c40c-2d78-4aae-81f2-811bf3992517",
       "name": "generic",
       "component_type": "PROMPT",
       "confidence": 0.55,
@@ -975,6 +775,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "prompt_generic",
           "adapter": "prompt_generic",
@@ -983,7 +791,7 @@
       }
     },
     {
-      "id": "b8b30611-8b35-43d6-872d-d69b149033a0",
+      "id": "36c65786-9465-4c5f-9a19-9cb995b827c4",
       "name": "Systeminstruction",
       "component_type": "PROMPT",
       "confidence": 0.65,
@@ -996,6 +804,14 @@
         "endpoint": null,
         "method": null,
         "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "systeminstruction",
           "adapter": "prompt_ts",
@@ -1011,246 +827,56 @@
           "language": "typescript"
         }
       }
-    },
-    {
-      "id": "88aab6cd-0ab6-4997-babb-f9e507909af2",
-      "name": "generic",
-      "component_type": "TOOL",
-      "confidence": 0.6,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "extras": {
-          "canonical_name": "tool_generic",
-          "adapter": "tool_generic",
-          "evidence_count": 1
-        }
-      }
     }
   ],
   "edges": [
     {
-      "source": "9f73207c-9571-42c8-b769-216ec3ae7f66",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "source": "d3e36573-e034-49be-ac5a-e02f890e6016",
+      "target": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "relationship_type": "USES"
     },
     {
-      "source": "5ffc4cf2-912e-41f4-85d5-df23008363f4",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "source": "7c510fcb-1ac5-4fdc-ad4b-65e3a4fbf31d",
+      "target": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "relationship_type": "USES"
     },
     {
-      "source": "eb67c2c4-2b96-46e8-a9d5-fc391ac1ea72",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "source": "8068b535-5e29-48b4-9071-a45c6f2af5e7",
+      "target": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "relationship_type": "USES"
     },
     {
-      "source": "87d3e8da-d59a-45b2-a681-bed812b0e281",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "source": "8c6d42fa-8b29-4e74-8aa1-8082181b0eb1",
+      "target": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "relationship_type": "USES"
     },
     {
-      "source": "96c5ebae-4a28-4ff5-b951-fb15603b4b36",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
+      "source": "d0654909-7fd5-4856-9c0c-5d1bc5e798ef",
+      "target": "286957fd-4966-4936-bff7-cd525c27ff2e",
       "relationship_type": "USES"
     },
     {
-      "source": "c8373291-2afe-4154-a1e5-4acb623a0585",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "5ffc4cf2-912e-41f4-85d5-df23008363f4",
-      "target": "eb67c2c4-2b96-46e8-a9d5-fc391ac1ea72",
+      "source": "d3e36573-e034-49be-ac5a-e02f890e6016",
+      "target": "7c510fcb-1ac5-4fdc-ad4b-65e3a4fbf31d",
       "relationship_type": "CALLS"
     },
     {
-      "source": "eb67c2c4-2b96-46e8-a9d5-fc391ac1ea72",
-      "target": "87d3e8da-d59a-45b2-a681-bed812b0e281",
+      "source": "7c510fcb-1ac5-4fdc-ad4b-65e3a4fbf31d",
+      "target": "8068b535-5e29-48b4-9071-a45c6f2af5e7",
       "relationship_type": "CALLS"
     },
     {
-      "source": "87d3e8da-d59a-45b2-a681-bed812b0e281",
-      "target": "96c5ebae-4a28-4ff5-b951-fb15603b4b36",
+      "source": "8068b535-5e29-48b4-9071-a45c6f2af5e7",
+      "target": "8c6d42fa-8b29-4e74-8aa1-8082181b0eb1",
       "relationship_type": "CALLS"
     },
     {
-      "source": "96c5ebae-4a28-4ff5-b951-fb15603b4b36",
-      "target": "c8373291-2afe-4154-a1e5-4acb623a0585",
+      "source": "8c6d42fa-8b29-4e74-8aa1-8082181b0eb1",
+      "target": "d0654909-7fd5-4856-9c0c-5d1bc5e798ef",
       "relationship_type": "CALLS"
-    },
-    {
-      "source": "380ca6cb-db4b-47ec-979c-fb28a18563a9",
-      "target": "88aab6cd-0ab6-4997-babb-f9e507909af2",
-      "relationship_type": "CALLS"
-    },
-    {
-      "source": "380ca6cb-db4b-47ec-979c-fb28a18563a9",
-      "target": "2b1085e4-9df2-4f8c-9bea-0657121b21a1",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "380ca6cb-db4b-47ec-979c-fb28a18563a9",
-      "target": "4ecd81e2-b8a4-4e31-b3cc-7b13ea3177a6",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "380ca6cb-db4b-47ec-979c-fb28a18563a9",
-      "target": "a7910ffe-6f0e-4745-a8ab-1903fd945185",
-      "relationship_type": "USES"
     }
   ],
   "evidence": [
-    {
-      "kind": "regex",
-      "confidence": 0.7,
-      "detail": "agent_generic: Agent",
-      "location": {
-        "path": ".github/copilot-instructions.md",
-        "line": 1
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.8,
-      "detail": "agent_generic: Assistant",
-      "location": {
-        "path": "README.md",
-        "line": 1
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.95,
-      "detail": "agent_generic: Agent",
-      "location": {
-        "path": "SAFETY_GUIDELINES.md",
-        "line": 1
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.95,
-      "detail": "agent_generic: Agent",
-      "location": {
-        "path": "backend/langgraph_llm_agents.py",
-        "line": 41
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.55,
-      "detail": "agent_generic: agent",
-      "location": {
-        "path": "backend/queries.py",
-        "line": 1
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.95,
-      "detail": "agent_generic: agent",
-      "location": {
-        "path": "package-lock.json",
-        "line": 2
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.55,
-      "detail": "agent_generic: agent",
-      "location": {
-        "path": "package.json",
-        "line": 2
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.55,
-      "detail": "agent_generic: agent",
-      "location": {
-        "path": "run_sql.py",
-        "line": 24
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.7,
-      "detail": "agent_generic: Assistant",
-      "location": {
-        "path": "src/Root.jsx",
-        "line": 4
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.95,
-      "detail": "agent_generic: Assistant",
-      "location": {
-        "path": "src/components/Assistant.jsx",
-        "line": 2
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.6,
-      "detail": "agent_generic: assistant",
-      "location": {
-        "path": "src/components/Dashboard.jsx",
-        "line": 55
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.6,
-      "detail": "agent_generic: Assistant",
-      "location": {
-        "path": "src/components/Recommendation.jsx",
-        "line": 21
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.65,
-      "detail": "agent_generic: Agent",
-      "location": {
-        "path": "src/context/UserContext.jsx",
-        "line": 107
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.65,
-      "detail": "agent_generic: Assistant",
-      "location": {
-        "path": "src/gemini.js",
-        "line": 19
-      }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.7,
-      "detail": "agent_generic: Agent",
-      "location": {
-        "path": "tests/voice-agent.spec.js",
-        "line": 3
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.9,
-      "detail": "langgraph: StateGraph(...)",
-      "location": {
-        "path": "backend/langgraph_llm_agents.py",
-        "line": 206
-      }
-    },
     {
       "kind": "ast_call",
       "confidence": 0.85,
@@ -1333,111 +959,21 @@
       }
     },
     {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_py: class AppointmentRequest",
+      "kind": "dockerfile",
+      "confidence": 0.99,
+      "detail": "dockerfile: FROM node:20 AS frontend-builder",
       "location": {
-        "path": "backend/models.py",
-        "line": 8
+        "path": "Dockerfile",
+        "line": 2
       }
     },
     {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_py: class LoginRequest",
+      "kind": "dockerfile",
+      "confidence": 0.99,
+      "detail": "dockerfile: FROM python:3.11-slim",
       "location": {
-        "path": "backend/models.py",
-        "line": 4
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_py: class MedicalHistoryResponse",
-      "location": {
-        "path": "backend/models.py",
-        "line": 24
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_py: class PatientDetailsResponse",
-      "location": {
-        "path": "backend/models.py",
+        "path": "Dockerfile",
         "line": 14
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS appointments (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 69
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS doctors (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 48
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS hospitals (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 35
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS patient_history (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 23
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS patients (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 10
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS specialists (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 43
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS symptoms (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 79
-      }
-    },
-    {
-      "kind": "ast_instantiation",
-      "confidence": 0.95,
-      "detail": "data_classification_sql: CREATE TABLE IF NOT EXISTS users (",
-      "location": {
-        "path": "sql/schema.sql",
-        "line": 3
       }
     },
     {
@@ -1673,15 +1209,6 @@
         "path": "src/gemini.js",
         "line": 24
       }
-    },
-    {
-      "kind": "regex",
-      "confidence": 0.6,
-      "detail": "tool_generic: tool",
-      "location": {
-        "path": "SAFETY_GUIDELINES.md",
-        "line": 3
-      }
     }
   ],
   "deps": [
@@ -1813,7 +1340,7 @@
     }
   ],
   "summary": {
-    "use_case": "This application implements an agentic AI workflow with 7 agent(s), 1 tool integration(s), and 0 guardrail control(s). Detected use cases include doctor lookup workflows, specialist recommendation workflows, search-based retrieval. Multi-modal support: Voice supported, Images not supported, Video not supported.",
+    "use_case": "This application implements an agentic AI workflow with 5 agent(s), 0 tool integration(s), and 0 guardrail control(s). Detected use cases include doctor lookup workflows, specialist recommendation workflows, search-based retrieval. Multi-modal support: Voice supported, Images not supported, Video not supported.",
     "frameworks": [
       "langgraph"
     ],
@@ -1838,29 +1365,30 @@
       "/{full_path:path}"
     ],
     "deployment_platforms": [
+      "GCP",
       "AWS"
     ],
     "regions": [],
     "environments": [
       "development",
-      "test",
-      "production",
       "stage",
-      "dev"
+      "dev",
+      "test",
+      "production"
     ],
     "deployment_urls": [],
     "iac_accounts": [],
     "node_counts": {
-      "AGENT": 7,
+      "AGENT": 5,
       "API_ENDPOINT": 1,
       "AUTH": 1,
-      "DATASTORE": 13,
+      "CONTAINER_IMAGE": 2,
+      "DATASTORE": 1,
       "DEPLOYMENT": 1,
       "FRAMEWORK": 3,
       "MODEL": 3,
       "PRIVILEGE": 1,
-      "PROMPT": 3,
-      "TOOL": 1
+      "PROMPT": 3
     },
     "data_classification": [
       "PHI",

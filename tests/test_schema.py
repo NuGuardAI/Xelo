@@ -1,4 +1,5 @@
 """Tests for schema generation, anti-drift, and serialization round-trips."""
+
 from __future__ import annotations
 
 import json
@@ -23,6 +24,7 @@ class _Args:
 # ---------------------------------------------------------------------------
 # Schema generation via CLI
 # ---------------------------------------------------------------------------
+
 
 def test_schema_command_writes_schema(tmp_path: Path) -> None:
     args = _Args()
@@ -49,10 +51,11 @@ def test_schema_has_required_top_level_fields(tmp_path: Path) -> None:
 # Anti-drift: committed schema must match AiBomDocument.model_json_schema()
 # ---------------------------------------------------------------------------
 
+
 def test_committed_schema_matches_models() -> None:
     """aibom.schema.json must stay in sync with AiBomDocument.model_json_schema().
 
-    If this test fails, run from the oss/Velo directory::
+    If this test fails, run from the oss/Xelo directory::
 
         python -c "
         from ai_sbom.models import AiBomDocument; import json
@@ -65,7 +68,7 @@ def test_committed_schema_matches_models() -> None:
     live = AiBomDocument.model_json_schema()
     assert committed == live, (
         "aibom.schema.json is out of sync with AiBomDocument Pydantic models. "
-        "Regenerate it with: python -c \"from ai_sbom.models import AiBomDocument; "
+        'Regenerate it with: python -c "from ai_sbom.models import AiBomDocument; '
         "import json; open('src/ai_sbom/schemas/aibom.schema.json', 'w')"
         ".write(json.dumps(AiBomDocument.model_json_schema(), indent=2) + '\\n')\""
     )
@@ -74,6 +77,7 @@ def test_committed_schema_matches_models() -> None:
 # ---------------------------------------------------------------------------
 # Serialization round-trips
 # ---------------------------------------------------------------------------
+
 
 def test_cyclonedx_empty_doc_has_required_fields() -> None:
     """Minimal document (no nodes) must still produce a valid CycloneDX envelope."""

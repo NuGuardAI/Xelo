@@ -256,6 +256,7 @@ def build_scan_summary(
     files: Sequence[tuple[str, str]],
     source_ref: str | None = None,
     branch: str | None = None,
+    dc_metadata: list[dict] | None = None,
 ) -> dict[str, Any]:
     """Build scan-level summary for reporting."""
     node_types: dict[str, int] = {}
@@ -274,19 +275,22 @@ def build_scan_summary(
     use_case_summary = build_deterministic_use_case_summary(nodes, modality_support)
     modalities = [k.upper() for k, enabled in modality_support.items() if enabled]
 
-    # Data classification: collect from DATASTORE nodes that carried classified fields
+    # Data classification: collect from typed fields on DATASTORE nodes, then fall back
+    # to raw dc_metadata for repos where no DATASTORE node was detected.
     all_labels: set[str] = set()
     classified_tables: list[str] = []
     for node in nodes:
-        dc = node.metadata.extras.get("data_classification")
+        dc = node.metadata.data_classification or node.metadata.extras.get("data_classification")
         if dc and isinstance(dc, list):
             all_labels.update(dc)
-            table = (
-                node.metadata.extras.get("table_name")
-                or node.metadata.extras.get("model_name")
-                or node.name
-            )
-            classified_tables.append(str(table))
+        ct = node.metadata.classified_tables or []
+        classified_tables.extend(ct)
+    if not all_labels:
+        for meta in dc_metadata or []:
+            all_labels.update(meta.get("data_classification") or [])
+            table = meta.get("table_name") or meta.get("model_name")
+            if table:
+                classified_tables.append(table)
 
     return {
         "source_ref": source_ref,

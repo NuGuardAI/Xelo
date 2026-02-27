@@ -1,7 +1,7 @@
 """SBOM serializers: native JSON and CycloneDX 1.6.
 
 ``SbomSerializer`` converts an ``AiBomDocument`` (and optional dependency list)
-into either the Vela-native JSON format or a standards-compliant CycloneDX 1.6
+into either the Xelo-native JSON format or a standards-compliant CycloneDX 1.6
 document.
 
 CycloneDX output structure
@@ -12,7 +12,7 @@ CycloneDX output structure
     Two groups merged into a single list:
 
     1. **AI components** (AGENT, MODEL, TOOL, PROMPT, DATASTORE, …) — extracted by
-       Vela's framework adapters.  Mapped to CycloneDX ``type`` values:
+       Xelo's framework adapters.  Mapped to CycloneDX ``type`` values:
 
        - AGENT / FRAMEWORK  → ``"application"``
        - MODEL              → ``"machine-learning-model"``
@@ -27,6 +27,7 @@ CycloneDX output structure
 ``dependencies``
     Edges from the ``AiBomDocument`` rendered as CycloneDX dependency refs.
 """
+
 from __future__ import annotations
 
 import json
@@ -39,23 +40,23 @@ from .types import ComponentType
 
 # CycloneDX component type mapping for AI node types
 _AI_TYPE_MAP: dict[ComponentType, str] = {
-    ComponentType.AGENT:        "application",
-    ComponentType.FRAMEWORK:    "application",
-    ComponentType.MODEL:        "machine-learning-model",
-    ComponentType.PROMPT:       "data",
-    ComponentType.DATASTORE:    "data",
-    ComponentType.TOOL:         "library",
-    ComponentType.AUTH:         "library",
-    ComponentType.PRIVILEGE:    "library",
+    ComponentType.AGENT: "application",
+    ComponentType.FRAMEWORK: "application",
+    ComponentType.MODEL: "machine-learning-model",
+    ComponentType.PROMPT: "data",
+    ComponentType.DATASTORE: "data",
+    ComponentType.TOOL: "library",
+    ComponentType.AUTH: "library",
+    ComponentType.PRIVILEGE: "library",
     ComponentType.API_ENDPOINT: "library",
-    ComponentType.DEPLOYMENT:   "library",
+    ComponentType.DEPLOYMENT: "library",
 }
 
 
 class SbomSerializer:
     @staticmethod
     def to_json(doc: AiBomDocument) -> str:
-        """Serialise to Vela-native JSON (Pydantic schema)."""
+        """Serialise to Xelo-native JSON (Pydantic schema)."""
         return doc.model_dump_json(indent=2)
 
     @staticmethod
@@ -84,28 +85,34 @@ class SbomSerializer:
             extras = node.metadata.extras
 
             props: list[dict[str, str]] = [
-                {"name": "vela:component_type", "value": node.component_type.value},
-                {"name": "vela:confidence",     "value": f"{node.confidence:.2f}"},
+                {"name": "xelo:component_type", "value": node.component_type.value},
+                {"name": "xelo:confidence", "value": f"{node.confidence:.2f}"},
             ]
             if extras.get("adapter"):
-                props.append({"name": "vela:adapter", "value": str(extras["adapter"])})
+                props.append({"name": "xelo:adapter", "value": str(extras["adapter"])})
             if extras.get("provider"):
-                props.append({"name": "vela:provider", "value": str(extras["provider"])})
+                props.append({"name": "xelo:provider", "value": str(extras["provider"])})
             if extras.get("model_family"):
-                props.append({"name": "vela:model_family", "value": str(extras["model_family"])})
-            dc = extras.get("data_classification")
+                props.append({"name": "xelo:model_family", "value": str(extras["model_family"])})
+            dc = node.metadata.data_classification or extras.get("data_classification")
             if dc and isinstance(dc, list):
-                props.append({"name": "vela:data_classification", "value": ",".join(dc)})
-            cf = extras.get("classified_fields")
+                props.append({"name": "xelo:data_classification", "value": ",".join(dc)})
+            ct = node.metadata.classified_tables or extras.get("classified_tables")
+            if ct and isinstance(ct, list):
+                props.append({"name": "xelo:classified_tables", "value": ",".join(ct)})
+            cf = node.metadata.classified_fields or extras.get("classified_fields")
             if cf and isinstance(cf, dict):
-                # Compact representation: "field:LABEL,LABEL;field2:LABEL"
-                cf_str = ";".join(f"{k}:{','.join(v)}" for k, v in sorted(cf.items()))
-                props.append({"name": "vela:classified_fields", "value": cf_str})
+                # Compact representation: "table:field1,field2;table2:field3"
+                cf_str = ";".join(
+                    f"{tbl}:{','.join(flds) if isinstance(flds, list) else ','.join(sorted(flds))}"
+                    for tbl, flds in sorted(cf.items())
+                )
+                props.append({"name": "xelo:classified_fields", "value": cf_str})
 
             component: dict[str, Any] = {
                 "bom-ref": str(node.id),
-                "type":    cdx_type,
-                "name":    node.name,
+                "type": cdx_type,
+                "name": node.name,
             }
             if extras.get("version"):
                 component["version"] = str(extras["version"])
@@ -113,15 +120,15 @@ class SbomSerializer:
                 component["externalReferences"] = [
                     {
                         "type": "documentation",
-                        "url":  str(extras["model_card_url"]),
+                        "url": str(extras["model_card_url"]),
                         "comment": "Model card / provider documentation",
                     }
                 ]
             if extras.get("api_endpoint"):
                 component.setdefault("externalReferences", []).append(  # type: ignore[union-attr]
                     {
-                        "type":    "website",
-                        "url":     str(extras["api_endpoint"]),
+                        "type": "website",
+                        "url": str(extras["api_endpoint"]),
                         "comment": "Provider API endpoint",
                     }
                 )
@@ -135,42 +142,40 @@ class SbomSerializer:
         for dep in effective_deps:
             dc: dict[str, Any] = {
                 "bom-ref": dep.purl,
-                "type":    "library",
-                "name":    dep.name,
-                "purl":    dep.purl,
+                "type": "library",
+                "name": dep.name,
+                "purl": dep.purl,
                 "properties": [
-                    {"name": "vela:dep_group",   "value": dep.group},
-                    {"name": "vela:source_file", "value": dep.source_file},
+                    {"name": "xelo:dep_group", "value": dep.group},
+                    {"name": "xelo:source_file", "value": dep.source_file},
                 ],
             }
             if dep.version:
                 dc["version"] = dep.version
             if dep.version_spec and dep.version_spec != f"=={dep.version}":
-                dc["properties"].append(
-                    {"name": "vela:version_spec", "value": dep.version_spec}
-                )
+                dc["properties"].append({"name": "xelo:version_spec", "value": dep.version_spec})
             dep_components.append(dc)
 
         # ── Edge → dependency refs ────────────────────────────────────
         dependencies: list[dict[str, Any]] = [
             {
-                "ref":       str(edge.source),
+                "ref": str(edge.source),
                 "dependsOn": [str(edge.target)],
             }
             for edge in doc.edges
         ]
 
         return {
-            "bomFormat":   "CycloneDX",
+            "bomFormat": "CycloneDX",
             "specVersion": spec_version,
-            "version":     1,
+            "version": 1,
             "serialNumber": f"urn:uuid:{doc.schema_version}-{doc.generated_at.strftime('%Y%m%dT%H%M%SZ')}",
             "metadata": {
                 "timestamp": doc.generated_at.isoformat(),
                 "tools": [
                     {
-                        "vendor":  "Vela",
-                        "name":    doc.generator,
+                        "vendor": "Xelo",
+                        "name": doc.generator,
                         "version": "0.2.0",
                     }
                 ],
@@ -179,8 +184,8 @@ class SbomSerializer:
                     "name": doc.target,
                 },
             },
-            "components":    ai_components + dep_components,
-            "dependencies":  dependencies,
+            "components": ai_components + dep_components,
+            "dependencies": dependencies,
         }
 
     @staticmethod

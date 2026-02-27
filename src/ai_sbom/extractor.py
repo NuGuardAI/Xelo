@@ -138,6 +138,8 @@ class SbomExtractor:
         _log.info("scanning %d files under %s", len(files), root)
         doc = AiBomDocument(target=source_ref or str(root))
         node_map: dict[tuple[ComponentType, str], _NodeAccumulator] = {}
+        # Classification-only metadata from data_classification adapters (not emitted as nodes)
+        _dc_metadata: list[dict] = []
         # Accumulated for Phase 3 LLM enrichment (rel_path → content)
         file_contents: dict[str, str] = {}
 
@@ -192,7 +194,11 @@ class SbomExtractor:
                                 )
                                 continue
                             for det in detections:
-                                self._merge_detection(node_map, det)
+                                if det.component_type == ComponentType.DATASTORE and \
+                                        det.metadata.get("source") in ("sql_schema", "python_model"):
+                                    _dc_metadata.append(det.metadata)
+                                else:
+                                    self._merge_detection(node_map, det)
 
             # Phase 1b: SQL schema — data classification
             elif is_sql:
@@ -204,7 +210,7 @@ class SbomExtractor:
                         _log.warning("SQL adapter %r failed on %s: %s", sql_adapter.name, rel_path, exc)
                         continue
                     for det in detections:
-                        self._merge_detection(node_map, det)
+                        _dc_metadata.append(det.metadata)
 
             # Phase 1c: TypeScript/JavaScript AST-aware framework adapters
             elif is_typescript:
@@ -260,6 +266,9 @@ class SbomExtractor:
                 )
                 self._merge_detection(node_map, comp_det)
 
+        # Enrich DATASTORE nodes with PII/PHI classification metadata
+        self._enrich_datastores(node_map, _dc_metadata)
+
         # Build nodes + edges
         for key in sorted(node_map.keys(), key=lambda v: (v[0].value, v[1])):
             acc = node_map[key]
@@ -273,7 +282,10 @@ class SbomExtractor:
             node.metadata.extras["evidence_count"] = len(acc.evidence)
             node.metadata.extras.update({
                 k: v for k, v in acc.metadata.items()
-                if k not in ("adapter", "evidence_count", "canonical_name")
+                if k not in (
+                    "adapter", "evidence_count", "canonical_name",
+                    "data_classification", "classified_tables", "classified_fields",
+                )
             })
             # Copy typed metadata fields
             if "framework" in acc.metadata:
@@ -288,6 +300,14 @@ class SbomExtractor:
                 node.metadata.extras["model_card_url"] = acc.metadata["model_card_url"]
             if "api_endpoint" in acc.metadata and acc.metadata["api_endpoint"]:
                 node.metadata.extras["api_endpoint"] = acc.metadata["api_endpoint"]
+            # Data classification metadata (DATASTORE nodes)
+            if acc.component_type == ComponentType.DATASTORE:
+                if acc.metadata.get("data_classification"):
+                    node.metadata.data_classification = acc.metadata["data_classification"]
+                if acc.metadata.get("classified_tables"):
+                    node.metadata.classified_tables = acc.metadata["classified_tables"]
+                if acc.metadata.get("classified_fields"):
+                    node.metadata.classified_fields = acc.metadata["classified_fields"]
             # Container image metadata
             if acc.component_type == ComponentType.CONTAINER_IMAGE:
                 node.metadata.image_name    = acc.metadata.get("image_name")
@@ -308,7 +328,8 @@ class SbomExtractor:
         # Build deterministic scan-level summary (always populated)
         files_sample = list(file_contents.items())[:200]
         doc.summary = _make_scan_summary(
-            build_scan_summary(doc.nodes, files_sample, source_ref=source_ref, branch=branch)
+            build_scan_summary(doc.nodes, files_sample, source_ref=source_ref, branch=branch,
+                               dc_metadata=_dc_metadata)
         )
 
         # Phase 3: LLM enrichment (skipped when deterministic_only=True)
@@ -424,6 +445,47 @@ class SbomExtractor:
             acc.evidence.append(evidence)
             # Accumulate relationship hints
             acc.relationships.extend(det.relationships)
+
+    def _enrich_datastores(
+        self,
+        node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+        dc_metadata: list[dict],
+    ) -> None:
+        """Merge PII/PHI classification data from schema adapters into DATASTORE nodes.
+
+        Classification data (from SQL CREATE TABLE and Python model analysis) is
+        attached as metadata on every detected DATASTORE node rather than emitted
+        as separate nodes.
+        """
+        if not dc_metadata:
+            return
+        datastore_keys = [k for k in node_map if k[0] == ComponentType.DATASTORE]
+        if not datastore_keys:
+            return
+
+        # Aggregate labels, table names, and per-table field detail
+        all_labels: set[str] = set()
+        classified_tables: list[str] = []
+        classified_fields: dict[str, list[str]] = {}
+        for meta in dc_metadata:
+            all_labels.update(meta.get("data_classification") or [])
+            table = meta.get("table_name") or meta.get("model_name")
+            if table:
+                classified_tables.append(table)
+                cf = meta.get("classified_fields")
+                if cf:
+                    classified_fields[table] = sorted(cf.keys())
+
+        # Merge into every DATASTORE accumulator (project-wide enrichment)
+        for key in datastore_keys:
+            acc = node_map[key]
+            existing_labels = set(acc.metadata.get("data_classification") or [])
+            acc.metadata["data_classification"] = sorted(all_labels | existing_labels)
+            existing_tables = set(acc.metadata.get("classified_tables") or [])
+            acc.metadata["classified_tables"] = sorted(set(classified_tables) | existing_tables)
+            existing_cf = dict(acc.metadata.get("classified_fields") or {})
+            existing_cf.update(classified_fields)
+            acc.metadata["classified_fields"] = existing_cf
 
     def _resolve_edges(
         self,
