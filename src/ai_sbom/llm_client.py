@@ -19,6 +19,20 @@ from typing import Any
 
 _log = logging.getLogger(__name__)
 
+_litellm_noise_suppressed = False
+
+
+def _suppress_litellm_noise(litellm: Any) -> None:
+    """Silence litellm's startup credential-probe warnings (one-time)."""
+    global _litellm_noise_suppressed
+    if _litellm_noise_suppressed:
+        return
+    litellm.suppress_debug_info = True
+    litellm.set_verbose = False
+    logging.getLogger("LiteLLM").setLevel(logging.CRITICAL)
+    logging.getLogger("litellm").setLevel(logging.CRITICAL)
+    _litellm_noise_suppressed = True
+
 
 class BudgetExhaustedError(Exception):
     """Raised when the token budget for LLM calls has been exhausted."""
@@ -31,11 +45,14 @@ class LLMClient:
     ----------
     model:
         Any litellm-compatible model string, e.g. ``"gpt-4o-mini"``,
-        ``"anthropic/claude-3-haiku-20240307"``, ``"ollama/mistral"``.
+        ``"anthropic/claude-haiku-4-5"``, ``"ollama/mistral"``.
     api_key:
         Optional API key. When ``None``, litellm falls back to the
         corresponding environment variable (``OPENAI_API_KEY``,
         ``ANTHROPIC_API_KEY``, etc.).
+    api_base:
+        Optional base URL override (e.g. Azure AI Foundry endpoint).
+        When ``None``, litellm uses the provider default.
     budget_tokens:
         Maximum total tokens (prompt + completion) to spend across all
         calls on this client instance. Raises ``BudgetExhaustedError``
@@ -46,10 +63,12 @@ class LLMClient:
         self,
         model: str = "gpt-4o-mini",
         api_key: str | None = None,
+        api_base: str | None = None,
         budget_tokens: int = 50_000,
     ) -> None:
         self._model = model
         self._api_key = api_key
+        self._api_base = api_base
         self._budget = budget_tokens
         self._tokens_used = 0
 
@@ -96,6 +115,7 @@ class LLMClient:
                 "Install it with: pip install 'ai-sbom[llm]'"
             ) from exc
 
+        _suppress_litellm_noise(litellm)
         self._check_budget()
 
         kwargs: dict[str, Any] = {
@@ -108,6 +128,8 @@ class LLMClient:
         }
         if self._api_key:
             kwargs["api_key"] = self._api_key
+        if self._api_base:
+            kwargs["api_base"] = self._api_base
 
         _log.debug("complete_text model=%s budget_left=%d", self._model, self._budget - self._tokens_used)
         response = await litellm.acompletion(**kwargs)
@@ -152,6 +174,7 @@ class LLMClient:
                 "Install it with: pip install 'ai-sbom[llm]'"
             ) from exc
 
+        _suppress_litellm_noise(litellm)
         self._check_budget()
 
         kwargs: dict[str, Any] = {
@@ -165,6 +188,8 @@ class LLMClient:
         }
         if self._api_key:
             kwargs["api_key"] = self._api_key
+        if self._api_base:
+            kwargs["api_base"] = self._api_base
 
         _log.debug("complete_structured model=%s schema_keys=%s", self._model, list(response_schema.get("properties", {}).keys()))
         response = await litellm.acompletion(**kwargs)

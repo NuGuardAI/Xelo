@@ -576,6 +576,7 @@ class SbomExtractor:
         client = LLMClient(
             model=config.llm_model,
             api_key=config.llm_api_key,
+            api_base=config.llm_api_base,
             budget_tokens=config.llm_budget_tokens,
         )
         evidence_map = _build_evidence_map(doc)

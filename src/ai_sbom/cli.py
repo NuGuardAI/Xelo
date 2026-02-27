@@ -1,23 +1,23 @@
-"""Velo CLI — AI SBOM generator.
+"""Xelo CLI — AI SBOM generator.
 
 Commands
 --------
-velo scan path <PATH>
+xelo scan path <PATH>
     Extract AI components from a local directory.
-    --format json          Vela-native JSON (default)
+    --format json          Xelo-native JSON (default)
     --format cyclonedx     AI components only as CycloneDX 1.6
     --format unified       Standard deps BOM + AI-BOM merged (CycloneDX 1.6)
     --cdx-bom <FILE>       Supply a pre-generated CycloneDX BOM to merge into
                            instead of running the built-in generator.
 
-velo scan repo <URL>
+xelo scan repo <URL>
     Clone a git repository and scan it (requires git on PATH).
     Same --format options as scan path.
 
-velo validate <FILE>
-    Validate a Vela-native JSON file against the AiBomDocument schema.
+xelo validate <FILE>
+    Validate a Xelo-native JSON file against the AiBomDocument schema.
 
-velo schema --output <FILE>
+xelo schema --output <FILE>
     Write the AiBomDocument JSON schema to a file.
 
 Logging
@@ -25,6 +25,7 @@ Logging
   --verbose   INFO-level logs to stderr (scan progress, file counts, fallbacks)
   --debug     DEBUG-level logs + full tracebacks on errors
 """
+
 from __future__ import annotations
 
 import argparse
@@ -40,7 +41,7 @@ from .extractor import SbomExtractor
 from .models import AiBomDocument
 from .serializer import SbomSerializer
 
-_log = logging.getLogger("vela")
+_log = logging.getLogger("xelo")
 
 
 def _setup_logging(verbose: bool, debug: bool) -> None:
@@ -68,7 +69,7 @@ def _load_dotenv(path: Path = Path(".env")) -> None:
         if not line or line.startswith("#"):
             continue
         if line.startswith("export "):
-            line = line[len("export "):].strip()
+            line = line[len("export ") :].strip()
         if "=" not in line:
             continue
         key, value = line.split("=", 1)
@@ -92,6 +93,8 @@ def _build_extraction_config(args: argparse.Namespace) -> ExtractionConfig:
         config.llm_budget_tokens = args.llm_budget_tokens
     if args.llm_api_key is not None:
         config.llm_api_key = args.llm_api_key
+    if getattr(args, "llm_api_base", None) is not None:
+        config.llm_api_base = args.llm_api_base
     return config
 
 
@@ -107,13 +110,15 @@ def _die(msg: str, args: argparse.Namespace | None = None) -> None:
 def main() -> None:
     _load_dotenv()
     parser = argparse.ArgumentParser(
-        prog="vela",
+        prog="xelo",
         description="Deterministic AI SBOM generator",
     )
-    parser.add_argument("--verbose", "-v", action="store_true",
-                        help="Enable INFO-level logging to stderr")
-    parser.add_argument("--debug", action="store_true",
-                        help="Enable DEBUG-level logging and full tracebacks")
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable INFO-level logging to stderr"
+    )
+    parser.add_argument(
+        "--debug", action="store_true", help="Enable DEBUG-level logging and full tracebacks"
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # ── scan ──────────────────────────────────────────────────────────────
@@ -124,8 +129,8 @@ def main() -> None:
     _add_scan_repo_args(scan_sub.add_parser("repo", help="Clone and scan a git repo"))
 
     # ── validate ─────────────────────────────────────────────────────────
-    validate_parser = subparsers.add_parser("validate", help="Validate a Velo JSON file")
-    validate_parser.add_argument("input", help="Path to Vela-native JSON file")
+    validate_parser = subparsers.add_parser("validate", help="Validate a Xelo JSON file")
+    validate_parser.add_argument("input", help="Path to Xelo-native JSON file")
 
     # ── schema ────────────────────────────────────────────────────────────
     schema_parser = subparsers.add_parser("schema", help="Export the AiBomDocument JSON schema")
@@ -150,7 +155,7 @@ def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401
         default="json",
         help=(
             "Output format: "
-            "json=Vela-native, "
+            "json=Xelo-native, "
             "cyclonedx=AI components as CycloneDX, "
             "unified=standard deps + AI merged CycloneDX (default: json)"
         ),
@@ -161,7 +166,7 @@ def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401
         metavar="<file>",
         dest="cdx_bom",
         help="Path to an existing CycloneDX BOM JSON to merge with (unified format only). "
-             "If omitted, Velo generates one automatically.",
+        "If omitted, Xelo generates one automatically.",
     )
     llm_mode = p.add_mutually_exclusive_group()
     llm_mode.add_argument(
@@ -193,6 +198,11 @@ def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401
         "--llm-api-key",
         metavar="<key>",
         help="Direct API key for LLM calls (overrides AISBOM_LLM_API_KEY).",
+    )
+    p.add_argument(
+        "--llm-api-base",
+        metavar="<url>",
+        help="Base URL for LLM calls (overrides AISBOM_LLM_API_BASE, e.g. Azure AI Foundry endpoint).",
     )
 
 
@@ -232,6 +242,11 @@ def _add_scan_repo_args(p: argparse.ArgumentParser) -> None:
         "--llm-api-key",
         metavar="<key>",
         help="Direct API key for LLM calls (overrides AISBOM_LLM_API_KEY).",
+    )
+    p.add_argument(
+        "--llm-api-base",
+        metavar="<url>",
+        help="Base URL for LLM calls (overrides AISBOM_LLM_API_BASE, e.g. Azure AI Foundry endpoint).",
     )
 
 
@@ -274,7 +289,7 @@ def _write_output(
 
     try:
         if fmt == "json":
-            _log.info("writing Vela-native JSON → %s", out)
+            _log.info("writing Xelo-native JSON → %s", out)
             out.write_text(SbomSerializer.to_json(doc), encoding="utf-8")
 
         elif fmt == "cyclonedx":
@@ -327,8 +342,11 @@ def _handle_unified(
         std_bom, method = gen.generate(root)
         _log.info("standard BOM generated via %s", method)
 
-    _log.info("merging standard BOM (%d components) with AI-BOM (%d nodes)",
-              len(std_bom.get("components", [])), len(ai_doc.nodes))
+    _log.info(
+        "merging standard BOM (%d components) with AI-BOM (%d nodes)",
+        len(std_bom.get("components", [])),
+        len(ai_doc.nodes),
+    )
     merger = AiBomMerger()
     unified = merger.merge(std_bom, ai_doc, generator_method=method)
 
