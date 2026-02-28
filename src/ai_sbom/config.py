@@ -36,20 +36,50 @@ def _default_llm_model() -> str:
     return "gpt-4o-mini"
 
 
+def _azure_base(url: str) -> str:
+    """Strip path from an Azure endpoint URL, leaving just scheme + host."""
+    from urllib.parse import urlparse
+    parsed = urlparse(url)
+    return f"{parsed.scheme}://{parsed.netloc}/"
+
+
 def _default_llm_api_key() -> str | None:
     explicit = os.getenv("AISBOM_LLM_API_KEY")
     if explicit:
         return explicit
-    return os.getenv("ANTHROPIC_FOUNDRY_API_KEY")
+    model = os.getenv("AISBOM_LLM_MODEL", "").lower()
+    # Azure Kimi K2 — uses dedicated key
+    if "kimi" in model:
+        return os.getenv("AZURE_KIMI_K2_KEY")
+    # Azure-hosted Anthropic (azure_ai/ prefix) — uses dedicated key
+    if "claude" in model:
+        return os.getenv("AZURE_ANTHROPIC_KEY")
+    # Legacy: anthropic/ prefix via Azure AI Foundry
+    if "anthropic" in model:
+        return os.getenv("ANTHROPIC_FOUNDRY_API_KEY")
+    # All other providers (azure/, openai, etc.) — let litellm read env vars directly
+    return None
 
 
 def _default_llm_api_base() -> str | None:
     explicit = os.getenv("AISBOM_LLM_API_BASE")
     if explicit:
         return explicit
-    resource = os.getenv("ANTHROPIC_FOUNDRY_RESOURCE")
-    if resource:
-        return f"https://{resource}.services.ai.azure.com/anthropic"
+    model = os.getenv("AISBOM_LLM_MODEL", "").lower()
+    # Azure Kimi K2 — strip dedicated endpoint to base URL
+    if "kimi" in model:
+        ep = os.getenv("AZURE_KIMI_K2_ENDPOINT", "")
+        return _azure_base(ep) if ep else None
+    # Azure-hosted Anthropic (azure_ai/ prefix) — strip dedicated endpoint to base URL
+    if "claude" in model:
+        ep = os.getenv("AZURE_ANTHROPIC_ENDPOINT", "")
+        return _azure_base(ep) if ep else None
+    # Legacy: anthropic/ prefix via Azure AI Foundry resource name
+    if "anthropic" in model:
+        resource = os.getenv("ANTHROPIC_FOUNDRY_RESOURCE")
+        if resource:
+            return f"https://{resource}.services.ai.azure.com/anthropic"
+    # All other providers — let litellm read their own env vars (AZURE_API_BASE, etc.)
     return None
 
 
