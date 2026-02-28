@@ -642,7 +642,13 @@ class SbomExtractor:
                 continue
             # Skip common irrelevant directories
             parts = set(path.parts)
-            if parts & {".git", "__pycache__", "node_modules", ".venv", "venv", ".tox"}:
+            if parts & {".git", "__pycache__", "node_modules", ".venv", "venv", ".tox", ".claude"}:
+                continue
+            # Skip .github/** except .github/workflows/**
+            if ".github" in parts and "workflows" not in parts:
+                continue
+            # Skip meta/tooling instruction files
+            if path.name in {"CLAUDE.md", "AGENTS.md"}:
                 continue
             try:
                 size = path.stat().st_size
