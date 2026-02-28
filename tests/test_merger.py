@@ -20,7 +20,6 @@ from ai_sbom.config import ExtractionConfig
 from ai_sbom.extractor import SbomExtractor
 from ai_sbom.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prompt_hash
 from ai_sbom.models import AiBomDocument
-from ai_sbom.types import ComponentType
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
 _PY_ONLY = ExtractionConfig(include_extensions={".py"}, deterministic_only=True)

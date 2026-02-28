@@ -23,7 +23,6 @@ from pathlib import Path
 import pytest
 
 from ai_sbom.adapters.registry import default_framework_adapters
-from ai_sbom.config import ExtractionConfig
 from ai_sbom.extractor import SbomExtractor
 from ai_sbom.models import AiBomDocument
 from ai_sbom.types import ComponentType, RelationshipType

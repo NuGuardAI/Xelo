@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 
 from ai_sbom.cli import _handle_schema
-from ai_sbom.config import ExtractionConfig
 from ai_sbom.extractor import SbomExtractor
 from ai_sbom.models import AiBomDocument
 from ai_sbom.serializer import SbomSerializer

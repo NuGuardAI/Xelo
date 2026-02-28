@@ -228,11 +228,11 @@ def build_deterministic_use_case_summary(
 
     node_names = [n.name.lower() for n in nodes if _node_type_str(n) in {"AGENT", "TOOL"}]
     phrase_map = {
-        "flight": "flight status support",
-        "cancel": "booking cancellation handling",
-        "seat": "seat selection updates",
+        "voice": "Voice interaction",
+        "mcp": "MCP tool integration",
+        "git": "git repository management",
         "faq": "FAQ question answering",
-        "doctor": "doctor lookup workflows",
+        "web": "web search and retrieval",
         "specialist": "specialist recommendation workflows",
         "search": "search-based retrieval",
         "triage": "request triage and routing",

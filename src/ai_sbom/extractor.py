@@ -30,7 +30,6 @@ from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 from .adapters.base import (
     ComponentDetection,

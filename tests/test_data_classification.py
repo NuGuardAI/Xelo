@@ -1,7 +1,6 @@
 """Tests for data classification — PII/PHI detection in SQL schemas and Python models."""
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 
@@ -14,7 +13,7 @@ from ai_sbom.config import ExtractionConfig
 from ai_sbom.extractor import SbomExtractor
 from ai_sbom.models import AiBomDocument
 from ai_sbom.types import ComponentType
-from conftest import APPS, PY_ONLY
+from conftest import APPS
 
 _SQL_ONLY = ExtractionConfig(include_extensions={".sql"}, deterministic_only=True)
 _SQL_AND_PY = ExtractionConfig(include_extensions={".py", ".sql"}, deterministic_only=True)

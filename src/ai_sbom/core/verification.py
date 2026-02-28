@@ -22,9 +22,9 @@ from functools import lru_cache
 from typing import Any
 from uuid import UUID
 
-_log = logging.getLogger(__name__)
-
 from ai_sbom.models import Evidence, Node
+
+_log = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Configuration from environment
