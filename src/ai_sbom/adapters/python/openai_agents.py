@@ -124,7 +124,7 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                 "has_instructions": bool(instructions),
             }
             if instructions:
-                meta["instructions_preview"] = instructions[:200]
+                meta["instructions_preview"] = instructions[:500]
                 meta["is_template"] = bool(template_vars)
                 meta["template_variables"] = template_vars
             if model_name:
@@ -163,7 +163,7 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                     confidence=0.92,
                     metadata={
                         "role": "system",
-                        "content_preview": instructions[:200],
+                        "content_preview": instructions[:500],
                         "char_count": len(instructions),
                         "is_template": bool(template_vars),
                         "template_variables": template_vars,

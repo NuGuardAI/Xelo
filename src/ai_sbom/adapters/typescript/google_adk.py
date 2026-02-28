@@ -210,7 +210,7 @@ class GoogleADKAdapter(TSFrameworkAdapter):
             # Instruction → PROMPT
             instruction = self._resolve(inst, "instruction", "system_instruction")
             if len(instruction) > 10:
-                prompt_name = f"{agent_name}_instruction"
+                prompt_name = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(prompt_name.lower())
                 rels.append(
                     RelationshipHint(
@@ -228,11 +228,11 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                         display_name=prompt_name,
                         adapter_name=self.name,
                         priority=self.priority,
-                        confidence=0.85,
+                        confidence=0.92,
                         metadata={
                             "prompt_type": "instruction",
                             "role": "system",
-                            "content_preview": instruction[:200],
+                            "content_preview": instruction[:500],
                             "language": "typescript",
                         },
                         file_path=file_path,

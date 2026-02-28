@@ -66,7 +66,17 @@ class AutoGenAdapter(FrameworkAdapter):
                     or inst.assigned_to
                     or f"agent_{inst.line}"
                 )
-                system_msg = _clean(args.get("system_message") or args.get("instructions", ""))
+                system_msg_raw = args.get("system_message") or args.get("instructions", "")
+                system_msg = _clean(system_msg_raw)
+                # Function-reference instructions: look up string literals from that function
+                if not system_msg and isinstance(system_msg_raw, str) and system_msg_raw.startswith("$"):
+                    func_name = system_msg_raw[1:]
+                    func_literals = [
+                        lit.value for lit in parse_result.string_literals
+                        if lit.context == func_name and len(lit.value) >= 40 and not lit.is_docstring
+                    ]
+                    if func_literals:
+                        system_msg = max(func_literals, key=len)
                 llm_config = args.get("llm_config")
                 rels: list[RelationshipHint] = []
                 canon = canonicalize_text(f"autogen:{agent_name}")
@@ -102,7 +112,7 @@ class AutoGenAdapter(FrameworkAdapter):
                     details = get_model_details(model_name, infer_provider(model_name))
                     meta.update({k: v for k, v in details.items() if v is not None})
                 if system_msg:
-                    meta["system_message_preview"] = system_msg[:200]
+                    meta["system_message_preview"] = system_msg[:500]
 
                 detected.append(ComponentDetection(
                     component_type=ComponentType.AGENT,
@@ -126,13 +136,13 @@ class AutoGenAdapter(FrameworkAdapter):
                     detected.append(ComponentDetection(
                         component_type=ComponentType.PROMPT,
                         canonical_name=prompt_canon,
-                        display_name=f"system_message_{inst.line}",
+                        display_name=f"{agent_name} System Message",
                         adapter_name=self.name,
                         priority=self.priority,
-                        confidence=0.80,
+                        confidence=0.90,
                         metadata={
                             "role": "system",
-                            "content_preview": system_msg[:200],
+                            "content_preview": system_msg[:500],
                             "char_count": len(system_msg),
                         },
                         file_path=file_path,

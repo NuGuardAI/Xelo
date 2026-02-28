@@ -270,7 +270,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 metadata={
                     "message_type": inst.class_name,
                     "role": role,
-                    "content_preview": content_val[:200],
+                    "content_preview": content_val[:500],
                     "char_count": len(content_val),
                     "is_template": bool(template_vars),
                     "template_variables": template_vars,
@@ -299,7 +299,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 confidence=0.60,
                 metadata={
                     "role": _detect_role_from_content(lit.value),
-                    "content_preview": lit.value[:200],
+                    "content_preview": lit.value[:500],
                     "char_count": len(lit.value),
                     "is_template": bool(template_vars),
                     "template_variables": template_vars,

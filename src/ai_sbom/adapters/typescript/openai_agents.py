@@ -135,7 +135,7 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
             # Instructions → PROMPT
             instructions = self._resolve(inst, "instructions", "system_prompt")
             if len(instructions) > 10:
-                prompt_name = f"{agent_name}_instructions"
+                prompt_name = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(prompt_name.lower())
                 rels.append(
                     RelationshipHint(
@@ -153,11 +153,11 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                         display_name=prompt_name,
                         adapter_name=self.name,
                         priority=self.priority,
-                        confidence=0.85,
+                        confidence=0.92,
                         metadata={
                             "prompt_type": "instructions",
                             "role": "system",
-                            "content_preview": instructions[:200],
+                            "content_preview": instructions[:500],
                             "language": "typescript",
                         },
                         file_path=file_path,

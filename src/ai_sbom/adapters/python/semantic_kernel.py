@@ -139,17 +139,32 @@ class SemanticKernelAdapter(FrameworkAdapter):
 
             # PromptTemplateConfig → PROMPT
             elif inst.class_name in {"PromptTemplateConfig", "KernelPromptTemplate"}:
-                template = _clean(inst.args.get("template") or inst.args.get("template_str", ""))
+                template_raw = inst.args.get("template") or inst.args.get("template_str", "")
+                template = _clean(template_raw)
+                # Function-reference template: look up string literals from that function
+                if not template and isinstance(template_raw, str) and template_raw.startswith("$"):
+                    func_name = template_raw[1:]
+                    func_literals = [
+                        lit.value for lit in parse_result.string_literals
+                        if lit.context == func_name and len(lit.value) >= 40 and not lit.is_docstring
+                    ]
+                    if func_literals:
+                        template = max(func_literals, key=len)
+                display_name = (
+                    _clean(inst.args.get("name") or inst.assigned_to or "").replace("_", " ").title()
+                    or inst.class_name
+                )
                 canon = canonicalize_text(f"semantic_kernel:prompt:{inst.line}")
                 detected.append(ComponentDetection(
                     component_type=ComponentType.PROMPT,
                     canonical_name=canon,
-                    display_name=f"prompt_{inst.line}",
+                    display_name=display_name,
                     adapter_name=self.name,
                     priority=self.priority,
-                    confidence=0.80,
+                    confidence=0.88,
                     metadata={
-                        "content_preview": template[:200] if template else "",
+                        "content_preview": template[:500] if template else "",
+                        "char_count": len(template),
                         "framework": "semantic_kernel",
                     },
                     file_path=file_path,

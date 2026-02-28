@@ -201,7 +201,9 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             if inst.class_name not in _PROMPT_CLASSES:
                 continue
             template = self._resolve(inst, "template", "0") or ""
-            name = template[:60] if len(template) > 10 else inst.class_name
+            # Use assigned variable name or class name as display; put template in content_preview
+            raw_name = self._assignment_name(result.source or "", inst.line_start) or inst.class_name
+            name = raw_name.replace("_", " ").title()
             canon = canonicalize_text(name.lower())
             detected.append(
                 ComponentDetection(
@@ -210,10 +212,12 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                     display_name=name,
                     adapter_name=self.name,
                     priority=self.priority,
-                    confidence=0.80,
+                    confidence=0.85,
                     metadata={
                         "framework": "langchain-js",
                         "prompt_class": inst.class_name,
+                        "content_preview": template[:500],
+                        "char_count": len(template),
                         "language": "typescript",
                     },
                     file_path=file_path,
