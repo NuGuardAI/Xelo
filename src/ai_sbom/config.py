@@ -53,6 +53,15 @@ def _default_llm_api_base() -> str | None:
     return None
 
 
+def _default_google_api_key() -> str | None:
+    """GCP API key for Vertex AI Gemini (?key= query param on aiplatform.googleapis.com)."""
+    return os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_CLOUD_API_KEY") or None
+
+
+def _default_vertex_location() -> str | None:
+    return os.getenv("VERTEXAI_LOCATION") or None
+
+
 class ExtractionConfig(BaseModel):
     max_files: int = Field(default=1000, ge=1, le=10000)
     max_file_size_bytes: int = Field(default=1024 * 1024, ge=1024)
@@ -75,3 +84,6 @@ class ExtractionConfig(BaseModel):
     llm_budget_tokens: int = Field(
         default_factory=lambda: _env_int("AISBOM_LLM_BUDGET_TOKENS", 50_000)
     )
+    # Vertex AI — direct httpx path (bypasses litellm when google_api_key is set)
+    google_api_key: str | None = Field(default_factory=_default_google_api_key)
+    vertex_location: str | None = Field(default_factory=_default_vertex_location)

@@ -316,8 +316,8 @@ class SbomExtractor:
                 node.metadata.registry      = acc.metadata.get("registry")
                 node.metadata.base_image    = acc.metadata.get("base_image")
 
+            node.evidence = list(acc.evidence)
             doc.nodes.append(node)
-            doc.evidence.extend(acc.evidence)
 
         self._resolve_edges(doc, node_map)
 
@@ -578,8 +578,10 @@ class SbomExtractor:
             api_key=config.llm_api_key,
             api_base=config.llm_api_base,
             budget_tokens=config.llm_budget_tokens,
+            google_api_key=config.google_api_key,
+            vertex_location=config.vertex_location,
         )
-        evidence_map = _build_evidence_map(doc)
+        evidence_map = {n.id: n.evidence for n in doc.nodes}
 
         # Step 1: Verify uncertain detections
         results, v_stats = await verify_uncertain_nodes(
@@ -671,44 +673,6 @@ def _make_scan_summary(d: dict[str, Any]) -> ScanSummary:
         data_classification=d.get("data_classification") or [],
         classified_tables=d.get("classified_tables") or [],
     )
-
-
-def _build_evidence_map(doc: AiBomDocument) -> dict[UUID, list[Evidence]]:
-    """Build a mapping from node.id to its evidence items.
-
-    Evidence items are matched to nodes by checking whether the evidence
-    detail starts with the node's adapter name (set by ``_merge_detection``
-    as ``"<adapter_name>: <snippet>"``).
-    """
-    # Build a lookup: canonical_name → node.id
-    canon_to_id: dict[str, UUID] = {}
-    for node in doc.nodes:
-        canon = node.metadata.extras.get("canonical_name", "")
-        if canon:
-            canon_to_id[canon] = node.id
-
-    # Map adapter name prefix → node.id (via canonical_name lookup)
-    adapter_to_id: dict[str, UUID] = {}
-    for node in doc.nodes:
-        adapter = node.metadata.extras.get("adapter", "")
-        if adapter and node.id not in adapter_to_id.values():
-            adapter_to_id[f"{adapter}:"] = node.id
-
-    evidence_map: dict[UUID, list[Evidence]] = {n.id: [] for n in doc.nodes}
-    for ev in doc.evidence:
-        # Evidence detail format: "<adapter_name>: <snippet>"
-        matched = False
-        for prefix, nid in adapter_to_id.items():
-            if ev.detail.startswith(prefix):
-                evidence_map[nid].append(ev)
-                matched = True
-                break
-        if not matched:
-            # Assign to first node as fallback (shouldn't happen often)
-            if doc.nodes:
-                evidence_map[doc.nodes[0].id].append(ev)
-
-    return evidence_map
 
 
 def stable_id(value: str) -> str:

@@ -103,6 +103,14 @@
         },
         "metadata": {
           "$ref": "#/$defs/NodeMetadata"
+        },
+        "evidence": {
+          "description": "Detection evidence supporting this node",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
         }
       },
       "required": [
@@ -523,12 +531,12 @@
       "type": "object"
     }
   },
-  "$id": "https://nuguard.ai/schemas/aibom/1.0.0/aibom.schema.json",
+  "$id": "https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "AI Bill of Materials document produced by Xelo.\n\nThis is the canonical output format.  Use ``SbomSerializer.to_json()``\nto serialise and ``AiBomDocument.model_validate()`` to parse and validate.",
   "properties": {
     "schema_version": {
-      "default": "1.0.0",
+      "default": "1.1.0",
       "description": "AIBOM schema version (semver); bump when format changes",
       "title": "Schema Version",
       "type": "string"
@@ -564,14 +572,6 @@
         "$ref": "#/$defs/Edge"
       },
       "title": "Edges",
-      "type": "array"
-    },
-    "evidence": {
-      "description": "Detection evidence items (one or more per node)",
-      "items": {
-        "$ref": "#/$defs/Evidence"
-      },
-      "title": "Evidence",
       "type": "array"
     },
     "deps": {

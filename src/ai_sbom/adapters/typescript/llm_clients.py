@@ -1,4 +1,4 @@
-"""Common LLM Clients TypeScript Adapter for Velo SBOM.
+"""Common LLM Clients TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -10,6 +10,7 @@ Supports:
 - Azure OpenAI
 - Cohere, Mistral, Groq, Together AI
 """
+
 from __future__ import annotations
 
 import re
@@ -118,7 +119,7 @@ class LLMClientTSAdapter(TSFrameworkAdapter):
         if not self._detect(result):
             return []
 
-        detected: list[ComponentDetection] = [self._fw_node(file_path)]
+        detected: list[ComponentDetection] = []
 
         imported_providers: set[str] = set()
         for imp in result.imports:
@@ -137,26 +138,28 @@ class LLMClientTSAdapter(TSFrameworkAdapter):
                 continue
             is_azure = "Azure" in inst.class_name or "azure" in str(inst.resolved_arguments).lower()
             effective_provider = "azure" if is_azure else provider
-            detected.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=canonicalize_text(model_name.lower()),
-                display_name=model_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "client_class": inst.class_name,
-                    "provider": effective_provider,
-                    "is_azure": is_azure,
-                    "model_card_url": _MODEL_CARD_URLS.get(effective_provider),
-                    "api_endpoint": _DEFAULT_ENDPOINTS.get(effective_provider),
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=canonicalize_text(model_name.lower()),
+                    display_name=model_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "client_class": inst.class_name,
+                        "provider": effective_provider,
+                        "is_azure": is_azure,
+                        "model_card_url": _MODEL_CARD_URLS.get(effective_provider),
+                        "api_endpoint": _DEFAULT_ENDPOINTS.get(effective_provider),
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # --- API call patterns: client.chat.completions.create({ model: "gpt-4o" }) ---
         for call in result.function_calls:
@@ -174,25 +177,27 @@ class LLMClientTSAdapter(TSFrameworkAdapter):
                 provider = "google"
             else:
                 provider = "openai"
-            detected.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=canonicalize_text(model_name.lower()),
-                display_name=model_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.88,
-                metadata={
-                    "api_call": fn,
-                    "provider": provider,
-                    "model_card_url": _MODEL_CARD_URLS.get(provider),
-                    "api_endpoint": _DEFAULT_ENDPOINTS.get(provider),
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=call.line_start,
-                snippet=call.source_snippet or f"{fn}(...)",
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=canonicalize_text(model_name.lower()),
+                    display_name=model_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.88,
+                    metadata={
+                        "api_call": fn,
+                        "provider": provider,
+                        "model_card_url": _MODEL_CARD_URLS.get(provider),
+                        "api_endpoint": _DEFAULT_ENDPOINTS.get(provider),
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=call.source_snippet or f"{fn}(...)",
+                    evidence_kind="ast_call",
+                )
+            )
 
         return detected
 

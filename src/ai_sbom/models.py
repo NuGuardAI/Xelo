@@ -97,6 +97,10 @@ class Node(BaseModel):
         description="Extraction confidence [0, 1]",
     )
     metadata: NodeMetadata = Field(default_factory=NodeMetadata)
+    evidence: list[Evidence] = Field(
+        default_factory=list,
+        description="Detection evidence supporting this node",
+    )
 
 
 class Edge(BaseModel):
@@ -180,12 +184,12 @@ class AiBomDocument(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "https://nuguard.ai/schemas/aibom/1.0.0/aibom.schema.json",
+            "$id": "https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json",
         }
     )
 
     schema_version: str = Field(
-        default="1.0.0",
+        default="1.1.0",
         description="AIBOM schema version (semver); bump when format changes",
     )
     generated_at: datetime = Field(
@@ -204,10 +208,6 @@ class AiBomDocument(BaseModel):
     edges: list[Edge] = Field(
         default_factory=list,
         description="Directed relationships between components",
-    )
-    evidence: list[Evidence] = Field(
-        default_factory=list,
-        description="Detection evidence items (one or more per node)",
     )
     deps: list[PackageDep] = Field(
         default_factory=list,

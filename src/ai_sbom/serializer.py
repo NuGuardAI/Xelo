@@ -57,7 +57,7 @@ class SbomSerializer:
     @staticmethod
     def to_json(doc: AiBomDocument) -> str:
         """Serialise to Xelo-native JSON (Pydantic schema)."""
-        return doc.model_dump_json(indent=2)
+        return doc.model_dump_json(indent=2, exclude_none=True)
 
     @staticmethod
     def to_cyclonedx(

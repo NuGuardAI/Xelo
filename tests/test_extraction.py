@@ -314,9 +314,10 @@ class TestOpenAIAgentsTriage:
         assert uses
 
     def test_evidence_quality(self, doc: AiBomDocument) -> None:
-        for ev in doc.evidence:
-            assert ev.location is not None
-            assert ev.confidence > 0
+        for node in doc.nodes:
+            for ev in node.evidence:
+                assert ev.location is not None
+                assert ev.confidence > 0
 
 
 class TestCrewAIBlogTeam:

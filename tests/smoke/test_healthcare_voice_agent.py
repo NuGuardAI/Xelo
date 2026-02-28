@@ -1,7 +1,7 @@
 """
 Smoke test: NuGuardAI/Healthcare-voice-agent
 
-Clones the public repository and asserts that Velo correctly extracts the
+Clones the public repository and asserts that Xelo correctly extracts the
 AI Bill of Materials for a real-world healthcare AI application:
 
 Architecture under test
@@ -24,6 +24,7 @@ Skip in offline / CI environments:
   pytest tests/smoke/ -m "smoke and not network"
   or set AISBOM_SMOKE_SKIP=1
 """
+
 from __future__ import annotations
 
 import os
@@ -42,15 +43,14 @@ from ai_sbom.types import ComponentType
 
 pytestmark = pytest.mark.smoke
 
-_SKIP_REASON = (
-    "Set AISBOM_SMOKE_SKIP=1 or ensure git is available to run network smoke tests"
-)
+_SKIP_REASON = "Set AISBOM_SMOKE_SKIP=1 or ensure git is available to run network smoke tests"
 
 
 def _should_skip() -> bool:
     if os.environ.get("AISBOM_SMOKE_SKIP", "").strip() == "1":
         return True
     import shutil
+
     return shutil.which("git") is None
 
 
@@ -82,6 +82,7 @@ def _build_repo_url() -> str:
 # Shared fixture: clone once per session
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture(scope="module")
 def doc() -> AiBomDocument:
     if _should_skip():
@@ -102,8 +103,9 @@ def _adapters(doc: AiBomDocument) -> set[str]:
 # Framework detection
 # ---------------------------------------------------------------------------
 
+
 class TestFrameworkDetection:
-    """Velo should detect both the Python LangGraph and Google GenAI (JS) frameworks."""
+    """Xelo should detect both the Python LangGraph and Google GenAI (JS) frameworks."""
 
     @skip_if_offline
     def test_detects_langgraph_framework(self, doc: AiBomDocument) -> None:
@@ -121,6 +123,7 @@ class TestFrameworkDetection:
 # ---------------------------------------------------------------------------
 # Agent detection (LangGraph graph nodes)
 # ---------------------------------------------------------------------------
+
 
 class TestAgentDetection:
     """The five StateGraph nodes should be detected as AGENT components."""
@@ -173,6 +176,7 @@ class TestAgentDetection:
 # Model detection
 # ---------------------------------------------------------------------------
 
+
 class TestModelDetection:
     """GPT-4 (backend) and Gemini 2.0 Flash (frontend) should both appear."""
 
@@ -186,9 +190,9 @@ class TestModelDetection:
     @skip_if_offline
     def test_gpt4_has_openai_provider(self, doc: AiBomDocument) -> None:
         gpt4_nodes = [
-            n for n in doc.nodes
-            if n.component_type == ComponentType.MODEL
-            and "gpt-4" in n.name.lower()
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.MODEL and "gpt-4" in n.name.lower()
         ]
         assert gpt4_nodes, "GPT-4 node not found"
         assert gpt4_nodes[0].metadata.extras.get("provider") == "openai", (
@@ -208,9 +212,9 @@ class TestModelDetection:
         # The regex model_generic node for "gemini-2.0" (no provider) may also
         # exist; we assert that at least one Gemini node has provider=google.
         gemini_nodes = [
-            n for n in doc.nodes
-            if n.component_type == ComponentType.MODEL
-            and "gemini" in n.name.lower()
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.MODEL and "gemini" in n.name.lower()
         ]
         assert gemini_nodes, "No Gemini model node found"
         assert any(n.metadata.extras.get("provider") == "google" for n in gemini_nodes), (
@@ -230,6 +234,7 @@ class TestModelDetection:
 # Prompt detection
 # ---------------------------------------------------------------------------
 
+
 class TestPromptDetection:
     """System prompts (SystemMessage calls in Python, system instruction in JS)
     should be captured as PROMPT components."""
@@ -246,6 +251,7 @@ class TestPromptDetection:
 # ---------------------------------------------------------------------------
 # Edge / relationship detection
 # ---------------------------------------------------------------------------
+
 
 class TestRelationships:
     """Agents should have USES → MODEL edges (LangGraph fallback inference)."""
@@ -267,6 +273,7 @@ class TestRelationships:
 # Document quality
 # ---------------------------------------------------------------------------
 
+
 class TestDocumentQuality:
     """Basic quality checks on the extracted document."""
 
@@ -281,9 +288,10 @@ class TestDocumentQuality:
 
     @skip_if_offline
     def test_all_evidence_has_location(self, doc: AiBomDocument) -> None:
-        for ev in doc.evidence:
-            assert ev.location is not None, "Evidence item missing location"
-            assert ev.location.path, "Evidence location has empty path"
+        for node in doc.nodes:
+            for ev in node.evidence:
+                assert ev.location is not None, "Evidence item missing location"
+                assert ev.location.path, "Evidence location has empty path"
 
     @skip_if_offline
     def test_deterministic_extraction(self) -> None:
@@ -299,6 +307,7 @@ class TestDocumentQuality:
     @skip_if_offline
     def test_json_serializable(self, doc: AiBomDocument) -> None:
         from ai_sbom.serializer import SbomSerializer
+
         json_str = SbomSerializer().to_json(doc)
         assert '"schema_version"' in json_str
         assert '"nodes"' in json_str
@@ -306,6 +315,7 @@ class TestDocumentQuality:
     @skip_if_offline
     def test_cyclonedx_output(self, doc: AiBomDocument) -> None:
         from ai_sbom.serializer import SbomSerializer
+
         cdx = SbomSerializer().to_cyclonedx(doc)
         assert cdx.get("bomFormat") == "CycloneDX"
         # CycloneDX components = AI nodes + package dep libraries
@@ -316,15 +326,16 @@ class TestDocumentQuality:
 # Snapshot — print summary when run with -s for manual inspection
 # ---------------------------------------------------------------------------
 
+
 @skip_if_offline
 def test_print_summary(doc: AiBomDocument) -> None:
     """Print a human-readable extraction summary (visible with pytest -s)."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Healthcare Voice Agent — SBOM Extraction Summary")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Total nodes  : {len(doc.nodes)}")
     print(f"Total edges  : {len(doc.edges)}")
-    print(f"Total evidence: {len(doc.evidence)}")
+    print(f"Total evidence: {sum(len(n.evidence) for n in doc.nodes)}")
     print()
     by_type: dict[str, list[str]] = {}
     for node in sorted(doc.nodes, key=lambda n: (n.component_type.value, n.name)):
@@ -339,4 +350,4 @@ def test_print_summary(doc: AiBomDocument) -> None:
         print(f"{ctype}:")
         for e in entries:
             print(e)
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")

@@ -1,4 +1,4 @@
-"""Prompt & PromptTemplate Detection TypeScript Adapter for Velo SBOM.
+"""Prompt & PromptTemplate Detection TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).  The tree-sitter path provides accurate
@@ -11,6 +11,7 @@ Supports:
 - Template literal strings that look like prompts
 - Injection risk scoring based on variable sources
 """
+
 from __future__ import annotations
 
 import re
@@ -41,12 +42,26 @@ _PROMPT_CLASSES = {
 }
 
 _PROMPT_KEYWORDS = [
-    "you are", "your task", "as an ai", "as a helpful",
-    "given the following", "answer the question", "respond in",
-    "return json", "output format", "few-shot", "examples:",
-    "system:", "user:", "assistant:", "human:",
-    "instructions:", "context:", "question:",
-    "summarize", "translate",
+    "you are",
+    "your task",
+    "as an ai",
+    "as a helpful",
+    "given the following",
+    "answer the question",
+    "respond in",
+    "return json",
+    "output format",
+    "few-shot",
+    "examples:",
+    "system:",
+    "user:",
+    "assistant:",
+    "human:",
+    "instructions:",
+    "context:",
+    "question:",
+    "summarize",
+    "translate",
 ]
 
 _ROLE_MARKERS = {
@@ -62,8 +77,15 @@ _TEMPLATE_VAR_RES = [
 ]
 
 _JSDOC_MARKERS = [
-    "@param", "@returns", "@return", "@throws", "@example",
-    "@deprecated", "@type", "@typedef", "@property",
+    "@param",
+    "@returns",
+    "@return",
+    "@throws",
+    "@example",
+    "@deprecated",
+    "@type",
+    "@typedef",
+    "@property",
 ]
 
 _HIGH_RISK_RE = re.compile(
@@ -86,7 +108,15 @@ def _is_likely_prompt(lit: TSStringLiteral) -> bool:
     # JSDoc block — only count as prompt if it has strong role/system cues
     jsdoc_count = sum(1 for m in _JSDOC_MARKERS if m in text_lower)
     if jsdoc_count >= 1:
-        strong = ["you are", "your task is", "as an ai", "{context}", "{question}", "system:", "user:"]
+        strong = [
+            "you are",
+            "your task is",
+            "as an ai",
+            "{context}",
+            "{question}",
+            "system:",
+            "user:",
+        ]
         if not any(s in text_lower for s in strong):
             return False
 
@@ -177,8 +207,7 @@ class PromptTSAdapter(TSFrameworkAdapter):
     handles_imports = _PROMPT_PACKAGES
 
     def can_handle(self, imports_present: set[str]) -> bool:
-        # Always run — prompts can appear in any file; _detect will filter
-        return True
+        return super().can_handle(imports_present)
 
     def extract(
         self,
@@ -193,7 +222,6 @@ class PromptTSAdapter(TSFrameworkAdapter):
         )
 
         detected: list[ComponentDetection] = []
-        emitted_fw = False
         source = result.source or content
 
         # --- PromptTemplate class instantiations ---
@@ -201,37 +229,40 @@ class PromptTSAdapter(TSFrameworkAdapter):
             ns = _PROMPT_CLASSES.get(inst.class_name)
             if ns is None:
                 continue
-            if not emitted_fw:
-                detected.append(self._fw_node(file_path))
-                emitted_fw = True
             template = self._resolve(inst, "template", "0") or ""
             all_vars = _extract_vars(template)
             risk = _injection_risk(template, all_vars, source)
-            name = _prompt_name(
-                TSStringLiteral(value=template, line_number=inst.line_start),
-                inst.line_start,
-            ) if template else inst.class_name
+            name = (
+                _prompt_name(
+                    TSStringLiteral(value=template, line_number=inst.line_start),
+                    inst.line_start,
+                )
+                if template
+                else inst.class_name
+            )
             canon = canonicalize_text(name.lower())
-            detected.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=canon,
-                display_name=name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "is_template": True,
-                    "template_class": inst.class_name,
-                    "template_variables": all_vars,
-                    "injection_risk_score": risk,
-                    "content_preview": template[:200],
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=canon,
+                    display_name=name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "is_template": True,
+                        "template_class": inst.class_name,
+                        "template_variables": all_vars,
+                        "injection_risk_score": risk,
+                        "content_preview": template[:200],
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # --- Prompt-like string literals ---
         # tree-sitter provides accurate context (variable name, property key, function name)
@@ -245,32 +276,31 @@ class PromptTSAdapter(TSFrameworkAdapter):
             risk = _injection_risk(lit.value, template_vars, source) if template_vars else 0.0
             name = _prompt_name(lit, lit.line_number)
             canon = canonicalize_text(name.lower())
-            if not emitted_fw:
-                detected.append(self._fw_node(file_path))
-                emitted_fw = True
-            detected.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=canon,
-                display_name=name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.75 if template_vars else 0.65,
-                metadata={
-                    "is_template": len(template_vars) > 0,
-                    "is_template_literal": lit.is_template,
-                    "template_variables": template_vars,
-                    "injection_risk_score": risk,
-                    "role": _detect_role(lit.value),
-                    "context": lit.context,
-                    "enclosing_function": lit.enclosing_function,
-                    "content_preview": lit.value[:200].replace("\n", " "),
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=lit.line_number,
-                snippet=lit.value[:80],
-                evidence_kind="ast_string_literal",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=canon,
+                    display_name=name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.75 if template_vars else 0.65,
+                    metadata={
+                        "is_template": len(template_vars) > 0,
+                        "is_template_literal": lit.is_template,
+                        "template_variables": template_vars,
+                        "injection_risk_score": risk,
+                        "role": _detect_role(lit.value),
+                        "context": lit.context,
+                        "enclosing_function": lit.enclosing_function,
+                        "content_preview": lit.value[:200].replace("\n", " "),
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=lit.line_number,
+                    snippet=lit.value[:80],
+                    evidence_kind="ast_string_literal",
+                )
+            )
 
         return detected
 
