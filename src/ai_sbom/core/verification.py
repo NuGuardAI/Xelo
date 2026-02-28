@@ -14,12 +14,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Any
 from uuid import UUID
+
+_log = logging.getLogger(__name__)
 
 from ai_sbom.models import Evidence, Node
 
@@ -378,15 +381,10 @@ async def verify_uncertain_nodes(
             else:
                 stats.rejected_count += 1
         except Exception as exc:  # noqa: BLE001
-            results.append(VerificationResult(
-                node_id=node.id,
-                original_name=node.name,
-                verified=False,
-                original_confidence=node.confidence,
-                new_confidence=0.4,
-                reason=f"Verification failed: {exc}",
-            ))
-            stats.rejected_count += 1
+            # On API/network failure, skip verification entirely — node keeps
+            # its original confidence rather than being incorrectly rejected.
+            _log.warning("Verification skipped for node %r: %s", node.name, exc)
+            stats.skipped_count += 1
 
     stats.total_cost = cost_used
     return results, stats

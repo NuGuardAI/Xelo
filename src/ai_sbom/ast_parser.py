@@ -320,6 +320,16 @@ class _AstExtractor(ast.NodeVisitor):
             self._visit_call(node, assigned_to=None)
             name = self._get_call_name(node)
             return f"${name}" if name else None
+        if isinstance(node, ast.JoinedStr):
+            # F-string: extract static text parts, replacing {expr} with {…}
+            parts: list[str] = []
+            for part in node.values:
+                if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                    parts.append(part.value)
+                else:
+                    parts.append("{…}")
+            text = "".join(parts)
+            return text if text.strip() else None
         return None
 
 

@@ -107,6 +107,17 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                             relationship_type="CALLS",
                         ))
 
+            # If instructions is a function reference, find string literals from that function
+            instructions_raw = args.get("instructions") or args.get("system_prompt", "")
+            if not instructions and isinstance(instructions_raw, str) and instructions_raw.startswith("$"):
+                func_name = instructions_raw[1:]  # strip "$"
+                func_literals = [
+                    lit.value for lit in parse_result.string_literals
+                    if lit.context == func_name and len(lit.value) >= 40 and not lit.is_docstring
+                ]
+                if func_literals:
+                    instructions = max(func_literals, key=len)
+
             template_vars = _TEMPLATE_VAR_RE.findall(instructions) if instructions else []
             meta: dict[str, Any] = {
                 "framework": "openai_agents",
@@ -141,14 +152,15 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
 
             # Instructions as PROMPT node
             if instructions and len(instructions) >= 40:
+                prompt_display = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(f"openai_agents:prompt:{inst.line}")
                 detected.append(ComponentDetection(
                     component_type=ComponentType.PROMPT,
                     canonical_name=prompt_canon,
-                    display_name=f"instructions_{inst.line}",
+                    display_name=prompt_display,
                     adapter_name=self.name,
                     priority=self.priority,
-                    confidence=0.85,
+                    confidence=0.92,
                     metadata={
                         "role": "system",
                         "content_preview": instructions[:200],
