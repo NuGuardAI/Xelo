@@ -18,6 +18,7 @@ Resolution order
 The output is always a CycloneDX 1.6 BOM ``dict`` compatible with
 ``AiBomMerger.merge()``.
 """
+
 from __future__ import annotations
 
 import json
@@ -127,11 +128,12 @@ class CycloneDxGenerator:
                 return bom, method
             _log.warning(
                 "cyclonedx-py is installed but no supported lock/requirements file "
-                "found under %s — falling back to dep-scanner", root
+                "found under %s — falling back to dep-scanner",
+                root,
             )
         else:
             _log.warning(
-                "cyclonedx-py not available (install with: pip install vela[cdx]); "
+                "cyclonedx-py not available (install with: pip install xelo[cdx]); "
                 "using shallow dep-scanner fallback"
             )
 
@@ -160,8 +162,7 @@ class CycloneDxGenerator:
 
         # requirements.txt variants (most common)
         # Pass the filename relative to root so it resolves correctly from cwd=root.
-        for req_file in ("requirements.txt", "requirements/base.txt",
-                         "requirements/prod.txt"):
+        for req_file in ("requirements.txt", "requirements/base.txt", "requirements/prod.txt"):
             if (root / req_file).exists():
                 _log.info("%s detected — trying cyclonedx-py requirements", req_file)
                 bom = _run_cdx(["requirements", req_file], root)
@@ -190,8 +191,10 @@ class CycloneDxGenerator:
         ]
         bom["dependencies"] = []
         bom.setdefault("metadata", {})["properties"] = [
-            {"name": "cdx:generator", "value": "vela-dep-scanner"},
-            {"name": "cdx:note", "value":
-             "Shallow manifest scan only — install cyclonedx-bom for full SBOM"},
+            {"name": "cdx:generator", "value": "xelo-dep-scanner"},
+            {
+                "name": "cdx:note",
+                "value": "Shallow manifest scan only — install cyclonedx-bom for full SBOM",
+            },
         ]
         return bom

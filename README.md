@@ -29,19 +29,19 @@ pip install -e ".[dev]"
 Generate an AI-BOM from a local path:
 
 ```bash
-Xelo scan path ./my-repo --format json --output sbom.json
+xelo scan path ./my-repo --format json --output sbom.json
 ```
 
 Validate a generated document:
 
 ```bash
-Xelo validate sbom.json
+xelo validate sbom.json
 ```
 
 Export the JSON schema used by the models:
 
 ```bash
-Xelo schema --output ai_bom.schema.json
+xelo schema --output ai_bom.schema.json
 ```
 
 CLI alias: `ai-sbom`.
@@ -50,16 +50,16 @@ CLI alias: `ai-sbom`.
 
 | Command | Description |
 | --- | --- |
-| `Xelo scan path <PATH>` | Scan a local repository path |
-| `Xelo scan repo <URL>` | Clone and scan a remote repository |
-| `Xelo validate <FILE>` | Validate AI-BOM JSON against schema models |
-| `Xelo schema --output <FILE>` | Export schema JSON |
+| `xelo scan path <PATH>` | Scan a local repository path |
+| `xelo scan repo <URL>` | Clone and scan a remote repository |
+| `xelo validate <FILE>` | Validate AI-BOM JSON against schema models |
+| `xelo schema --output <FILE>` | Export schema JSON |
 
-Run `Xelo --help` or `Xelo <command> --help` for all flags.
+Run `xelo --help` or `xelo <command> --help` for all flags.
 
 ## Configuration
 
-`Xelo scan` can be configured via `.env` values and CLI flags. CLI flags take precedence.
+`xelo scan` can be configured via `.env` values and CLI flags. CLI flags take precedence.
 
 Environment variables:
 
@@ -71,7 +71,7 @@ Environment variables:
 Example enabling enrichment:
 
 ```bash
-Xelo scan path ./my-repo --enable-llm --llm-model gpt-4o-mini --output sbom.json
+xelo scan path ./my-repo --enable-llm --llm-model gpt-4o-mini --output sbom.json
 ```
 
 ## DeXelopment

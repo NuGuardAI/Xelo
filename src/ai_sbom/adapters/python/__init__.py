@@ -1,4 +1,5 @@
-"""Python-specific framework adapters for Velo SBOM extraction."""
+"""Python-specific framework adapters for Xelo SBOM extraction."""
+
 from .autogen import AutoGenAdapter
 from .crewai import CrewAIAdapter
 from .langgraph import LangGraphAdapter

@@ -1,9 +1,10 @@
-"""Shared helpers for all Velo tests.
+"""Shared helpers for all Xelo tests.
 
 Import these directly in test modules::
 
     from conftest import APPS, FIXTURES, PY_ONLY, extract, nodes, names, adapters
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -33,6 +34,7 @@ PY_ONLY: ExtractionConfig = ExtractionConfig(
 # ---------------------------------------------------------------------------
 # Extraction helpers
 # ---------------------------------------------------------------------------
+
 
 def extract(path: Path, config: ExtractionConfig | None = None) -> AiBomDocument:
     """Run SbomExtractor on *path* using *config* (default: PY_ONLY)."""

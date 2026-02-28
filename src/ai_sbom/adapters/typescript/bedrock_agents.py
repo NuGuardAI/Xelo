@@ -1,4 +1,4 @@
-"""AWS Bedrock Agents TypeScript Adapter for Velo SBOM.
+"""AWS Bedrock Agents TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -9,6 +9,7 @@ Extracts:
 - InvokeInlineAgentCommand → Inline agents with model/instructions/tools
 - RetrieveCommand / RetrieveAndGenerateCommand → Knowledge base (Datastore) nodes
 """
+
 from __future__ import annotations
 
 import re
@@ -87,7 +88,9 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
 
     # ------------------------------------------------------------------
 
-    def _invoke_agent(self, file_path: str, line: int, args: dict[str, Any]) -> list[ComponentDetection]:
+    def _invoke_agent(
+        self, file_path: str, line: int, args: dict[str, Any]
+    ) -> list[ComponentDetection]:
         agent_id = self._clean(args.get("agentId", ""))
         agent_alias = self._clean(args.get("agentAliasId", ""))
         agent_name = agent_id or f"bedrock_agent_{line}"
@@ -98,52 +101,58 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
         input_text = self._clean(args.get("inputText", ""))
         if len(input_text) > 5:
             prompt_canon = canonicalize_text(f"{agent_name}_input")
-            rels.append(RelationshipHint(
-                source_canonical=agent_canon,
-                source_type=ComponentType.AGENT,
-                target_canonical=prompt_canon,
-                target_type=ComponentType.PROMPT,
-                relationship_type="USES",
-            ))
-            out.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=prompt_canon,
-                display_name=f"{agent_name}_input",
+            rels.append(
+                RelationshipHint(
+                    source_canonical=agent_canon,
+                    source_type=ComponentType.AGENT,
+                    target_canonical=prompt_canon,
+                    target_type=ComponentType.PROMPT,
+                    relationship_type="USES",
+                )
+            )
+            out.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=prompt_canon,
+                    display_name=f"{agent_name}_input",
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.80,
+                    metadata={
+                        "prompt_type": "agent_input",
+                        "role": "user",
+                        "content_preview": input_text[:200],
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=line,
+                    snippet=input_text[:80],
+                    evidence_kind="ast_instantiation",
+                )
+            )
+
+        out.append(
+            ComponentDetection(
+                component_type=ComponentType.AGENT,
+                canonical_name=agent_canon,
+                display_name=agent_name,
                 adapter_name=self.name,
                 priority=self.priority,
-                confidence=0.80,
+                confidence=0.90,
                 metadata={
-                    "prompt_type": "agent_input",
-                    "role": "user",
-                    "content_preview": input_text[:200],
+                    "agent_id": agent_id,
+                    "agent_alias_id": agent_alias,
+                    "framework": "aws-bedrock",
+                    "command": "InvokeAgentCommand",
                     "language": "typescript",
                 },
                 file_path=file_path,
                 line=line,
-                snippet=input_text[:80],
+                snippet=f"new InvokeAgentCommand({{agentId: {agent_id!r}}})",
                 evidence_kind="ast_instantiation",
-            ))
-
-        out.append(ComponentDetection(
-            component_type=ComponentType.AGENT,
-            canonical_name=agent_canon,
-            display_name=agent_name,
-            adapter_name=self.name,
-            priority=self.priority,
-            confidence=0.90,
-            metadata={
-                "agent_id": agent_id,
-                "agent_alias_id": agent_alias,
-                "framework": "aws-bedrock",
-                "command": "InvokeAgentCommand",
-                "language": "typescript",
-            },
-            file_path=file_path,
-            line=line,
-            snippet=f"new InvokeAgentCommand({{agentId: {agent_id!r}}})",
-            evidence_kind="ast_instantiation",
-            relationships=rels,
-        ))
+                relationships=rels,
+            )
+        )
         return out
 
     def _inline_agent(
@@ -158,81 +167,91 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
         if fm:
             info = _model_info(fm)
             model_canon = canonicalize_text(fm.lower())
-            rels.append(RelationshipHint(
-                source_canonical=agent_canon,
-                source_type=ComponentType.AGENT,
-                target_canonical=model_canon,
-                target_type=ComponentType.MODEL,
-                relationship_type="USES",
-            ))
-            out.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=model_canon,
-                display_name=fm,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "model_id": fm,
-                    "provider": info.get("provider", "aws"),
-                    "family": info.get("family"),
-                    "source": "InvokeInlineAgentCommand",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=line,
-                snippet=f"foundationModel={fm!r}",
-                evidence_kind="ast_instantiation",
-            ))
+            rels.append(
+                RelationshipHint(
+                    source_canonical=agent_canon,
+                    source_type=ComponentType.AGENT,
+                    target_canonical=model_canon,
+                    target_type=ComponentType.MODEL,
+                    relationship_type="USES",
+                )
+            )
+            out.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=model_canon,
+                    display_name=fm,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "model_id": fm,
+                        "provider": info.get("provider", "aws"),
+                        "family": info.get("family"),
+                        "source": "InvokeInlineAgentCommand",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=line,
+                    snippet=f"foundationModel={fm!r}",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         instruction = self._clean(args.get("instruction", ""))
         if len(instruction) > 5:
             prompt_canon = canonicalize_text(f"{agent_name}_instruction")
-            rels.append(RelationshipHint(
-                source_canonical=agent_canon,
-                source_type=ComponentType.AGENT,
-                target_canonical=prompt_canon,
-                target_type=ComponentType.PROMPT,
-                relationship_type="USES",
-            ))
-            out.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=prompt_canon,
-                display_name=f"{agent_name}_instruction",
+            rels.append(
+                RelationshipHint(
+                    source_canonical=agent_canon,
+                    source_type=ComponentType.AGENT,
+                    target_canonical=prompt_canon,
+                    target_type=ComponentType.PROMPT,
+                    relationship_type="USES",
+                )
+            )
+            out.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=prompt_canon,
+                    display_name=f"{agent_name}_instruction",
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "prompt_type": "instruction",
+                        "role": "system",
+                        "content_preview": instruction[:200],
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=line,
+                    snippet=instruction[:80],
+                    evidence_kind="ast_instantiation",
+                )
+            )
+
+        out.append(
+            ComponentDetection(
+                component_type=ComponentType.AGENT,
+                canonical_name=agent_canon,
+                display_name=agent_name,
                 adapter_name=self.name,
                 priority=self.priority,
-                confidence=0.85,
+                confidence=0.90,
                 metadata={
-                    "prompt_type": "instruction",
-                    "role": "system",
-                    "content_preview": instruction[:200],
+                    "framework": "aws-bedrock",
+                    "command": "InvokeInlineAgentCommand",
+                    "is_inline": True,
                     "language": "typescript",
                 },
                 file_path=file_path,
                 line=line,
-                snippet=instruction[:80],
+                snippet="new InvokeInlineAgentCommand({...})",
                 evidence_kind="ast_instantiation",
-            ))
-
-        out.append(ComponentDetection(
-            component_type=ComponentType.AGENT,
-            canonical_name=agent_canon,
-            display_name=agent_name,
-            adapter_name=self.name,
-            priority=self.priority,
-            confidence=0.90,
-            metadata={
-                "framework": "aws-bedrock",
-                "command": "InvokeInlineAgentCommand",
-                "is_inline": True,
-                "language": "typescript",
-            },
-            file_path=file_path,
-            line=line,
-            snippet="new InvokeInlineAgentCommand({...})",
-            evidence_kind="ast_instantiation",
-            relationships=rels,
-        ))
+                relationships=rels,
+            )
+        )
         return out
 
     def _kb_command(
@@ -242,49 +261,53 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
         kb_name = kb_id or f"knowledge_base_{line}"
         out: list[ComponentDetection] = []
 
-        out.append(ComponentDetection(
-            component_type=ComponentType.DATASTORE,
-            canonical_name=canonicalize_text(kb_name.lower()),
-            display_name=kb_name,
-            adapter_name=self.name,
-            priority=self.priority,
-            confidence=0.90,
-            metadata={
-                "datastore_type": "knowledge_base",
-                "knowledge_base_id": kb_id,
-                "command": command,
-                "framework": "aws-bedrock",
-                "language": "typescript",
-            },
-            file_path=file_path,
-            line=line,
-            snippet=f"new {command}({{knowledgeBaseId: {kb_id!r}}})",
-            evidence_kind="ast_instantiation",
-        ))
+        out.append(
+            ComponentDetection(
+                component_type=ComponentType.DATASTORE,
+                canonical_name=canonicalize_text(kb_name.lower()),
+                display_name=kb_name,
+                adapter_name=self.name,
+                priority=self.priority,
+                confidence=0.90,
+                metadata={
+                    "datastore_type": "knowledge_base",
+                    "knowledge_base_id": kb_id,
+                    "command": command,
+                    "framework": "aws-bedrock",
+                    "language": "typescript",
+                },
+                file_path=file_path,
+                line=line,
+                snippet=f"new {command}({{knowledgeBaseId: {kb_id!r}}})",
+                evidence_kind="ast_instantiation",
+            )
+        )
 
         if command == "RetrieveAndGenerateCommand":
             m = re.search(r"""modelArn\s*:\s*['"]([^'"]+)['"]""", str(args))
             if m:
                 model_arn = m.group(1)
                 info = _model_info(model_arn)
-                out.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=canonicalize_text(model_arn.lower()),
-                    display_name=model_arn,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.85,
-                    metadata={
-                        "model_arn": model_arn,
-                        "provider": info.get("provider", "aws"),
-                        "source": "RetrieveAndGenerateCommand",
-                        "language": "typescript",
-                    },
-                    file_path=file_path,
-                    line=line,
-                    snippet=f"modelArn={model_arn!r}",
-                    evidence_kind="ast_instantiation",
-                ))
+                out.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=canonicalize_text(model_arn.lower()),
+                        display_name=model_arn,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={
+                            "model_arn": model_arn,
+                            "provider": info.get("provider", "aws"),
+                            "source": "RetrieveAndGenerateCommand",
+                            "language": "typescript",
+                        },
+                        file_path=file_path,
+                        line=line,
+                        snippet=f"modelArn={model_arn!r}",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         return out
 

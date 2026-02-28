@@ -24,3 +24,7 @@ htmlcov/
 .idea/
 .vscode/
 *.swp
+
+# tmp files
+output/
+tmp/

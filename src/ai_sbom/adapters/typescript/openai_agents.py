@@ -1,4 +1,4 @@
-"""OpenAI Agents SDK TypeScript Adapter for Velo SBOM.
+"""OpenAI Agents SDK TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -8,6 +8,7 @@ Supports:
 - tool() / createTool() / defineTool() registrations
 - Agent → Model and Agent → Tool relationship hints
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -67,23 +68,25 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
             )
             canon = canonicalize_text(tool_name.lower())
             tool_canonicals[tool_name] = canon
-            detected.append(ComponentDetection(
-                component_type=ComponentType.TOOL,
-                canonical_name=canon,
-                display_name=tool_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={
-                    "creation_method": call.function_name,
-                    "framework": "openai-agents-sdk",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=call.line_start,
-                snippet=call.source_snippet or f"{call.function_name}({tool_name!r})",
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name=canon,
+                    display_name=tool_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "creation_method": call.function_name,
+                        "framework": "openai-agents-sdk",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=call.source_snippet or f"{call.function_name}({tool_name!r})",
+                    evidence_kind="ast_call",
+                )
+            )
 
         # --- Extract agents ---
         for inst in result.instantiations:
@@ -104,92 +107,109 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
             model_name = self._resolve(inst, "model")
             if model_name:
                 model_canon = canonicalize_text(model_name.lower())
-                rels.append(RelationshipHint(
-                    source_canonical=agent_canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=model_canon,
-                    target_type=ComponentType.MODEL,
-                    relationship_type="USES",
-                ))
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=model_canon,
-                    display_name=model_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={"provider": "openai", "language": "typescript"},
-                    file_path=file_path,
-                    line=inst.line_start,
-                    snippet=f"model={model_name!r}",
-                    evidence_kind="ast_instantiation",
-                ))
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=agent_canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=model_canon,
+                        target_type=ComponentType.MODEL,
+                        relationship_type="USES",
+                    )
+                )
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=model_canon,
+                        display_name=model_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={"provider": "openai", "language": "typescript"},
+                        file_path=file_path,
+                        line=inst.line_start,
+                        snippet=f"model={model_name!r}",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             # Instructions → PROMPT
             instructions = self._resolve(inst, "instructions", "system_prompt")
             if len(instructions) > 10:
                 prompt_name = f"{agent_name}_instructions"
                 prompt_canon = canonicalize_text(prompt_name.lower())
-                rels.append(RelationshipHint(
-                    source_canonical=agent_canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=prompt_canon,
-                    target_type=ComponentType.PROMPT,
-                    relationship_type="USES",
-                ))
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.PROMPT,
-                    canonical_name=prompt_canon,
-                    display_name=prompt_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.85,
-                    metadata={
-                        "prompt_type": "instructions",
-                        "role": "system",
-                        "content_preview": instructions[:200],
-                        "language": "typescript",
-                    },
-                    file_path=file_path,
-                    line=inst.line_start,
-                    snippet=instructions[:80],
-                    evidence_kind="ast_instantiation",
-                ))
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=agent_canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=prompt_canon,
+                        target_type=ComponentType.PROMPT,
+                        relationship_type="USES",
+                    )
+                )
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.PROMPT,
+                        canonical_name=prompt_canon,
+                        display_name=prompt_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={
+                            "prompt_type": "instructions",
+                            "role": "system",
+                            "content_preview": instructions[:200],
+                            "language": "typescript",
+                        },
+                        file_path=file_path,
+                        line=inst.line_start,
+                        snippet=instructions[:80],
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             # Tools list — tools: [searchTool, calcTool]
             tools_val = (inst.resolved_arguments or inst.arguments).get("tools")
             if tools_val:
                 refs = (
-                    tools_val if isinstance(tools_val, list)
-                    else [t.strip().strip("'\"") for t in str(tools_val).strip("[]").split(",") if t.strip()]
+                    tools_val
+                    if isinstance(tools_val, list)
+                    else [
+                        t.strip().strip("'\"")
+                        for t in str(tools_val).strip("[]").split(",")
+                        if t.strip()
+                    ]
                 )
                 for ref in refs:
-                    rels.append(RelationshipHint(
-                        source_canonical=agent_canon,
-                        source_type=ComponentType.AGENT,
-                        target_canonical=canonicalize_text(str(ref).lower()),
-                        target_type=ComponentType.TOOL,
-                        relationship_type="CALLS",
-                    ))
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=agent_canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=canonicalize_text(str(ref).lower()),
+                            target_type=ComponentType.TOOL,
+                            relationship_type="CALLS",
+                        )
+                    )
 
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=agent_canon,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "class": inst.class_name,
-                    "framework": "openai-agents-sdk",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-                relationships=rels,
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=agent_canon,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "class": inst.class_name,
+                        "framework": "openai-agents-sdk",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                    relationships=rels,
+                )
+            )
 
         return detected
 

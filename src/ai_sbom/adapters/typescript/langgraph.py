@@ -1,4 +1,4 @@
-"""LangChain.js / LangGraph.js TypeScript Adapter for Velo SBOM.
+"""LangChain.js / LangGraph.js TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -10,6 +10,7 @@ Supports:
 - ToolNode detection
 - PromptTemplate, ChatPromptTemplate
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -86,23 +87,25 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             var = self._assignment_name(source, inst.line_start) or f"langgraph_{inst.line_start}"
             canon = canonicalize_text(var)
             graph_canonicals.append(canon)
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=canon,
-                display_name=var,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "framework": "langgraph-js",
-                    "graph_class": inst.class_name,
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=canon,
+                    display_name=var,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "framework": "langgraph-js",
+                        "graph_class": inst.class_name,
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # --- addNode() calls → graph node registrations ---
         for call in result.function_calls:
@@ -113,23 +116,25 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             if not node_name:
                 continue
             canon = canonicalize_text(node_name)
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=canon,
-                display_name=node_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={
-                    "framework": "langgraph-js",
-                    "is_graph_node": True,
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=call.line_start,
-                snippet=f"addNode({node_name!r})",
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=canon,
+                    display_name=node_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "framework": "langgraph-js",
+                        "is_graph_node": True,
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=f"addNode({node_name!r})",
+                    evidence_kind="ast_call",
+                )
+            )
 
         # --- LLM wrapper classes → MODEL nodes ---
         for inst in result.instantiations:
@@ -149,43 +154,47 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                 )
                 for gc in graph_canonicals
             ]
-            detected.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=canon,
-                display_name=model_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={
-                    "framework": "langchain-js",
-                    "client_class": inst.class_name,
-                    "provider": "azure" if "Azure" in inst.class_name else provider,
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-                relationships=rels,
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=canon,
+                    display_name=model_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "framework": "langchain-js",
+                        "client_class": inst.class_name,
+                        "provider": "azure" if "Azure" in inst.class_name else provider,
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                    relationships=rels,
+                )
+            )
 
         # --- ToolNode → TOOL node ---
         for inst in result.instantiations:
             if inst.class_name != "ToolNode":
                 continue
-            detected.append(ComponentDetection(
-                component_type=ComponentType.TOOL,
-                canonical_name="toolnode",
-                display_name="ToolNode",
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={"framework": "langgraph-js", "language": "typescript"},
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name="toolnode",
+                    display_name="ToolNode",
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={"framework": "langgraph-js", "language": "typescript"},
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # --- PromptTemplate instantiations → PROMPT nodes ---
         for inst in result.instantiations:
@@ -194,23 +203,25 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             template = self._resolve(inst, "template", "0") or ""
             name = template[:60] if len(template) > 10 else inst.class_name
             canon = canonicalize_text(name.lower())
-            detected.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=canon,
-                display_name=name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.80,
-                metadata={
-                    "framework": "langchain-js",
-                    "prompt_class": inst.class_name,
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=canon,
+                    display_name=name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.80,
+                    metadata={
+                        "framework": "langchain-js",
+                        "prompt_class": inst.class_name,
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         return detected
 

@@ -23,7 +23,7 @@ Merge strategy
 
 aibom:* property conventions (Appendix B of reference arch)
 ------------------------------------------------------------
-- ``aibom:componentType``   — Velo component type (AGENT, MODEL, etc.)
+- ``aibom:componentType``   — Xelo component type (AGENT, MODEL, etc.)
 - ``aibom:agentFramework``  — framework adapter name (langgraph, crewai, …)
 - ``aibom:promptHash``      — sha256 of prompt content (PROMPT nodes)
 - ``aibom:toolRiskCategory``— risk category for TOOL nodes
@@ -33,6 +33,7 @@ aibom:* property conventions (Appendix B of reference arch)
 - ``aibom:modelFamily``     — model family label (MODEL nodes)
 - ``aibom:modelCardUrl``    — model documentation URL (MODEL nodes)
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -49,36 +50,36 @@ from .types import ComponentType
 
 _VERSION = "0.2.0"
 
-# Map Velo types to CycloneDX component types
+# Map Xelo types to CycloneDX component types
 _CDX_TYPE: dict[ComponentType, str] = {
-    ComponentType.AGENT:        "application",
-    ComponentType.FRAMEWORK:    "application",
-    ComponentType.MODEL:        "machine-learning-model",
-    ComponentType.PROMPT:       "data",
-    ComponentType.DATASTORE:    "data",
-    ComponentType.TOOL:         "library",
-    ComponentType.AUTH:         "library",
-    ComponentType.PRIVILEGE:    "library",
+    ComponentType.AGENT: "application",
+    ComponentType.FRAMEWORK: "application",
+    ComponentType.MODEL: "machine-learning-model",
+    ComponentType.PROMPT: "data",
+    ComponentType.DATASTORE: "data",
+    ComponentType.TOOL: "library",
+    ComponentType.AUTH: "library",
+    ComponentType.PRIVILEGE: "library",
     ComponentType.API_ENDPOINT: "library",
-    ComponentType.DEPLOYMENT:   "library",
+    ComponentType.DEPLOYMENT: "library",
 }
 
 _TOOL_RISK_KEYWORDS: dict[str, str] = {
     "filesystem": "filesystem",
-    "file":       "filesystem",
-    "shell":      "code-execution",
-    "exec":       "code-execution",
-    "bash":       "code-execution",
-    "sql":        "data-read/write",
-    "database":   "data-read/write",
-    "db":         "data-read/write",
-    "http":       "network",
-    "request":    "network",
-    "web":        "network",
-    "email":      "communication",
-    "slack":      "communication",
-    "search":     "data-read",
-    "read":       "data-read",
+    "file": "filesystem",
+    "shell": "code-execution",
+    "exec": "code-execution",
+    "bash": "code-execution",
+    "sql": "data-read/write",
+    "database": "data-read/write",
+    "db": "data-read/write",
+    "http": "network",
+    "request": "network",
+    "web": "network",
+    "email": "communication",
+    "slack": "communication",
+    "search": "data-read",
+    "read": "data-read",
 }
 
 
@@ -143,9 +144,7 @@ class AiBomMerger:
                 name_index[norm] = i
 
         # ── Build node-id → bom-ref map for edge resolution ─────────────
-        id_to_ref: dict[str, str] = {
-            str(node.id): str(node.id) for node in ai_doc.nodes
-        }
+        id_to_ref: dict[str, str] = {str(node.id): str(node.id) for node in ai_doc.nodes}
 
         # ── Process each AI node ─────────────────────────────────────────
         ai_only_components: list[dict[str, Any]] = []
@@ -197,25 +196,29 @@ class AiBomMerger:
                 # Add as new AI-only component
                 comp: dict[str, Any] = {
                     "bom-ref": str(node.id),
-                    "type":    cdx_type,
-                    "name":    node.name,
+                    "type": cdx_type,
+                    "name": node.name,
                 }
                 if node.metadata.extras.get("version"):
                     comp["version"] = str(node.metadata.extras["version"])
                 if cdx_type == "machine-learning-model":
                     ext_refs: list[dict[str, str]] = []
                     if node.metadata.extras.get("model_card_url"):
-                        ext_refs.append({
-                            "type":    "documentation",
-                            "url":     str(node.metadata.extras["model_card_url"]),
-                            "comment": "Model card / provider documentation",
-                        })
+                        ext_refs.append(
+                            {
+                                "type": "documentation",
+                                "url": str(node.metadata.extras["model_card_url"]),
+                                "comment": "Model card / provider documentation",
+                            }
+                        )
                     if node.metadata.extras.get("api_endpoint"):
-                        ext_refs.append({
-                            "type":    "website",
-                            "url":     str(node.metadata.extras["api_endpoint"]),
-                            "comment": "Provider API endpoint",
-                        })
+                        ext_refs.append(
+                            {
+                                "type": "website",
+                                "url": str(node.metadata.extras["api_endpoint"]),
+                                "comment": "Provider API endpoint",
+                            }
+                        )
                     if ext_refs:
                         comp["externalReferences"] = ext_refs
                 comp["properties"] = aibom_props
@@ -231,9 +234,7 @@ class AiBomMerger:
             tgt_ref = id_to_ref.get(str(edge.target))
             if src_ref and tgt_ref and src_ref != tgt_ref:
                 # Merge into existing entry for src_ref, or add new
-                existing_entry = next(
-                    (d for d in existing_deps if d.get("ref") == src_ref), None
-                )
+                existing_entry = next((d for d in existing_deps if d.get("ref") == src_ref), None)
                 if existing_entry:
                     if tgt_ref not in existing_entry.get("dependsOn", []):
                         existing_entry.setdefault("dependsOn", []).append(tgt_ref)
@@ -245,58 +246,69 @@ class AiBomMerger:
         meta: dict[str, Any] = result.get("metadata", {})
         meta_props: list[dict[str, str]] = list(meta.get("properties", []))
 
-        # Ensure tool entry records Vela
+        # Ensure tool entry records Xelo
         tools: list[dict[str, str]] = meta.get("tools", [])
-        vela_tool = {"vendor": "Vela", "name": "vela", "version": _VERSION}
-        if not any(t.get("name") == "vela" for t in tools):
+        vela_tool = {"vendor": "Xelo", "name": "xelo", "version": _VERSION}
+        if not any(t.get("name") == "xelo" for t in tools):
             tools.append(vela_tool)
         meta["tools"] = tools
 
         # AI-BOM summary properties
         ai_counts = self._count_by_type(ai_doc)
         summary_props: list[dict[str, str]] = [
-            {"name": "aibom:version",            "value": "1.0"},
-            {"name": "aibom:generator",          "value": f"vela/{_VERSION}"},
-            {"name": "aibom:depsBomMethod",      "value": generator_method},
-            {"name": "aibom:scanTarget",         "value": ai_doc.target},
-            {"name": "aibom:scanTimestamp",      "value": datetime.now(timezone.utc).isoformat()},
-            {"name": "aibom:aiComponentTotal",   "value": str(len(ai_doc.nodes))},
-            {"name": "aibom:aiRelationships",    "value": str(len(ai_doc.edges))},
+            {"name": "aibom:version", "value": "1.0"},
+            {"name": "aibom:generator", "value": f"xelo/{_VERSION}"},
+            {"name": "aibom:depsBomMethod", "value": generator_method},
+            {"name": "aibom:scanTarget", "value": ai_doc.target},
+            {"name": "aibom:scanTimestamp", "value": datetime.now(timezone.utc).isoformat()},
+            {"name": "aibom:aiComponentTotal", "value": str(len(ai_doc.nodes))},
+            {"name": "aibom:aiRelationships", "value": str(len(ai_doc.edges))},
         ]
         for ctype, count in ai_counts.items():
-            summary_props.append({
-                "name":  f"aibom:count:{ctype.lower()}",
-                "value": str(count),
-            })
+            summary_props.append(
+                {
+                    "name": f"aibom:count:{ctype.lower()}",
+                    "value": str(count),
+                }
+            )
 
         # Quality gate (Section 9 of reference arch)
         has_model = ai_counts.get("MODEL", 0) > 0
         has_agent = ai_counts.get("AGENT", 0) > 0
         all_have_evidence = all(
-            node.metadata.extras.get("evidence_count", 0) > 0
-            for node in ai_doc.nodes
+            node.metadata.extras.get("evidence_count", 0) > 0 for node in ai_doc.nodes
         )
         quality_pass = has_model or has_agent
-        summary_props.append({
-            "name":  "aibom:qualityGate",
-            "value": "pass" if quality_pass else "warn",
-        })
-        summary_props.append({
-            "name":  "aibom:allNodesHaveEvidence",
-            "value": str(all_have_evidence).lower(),
-        })
+        summary_props.append(
+            {
+                "name": "aibom:qualityGate",
+                "value": "pass" if quality_pass else "warn",
+            }
+        )
+        summary_props.append(
+            {
+                "name": "aibom:allNodesHaveEvidence",
+                "value": str(all_have_evidence).lower(),
+            }
+        )
 
         # Confidence summary
         if ai_doc.nodes:
             confidences = [n.confidence for n in ai_doc.nodes]
             avg_conf = sum(confidences) / len(confidences)
             min_conf = min(confidences)
-            summary_props.append({
-                "name": "aibom:avgConfidence", "value": f"{avg_conf:.2f}",
-            })
-            summary_props.append({
-                "name": "aibom:minConfidence", "value": f"{min_conf:.2f}",
-            })
+            summary_props.append(
+                {
+                    "name": "aibom:avgConfidence",
+                    "value": f"{avg_conf:.2f}",
+                }
+            )
+            summary_props.append(
+                {
+                    "name": "aibom:minConfidence",
+                    "value": f"{min_conf:.2f}",
+                }
+            )
 
         # Remove any pre-existing aibom: props before adding fresh ones
         meta_props = [p for p in meta_props if not p["name"].startswith("aibom:")]
@@ -318,7 +330,7 @@ class AiBomMerger:
         extras = node.metadata.extras
         props: list[dict[str, str]] = [
             {"name": "aibom:componentType", "value": node.component_type.value},
-            {"name": "aibom:confidence",    "value": f"{node.confidence:.2f}"},
+            {"name": "aibom:confidence", "value": f"{node.confidence:.2f}"},
         ]
 
         # Evidence reference: first evidence item's location

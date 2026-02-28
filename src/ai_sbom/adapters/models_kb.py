@@ -1,9 +1,10 @@
 """AI model knowledge base: provider families, version patterns, and documentation URLs.
 
-This module is the single source of truth for known model metadata within Vela.
+This module is the single source of truth for known model metadata within Xelo.
 All framework adapters import from here to ensure consistent provider/version
 attribution.
 """
+
 from __future__ import annotations
 
 import re as _re
@@ -17,62 +18,78 @@ from typing import Any
 
 MODEL_FAMILIES: dict[str, dict[str, str]] = {
     # OpenAI GPT models
-    "gpt-5-turbo":      {"provider": "openai",    "base_version": "5-turbo",     "family": "gpt"},
-    "gpt-5-mini":       {"provider": "openai",    "base_version": "5-mini",      "family": "gpt"},
-    "gpt-5":            {"provider": "openai",    "base_version": "5",           "family": "gpt"},
-    "gpt-4o":           {"provider": "openai",    "base_version": "4o",          "family": "gpt"},
-    "gpt-4-turbo":      {"provider": "openai",    "base_version": "4-turbo",     "family": "gpt"},
-    "gpt-4":            {"provider": "openai",    "base_version": "4",           "family": "gpt"},
-    "gpt-3.5-turbo":    {"provider": "openai",    "base_version": "3.5-turbo",   "family": "gpt"},
+    "gpt-5-turbo": {"provider": "openai", "base_version": "5-turbo", "family": "gpt"},
+    "gpt-5-mini": {"provider": "openai", "base_version": "5-mini", "family": "gpt"},
+    "gpt-5": {"provider": "openai", "base_version": "5", "family": "gpt"},
+    "gpt-4o": {"provider": "openai", "base_version": "4o", "family": "gpt"},
+    "gpt-4-turbo": {"provider": "openai", "base_version": "4-turbo", "family": "gpt"},
+    "gpt-4": {"provider": "openai", "base_version": "4", "family": "gpt"},
+    "gpt-3.5-turbo": {"provider": "openai", "base_version": "3.5-turbo", "family": "gpt"},
     # OpenAI o-series reasoning models
-    "o4-mini":          {"provider": "openai",    "base_version": "4-mini",      "family": "o4"},
-    "o4":               {"provider": "openai",    "base_version": "4",           "family": "o4"},
-    "o3-mini":          {"provider": "openai",    "base_version": "3-mini",      "family": "o3"},
-    "o3":               {"provider": "openai",    "base_version": "3",           "family": "o3"},
-    "o1-mini":          {"provider": "openai",    "base_version": "1-mini",      "family": "o1"},
-    "o1-preview":       {"provider": "openai",    "base_version": "1-preview",   "family": "o1"},
-    "o1":               {"provider": "openai",    "base_version": "1",           "family": "o1"},
+    "o4-mini": {"provider": "openai", "base_version": "4-mini", "family": "o4"},
+    "o4": {"provider": "openai", "base_version": "4", "family": "o4"},
+    "o3-mini": {"provider": "openai", "base_version": "3-mini", "family": "o3"},
+    "o3": {"provider": "openai", "base_version": "3", "family": "o3"},
+    "o1-mini": {"provider": "openai", "base_version": "1-mini", "family": "o1"},
+    "o1-preview": {"provider": "openai", "base_version": "1-preview", "family": "o1"},
+    "o1": {"provider": "openai", "base_version": "1", "family": "o1"},
     # Anthropic Claude models (hyphenated date-suffix variants listed first for longest-match)
-    "claude-4-opus":    {"provider": "anthropic", "base_version": "4-opus",      "family": "claude"},
-    "claude-4-sonnet":  {"provider": "anthropic", "base_version": "4-sonnet",    "family": "claude"},
-    "claude-4-haiku":   {"provider": "anthropic", "base_version": "4-haiku",     "family": "claude"},
-    "claude-4":         {"provider": "anthropic", "base_version": "4",           "family": "claude"},
-    "claude-3-7-sonnet":{"provider": "anthropic", "base_version": "3.7-sonnet",  "family": "claude"},
-    "claude-3.7-sonnet":{"provider": "anthropic", "base_version": "3.7-sonnet",  "family": "claude"},
-    "claude-3-5-sonnet":{"provider": "anthropic", "base_version": "3.5-sonnet",  "family": "claude"},
-    "claude-3-5-haiku": {"provider": "anthropic", "base_version": "3.5-haiku",   "family": "claude"},
-    "claude-3.5-sonnet":{"provider": "anthropic", "base_version": "3.5-sonnet",  "family": "claude"},
-    "claude-3.5-haiku": {"provider": "anthropic", "base_version": "3.5-haiku",   "family": "claude"},
-    "claude-3-opus":    {"provider": "anthropic", "base_version": "3-opus",      "family": "claude"},
-    "claude-3-sonnet":  {"provider": "anthropic", "base_version": "3-sonnet",    "family": "claude"},
-    "claude-3-haiku":   {"provider": "anthropic", "base_version": "3-haiku",     "family": "claude"},
+    "claude-4-opus": {"provider": "anthropic", "base_version": "4-opus", "family": "claude"},
+    "claude-4-sonnet": {"provider": "anthropic", "base_version": "4-sonnet", "family": "claude"},
+    "claude-4-haiku": {"provider": "anthropic", "base_version": "4-haiku", "family": "claude"},
+    "claude-4": {"provider": "anthropic", "base_version": "4", "family": "claude"},
+    "claude-3-7-sonnet": {
+        "provider": "anthropic",
+        "base_version": "3.7-sonnet",
+        "family": "claude",
+    },
+    "claude-3.7-sonnet": {
+        "provider": "anthropic",
+        "base_version": "3.7-sonnet",
+        "family": "claude",
+    },
+    "claude-3-5-sonnet": {
+        "provider": "anthropic",
+        "base_version": "3.5-sonnet",
+        "family": "claude",
+    },
+    "claude-3-5-haiku": {"provider": "anthropic", "base_version": "3.5-haiku", "family": "claude"},
+    "claude-3.5-sonnet": {
+        "provider": "anthropic",
+        "base_version": "3.5-sonnet",
+        "family": "claude",
+    },
+    "claude-3.5-haiku": {"provider": "anthropic", "base_version": "3.5-haiku", "family": "claude"},
+    "claude-3-opus": {"provider": "anthropic", "base_version": "3-opus", "family": "claude"},
+    "claude-3-sonnet": {"provider": "anthropic", "base_version": "3-sonnet", "family": "claude"},
+    "claude-3-haiku": {"provider": "anthropic", "base_version": "3-haiku", "family": "claude"},
     # Google Gemini models
-    "gemini-3.5-pro":   {"provider": "google",    "base_version": "3.5-pro",     "family": "gemini"},
-    "gemini-3.5-flash": {"provider": "google",    "base_version": "3.5-flash",   "family": "gemini"},
-    "gemini-3.0-pro":   {"provider": "google",    "base_version": "3.0-pro",     "family": "gemini"},
-    "gemini-3.0-flash": {"provider": "google",    "base_version": "3.0-flash",   "family": "gemini"},
-    "gemini-3":         {"provider": "google",    "base_version": "3",           "family": "gemini"},
-    "gemini-2.5-pro":   {"provider": "google",    "base_version": "2.5-pro",     "family": "gemini"},
-    "gemini-2.5-flash": {"provider": "google",    "base_version": "2.5-flash",   "family": "gemini"},
-    "gemini-2.0-flash": {"provider": "google",    "base_version": "2.0-flash",   "family": "gemini"},
-    "gemini-1.5-pro":   {"provider": "google",    "base_version": "1.5-pro",     "family": "gemini"},
-    "gemini-1.5-flash": {"provider": "google",    "base_version": "1.5-flash",   "family": "gemini"},
+    "gemini-3.5-pro": {"provider": "google", "base_version": "3.5-pro", "family": "gemini"},
+    "gemini-3.5-flash": {"provider": "google", "base_version": "3.5-flash", "family": "gemini"},
+    "gemini-3.0-pro": {"provider": "google", "base_version": "3.0-pro", "family": "gemini"},
+    "gemini-3.0-flash": {"provider": "google", "base_version": "3.0-flash", "family": "gemini"},
+    "gemini-3": {"provider": "google", "base_version": "3", "family": "gemini"},
+    "gemini-2.5-pro": {"provider": "google", "base_version": "2.5-pro", "family": "gemini"},
+    "gemini-2.5-flash": {"provider": "google", "base_version": "2.5-flash", "family": "gemini"},
+    "gemini-2.0-flash": {"provider": "google", "base_version": "2.0-flash", "family": "gemini"},
+    "gemini-1.5-pro": {"provider": "google", "base_version": "1.5-pro", "family": "gemini"},
+    "gemini-1.5-flash": {"provider": "google", "base_version": "1.5-flash", "family": "gemini"},
     # Mistral models
-    "mistral-large":    {"provider": "mistral",   "base_version": "large",       "family": "mistral"},
-    "mistral-small":    {"provider": "mistral",   "base_version": "small",       "family": "mistral"},
-    "mixtral-8x7b":     {"provider": "mistral",   "base_version": "8x7b",        "family": "mixtral"},
+    "mistral-large": {"provider": "mistral", "base_version": "large", "family": "mistral"},
+    "mistral-small": {"provider": "mistral", "base_version": "small", "family": "mistral"},
+    "mixtral-8x7b": {"provider": "mistral", "base_version": "8x7b", "family": "mixtral"},
     # Meta Llama models
-    "llama-4-maverick": {"provider": "meta",      "base_version": "4-maverick",  "family": "llama"},
-    "llama-4-scout":    {"provider": "meta",      "base_version": "4-scout",     "family": "llama"},
-    "llama-4":          {"provider": "meta",      "base_version": "4",           "family": "llama"},
-    "llama-3.3":        {"provider": "meta",      "base_version": "3.3",         "family": "llama"},
-    "llama-3.2":        {"provider": "meta",      "base_version": "3.2",         "family": "llama"},
-    "llama-3.1":        {"provider": "meta",      "base_version": "3.1",         "family": "llama"},
-    "llama-3":          {"provider": "meta",      "base_version": "3",           "family": "llama"},
+    "llama-4-maverick": {"provider": "meta", "base_version": "4-maverick", "family": "llama"},
+    "llama-4-scout": {"provider": "meta", "base_version": "4-scout", "family": "llama"},
+    "llama-4": {"provider": "meta", "base_version": "4", "family": "llama"},
+    "llama-3.3": {"provider": "meta", "base_version": "3.3", "family": "llama"},
+    "llama-3.2": {"provider": "meta", "base_version": "3.2", "family": "llama"},
+    "llama-3.1": {"provider": "meta", "base_version": "3.1", "family": "llama"},
+    "llama-3": {"provider": "meta", "base_version": "3", "family": "llama"},
     # Cohere
-    "command-r+":       {"provider": "cohere",    "base_version": "r+",          "family": "command"},
-    "command-r":        {"provider": "cohere",    "base_version": "r",           "family": "command"},
-    "command":          {"provider": "cohere",    "base_version": "latest",      "family": "command"},
+    "command-r+": {"provider": "cohere", "base_version": "r+", "family": "command"},
+    "command-r": {"provider": "cohere", "base_version": "r", "family": "command"},
+    "command": {"provider": "cohere", "base_version": "latest", "family": "command"},
 }
 
 # ---------------------------------------------------------------------------
@@ -80,25 +97,25 @@ MODEL_FAMILIES: dict[str, dict[str, str]] = {
 # ---------------------------------------------------------------------------
 
 MODEL_CARD_TEMPLATES: dict[str, str] = {
-    "openai":     "https://platform.openai.com/docs/models/{model_name}",
-    "anthropic":  "https://docs.anthropic.com/en/docs/about-claude/models",
-    "google":     "https://ai.google.dev/gemini-api/docs/models/{model_name}",
-    "azure":      "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
-    "huggingface":"https://huggingface.co/{model_name}",
-    "mistral":    "https://docs.mistral.ai/getting-started/models/",
-    "cohere":     "https://docs.cohere.com/docs/models",
-    "meta":       "https://huggingface.co/meta-llama/{model_name}",
-    "groq":       "https://console.groq.com/docs/models",
+    "openai": "https://platform.openai.com/docs/models/{model_name}",
+    "anthropic": "https://docs.anthropic.com/en/docs/about-claude/models",
+    "google": "https://ai.google.dev/gemini-api/docs/models/{model_name}",
+    "azure": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models",
+    "huggingface": "https://huggingface.co/{model_name}",
+    "mistral": "https://docs.mistral.ai/getting-started/models/",
+    "cohere": "https://docs.cohere.com/docs/models",
+    "meta": "https://huggingface.co/meta-llama/{model_name}",
+    "groq": "https://console.groq.com/docs/models",
 }
 
 # Default API endpoint by provider (for known public endpoints)
 DEFAULT_ENDPOINTS: dict[str, str] = {
-    "openai":    "https://api.openai.com/v1",
+    "openai": "https://api.openai.com/v1",
     "anthropic": "https://api.anthropic.com",
-    "google":    "https://generativelanguage.googleapis.com",
-    "mistral":   "https://api.mistral.ai",
-    "cohere":    "https://api.cohere.com",
-    "groq":      "https://api.groq.com/openai/v1",
+    "google": "https://generativelanguage.googleapis.com",
+    "mistral": "https://api.mistral.ai",
+    "cohere": "https://api.cohere.com",
+    "groq": "https://api.groq.com/openai/v1",
 }
 
 # ---------------------------------------------------------------------------
@@ -107,44 +124,49 @@ DEFAULT_ENDPOINTS: dict[str, str] = {
 
 LLM_CLIENT_PATTERNS: dict[str, dict[str, Any]] = {
     "openai": {
-        "imports":   ["openai"],
-        "classes":   ["OpenAI", "AsyncOpenAI", "AzureOpenAI", "AsyncAzureOpenAI"],
+        "imports": ["openai"],
+        "classes": ["OpenAI", "AsyncOpenAI", "AzureOpenAI", "AsyncAzureOpenAI"],
         "namespace": "openai",
     },
     "anthropic": {
-        "imports":   ["anthropic"],
-        "classes":   ["Anthropic", "AsyncAnthropic"],
+        "imports": ["anthropic"],
+        "classes": ["Anthropic", "AsyncAnthropic"],
         "namespace": "anthropic",
     },
     "google": {
-        "imports":   ["google.genai", "google.generativeai", "vertexai",
-                      "google.cloud.aiplatform", "google"],
-        "classes":   ["Client", "GenerativeModel", "ChatModel", "TextGenerationModel"],
+        "imports": [
+            "google.genai",
+            "google.generativeai",
+            "vertexai",
+            "google.cloud.aiplatform",
+            "google",
+        ],
+        "classes": ["Client", "GenerativeModel", "ChatModel", "TextGenerationModel"],
         "namespace": "google",
     },
     "cohere": {
-        "imports":   ["cohere"],
-        "classes":   ["Client", "AsyncClient"],
+        "imports": ["cohere"],
+        "classes": ["Client", "AsyncClient"],
         "namespace": "cohere",
     },
     "mistral": {
-        "imports":   ["mistralai"],
-        "classes":   ["Mistral", "MistralClient"],
+        "imports": ["mistralai"],
+        "classes": ["Mistral", "MistralClient"],
         "namespace": "mistral",
     },
     "groq": {
-        "imports":   ["groq"],
-        "classes":   ["Groq", "AsyncGroq"],
+        "imports": ["groq"],
+        "classes": ["Groq", "AsyncGroq"],
         "namespace": "groq",
     },
     "ollama": {
-        "imports":   ["ollama"],
-        "classes":   [],
+        "imports": ["ollama"],
+        "classes": [],
         "namespace": "ollama",
     },
     "bedrock": {
-        "imports":   ["boto3", "botocore"],
-        "classes":   ["BedrockRuntimeClient"],
+        "imports": ["boto3", "botocore"],
+        "classes": ["BedrockRuntimeClient"],
         "namespace": "bedrock",
     },
 }
@@ -159,17 +181,17 @@ ALL_LLM_CLASSES: list[str] = list(_CLASS_TO_PROVIDERS.keys())
 
 # LangChain wrapper class → underlying provider
 LANGCHAIN_LLM_CLASS_PROVIDERS: dict[str, str] = {
-    "ChatOpenAI":               "openai",
-    "AzureChatOpenAI":          "azure",
-    "ChatAnthropic":            "anthropic",
-    "ChatGoogleGenerativeAI":   "google",
-    "ChatVertexAI":             "google",
-    "ChatOllama":               "ollama",
-    "ChatMistralAI":            "mistral",
-    "ChatCohere":               "cohere",
-    "ChatGroq":                 "groq",
-    "ChatBedrock":              "bedrock",
-    "BedrockChat":              "bedrock",
+    "ChatOpenAI": "openai",
+    "AzureChatOpenAI": "azure",
+    "ChatAnthropic": "anthropic",
+    "ChatGoogleGenerativeAI": "google",
+    "ChatVertexAI": "google",
+    "ChatOllama": "ollama",
+    "ChatMistralAI": "mistral",
+    "ChatCohere": "cohere",
+    "ChatGroq": "groq",
+    "ChatBedrock": "bedrock",
+    "BedrockChat": "bedrock",
 }
 
 # ---------------------------------------------------------------------------
@@ -197,7 +219,9 @@ def infer_provider(model_name: str) -> str:
     return "unknown"
 
 
-def get_model_details(model_name: str, provider: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
+def get_model_details(
+    model_name: str, provider: str, args: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Return version, api_endpoint, model_card_url, and model_family for a model."""
     args = args or {}
     details: dict[str, Any] = {

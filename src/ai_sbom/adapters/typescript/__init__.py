@@ -1,4 +1,4 @@
-"""TypeScript/JavaScript Framework Adapters for Velo SBOM.
+"""TypeScript/JavaScript Framework Adapters for Xelo SBOM.
 
 Supports detection of AI frameworks in TypeScript and JavaScript code:
 - LangGraph.js / LangChain.js
@@ -9,6 +9,7 @@ Supports detection of AI frameworks in TypeScript and JavaScript code:
 - Datastore detection (SQL, Vector DBs, Object Storage)
 - AWS Bedrock Agents
 """
+
 from ai_sbom.adapters.typescript.bedrock_agents import BedrockAgentsTSAdapter
 from ai_sbom.adapters.typescript.datastores import DatastoreTSAdapter
 from ai_sbom.adapters.typescript.google_adk import GoogleADKAdapter

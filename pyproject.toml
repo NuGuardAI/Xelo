@@ -30,7 +30,7 @@ Homepage = "https://nuguard.ai"
 
 [project.optional-dependencies]
 # Accurate TypeScript/JavaScript AST parsing (highly recommended)
-# Without this, Velo falls back to regex-based TS parsing.
+# Without this, Xelo falls back to regex-based TS parsing.
 ts = [
   "tree-sitter>=0.23,<1",
   "tree-sitter-javascript>=0.23,<1",
@@ -59,7 +59,7 @@ dev = [
 ]
 
 [project.scripts]
-velo = "ai_sbom.cli:main"
+xelo = "ai_sbom.cli:main"
 ai-sbom = "ai_sbom.cli:main"
 
 [tool.setuptools.packages.find]

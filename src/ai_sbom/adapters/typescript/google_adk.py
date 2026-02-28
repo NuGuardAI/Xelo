@@ -1,4 +1,4 @@
-"""Google ADK (Agent Development Kit) TypeScript Adapter for Velo SBOM.
+"""Google ADK (Agent Development Kit) TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -9,6 +9,7 @@ Supports:
 - Gemini / Vertex AI model references
 - Agent → Model and Agent → Tool relationship hints
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -90,23 +91,25 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                 or self._assignment_name(source, call.line_start)
                 or f"tool_{call.line_start}"
             )
-            detected.append(ComponentDetection(
-                component_type=ComponentType.TOOL,
-                canonical_name=canonicalize_text(tool_name.lower()),
-                display_name=tool_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={
-                    "creation_method": call.function_name,
-                    "framework": "google-adk",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=call.line_start,
-                snippet=call.source_snippet or f"{call.function_name}({tool_name!r})",
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name=canonicalize_text(tool_name.lower()),
+                    display_name=tool_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "creation_method": call.function_name,
+                        "framework": "google-adk",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=call.source_snippet or f"{call.function_name}({tool_name!r})",
+                    evidence_kind="ast_call",
+                )
+            )
 
         # --- Explicit model objects (GenerativeModel, VertexAI) ---
         model_canonicals: dict[str, str] = {}
@@ -120,23 +123,25 @@ class GoogleADKAdapter(TSFrameworkAdapter):
             )
             canon = canonicalize_text(model_name.lower())
             model_canonicals[inst.class_name] = canon
-            detected.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=canon,
-                display_name=model_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.85,
-                metadata={
-                    "class": inst.class_name,
-                    "provider": "google",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=canon,
+                    display_name=model_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.85,
+                    metadata={
+                        "class": inst.class_name,
+                        "provider": "google",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # --- Agents ---
         for inst in result.instantiations:
@@ -154,93 +159,110 @@ class GoogleADKAdapter(TSFrameworkAdapter):
             model_val = self._resolve(inst, "model")
             if model_val:
                 model_canon = canonicalize_text(model_val.lower())
-                rels.append(RelationshipHint(
-                    source_canonical=agent_canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=model_canon,
-                    target_type=ComponentType.MODEL,
-                    relationship_type="USES",
-                ))
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=model_canon,
-                    display_name=model_val,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={"provider": "google", "language": "typescript"},
-                    file_path=file_path,
-                    line=inst.line_start,
-                    snippet=f"model={model_val!r}",
-                    evidence_kind="ast_instantiation",
-                ))
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=agent_canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=model_canon,
+                        target_type=ComponentType.MODEL,
+                        relationship_type="USES",
+                    )
+                )
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=model_canon,
+                        display_name=model_val,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={"provider": "google", "language": "typescript"},
+                        file_path=file_path,
+                        line=inst.line_start,
+                        snippet=f"model={model_val!r}",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             # Tools list
             tools_val = (inst.resolved_arguments or inst.arguments).get("tools")
             if tools_val:
                 refs = (
-                    tools_val if isinstance(tools_val, list)
-                    else [t.strip().strip("'\"") for t in str(tools_val).strip("[]").split(",") if t.strip()]
+                    tools_val
+                    if isinstance(tools_val, list)
+                    else [
+                        t.strip().strip("'\"")
+                        for t in str(tools_val).strip("[]").split(",")
+                        if t.strip()
+                    ]
                 )
                 for ref in refs:
-                    rels.append(RelationshipHint(
-                        source_canonical=agent_canon,
-                        source_type=ComponentType.AGENT,
-                        target_canonical=canonicalize_text(str(ref).lower()),
-                        target_type=ComponentType.TOOL,
-                        relationship_type="CALLS",
-                    ))
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=agent_canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=canonicalize_text(str(ref).lower()),
+                            target_type=ComponentType.TOOL,
+                            relationship_type="CALLS",
+                        )
+                    )
 
             # Instruction → PROMPT
             instruction = self._resolve(inst, "instruction", "system_instruction")
             if len(instruction) > 10:
                 prompt_name = f"{agent_name}_instruction"
                 prompt_canon = canonicalize_text(prompt_name.lower())
-                rels.append(RelationshipHint(
-                    source_canonical=agent_canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=prompt_canon,
-                    target_type=ComponentType.PROMPT,
-                    relationship_type="USES",
-                ))
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.PROMPT,
-                    canonical_name=prompt_canon,
-                    display_name=prompt_name,
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=agent_canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=prompt_canon,
+                        target_type=ComponentType.PROMPT,
+                        relationship_type="USES",
+                    )
+                )
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.PROMPT,
+                        canonical_name=prompt_canon,
+                        display_name=prompt_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={
+                            "prompt_type": "instruction",
+                            "role": "system",
+                            "content_preview": instruction[:200],
+                            "language": "typescript",
+                        },
+                        file_path=file_path,
+                        line=inst.line_start,
+                        snippet=instruction[:80],
+                        evidence_kind="ast_instantiation",
+                    )
+                )
+
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=agent_canon,
+                    display_name=agent_name,
                     adapter_name=self.name,
                     priority=self.priority,
-                    confidence=0.85,
+                    confidence=0.90,
                     metadata={
-                        "prompt_type": "instruction",
-                        "role": "system",
-                        "content_preview": instruction[:200],
+                        "class": inst.class_name,
+                        "agent_type": _agent_subtype(inst.class_name),
+                        "framework": "google-adk",
                         "language": "typescript",
                     },
                     file_path=file_path,
                     line=inst.line_start,
-                    snippet=instruction[:80],
+                    snippet=inst.source_snippet or "",
                     evidence_kind="ast_instantiation",
-                ))
-
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=agent_canon,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "class": inst.class_name,
-                    "agent_type": _agent_subtype(inst.class_name),
-                    "framework": "google-adk",
-                    "language": "typescript",
-                },
-                file_path=file_path,
-                line=inst.line_start,
-                snippet=inst.source_snippet or "",
-                evidence_kind="ast_instantiation",
-                relationships=rels,
-            ))
+                    relationships=rels,
+                )
+            )
 
         return detected
 

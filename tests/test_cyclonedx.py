@@ -7,6 +7,7 @@ requirements for a valid CycloneDX 1.6 BOM.
 
 Fixtures are the real-world app directories used in test_scenarios.py.
 """
+
 from __future__ import annotations
 
 import re
@@ -37,6 +38,7 @@ def _cdx(app: str, deps: list[PackageDep] | None = None) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Top-level BOM structure
 # ---------------------------------------------------------------------------
+
 
 class TestBomStructure:
     @pytest.fixture(scope="class")
@@ -75,7 +77,7 @@ class TestBomStructure:
         tools = bom["metadata"]["tools"]
         assert tools
         tool = tools[0]
-        assert tool.get("vendor") == "Vela"
+        assert tool.get("vendor") == "Xelo"
         assert tool.get("name")
         assert tool.get("version")
 
@@ -98,6 +100,7 @@ class TestBomStructure:
 # AI component type mapping
 # ---------------------------------------------------------------------------
 
+
 class TestAiComponentTypes:
     """Validate CycloneDX type mapping for AI component types."""
 
@@ -109,12 +112,16 @@ class TestAiComponentTypes:
     def bom(self, doc: AiBomDocument) -> dict[str, Any]:
         return SbomSerializer.to_cyclonedx(doc)
 
-    def test_model_nodes_map_to_ml_model_type(self, doc: AiBomDocument, bom: dict[str, Any]) -> None:
+    def test_model_nodes_map_to_ml_model_type(
+        self, doc: AiBomDocument, bom: dict[str, Any]
+    ) -> None:
         model_names = {n.name for n in doc.nodes if n.component_type == ComponentType.MODEL}
         ml_model_comps = [c for c in bom["components"] if c["type"] == "machine-learning-model"]
         ml_model_names = {c["name"] for c in ml_model_comps}
         for name in model_names:
-            assert name in ml_model_names, f"MODEL node {name!r} not mapped to machine-learning-model"
+            assert name in ml_model_names, (
+                f"MODEL node {name!r} not mapped to machine-learning-model"
+            )
 
     def test_agent_nodes_map_to_application(self, doc: AiBomDocument, bom: dict[str, Any]) -> None:
         agent_names = {n.name for n in doc.nodes if n.component_type == ComponentType.AGENT}
@@ -122,7 +129,9 @@ class TestAiComponentTypes:
         for name in agent_names:
             assert name in app_comps, f"AGENT node {name!r} not mapped to application"
 
-    def test_framework_nodes_map_to_application(self, doc: AiBomDocument, bom: dict[str, Any]) -> None:
+    def test_framework_nodes_map_to_application(
+        self, doc: AiBomDocument, bom: dict[str, Any]
+    ) -> None:
         fw_names = {n.name for n in doc.nodes if n.component_type == ComponentType.FRAMEWORK}
         app_comps = {c["name"] for c in bom["components"] if c["type"] == "application"}
         for name in fw_names:
@@ -135,8 +144,16 @@ class TestAiComponentTypes:
             assert name in lib_comps, f"TOOL node {name!r} not mapped to library"
 
     def test_no_unknown_types(self, bom: dict[str, Any]) -> None:
-        valid_types = {"application", "library", "machine-learning-model", "data",
-                       "container", "firmware", "device", "file"}
+        valid_types = {
+            "application",
+            "library",
+            "machine-learning-model",
+            "data",
+            "container",
+            "firmware",
+            "device",
+            "file",
+        }
         for comp in bom["components"]:
             assert comp["type"] in valid_types, f"Unknown CycloneDX type: {comp['type']!r}"
 
@@ -144,6 +161,7 @@ class TestAiComponentTypes:
 # ---------------------------------------------------------------------------
 # MODEL externalReferences (model card URLs)
 # ---------------------------------------------------------------------------
+
 
 class TestModelExternalReferences:
     @pytest.fixture(scope="class")
@@ -171,9 +189,10 @@ class TestModelExternalReferences:
     def test_openai_model_card_url_domain(self, bom: dict[str, Any]) -> None:
         ml_comps = [c for c in bom["components"] if c["type"] == "machine-learning-model"]
         openai_props = [
-            c for c in ml_comps
+            c
+            for c in ml_comps
             if any(
-                p.get("name") == "vela:provider" and p.get("value") == "openai"
+                p.get("name") == "xelo:provider" and p.get("value") == "openai"
                 for p in c.get("properties", [])
             )
         ]
@@ -187,9 +206,10 @@ class TestModelExternalReferences:
     def test_anthropic_model_card_url_domain(self, bom: dict[str, Any]) -> None:
         ml_comps = [c for c in bom["components"] if c["type"] == "machine-learning-model"]
         anthropic_props = [
-            c for c in ml_comps
+            c
+            for c in ml_comps
             if any(
-                p.get("name") == "vela:provider" and p.get("value") == "anthropic"
+                p.get("name") == "xelo:provider" and p.get("value") == "anthropic"
                 for p in c.get("properties", [])
             )
         ]
@@ -202,8 +222,9 @@ class TestModelExternalReferences:
 
 
 # ---------------------------------------------------------------------------
-# Velo properties on AI components
+# Xelo properties on AI components
 # ---------------------------------------------------------------------------
+
 
 class TestVelaProperties:
     @pytest.fixture(scope="class")
@@ -211,34 +232,35 @@ class TestVelaProperties:
         return _cdx("research_assistant")
 
     def test_all_components_have_component_type_property(self, bom: dict[str, Any]) -> None:
-        # Only AI components carry vela:component_type; dep library components have purl instead
+        # Only AI components carry xelo:component_type; dep library components have purl instead
         ai_comps = [c for c in bom["components"] if not c.get("purl")]
         for comp in ai_comps:
             props = {p["name"]: p["value"] for p in comp.get("properties", [])}
-            assert "vela:component_type" in props, (
-                f"Component {comp['name']!r} missing vela:component_type property"
+            assert "xelo:component_type" in props, (
+                f"Component {comp['name']!r} missing xelo:component_type property"
             )
 
     def test_all_components_have_confidence_property(self, bom: dict[str, Any]) -> None:
-        # Only AI components carry vela:confidence; dep library components do not
+        # Only AI components carry xelo:confidence; dep library components do not
         ai_comps = [c for c in bom["components"] if not c.get("purl")]
         for comp in ai_comps:
             props = {p["name"]: p["value"] for p in comp.get("properties", [])}
-            assert "vela:confidence" in props, (
-                f"Component {comp['name']!r} missing vela:confidence property"
+            assert "xelo:confidence" in props, (
+                f"Component {comp['name']!r} missing xelo:confidence property"
             )
-            confidence = float(props["vela:confidence"])
+            confidence = float(props["xelo:confidence"])
             assert 0.0 < confidence <= 1.0
 
     def test_model_components_have_provider_property(self, bom: dict[str, Any]) -> None:
         ml_comps = [c for c in bom["components"] if c["type"] == "machine-learning-model"]
         # AST-enriched models should have provider; at least one must be present
         enriched = [
-            c for c in ml_comps
-            if any(p["name"] == "vela:provider" for p in c.get("properties", []))
+            c
+            for c in ml_comps
+            if any(p["name"] == "xelo:provider" for p in c.get("properties", []))
         ]
         assert enriched, (
-            f"Expected at least one ML model with vela:provider property; "
+            f"Expected at least one ML model with xelo:provider property; "
             f"got models: {[c['name'] for c in ml_comps]}"
         )
 
@@ -250,6 +272,7 @@ class TestVelaProperties:
 # ---------------------------------------------------------------------------
 # Package dependency components (pkg:pypi/ PURLs)
 # ---------------------------------------------------------------------------
+
 
 class TestDepComponents:
     @pytest.fixture(scope="class")
@@ -268,8 +291,7 @@ class TestDepComponents:
 
     def test_dep_components_have_purls(self, bom_with_deps: dict[str, Any]) -> None:
         dep_comps = [
-            c for c in bom_with_deps["components"]
-            if c.get("purl", "").startswith("pkg:pypi/")
+            c for c in bom_with_deps["components"] if c.get("purl", "").startswith("pkg:pypi/")
         ]
         assert dep_comps, "Expected dep components with pkg:pypi/ PURLs"
 
@@ -284,15 +306,15 @@ class TestDepComponents:
         dep_comps = [c for c in bom_with_deps["components"] if c.get("purl")]
         for comp in dep_comps:
             prop_names = {p["name"] for p in comp.get("properties", [])}
-            assert "vela:dep_group" in prop_names, (
-                f"Dep {comp['name']!r} missing vela:dep_group property"
+            assert "xelo:dep_group" in prop_names, (
+                f"Dep {comp['name']!r} missing xelo:dep_group property"
             )
 
     def test_dep_has_source_file_property(self, bom_with_deps: dict[str, Any]) -> None:
         dep_comps = [c for c in bom_with_deps["components"] if c.get("purl")]
         for comp in dep_comps:
             prop_names = {p["name"] for p in comp.get("properties", [])}
-            assert "vela:source_file" in prop_names
+            assert "xelo:source_file" in prop_names
 
     def test_langgraph_dep_present(self, bom_with_deps: dict[str, Any]) -> None:
         dep_names = {c["name"] for c in bom_with_deps["components"] if c.get("purl")}
@@ -319,6 +341,7 @@ class TestDepComponents:
 # Dependency edges (CycloneDX dependencies section)
 # ---------------------------------------------------------------------------
 
+
 class TestDependencyEdges:
     @pytest.fixture(scope="class")
     def bom(self) -> dict[str, Any]:
@@ -333,14 +356,13 @@ class TestDependencyEdges:
 
     def test_no_self_referential_edges(self, bom: dict[str, Any]) -> None:
         for dep in bom["dependencies"]:
-            assert dep["ref"] not in dep["dependsOn"], (
-                f"Self-referential edge: {dep['ref']!r}"
-            )
+            assert dep["ref"] not in dep["dependsOn"], f"Self-referential edge: {dep['ref']!r}"
 
 
 # ---------------------------------------------------------------------------
 # Cross-app: RAG pipeline and CrewAI crew
 # ---------------------------------------------------------------------------
+
 
 class TestRagPipelineCycloneDx:
     @pytest.fixture(scope="class")
@@ -356,10 +378,11 @@ class TestRagPipelineCycloneDx:
 
     def test_anthropic_model_has_external_ref(self, bom: dict[str, Any]) -> None:
         anthropic_comps = [
-            c for c in bom["components"]
+            c
+            for c in bom["components"]
             if c["type"] == "machine-learning-model"
             and any(
-                p["name"] == "vela:provider" and p["value"] == "anthropic"
+                p["name"] == "xelo:provider" and p["value"] == "anthropic"
                 for p in c.get("properties", [])
             )
         ]
@@ -379,7 +402,7 @@ class TestCodeReviewCrewCycloneDx:
         adapter_props = set()
         for comp in app_comps:
             for p in comp.get("properties", []):
-                if p["name"] == "vela:adapter":
+                if p["name"] == "xelo:adapter":
                     adapter_props.add(p["value"])
         assert "crewai" in adapter_props or "autogen" in adapter_props, (
             f"Expected crewai or autogen adapter in application components, got: {adapter_props}"
@@ -390,7 +413,7 @@ class TestCodeReviewCrewCycloneDx:
         providers = set()
         for comp in ml_comps:
             for p in comp.get("properties", []):
-                if p["name"] == "vela:provider":
+                if p["name"] == "xelo:provider":
                     providers.add(p["value"])
         assert "anthropic" in providers or "openai" in providers, (
             f"Expected multi-provider models, got: {providers}"
@@ -400,6 +423,7 @@ class TestCodeReviewCrewCycloneDx:
 # ---------------------------------------------------------------------------
 # Full pipeline: extract + scan deps + serialize
 # ---------------------------------------------------------------------------
+
 
 class TestFullPipeline:
     """End-to-end: extract AI BOM + scan deps → combined CycloneDX output."""
@@ -417,6 +441,7 @@ class TestFullPipeline:
 
     def test_json_serializable(self) -> None:
         import json
+
         doc = _extract("customer_service_bot")
         deps = DependencyScanner().scan(_APPS / "customer_service_bot")
         json_str = SbomSerializer.dump_cyclonedx_json(doc, deps=deps)

@@ -1,5 +1,5 @@
 {
-  "name": "Velo Dev",
+  "name": "Xelo Dev",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."

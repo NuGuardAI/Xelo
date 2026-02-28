@@ -1,4 +1,4 @@
-"""Datastore Detection TypeScript Adapter for Velo SBOM.
+"""Datastore Detection TypeScript Adapter for Xelo SBOM.
 
 Parsing is performed by ``ai_sbom.core.ts_parser`` (tree-sitter when
 available, regex fallback otherwise).
@@ -9,6 +9,7 @@ Supports:
 - Object Storage: @aws-sdk/client-s3, @google-cloud/storage, @azure/storage-blob
 - Key-Value: redis, ioredis
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -67,7 +68,9 @@ _KV_PACKAGES = {
     "memcached": "memcached",
 }
 
-_ALL_PACKAGES = list({**_SQL_PACKAGES, **_VECTOR_PACKAGES, **_OBJECT_STORAGE_PACKAGES, **_KV_PACKAGES})
+_ALL_PACKAGES = list(
+    {**_SQL_PACKAGES, **_VECTOR_PACKAGES, **_OBJECT_STORAGE_PACKAGES, **_KV_PACKAGES}
+)
 
 # class → (provider, datastore_type)
 _CLASS_MAP: dict[str, tuple[str, str]] = {
@@ -93,7 +96,11 @@ def _parse_url(url: str) -> dict[str, Any]:
         parsed = urlparse(url.strip("'\"`"))
         scheme = parsed.scheme.split("+")[0] if parsed.scheme else ""
         db = parsed.path.strip("/").split("/")[0] if parsed.path else None
-        ep = f"{scheme}://{parsed.hostname}:{parsed.port}" if parsed.hostname and parsed.port else None
+        ep = (
+            f"{scheme}://{parsed.hostname}:{parsed.port}"
+            if parsed.hostname and parsed.port
+            else None
+        )
         return {"database": db, "api_endpoint": ep, "has_ssl": "ssl" in url.lower()}
     except Exception:
         return {}
@@ -137,14 +144,16 @@ class DatastoreTSAdapter(TSFrameworkAdapter):
                     if pattern in mod or mod == pattern:
                         if provider not in seen_providers:
                             seen_providers.add(provider)
-                            detected.append(self._ds_node(
-                                file_path=file_path,
-                                name=provider,
-                                provider=provider,
-                                ds_type=ds_type,
-                                line=imp.line_number,
-                                confidence=0.70,
-                            ))
+                            detected.append(
+                                self._ds_node(
+                                    file_path=file_path,
+                                    name=provider,
+                                    provider=provider,
+                                    ds_type=ds_type,
+                                    line=imp.line_number,
+                                    confidence=0.70,
+                                )
+                            )
 
         # --- Instantiation-level detection (higher confidence) ---
         pg_imported = any(
@@ -186,15 +195,17 @@ class DatastoreTSAdapter(TSFrameworkAdapter):
                     args.get("collectionName") or args.get("collection")
                 )
 
-            detected.append(self._ds_node(
-                file_path=file_path,
-                name=name,
-                provider=provider,
-                ds_type=ds_type,
-                line=inst.line_start,
-                confidence=0.90,
-                extra_meta=extra_meta,
-            ))
+            detected.append(
+                self._ds_node(
+                    file_path=file_path,
+                    name=name,
+                    provider=provider,
+                    ds_type=ds_type,
+                    line=inst.line_start,
+                    confidence=0.90,
+                    extra_meta=extra_meta,
+                )
+            )
 
         # --- S3 / Azure Blob via function calls ---
         for call in result.function_calls:
@@ -202,29 +213,33 @@ class DatastoreTSAdapter(TSFrameworkAdapter):
             args = call.resolved_arguments or call.arguments
             if "S3Client" in fn or (fn.endswith("S3") and "create" in fn.lower()):
                 bucket = self._clean(args.get("Bucket") or args.get("bucket"))
-                detected.append(self._ds_node(
-                    file_path=file_path,
-                    name=bucket or f"s3_{call.line_start}",
-                    provider="aws-s3",
-                    ds_type="object-storage",
-                    line=call.line_start,
-                    confidence=0.85,
-                    extra_meta={
-                        "bucket_name": bucket,
-                        "region": self._clean(args.get("region")),
-                    },
-                ))
+                detected.append(
+                    self._ds_node(
+                        file_path=file_path,
+                        name=bucket or f"s3_{call.line_start}",
+                        provider="aws-s3",
+                        ds_type="object-storage",
+                        line=call.line_start,
+                        confidence=0.85,
+                        extra_meta={
+                            "bucket_name": bucket,
+                            "region": self._clean(args.get("region")),
+                        },
+                    )
+                )
             elif "BlobServiceClient" in fn:
                 container = self._clean(args.get("containerName"))
-                detected.append(self._ds_node(
-                    file_path=file_path,
-                    name=container or f"azure_blob_{call.line_start}",
-                    provider="azure-blob",
-                    ds_type="object-storage",
-                    line=call.line_start,
-                    confidence=0.85,
-                    extra_meta={"container_name": container},
-                ))
+                detected.append(
+                    self._ds_node(
+                        file_path=file_path,
+                        name=container or f"azure_blob_{call.line_start}",
+                        provider="azure-blob",
+                        ds_type="object-storage",
+                        line=call.line_start,
+                        confidence=0.85,
+                        extra_meta={"container_name": container},
+                    )
+                )
 
         return detected
 

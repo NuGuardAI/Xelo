@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Run the Velo CLI without installing the package.
-# Usage:   ./vela.sh scan path <DIR> --format json --output sbom.json
-#          ./vela.sh scan repo <URL> --ref main --output sbom.json
-#          ./vela.sh validate sbom.json
-#          ./vela.sh schema --output schema.json
+# Run the Xelo CLI without installing the package.
+# Usage:   ./xelo.sh scan path <DIR> --format json --output sbom.json
+#          ./xelo.sh scan repo <URL> --ref main --output sbom.json
+#          ./xelo.sh validate sbom.json
+#          ./xelo.sh schema --output schema.json
+
 
 set -euo pipefail
 
@@ -11,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$SCRIPT_DIR/src"
 
 if [[ ! -d "$SRC_DIR/ai_sbom" ]]; then
-  echo "Error: cannot find $SRC_DIR/ai_sbom — run this script from inside oss/Vela/" >&2
+  echo "Error: cannot find $SRC_DIR/ai_sbom — run this script from inside Xelo/" >&2
   exit 1
 fi
 
