@@ -269,6 +269,14 @@ class SbomExtractor:
         # Enrich DATASTORE nodes with PII/PHI classification metadata
         self._enrich_datastores(node_map, _dc_metadata)
 
+        # Deduplicate nodes that share (component_type, file, line) — e.g. a
+        # regex adapter and an AST adapter both firing on the same token.
+        _dedup_by_location(node_map)
+        # Deduplicate nodes where one name is a prefix of another from the same
+        # file — e.g. regex matches "gemini-2.0" while AST extracts the full
+        # "gemini-2.0-flash" from an adjacent line of the same call.
+        _dedup_by_name_prefix(node_map)
+
         # Build nodes + edges
         for key in sorted(node_map.keys(), key=lambda v: (v[0].value, v[1])):
             acc = node_map[key]
@@ -679,6 +687,100 @@ def _make_scan_summary(d: dict[str, Any]) -> ScanSummary:
         data_classification=d.get("data_classification") or [],
         classified_tables=d.get("classified_tables") or [],
     )
+
+
+def _dedup_by_name_prefix(
+    node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+) -> None:
+    """Remove accumulator entries whose name is a strict prefix of another
+    entry of the same component type that shares at least one source file.
+
+    Handles cases where a regex adapter extracts a truncated model name
+    (e.g. ``gemini-2.0``) while an AST adapter extracts the full string
+    (``gemini-2.0-flash``) from an adjacent line of the same call.
+    The shorter entry is dropped and its evidence absorbed by the longer one.
+    """
+    keys = list(node_map.keys())
+    keys_to_remove: set[tuple[ComponentType, str]] = set()
+
+    for i, key_a in enumerate(keys):
+        if key_a in keys_to_remove:
+            continue
+        acc_a = node_map[key_a]
+        files_a = {ev.location.path for ev in acc_a.evidence if ev.location}
+
+        for key_b in keys[i + 1 :]:
+            if key_b in keys_to_remove:
+                continue
+            if key_a[0] != key_b[0]:  # must be same component_type
+                continue
+            acc_b = node_map[key_b]
+            files_b = {ev.location.path for ev in acc_b.evidence if ev.location}
+
+            if not files_a & files_b:  # must share at least one file
+                continue
+
+            name_a = acc_a.display_name.lower()
+            name_b = acc_b.display_name.lower()
+            if name_b.startswith(name_a) and name_b != name_a:
+                # a is the shorter prefix — drop it, keep b
+                node_map[key_b].evidence.extend(node_map[key_a].evidence)
+                keys_to_remove.add(key_a)
+                _log.debug("dedup_by_name_prefix: dropped %s → kept %s", key_a, key_b)
+                break
+            elif name_a.startswith(name_b) and name_a != name_b:
+                # b is the shorter prefix — drop it, keep a
+                node_map[key_a].evidence.extend(node_map[key_b].evidence)
+                keys_to_remove.add(key_b)
+                _log.debug("dedup_by_name_prefix: dropped %s → kept %s", key_b, key_a)
+
+    for k in keys_to_remove:
+        del node_map[k]
+
+
+def _dedup_by_location(
+    node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+) -> None:
+    """Remove accumulator entries that share (component_type, file, line) with a
+    higher-priority entry, merging their evidence into the winner.
+
+    Applies when two adapters fire on the exact same source token — e.g. an AST
+    adapter producing ``gemini-2.0-flash`` and a regex adapter producing
+    ``gemini-2.0`` from the same line.  The lower-priority-number (higher
+    precedence) adapter wins; ties broken by confidence descending.
+    """
+    # loc → [key, ...] for all keys that have at least one evidence item at that location
+    loc_to_keys: dict[tuple[ComponentType, str, int | None], list[tuple[ComponentType, str]]] = {}
+    for key, acc in node_map.items():
+        for ev in acc.evidence:
+            if ev.location:
+                loc = (key[0], ev.location.path, ev.location.line)
+                if key not in loc_to_keys.get(loc, []):
+                    loc_to_keys.setdefault(loc, []).append(key)
+
+    keys_to_remove: set[tuple[ComponentType, str]] = set()
+    for loc, keys in loc_to_keys.items():
+        if len(keys) <= 1:
+            continue
+        # Sort: lower priority number = higher precedence; break ties by confidence desc
+        keys_sorted = sorted(
+            keys,
+            key=lambda k: (node_map[k].priority, -node_map[k].confidence),
+        )
+        winner = keys_sorted[0]
+        for loser in keys_sorted[1:]:
+            if loser in keys_to_remove:
+                continue
+            # Absorb evidence so the winner node reflects all source locations
+            node_map[winner].evidence.extend(node_map[loser].evidence)
+            keys_to_remove.add(loser)
+            _log.debug(
+                "dedup_by_location: dropped %s (priority=%d conf=%.2f) → kept %s",
+                loser, node_map[loser].priority, node_map[loser].confidence, winner,
+            )
+
+    for k in keys_to_remove:
+        del node_map[k]
 
 
 def stable_id(value: str) -> str:
