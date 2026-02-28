@@ -207,7 +207,8 @@ class PromptTSAdapter(TSFrameworkAdapter):
     handles_imports = _PROMPT_PACKAGES
 
     def can_handle(self, imports_present: set[str]) -> bool:
-        return super().can_handle(imports_present)
+        # Always run — prompts can appear in any file; _detect will filter
+        return True
 
     def extract(
         self,
