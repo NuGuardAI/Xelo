@@ -56,6 +56,8 @@ class ParseResult:
     string_literals: list[ParsedStringLiteral] = field(default_factory=list)
     source: str = ""
     parse_error: str | None = None
+    # Variable names of Agent instances that are invoked inside @input_guardrail functions
+    guardrail_agent_vars: set[str] = field(default_factory=set)
 
 
 class _AstExtractor(ast.NodeVisitor):
@@ -68,6 +70,8 @@ class _AstExtractor(ast.NodeVisitor):
         self.function_calls: list[ParsedCall] = []
         self.string_literals: list[ParsedStringLiteral] = []
         self._scope_stack: list[str] = []
+        self._in_input_guardrail: bool = False
+        self.guardrail_agent_vars: set[str] = set()
 
     # ------------------------------------------------------------------
     # Import handling
@@ -103,11 +107,13 @@ class _AstExtractor(ast.NodeVisitor):
     # ------------------------------------------------------------------
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
-        # Capture bare decorators (e.g. @function_tool before def web_search)
+        # Capture decorators — both bare (@function_tool) and call-style (@function_tool(args))
+        is_input_guardrail = False
         for decorator in node.decorator_list:
             if isinstance(decorator, ast.Name):
+                dname = decorator.id
                 self.function_calls.append(ParsedCall(
-                    function_name=decorator.id,
+                    function_name=dname,
                     receiver=None,
                     args={},
                     positional_args=[],
@@ -115,9 +121,36 @@ class _AstExtractor(ast.NodeVisitor):
                     line=decorator.lineno,
                     line_end=decorator.lineno,
                 ))
+                if dname == "input_guardrail":
+                    is_input_guardrail = True
+            elif isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Name):
+                # @decorator(keyword=value, ...) — e.g. @function_tool(name_override="foo")
+                dname = decorator.func.id
+                dargs: dict[str, Any] = {}
+                for kw in decorator.keywords:
+                    if kw.arg:
+                        v = self._extract_value(kw.value)
+                        if v is not None:
+                            dargs[kw.arg] = v
+                dpos = [v for v in (self._extract_value(a) for a in decorator.args) if v is not None]
+                self.function_calls.append(ParsedCall(
+                    function_name=dname,
+                    receiver=None,
+                    args=dargs,
+                    positional_args=dpos,
+                    assigned_to=node.name,
+                    line=decorator.lineno,
+                    line_end=decorator.lineno,
+                ))
+                if dname == "input_guardrail":
+                    is_input_guardrail = True
+
+        prev_guardrail = self._in_input_guardrail
+        self._in_input_guardrail = is_input_guardrail or self._in_input_guardrail
         self._scope_stack.append(node.name)
         self.generic_visit(node)
         self._scope_stack.pop()
+        self._in_input_guardrail = prev_guardrail
 
     visit_AsyncFunctionDef = visit_FunctionDef  # type: ignore[assignment]
 
@@ -136,6 +169,9 @@ class _AstExtractor(ast.NodeVisitor):
             assigned_to = self._get_name(node.targets[0])
         if isinstance(node.value, ast.Call):
             self._visit_call(node.value, assigned_to=assigned_to)
+        elif isinstance(node.value, ast.Await) and isinstance(node.value.value, ast.Call):
+            # Handle `result = await Runner.run(...)` patterns
+            self._visit_call(node.value.value, assigned_to=assigned_to)
         self.generic_visit(node)
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> None:
@@ -147,6 +183,9 @@ class _AstExtractor(ast.NodeVisitor):
     def visit_Expr(self, node: ast.Expr) -> None:
         if isinstance(node.value, ast.Call):
             self._visit_call(node.value, assigned_to=None)
+        elif isinstance(node.value, ast.Await) and isinstance(node.value.value, ast.Call):
+            # Handle `await some_call(...)` — e.g. `await Runner.run(...)`
+            self._visit_call(node.value.value, assigned_to=None)
         elif isinstance(node.value, ast.Constant) and isinstance(node.value.value, str):
             # Module-level or function-level docstrings
             value = node.value.value
@@ -195,6 +234,12 @@ class _AstExtractor(ast.NodeVisitor):
         line = node.lineno
         line_end: int = getattr(node, "end_lineno", line)
 
+        # Track variables passed as first arg to Runner.run() inside @input_guardrail functions
+        if self._in_input_guardrail and func_name.split(".")[-1] == "run":
+            for arg in node.args[:1]:
+                if isinstance(arg, ast.Name):
+                    self.guardrail_agent_vars.add(arg.id)
+
         # Heuristic: Title-case top-level names are class instantiations
         top = func_name.split(".")[-1]
         if top and top[0].isupper():
@@ -237,6 +282,17 @@ class _AstExtractor(ast.NodeVisitor):
             if receiver:
                 return f"{receiver}.{node.func.attr}"
             return node.func.attr
+        if isinstance(node.func, ast.Subscript):
+            # Handle Agent[T](...) — generic subscript syntax
+            inner = node.func.value
+            if isinstance(inner, ast.Name):
+                return inner.id
+            if isinstance(inner, ast.Attribute):
+                obj = inner.value
+                recv = obj.id if isinstance(obj, ast.Name) else getattr(obj, "attr", None)
+                if recv:
+                    return f"{recv}.{inner.attr}"
+                return inner.attr
         return None
 
     def _get_receiver(self, node: ast.Call) -> str | None:
@@ -285,6 +341,7 @@ def parse(source: str) -> ParseResult:
     result.imports = extractor.imports
     result.instantiations = extractor.instantiations
     result.function_calls = extractor.function_calls
+    result.guardrail_agent_vars = extractor.guardrail_agent_vars
 
     # De-duplicate string literals (visit_Constant fires for every node,
     # including those already captured by visit_Expr for docstrings).

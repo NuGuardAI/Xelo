@@ -3,6 +3,7 @@ from enum import Enum
 
 class ComponentType(str, Enum):
     AGENT = "AGENT"
+    GUARDRAIL = "GUARDRAIL"
     FRAMEWORK = "FRAMEWORK"
     MODEL = "MODEL"
     TOOL = "TOOL"

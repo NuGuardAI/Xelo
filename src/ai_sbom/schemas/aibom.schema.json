@@ -3,6 +3,7 @@
     "ComponentType": {
       "enum": [
         "AGENT",
+        "GUARDRAIL",
         "FRAMEWORK",
         "MODEL",
         "TOOL",

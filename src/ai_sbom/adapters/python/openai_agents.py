@@ -39,6 +39,9 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
         detected: list[ComponentDetection] = [self._framework_node(file_path)]
         agent_canonicals: list[str] = []
 
+        # Collect guardrail agent variable names (populated by AST parser from @input_guardrail bodies)
+        guardrail_vars: set[str] = getattr(parse_result, "guardrail_agent_vars", set())
+
         # 1. Agent class instantiations
         for inst in parse_result.instantiations:
             if inst.class_name not in {"Agent", "AssistantAgent", "SwarmAgent"}:
@@ -53,6 +56,9 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
             instructions = _clean(args.get("instructions") or args.get("system_prompt", ""))
             model_name = _clean(args.get("model", ""))
             tools_raw = args.get("tools", [])
+
+            # Classify as GUARDRAIL if this agent variable is invoked inside an @input_guardrail fn
+            is_guardrail = bool(inst.assigned_to and inst.assigned_to in guardrail_vars)
 
             canon = canonicalize_text(f"openai_agents:{agent_name}")
             rels: list[RelationshipHint] = []
@@ -115,8 +121,9 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                 details = get_model_details(model_name, infer_provider(model_name))
                 meta.update({k: v for k, v in details.items() if v is not None})
 
+            comp_type = ComponentType.GUARDRAIL if is_guardrail else ComponentType.AGENT
             detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
+                component_type=comp_type,
                 canonical_name=canon,
                 display_name=agent_name,
                 adapter_name=self.name,
@@ -129,7 +136,8 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                 evidence_kind="ast_instantiation",
                 relationships=rels,
             ))
-            agent_canonicals.append(canon)
+            if not is_guardrail:
+                agent_canonicals.append(canon)
 
             # Instructions as PROMPT node
             if instructions and len(instructions) >= 40:
@@ -178,7 +186,8 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
         for call in parse_result.function_calls:
             if call.function_name in {"function_tool", "tool"}:
                 tool_name = _clean(
-                    call.args.get("name")
+                    call.args.get("name_override")  # @function_tool(name_override="foo")
+                    or call.args.get("name")
                     or (call.positional_args[0] if call.positional_args else None)
                     or call.assigned_to
                     or f"tool_{call.line}"
