@@ -182,7 +182,9 @@ def _detect_role(content: str) -> str | None:
 def _prompt_name(lit: TSStringLiteral, line: int) -> str:
     ctx = lit.context or lit.enclosing_function or ""
     if ctx:
-        slug = re.sub(r"[^a-z0-9_]", "_", ctx.lower()).strip("_")
+        # Split camelCase/PascalCase into words before lowercasing
+        ctx_split = re.sub(r"([a-z])([A-Z])", r"\1_\2", ctx)
+        slug = re.sub(r"[^a-z0-9_]", "_", ctx_split.lower()).strip("_")
         if slug and slug not in {"prompt", "template", "message", "content", "text", "str"}:
             return slug.replace("_", " ").title()
     cl = lit.value.lower()[:400]

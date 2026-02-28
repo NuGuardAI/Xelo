@@ -258,11 +258,12 @@ class LangGraphAdapter(FrameworkAdapter):
                 continue
             role = _detect_role(inst.class_name)
             template_vars = _TEMPLATE_VAR_RE.findall(content_val)
+            dname = _prompt_display_name(content_val, inst.assigned_to or inst.class_name, inst.line)
             canon = canonicalize_text(f"langchain:prompt:{inst.line}")
             detected.append(ComponentDetection(
                 component_type=ComponentType.PROMPT,
                 canonical_name=canon,
-                display_name=f"prompt_{inst.line}",
+                display_name=dname,
                 adapter_name=self.name,
                 priority=self.priority,
                 confidence=0.80,
@@ -287,11 +288,12 @@ class LangGraphAdapter(FrameworkAdapter):
             if not _is_prompt_literal(lit.value, lit.context or ""):
                 continue
             template_vars = _TEMPLATE_VAR_RE.findall(lit.value)
+            dname = _prompt_display_name(lit.value, lit.context or "", lit.line)
             canon = canonicalize_text(f"langchain:prompt:str:{lit.line}")
             detected.append(ComponentDetection(
                 component_type=ComponentType.PROMPT,
                 canonical_name=canon,
-                display_name=f"prompt_{lit.line}",
+                display_name=dname,
                 adapter_name=self.name,
                 priority=self.priority,
                 confidence=0.60,
@@ -339,6 +341,29 @@ def _infer_var_from_source(source: str, line: int) -> str | None:
         if m:
             return m.group(1)
     return None
+
+
+def _prompt_display_name(content: str, context: str, line: int) -> str:
+    """Derive a human-readable name for a detected prompt."""
+    ctx = context.strip()
+    if ctx:
+        # Split camelCase/PascalCase into words before lowercasing
+        ctx_words = re.sub(r"([a-z])([A-Z])", r"\1_\2", ctx)
+        slug = re.sub(r"[^a-z0-9_]", "_", ctx_words.lower()).strip("_")
+        if slug and slug not in {"prompt", "template", "message", "content", "text", "str"}:
+            return slug.replace("_", " ").title()
+    cl = content.lower()[:400]
+    if re.search(r"\byou are\s", cl):
+        return "System Prompt"
+    if any(k in cl for k in ["answer the question", "given the context"]):
+        return "RAG Prompt"
+    if any(k in cl for k in ["example:", "input:", "output:"]):
+        return "Few Shot Prompt"
+    if "summarize" in cl:
+        return "Summarize Prompt"
+    if "translate" in cl:
+        return "Translate Prompt"
+    return f"Prompt {line}"
 
 
 def _detect_role(class_name: str) -> str | None:
