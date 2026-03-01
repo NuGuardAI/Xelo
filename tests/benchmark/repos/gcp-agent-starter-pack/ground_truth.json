@@ -1,0 +1,248 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/GoogleCloudPlatform/agent-starter-pack",
+  "nodes": [
+    {
+      "id": "dab58a82-be29-5691-b36a-d6daff7e24c5",
+      "name": "model",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Google ADK model configuration",
+          "synonyms": [
+            "adk_model",
+            "gemini_model"
+          ]
+        },
+        "framework": "vertex-ai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 65
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatVertexAI",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 65
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "gemini",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 65
+          }
+        }
+      ]
+    },
+    {
+      "id": "bbb54b33-f958-51f0-9241-ced30df1e11d",
+      "name": "llm",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangGraph LLM via ChatVertexAI",
+          "synonyms": [
+            "langgraph_llm",
+            "chat_model"
+          ]
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "llm",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 30
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatVertexAI",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 30
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "gemini",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "80fa645a-065d-5919-b2e0-d8c04dab05b1",
+      "name": "text-embedding-005",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Vertex AI text embedding model for data ingestion",
+          "synonyms": [
+            "embedding_model",
+            "embeddings"
+          ]
+        },
+        "framework": "vertex-ai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "text-embedding-005",
+          "location": {
+            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
+            "line": 270
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "VertexAIEmbeddings",
+          "location": {
+            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
+            "line": 270
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "embedding",
+          "location": {
+            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
+            "line": 270
+          }
+        }
+      ]
+    },
+    {
+      "id": "3f367c3b-dfec-5f8e-94a9-91d54f9ff1e1",
+      "name": "system_prompt",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "System prompt for LangGraph agent",
+          "synonyms": [
+            "SYSTEM_PROMPT",
+            "prompt"
+          ]
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "system_prompt",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 45
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "SystemMessage",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 45
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "instructions",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 45
+          }
+        }
+      ]
+    },
+    {
+      "id": "4868eff9-85f8-57e8-b736-19276736383b",
+      "name": "LangGraphAgentExecutor",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangGraph agent executor for A2A communication",
+          "synonyms": [
+            "agent_executor",
+            "executor"
+          ]
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "LangGraphAgentExecutor",
+          "location": {
+            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "AgentExecutor",
+          "location": {
+            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "StateGraph",
+          "location": {
+            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
+            "line": 1
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "vertex-ai",
+      "gemini",
+      "langchain",
+      "langgraph"
+    ],
+    "node_counts": {
+      "MODEL": 3,
+      "PROMPT": 1,
+      "AGENT": 1
+    }
+  }
+}

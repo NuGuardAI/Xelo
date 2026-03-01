@@ -1,0 +1,8 @@
+{
+  "files": [
+    {
+      "path": "README.benchmark-skip.md",
+      "content": "# Benchmark Placeholder: voicelive-api-salescoach-demo\n\nThis repo is marked as skipped/private in ground_truth.json.\nNo source snapshot is available in this environment.\n"
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/NuGuardAI/Healthcare-voice-agent",
+  "nodes": [
+    {
+      "id": "c685b0c2-be27-5194-b84f-0dc17ac8ab13",
+      "name": "normalize_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangGraph agent that normalizes patient symptom phrases into clinical symptom terms using GPT-4"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ground truth annotation",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 42
+          }
+        }
+      ]
+    },
+    {
+      "id": "883c5576-26a5-5a9f-b36b-1834f1e331ca",
+      "name": "prognosis_search_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent that searches for prognosis using DuckDuckGo on medical sites"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ground truth annotation",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 77
+          }
+        }
+      ]
+    },
+    {
+      "id": "388b67de-5b08-5448-8e1f-139cba12540e",
+      "name": "specialist_lookup_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent that looks up specialists via PostgreSQL stored procedure"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ground truth annotation",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 110
+          }
+        }
+      ]
+    },
+    {
+      "id": "33817400-8607-59d2-89d2-d644062055a1",
+      "name": "recommend_specialists_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LLM-based agent that recommends specialists based on symptoms"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ground truth annotation",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 133
+          }
+        }
+      ]
+    },
+    {
+      "id": "da3cd9b2-c81f-5bc3-80c1-d19b5ba44521",
+      "name": "fetch_doctor_details_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent that fetches doctor details via stored procedure"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ground truth annotation",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 170
+          }
+        }
+      ]
+    },
+    {
+      "id": "37a8d765-66f5-50e5-9945-197238b39f4c",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI GPT-4 model via LangChain ChatOpenAI",
+          "synonyms": [
+            "llm",
+            "ChatOpenAI"
+          ]
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatOpenAI",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 34
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4\"",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 34
+          }
+        }
+      ]
+    },
+    {
+      "id": "a9435d90-6920-5549-9ec3-380bcbdd09a5",
+      "name": "api_key",
+      "component_type": "AUTH",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI API key loaded from environment",
+          "synonyms": [
+            "openai_api_key",
+            "OPENAI_API_KEY"
+          ]
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "openai_api_key=os.getenv",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 36
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "langgraph",
+      "langchain",
+      "openai",
+      "gemini"
+    ],
+    "node_counts": {
+      "AGENT": 5,
+      "MODEL": 1,
+      "AUTH": 1
+    }
+  }
+}

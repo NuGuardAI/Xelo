@@ -1,0 +1,180 @@
+{
+  "policy_name": "OWASP AI Top 10",
+  "version": "2025",
+  "description": "OWASP Top 10 for Large Language Model Applications",
+  "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+  "controls": [
+    {
+      "control_id": "OWASP-A01",
+      "name": "Prompt Injection",
+      "description": "Manipulation of LLM behavior through malicious inputs, including direct injection (overriding system prompts) and indirect injection (through external data sources).",
+      "category": "Input Validation",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No input sanitization",
+        "System prompt exposed",
+        "External data not validated",
+        "Indirect injection via RAG"
+      ],
+      "typical_mitigations": [
+        "Input filtering and validation",
+        "Privilege separation",
+        "Human approval for sensitive actions",
+        "Guardrail implementation"
+      ]
+    },
+    {
+      "control_id": "OWASP-A02",
+      "name": "Insecure Output Handling",
+      "description": "Failure to validate, sanitize, or handle LLM-generated outputs before passing to downstream systems or users.",
+      "category": "Output Validation",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No output validation",
+        "Direct execution of LLM output",
+        "XSS/injection through LLM responses"
+      ],
+      "typical_mitigations": [
+        "Output encoding",
+        "Content filtering",
+        "Response validation"
+      ]
+    },
+    {
+      "control_id": "OWASP-A03",
+      "name": "Training Data Poisoning",
+      "description": "Corruption or manipulation of training data to introduce vulnerabilities, backdoors, or biases into the model.",
+      "category": "Data Security",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No data provenance tracking",
+        "Untrusted training sources",
+        "No data validation pipeline"
+      ],
+      "typical_mitigations": [
+        "Data validation",
+        "Provenance tracking",
+        "Anomaly detection"
+      ]
+    },
+    {
+      "control_id": "OWASP-A04",
+      "name": "Model Denial of Service",
+      "description": "Attacks that cause resource exhaustion, excessive costs, or service degradation through malicious or resource-intensive queries.",
+      "category": "Availability",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No rate limiting",
+        "No cost controls",
+        "No query complexity limits"
+      ],
+      "typical_mitigations": [
+        "Rate limiting",
+        "Token budgets",
+        "Timeouts"
+      ]
+    },
+    {
+      "control_id": "OWASP-A05",
+      "name": "Supply Chain Vulnerabilities",
+      "description": "Risks from third-party components including pre-trained models, training data, and plugins from untrusted sources.",
+      "category": "Supply Chain",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Unvetted model sources",
+        "No dependency scanning",
+        "Outdated model versions"
+      ],
+      "typical_mitigations": [
+        "Model provenance verification",
+        "Dependency scanning",
+        "Version management"
+      ]
+    },
+    {
+      "control_id": "OWASP-A06",
+      "name": "Sensitive Information Disclosure",
+      "description": "Unauthorized exposure of sensitive information through LLM responses, including PII, credentials, or proprietary data.",
+      "category": "Data Privacy",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No PII filtering",
+        "Sensitive data in prompts",
+        "No response masking"
+      ],
+      "typical_mitigations": [
+        "PII detection/redaction",
+        "Data classification",
+        "Output filtering"
+      ]
+    },
+    {
+      "control_id": "OWASP-A07",
+      "name": "Insecure Plugin Design",
+      "description": "Security vulnerabilities in LLM plugins, tools, or function calling that could allow unauthorized actions or data access.",
+      "category": "Tool Security",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No tool validation",
+        "Excessive permissions",
+        "No sandboxing"
+      ],
+      "typical_mitigations": [
+        "Least privilege tools",
+        "Input validation for tools",
+        "Sandboxed execution"
+      ]
+    },
+    {
+      "control_id": "OWASP-A08",
+      "name": "Excessive Agency",
+      "description": "Granting LLMs excessive autonomy, permissions, or functionality without appropriate oversight or controls.",
+      "category": "Access Control",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Autonomous critical actions",
+        "No human-in-the-loop",
+        "Excessive permissions"
+      ],
+      "typical_mitigations": [
+        "Human approval gates",
+        "Action logging",
+        "Capability restrictions"
+      ]
+    },
+    {
+      "control_id": "OWASP-A09",
+      "name": "Overreliance",
+      "description": "Excessive trust in LLM outputs without appropriate verification, leading to misinformation or poor decisions.",
+      "category": "Human Factors",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No output verification",
+        "Missing confidence scores",
+        "No source citations"
+      ],
+      "typical_mitigations": [
+        "Uncertainty quantification",
+        "Source attribution",
+        "Human review"
+      ]
+    },
+    {
+      "control_id": "OWASP-A10",
+      "name": "Model Theft",
+      "description": "Unauthorized extraction of model weights, training data, or proprietary information through various techniques.",
+      "category": "Intellectual Property",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No API rate limiting",
+        "Exposed model details",
+        "No query pattern monitoring"
+      ],
+      "typical_mitigations": [
+        "Rate limiting",
+        "Query monitoring",
+        "Watermarking"
+      ]
+    }
+  ]
+}

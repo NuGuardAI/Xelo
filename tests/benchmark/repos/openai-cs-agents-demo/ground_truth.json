@@ -1,0 +1,714 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-06T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/NuGuardAI/openai-cs-agents-demo",
+  "nodes": [
+    {
+      "id": "2cbf326b-a5b3-5abb-9913-2db5462cdc0b",
+      "name": "TriageAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Triage agent that delegates customer requests to appropriate agents using OpenAI Agents SDK"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent[AirlineAgentContext]",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 296
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Triage Agent\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 296
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4.1\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 296
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "handoffs=",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 296
+          }
+        }
+      ]
+    },
+    {
+      "id": "5dea8e8f-6639-5f27-84bc-2dbcc44d546b",
+      "name": "FAQAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "FAQ agent that answers airline-related questions using faq_lookup_tool"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent[AirlineAgentContext]",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"FAQ Agent\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4.1\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        }
+      ]
+    },
+    {
+      "id": "b6625b82-7059-51d6-9e5b-4004f68b70f9",
+      "name": "SeatBookingAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Seat booking agent that handles seat selection and updates"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent[AirlineAgentContext]",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 201
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Seat Booking Agent\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 201
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4.1\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 201
+          }
+        }
+      ]
+    },
+    {
+      "id": "89679507-e0ab-5cf6-a0e0-80a540971ed9",
+      "name": "FlightStatusAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent that provides flight status information"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent[AirlineAgentContext]",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 225
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Flight Status Agent\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 225
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4.1\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 225
+          }
+        }
+      ]
+    },
+    {
+      "id": "b7f8c3dd-9232-522f-9b9e-42877e51f75b",
+      "name": "CancellationAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent that handles flight cancellation requests"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent[AirlineAgentContext]",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Cancellation Agent\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"gpt-4.1\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 273
+          }
+        }
+      ]
+    },
+    {
+      "id": "c3691fe8-b288-57ba-b3e3-ab30e6e500d4",
+      "name": "RelevanceGuardrail",
+      "component_type": "GUARDRAIL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Input guardrail to check if messages are relevant to airline topics"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@input_guardrail(name=\"Relevance Guardrail\")",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 141
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "GuardrailFunctionOutput",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 141
+          }
+        }
+      ]
+    },
+    {
+      "id": "3464bf2d-1138-534b-a54b-503598c055c6",
+      "name": "JailbreakGuardrail",
+      "component_type": "GUARDRAIL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Input guardrail to detect jailbreak attempts"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@input_guardrail(name=\"Jailbreak Guardrail\")",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 172
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "GuardrailFunctionOutput",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 172
+          }
+        }
+      ]
+    },
+    {
+      "id": "ac53348b-f710-5588-bcfc-55345f814218",
+      "name": "seat_booking_instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Instruction prompt routine for the seat booking agent",
+          "synonyms": [
+            "Seat Booking Agent_instructions"
+          ]
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def seat_booking_instructions",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 187
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "RECOMMENDED_PROMPT_PREFIX",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 187
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "You are a seat booking agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 187
+          }
+        }
+      ]
+    },
+    {
+      "id": "4a150dd1-c092-53be-a04d-0bfb63bd9f40",
+      "name": "flight_status_instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Instruction prompt routine for the flight status agent",
+          "synonyms": [
+            "Flight Status Agent_instructions"
+          ]
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def flight_status_instructions",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 212
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "RECOMMENDED_PROMPT_PREFIX",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 212
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "You are a Flight Status Agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 212
+          }
+        }
+      ]
+    },
+    {
+      "id": "44a784b9-ffc7-594c-b970-9b25af44064b",
+      "name": "cancellation_instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Instruction prompt routine for the cancellation agent",
+          "synonyms": [
+            "Cancellation Agent_instructions"
+          ]
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def cancellation_instructions",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 260
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "RECOMMENDED_PROMPT_PREFIX",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 260
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "You are a Cancellation Agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 260
+          }
+        }
+      ]
+    },
+    {
+      "id": "dcdcb6a4-93a6-5c31-b84f-85ac26983cf8",
+      "name": "faq_agent_instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Inline instruction prompt for the FAQ agent",
+          "synonyms": [
+            "FAQ Agent_instructions",
+            "system_prompt_288"
+          ]
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "faq_agent = Agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 288
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "instructions=f",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 288
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "You are an FAQ agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 288
+          }
+        }
+      ]
+    },
+    {
+      "id": "5bb3ab48-e84e-5920-8d67-b0bdd9798b62",
+      "name": "triage_agent_instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Inline instruction prompt for the triage agent",
+          "synonyms": [
+            "Triage Agent_instructions",
+            "system_prompt_303"
+          ]
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "triage_agent = Agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 302
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "instructions=(",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 302
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "You are a helpful triaging agent",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 302
+          }
+        }
+      ]
+    },
+    {
+      "id": "830f64fe-a20f-5ec8-a085-7d5df6aa651f",
+      "name": "faq_lookup_tool",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for looking up frequently asked questions"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 42
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name_override=\"faq_lookup_tool\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 42
+          }
+        }
+      ]
+    },
+    {
+      "id": "2a738378-a1f5-5030-aeb1-26c74489eb2e",
+      "name": "update_seat",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for updating seat assignment on a flight"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 57
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "async def update_seat",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 57
+          }
+        }
+      ]
+    },
+    {
+      "id": "97ec4229-1b92-56de-9ff2-f4d87180f344",
+      "name": "flight_status_tool",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for looking up flight status"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 79
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name_override=\"flight_status_tool\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 79
+          }
+        }
+      ]
+    },
+    {
+      "id": "dc8c39c4-f2df-5a1e-ad8c-a3c91716bdf7",
+      "name": "baggage_tool",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for looking up baggage allowance and fees"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 87
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name_override=\"baggage_tool\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 87
+          }
+        }
+      ]
+    },
+    {
+      "id": "5e7c3538-bd27-5ab1-89e1-f414a9f8b39e",
+      "name": "display_seat_map",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for displaying interactive seat map to customers"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 101
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name_override=\"display_seat_map\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 101
+          }
+        }
+      ]
+    },
+    {
+      "id": "e7e6fa3f-d4d4-51a6-aea6-6b547fedf50c",
+      "name": "cancel_flight",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for cancelling a flight"
+        },
+        "framework": "openai-agents-sdk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@function_tool",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 236
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name_override=\"cancel_flight\"",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 236
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "openai-agents-sdk",
+      "openai"
+    ],
+    "node_counts": {
+      "AGENT": 5,
+      "GUARDRAIL": 2,
+      "PROMPT": 5,
+      "TOOL": 6
+    }
+  }
+}

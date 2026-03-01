@@ -1,0 +1,367 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2025-02-05T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/run-llama/rags",
+  "nodes": [
+    {
+      "id": "f5b27c99-b53a-552e-90ce-fd9efa8f78ce",
+      "name": "RAGAgentBuilder",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "RAG Agent Builder class"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "RAGAgentBuilder",
+          "location": {
+            "path": "core/agent_builder/base.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "e78dc749-da54-5b64-bbab-8866d373a7d6",
+      "name": "MultimodalRAGAgentBuilder",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Multimodal RAG Agent Builder"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "MultimodalRAGAgentBuilder",
+          "location": {
+            "path": "core/agent_builder/multimodal.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "45bec7e0-2062-55cd-befa-c0686f2e717f",
+      "name": "vector_query_engine",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Vector query engine"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "as_query_engine",
+          "location": {
+            "path": "core/utils.py",
+            "line": 252
+          }
+        }
+      ]
+    },
+    {
+      "id": "79f04d36-6b0e-5aeb-a61c-c4fdcf1431b5",
+      "name": "summary_query_engine",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Summary query engine"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "as_query_engine",
+          "location": {
+            "path": "core/utils.py",
+            "line": 268
+          }
+        }
+      ]
+    },
+    {
+      "id": "34d3333e-50a0-5e6f-8ba1-aeca0e075f50",
+      "name": "vector_tool",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Vector tool for querying"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "QueryEngineTool",
+          "location": {
+            "path": "core/utils.py",
+            "line": 256
+          }
+        }
+      ]
+    },
+    {
+      "id": "50ff8ce5-1860-5ba8-b338-bca9c4336db1",
+      "name": "summary_tool",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Summary tool for querying"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "QueryEngineTool",
+          "location": {
+            "path": "core/utils.py",
+            "line": 269
+          }
+        }
+      ]
+    },
+    {
+      "id": "5d72e73b-990e-5887-83db-ad14438ed203",
+      "name": "BUILDER_LLM",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Builder LLM configuration"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "BUILDER_LLM = OpenAI(",
+          "location": {
+            "path": "core/builder_config.py",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "5767451c-5c28-5b0f-b979-4a0ae5db6b3e",
+      "name": "LLM",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LLM constant (uppercase)"
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "LLM = OpenAI(",
+          "location": {
+            "path": "core/utils.py",
+            "line": 84
+          }
+        }
+      ]
+    },
+    {
+      "id": "6d54ee11-4d52-5043-acc2-76e9b4cabf8c",
+      "name": "llm",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LLM variable (lowercase)"
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "llm = OpenAI(",
+          "location": {
+            "path": "core/utils.py",
+            "line": 89
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1a9c2ee-e57a-58f5-935e-0c38a7fa8255",
+      "name": "system_prompt",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "System prompt definition"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "system_prompt",
+          "location": {
+            "path": "pages/2_\u2699\ufe0f_RAG_Config.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "b38a54f1-be15-50d1-adf0-f02b3a417dd8",
+      "name": "RAG_BUILDER_SYS_STR",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "RAG builder system prompt string"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "RAG_BUILDER_SYS_STR",
+          "location": {
+            "path": "core/agent_builder/loader.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "1a298589-238b-56ea-b9cf-f0e7321ed2ea",
+      "name": "GEN_SYS_PROMPT_STR",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Generated system prompt string"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "GEN_SYS_PROMPT_STR",
+          "location": {
+            "path": "core/agent_builder/base.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "d1aae73f-3247-5a17-8597-84d1bbe9906b",
+      "name": "GEN_SYS_PROMPT_TMPL",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Generated system prompt template"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "GEN_SYS_PROMPT_TMPL",
+          "location": {
+            "path": "core/agent_builder/base.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "4c135517-9d23-57cf-bc7d-77e869a4d452",
+      "name": "reader",
+      "component_type": "DATASTORE",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Simple directory reader"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "SimpleDirectoryReader",
+          "location": {
+            "path": "core/utils.py",
+            "line": 119
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ad6a562-9759-5853-8e6b-33d1d4424af1",
+      "name": "mm_retriever",
+      "component_type": "DATASTORE",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Multimodal retriever"
+        },
+        "framework": "llamaindex"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "as_retriever",
+          "location": {
+            "path": "core/utils.py",
+            "line": 456
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "llamaindex",
+      "langchain"
+    ],
+    "node_counts": {
+      "AGENT": 6,
+      "MODEL": 3,
+      "PROMPT": 4,
+      "DATASTORE": 2
+    }
+  }
+}

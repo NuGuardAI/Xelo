@@ -1,0 +1,215 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-05T00:00:00Z",
+  "generator": "xelo",
+  "target": "local://synthetic",
+  "nodes": [
+    {
+      "id": "24021e80-a3fe-5b05-ab9a-116e63f519c0",
+      "name": "support_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Customer support agent with tools"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "create_react_agent",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 15
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "AgentExecutor",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "a547d248-3009-56cd-a3aa-e171959b69b7",
+      "name": "ChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI GPT-4 chat model"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatOpenAI(",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 8
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model='gpt-4'",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "0d85a34e-18cd-53a4-b340-d3b12dc9a317",
+      "name": "search_knowledge_base",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool to search internal knowledge base"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@tool",
+          "location": {
+            "path": "src/tools/search.py",
+            "line": 10
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def search_knowledge_base",
+          "location": {
+            "path": "src/tools/search.py",
+            "line": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "d223acd5-38ad-582e-a9b6-47a6dbf3c96e",
+      "name": "create_ticket",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool to create support tickets"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@tool",
+          "location": {
+            "path": "src/tools/ticketing.py",
+            "line": 8
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def create_ticket",
+          "location": {
+            "path": "src/tools/ticketing.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "0cc7a1f5-fb0a-5f06-8ce9-3c140038a51f",
+      "name": "support_system_prompt",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "System prompt for support agent"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "SystemMessagePromptTemplate",
+          "location": {
+            "path": "src/prompts/system.py",
+            "line": 5
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "system_prompt",
+          "location": {
+            "path": "src/prompts/system.py",
+            "line": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "f1de9fb5-1f49-50b6-a498-8764dbc0c13f",
+      "name": "pinecone_index",
+      "component_type": "DATASTORE",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Pinecone vector store for knowledge base"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Pinecone(",
+          "location": {
+            "path": "src/vectorstore/index.py",
+            "line": 12
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "index_name=",
+          "location": {
+            "path": "src/vectorstore/index.py",
+            "line": 12
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "langchain",
+      "openai"
+    ],
+    "node_counts": {
+      "AGENT": 1,
+      "MODEL": 1,
+      "TOOL": 2,
+      "PROMPT": 1,
+      "DATASTORE": 1
+    }
+  }
+}

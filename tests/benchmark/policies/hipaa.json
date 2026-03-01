@@ -1,0 +1,136 @@
+{
+  "policy_name": "HIPAA",
+  "version": "2024",
+  "description": "Health Insurance Portability and Accountability Act - Security and Privacy Rules applicable to AI systems handling PHI",
+  "source_url": "https://www.hhs.gov/hipaa/index.html",
+  "controls": [
+    {
+      "control_id": "HIPAA-164.312(a)(1)",
+      "name": "Access Control",
+      "description": "Implement technical policies and procedures for electronic information systems that maintain PHI to allow access only to authorized persons.",
+      "category": "Access Control",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No authentication on AI endpoints",
+        "Shared credentials",
+        "No role-based access"
+      ],
+      "typical_mitigations": [
+        "Authentication required",
+        "RBAC implementation",
+        "Session management"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.312(a)(2)(i)",
+      "name": "Unique User Identification",
+      "description": "Assign a unique name and/or number for identifying and tracking user identity.",
+      "category": "Access Control",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Anonymous API access",
+        "No user tracking"
+      ],
+      "typical_mitigations": [
+        "User identification",
+        "Audit logging"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.312(b)",
+      "name": "Audit Controls",
+      "description": "Implement hardware, software, and/or procedural mechanisms that record and examine activity in systems that contain or use PHI.",
+      "category": "Audit",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No logging of AI queries",
+        "No audit trail",
+        "Missing PHI access logs"
+      ],
+      "typical_mitigations": [
+        "Comprehensive logging",
+        "Audit trail retention",
+        "Log monitoring"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.312(c)(1)",
+      "name": "Integrity",
+      "description": "Implement policies and procedures to protect PHI from improper alteration or destruction.",
+      "category": "Data Integrity",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No data validation",
+        "AI can modify records without approval"
+      ],
+      "typical_mitigations": [
+        "Data validation",
+        "Change approval workflow"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.312(d)",
+      "name": "Person or Entity Authentication",
+      "description": "Implement procedures to verify that a person or entity seeking access to PHI is the one claimed.",
+      "category": "Authentication",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Weak authentication",
+        "No MFA for sensitive operations"
+      ],
+      "typical_mitigations": [
+        "Strong authentication",
+        "MFA implementation"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.312(e)(1)",
+      "name": "Transmission Security",
+      "description": "Implement technical security measures to guard against unauthorized access to PHI that is being transmitted over an electronic network.",
+      "category": "Encryption",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Unencrypted API calls",
+        "PHI in plaintext logs"
+      ],
+      "typical_mitigations": [
+        "TLS encryption",
+        "Encrypted storage"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.530(c)",
+      "name": "Minimum Necessary",
+      "description": "Use, disclose, or request only the minimum amount of PHI needed to accomplish the intended purpose.",
+      "category": "Data Minimization",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "All data sent to AI model",
+        "No data filtering",
+        "Excessive context in prompts"
+      ],
+      "typical_mitigations": [
+        "Data minimization",
+        "Field-level access control",
+        "Prompt data filtering"
+      ]
+    },
+    {
+      "control_id": "HIPAA-164.502(a)",
+      "name": "Uses and Disclosures",
+      "description": "A covered entity may not use or disclose PHI except as permitted or required.",
+      "category": "Privacy",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "PHI sent to third-party AI",
+        "No BAA with AI provider",
+        "Data retention unknown"
+      ],
+      "typical_mitigations": [
+        "BAA agreements",
+        "Data processing agreements",
+        "Privacy controls"
+      ]
+    }
+  ]
+}

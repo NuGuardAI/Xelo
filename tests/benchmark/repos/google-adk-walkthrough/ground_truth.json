@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/sokart/adk-walkthrough",
+  "nodes": [
+    {
+      "id": "76c40e46-370c-5a6e-bb20-71ec04637a9a",
+      "name": "basic_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Basic agent that responds to creation inquiries"
+        },
+        "framework": "google-adk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "chapter1_main_basic.py",
+            "line": 78
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "basic_agent",
+          "location": {
+            "path": "chapter1_main_basic.py",
+            "line": 78
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_basic",
+          "location": {
+            "path": "chapter1_main_basic.py",
+            "line": 78
+          }
+        }
+      ]
+    },
+    {
+      "id": "5687de19-0989-5831-8dd1-7ff4e9296b91",
+      "name": "agent_grammar",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Grammar checking agent for kids"
+        },
+        "framework": "google-adk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "agent_grammar/agent.py",
+            "line": 163
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_grammar",
+          "location": {
+            "path": "agent_grammar/agent.py",
+            "line": 163
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "grammar helper",
+          "location": {
+            "path": "agent_grammar/agent.py",
+            "line": 163
+          }
+        }
+      ]
+    },
+    {
+      "id": "4e7aff22-ffd4-5d40-950e-38378a910331",
+      "name": "agent_math",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Math operations agent for arithmetic"
+        },
+        "framework": "google-adk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 107
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_math",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 107
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "arithmetic",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 107
+          }
+        }
+      ]
+    },
+    {
+      "id": "4c410325-a05f-548f-9d6e-fd254cde3b1f",
+      "name": "agent_summary",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Summary agent that synthesizes grammar and math results"
+        },
+        "framework": "google-adk"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "agent_summary/agent.py",
+            "line": 60
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_summary",
+          "location": {
+            "path": "agent_summary/agent.py",
+            "line": 60
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "teaching assistant",
+          "location": {
+            "path": "agent_summary/agent.py",
+            "line": 60
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "google-adk",
+      "gemini"
+    ],
+    "node_counts": {
+      "AGENT": 4
+    }
+  }
+}

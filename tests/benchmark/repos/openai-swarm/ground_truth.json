@@ -1,0 +1,429 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/openai/swarm",
+  "nodes": [
+    {
+      "id": "35494b6e-d925-5674-8b8b-0917cfd2baa0",
+      "name": "triage_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Triage agent routing customer requests"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Triage Agent\"",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "568c421c-e2f4-5d10-b07b-51c4144386a0",
+      "name": "sales_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Sales agent for product inquiries"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Sales Agent\"",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "f1e018e1-e981-5ff9-b0c8-87cd2ae38e1e",
+      "name": "refunds_agent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Refunds agent for refund requests"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"Refunds Agent\"",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "a5e75e08-e031-529f-b79b-71aff55b1b67",
+      "name": "flight_modification",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Airline flight modification agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "flight_modification",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "2646a345-ae80-5bf2-8148-734dc33a24ec",
+      "name": "flight_cancel",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Airline flight cancellation agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "flight_cancel",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "77e2fb17-1962-5659-83c5-c73b8b859f57",
+      "name": "flight_change",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Airline flight change agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "flight_change",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "75294e1a-2b15-5393-b0de-b81e81b96915",
+      "name": "lost_baggage",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Lost baggage handling agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "lost_baggage",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "b55a3be0-c803-581a-bbf9-5d2d5d3273e4",
+      "name": "transfer_to_sales",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to sales agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_sales",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "b7a1a7e2-26a9-59dc-b026-28952185f4f1",
+      "name": "transfer_to_refunds",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to refunds agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_refunds",
+          "location": {
+            "path": "examples/triage_agent/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "6326798a-ef1d-5e51-8487-470a530b596e",
+      "name": "transfer_to_flight_modification",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to flight modification agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_flight_modification",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "7a3f4df3-fe74-5aa9-aeaa-230c41aeee92",
+      "name": "transfer_to_flight_cancel",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to flight cancel agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_flight_cancel",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "52abf14a-ac53-55b6-93a9-365e462ea126",
+      "name": "transfer_to_flight_change",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to flight change agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_flight_change",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "312cbaed-73e1-51ab-ae36-fb20dbbba6b3",
+      "name": "transfer_to_lost_baggage",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer to lost baggage agent"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_lost_baggage",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "794dc7ea-6312-5ed4-95cb-e4fc73c163ae",
+      "name": "transfer_to_triage",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Transfer back to triage"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def transfer_to_triage",
+          "location": {
+            "path": "examples/airline/configs/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "51ad644e-3b9b-54cb-a79c-d19584c4437c",
+      "name": "SYSTEM_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "System prompt for triage agent evaluation"
+        },
+        "framework": "openai-swarm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "SYSTEM_PROMPT",
+          "location": {
+            "path": "examples/triage_agent/evals.py",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "openai",
+      "openai-swarm"
+    ],
+    "node_counts": {
+      "AGENT": 7,
+      "TOOL": 7,
+      "PROMPT": 1
+    }
+  }
+}

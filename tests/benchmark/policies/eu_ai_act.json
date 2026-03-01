@@ -1,0 +1,212 @@
+{
+  "policy_name": "EU AI Act",
+  "version": "2024",
+  "description": "European Union Artificial Intelligence Act - Requirements for High-Risk AI Systems",
+  "source_url": "https://artificialintelligenceact.eu/",
+  "controls": [
+    {
+      "control_id": "EU-AI-6",
+      "name": "Risk Management System",
+      "description": "High-risk AI systems shall have a risk management system established, implemented, documented and maintained.",
+      "category": "Risk Management",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No documented risk management",
+        "Missing risk identification",
+        "No continuous monitoring"
+      ],
+      "typical_mitigations": [
+        "Risk management documentation",
+        "Risk identification process",
+        "Monitoring system"
+      ]
+    },
+    {
+      "control_id": "EU-AI-9",
+      "name": "Data Governance",
+      "description": "Training, validation, and testing data sets shall be subject to appropriate data governance and management practices.",
+      "category": "Data Quality",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No data governance policy",
+        "Missing data quality controls",
+        "Undocumented data sources"
+      ],
+      "typical_mitigations": [
+        "Data governance framework",
+        "Data quality checks",
+        "Data lineage documentation"
+      ]
+    },
+    {
+      "control_id": "EU-AI-10",
+      "name": "Technical Documentation",
+      "description": "Technical documentation shall be drawn up before the AI system is placed on the market or put into service.",
+      "category": "Documentation",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Missing technical documentation",
+        "Outdated documentation",
+        "Incomplete system description"
+      ],
+      "typical_mitigations": [
+        "Technical documentation",
+        "Documentation process",
+        "Version control"
+      ]
+    },
+    {
+      "control_id": "EU-AI-11",
+      "name": "Record Keeping",
+      "description": "High-risk AI systems shall technically allow for automatic recording of events (logs) over the lifetime of the system.",
+      "category": "Logging",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No logging implemented",
+        "Insufficient log retention",
+        "Missing audit trail"
+      ],
+      "typical_mitigations": [
+        "Comprehensive logging",
+        "Log retention policy",
+        "Audit trail implementation"
+      ]
+    },
+    {
+      "control_id": "EU-AI-12",
+      "name": "Transparency",
+      "description": "High-risk AI systems shall be designed and developed in such a way as to ensure sufficient transparency to enable users to interpret and use the system output appropriately.",
+      "category": "Transparency",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Black-box model",
+        "No user documentation",
+        "Missing output explanations"
+      ],
+      "typical_mitigations": [
+        "Explainability features",
+        "User documentation",
+        "Output interpretation guides"
+      ]
+    },
+    {
+      "control_id": "EU-AI-13",
+      "name": "Human Oversight",
+      "description": "High-risk AI systems shall be designed and developed in such a way as to be effectively overseen by natural persons during the period of use.",
+      "category": "Human Control",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Fully autonomous operation",
+        "No human review process",
+        "Missing override capability"
+      ],
+      "typical_mitigations": [
+        "Human-in-the-loop design",
+        "Review workflows",
+        "Override mechanisms"
+      ]
+    },
+    {
+      "control_id": "EU-AI-14",
+      "name": "Accuracy and Robustness",
+      "description": "High-risk AI systems shall be designed to achieve appropriate levels of accuracy, robustness and cybersecurity.",
+      "category": "Performance",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No accuracy benchmarks",
+        "Missing adversarial testing",
+        "Inadequate security measures"
+      ],
+      "typical_mitigations": [
+        "Accuracy testing",
+        "Robustness testing",
+        "Security hardening"
+      ]
+    },
+    {
+      "control_id": "EU-AI-15",
+      "name": "Cybersecurity",
+      "description": "High-risk AI systems shall be resilient against attempts by malicious third parties to alter their use or performance.",
+      "category": "Security",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No adversarial attack protection",
+        "Missing security testing",
+        "Vulnerable to manipulation"
+      ],
+      "typical_mitigations": [
+        "Adversarial testing",
+        "Security assessments",
+        "Attack mitigation"
+      ]
+    },
+    {
+      "control_id": "EU-AI-17",
+      "name": "Quality Management",
+      "description": "Providers shall put a quality management system in place that ensures compliance with this Regulation.",
+      "category": "Quality",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No quality management system",
+        "Missing compliance procedures",
+        "No quality metrics"
+      ],
+      "typical_mitigations": [
+        "Quality management system",
+        "Compliance monitoring",
+        "Quality metrics"
+      ]
+    },
+    {
+      "control_id": "EU-AI-50",
+      "name": "Transparency for GPAI",
+      "description": "General-purpose AI model providers shall draw up and keep up-to-date technical documentation and make it available.",
+      "category": "GPAI Transparency",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Missing model documentation",
+        "No training data description",
+        "Undocumented capabilities"
+      ],
+      "typical_mitigations": [
+        "Model documentation",
+        "Training data documentation",
+        "Capability documentation"
+      ]
+    },
+    {
+      "control_id": "EU-AI-52",
+      "name": "Fundamental Rights Impact",
+      "description": "Before deploying a high-risk AI system, deployers shall perform an assessment of the impact on fundamental rights.",
+      "category": "Rights Assessment",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No fundamental rights assessment",
+        "Missing bias evaluation",
+        "No discrimination testing"
+      ],
+      "typical_mitigations": [
+        "Rights impact assessment",
+        "Bias testing",
+        "Discrimination evaluation"
+      ]
+    },
+    {
+      "control_id": "EU-AI-55",
+      "name": "Systemic Risk Evaluation",
+      "description": "GPAI models with systemic risk shall perform model evaluation, adversarial testing, and incident tracking.",
+      "category": "Systemic Risk",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No systemic risk evaluation",
+        "Missing red teaming",
+        "No incident tracking"
+      ],
+      "typical_mitigations": [
+        "Systemic risk assessment",
+        "Red teaming program",
+        "Incident tracking system"
+      ]
+    }
+  ]
+}

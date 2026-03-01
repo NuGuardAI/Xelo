@@ -1,0 +1,301 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/karthik-codex/Autogen_GraphRAG_Ollama",
+  "nodes": [
+    {
+      "id": "afd1e94b-2b93-52eb-a379-aabec7b7d3f8",
+      "name": "retriever",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Retriever assistant agent for GraphRAG queries",
+          "synonyms": [
+            "Retriever",
+            "AssistantAgent"
+          ]
+        },
+        "framework": "autogen"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "AssistantAgent",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Retriever",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "query_graphRAG",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "2b9ff722-b743-5a9b-95d6-071ee52fc632",
+      "name": "ChainlitAssistantAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Wrapper class for AutoGen AssistantAgent with Chainlit UI integration"
+        },
+        "framework": "autogen"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class ChainlitAssistantAgent(AssistantAgent)",
+          "location": {
+            "path": "utils/chainlit_agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "AssistantAgent",
+          "location": {
+            "path": "utils/chainlit_agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "d1a45325-da74-5137-814c-7c2cfa15eab1",
+      "name": "ChainlitUserProxyAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Wrapper class for AutoGen UserProxyAgent with Chainlit UI integration"
+        },
+        "framework": "autogen"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class ChainlitUserProxyAgent(UserProxyAgent)",
+          "location": {
+            "path": "utils/chainlit_agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "UserProxyAgent",
+          "location": {
+            "path": "utils/chainlit_agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "f338ce1a-4562-52c6-83c2-83cfe4f0d2c2",
+      "name": "nomic-embed-text",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Nomic embedding model for vector embeddings"
+        },
+        "framework": "ollama"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "nomic-embed-text",
+          "location": {
+            "path": "utils/openai_embeddings_llm.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ollama.embeddings",
+          "location": {
+            "path": "utils/openai_embeddings_llm.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "c9828df3-8602-501a-a0c0-47057b43d689",
+      "name": "litellm",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LiteLLM for model abstraction"
+        },
+        "framework": "litellm"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "litellm",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "fb592965-8502-548e-be6d-e7e05182b69f",
+      "name": "Retriever_system_message",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "System instruction prompt for the Retriever assistant agent",
+          "synonyms": [
+            "retriever_system_message",
+            "Retriever system_message"
+          ]
+        },
+        "framework": "autogen"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "system_message",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Only execute the function query_graphRAG",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "6f2da6ff-52ff-50cb-949e-574dbeea8324",
+      "name": "query_graphRAG",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "GraphRAG query tool for retrieval"
+        },
+        "framework": "graphrag"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "query_graphRAG",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "def query",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "df4f79ee-459e-5695-9a56-c1bf86568555",
+      "name": "run_local_search",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Local search tool for GraphRAG"
+        },
+        "framework": "graphrag"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "run_local_search",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "7c1e4ee6-d392-54d3-b62c-07f3c40a48ed",
+      "name": "run_global_search",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Global search tool for GraphRAG"
+        },
+        "framework": "graphrag"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "run_global_search",
+          "location": {
+            "path": "appUI.py",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "autogen",
+      "graphrag",
+      "ollama"
+    ],
+    "node_counts": {
+      "AGENT": 3,
+      "MODEL": 2,
+      "PROMPT": 1,
+      "TOOL": 3
+    }
+  }
+}

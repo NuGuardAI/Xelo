@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-14T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/google/langextract",
+  "nodes": [
+    {
+      "id": "fbb2f9b1-d366-5b7d-825e-3eddaf7d9870",
+      "name": "gemini-2.5-flash",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Default Gemini model ID configured for the Gemini provider."
+        },
+        "framework": "langextract"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "_DEFAULT_MODEL_ID = 'gemini-2.5-flash'",
+          "location": {
+            "path": "langextract/providers/gemini.py",
+            "line": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": "9ed0c4a4-680b-5da5-94ef-70343bf3bb17",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Default OpenAI model ID configured for the OpenAI provider."
+        },
+        "framework": "langextract"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model_id: str = 'gpt-4o-mini'",
+          "location": {
+            "path": "langextract/providers/openai.py",
+            "line": 41
+          }
+        }
+      ]
+    },
+    {
+      "id": "a169ffb4-ea81-5df5-b502-836ba5485efb",
+      "name": "_ollama_query",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Prompt text used by Ollama provider query construction."
+        },
+        "framework": "langextract"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "_ollama_query",
+          "location": {
+            "path": "langextract/providers/ollama.py",
+            "line": 298
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "langextract"
+    ],
+    "node_counts": {
+      "MODEL": 2,
+      "PROMPT": 1
+    }
+  }
+}

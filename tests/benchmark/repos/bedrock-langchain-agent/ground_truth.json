@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/aws-samples/generative-ai-amazon-bedrock-langchain-agent-example",
+  "nodes": [
+    {
+      "id": "9c6bf691-8cf6-54f8-9c24-8463dc141160",
+      "name": "FSIAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Financial Services Industry agent using LangChain"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "FSIAgent",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class FSIAgent",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "fbab2947-3e7d-5d20-bc3c-1dbf2a8a25bc",
+      "name": "ConversationalAgent",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangChain conversational agent"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ConversationalAgent.from_llm_and_tools",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "02d5a7c2-45cb-506f-975c-9d7a1f38df8c",
+      "name": "AgentExecutor",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangChain agent executor"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "AgentExecutor.from_agent_and_tools",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "292aac53-607a-55ff-bf37-c30cab4b09e7",
+      "name": "anthropic.claude-v2:1",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Claude v2.1 model via Bedrock"
+        },
+        "framework": "aws-bedrock"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "anthropic.claude-v2:1",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model_id",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "6c9fdc8a-7d24-5dba-a37b-1370386e73ba",
+      "name": "anthropic.claude-3-sonnet",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Claude 3 Sonnet model"
+        },
+        "framework": "aws-bedrock"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "anthropic.claude-3-sonnet",
+          "location": {
+            "path": "agent/lambda/agent-handler/tools.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "62d37d60-808f-57e1-8e2f-c14bfc4c9c50",
+      "name": "AnyCompany",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangChain Tool for Kendra search"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Tool",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "name=\"AnyCompany\"",
+          "location": {
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "a26d2fde-4863-5b88-8d93-bbe0e80b7aab",
+      "name": "dynamodb",
+      "component_type": "DATASTORE",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "DynamoDB for user accounts and conversations"
+        },
+        "framework": "boto3"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "boto3.resource",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "dynamodb",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "4e013f85-8621-5e5a-a904-db45a6e3f59b",
+      "name": "ConversationBufferMemory",
+      "component_type": "DATASTORE",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "LangChain conversation memory buffer"
+        },
+        "framework": "langchain"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ConversationBufferMemory",
+          "location": {
+            "path": "agent/lambda/agent-handler/chat.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "2f701a55-b16d-59d7-a3d1-e08f5705db61",
+      "name": "boto3_session",
+      "component_type": "AUTH",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "AWS boto3 session for authenticated API access"
+        },
+        "framework": "boto3"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "boto3.Session",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "region_name",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "aws-bedrock",
+      "langchain",
+      "boto3"
+    ],
+    "node_counts": {
+      "AGENT": 3,
+      "MODEL": 2,
+      "TOOL": 1,
+      "DATASTORE": 2,
+      "AUTH": 1
+    }
+  }
+}

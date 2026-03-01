@@ -1,0 +1,372 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/bytedance/deer-flow",
+  "nodes": [
+    {
+      "id": "5c56635c-c924-5ece-a941-80fd1015957b",
+      "name": "coordinator",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Coordinator agent orchestrating the multi-agent workflow"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "coordinator",
+          "location": {
+            "path": "src/graph/builder.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/graph/builder.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "aca6fec0-4d76-5529-83b0-a924507262d3",
+      "name": "planner",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Planning agent for task decomposition"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "planner",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "0a21d9bb-dace-5bb8-bcfe-baaea6b60bff",
+      "name": "researcher",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Research agent for information gathering"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "researcher",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "36e5c9f8-af69-5560-8741-d1fe144b0c8d",
+      "name": "analyst",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Analysis agent for data processing"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "analyst",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "933271f0-6fe8-5f5a-9aea-b65436a20b59",
+      "name": "coder",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Coding agent for code generation"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "coder",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "8abdc5f3-4a9a-5def-bf56-095e2a10fc79",
+      "name": "reporter",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Reporter agent for generating reports"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "reporter",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "638329db-c81f-5293-825b-7fe0b1304d98",
+      "name": "podcast_script_writer",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent for writing podcast scripts"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "podcast_script_writer",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "777fe8de-a77f-5008-a71b-8b821f00d154",
+      "name": "ppt_composer",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent for composing presentations"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ppt_composer",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "23731c62-6d6a-5e35-ac0c-aded7a2bac01",
+      "name": "prose_writer",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent for prose writing"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "prose_writer",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "a01ee2f4-1d0a-5512-b365-2a494b605252",
+      "name": "prompt_enhancer",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Agent for enhancing prompts"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "prompt_enhancer",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent",
+          "location": {
+            "path": "src/config/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "1b6e1dd5-0572-5528-9f4c-32807fd29909",
+      "name": "gpt-4o",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI GPT-4o model configuration"
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "gpt-4o",
+          "location": {
+            "path": "docs/configuration_guide.md",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model",
+          "location": {
+            "path": "docs/configuration_guide.md",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "langchain",
+      "langgraph"
+    ],
+    "node_counts": {
+      "AGENT": 10,
+      "MODEL": 1
+    }
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-08T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/crewAIInc/crewAI-examples",
+  "nodes": [
+    {
+      "id": "557f1e1a-ed6d-58e2-a60f-e90e05a5c4d9",
+      "name": "agent_1_name",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Placeholder CrewAI agent 1"
+        },
+        "framework": "crewai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "role=",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_1_name",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "ed004dcd-2a22-564a-9db0-03a2b5b9889d",
+      "name": "agent_2_name",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Placeholder CrewAI agent 2"
+        },
+        "framework": "crewai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Agent(",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "role=",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agent_2_name",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "f89b1c6c-ca6e-5201-b5fc-72301a59ada6",
+      "name": "crew",
+      "component_type": "AGENT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "CrewAI Crew orchestrator for custom agents"
+        },
+        "framework": "crewai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Crew(",
+          "location": {
+            "path": "crews/starter_template/main.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "agents=",
+          "location": {
+            "path": "crews/starter_template/main.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "tasks=",
+          "location": {
+            "path": "crews/starter_template/main.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "8c41b2b0-f59c-5603-ab92-baac97377c87",
+      "name": "gpt-3.5-turbo",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI GPT-3.5-turbo model via ChatOpenAI",
+          "synonyms": [
+            "OpenAIGPT35"
+          ]
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatOpenAI",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model_name=\"gpt-3.5-turbo\"",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "7c52d7bd-d1a1-54b2-800e-2350b84f6e1a",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI GPT-4 model via ChatOpenAI",
+          "synonyms": [
+            "OpenAIGPT4"
+          ]
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "ChatOpenAI",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model_name=\"gpt-4\"",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "898db200-6f68-56a6-b312-e4ca3f261d08",
+      "name": "openhermes",
+      "component_type": "MODEL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Ollama local model (openhermes)",
+          "synonyms": [
+            "Ollama"
+          ]
+        },
+        "framework": "ollama"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Ollama",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "model=\"openhermes\"",
+          "location": {
+            "path": "crews/starter_template/agents.py",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "crewai",
+      "langchain",
+      "openai",
+      "ollama"
+    ],
+    "node_counts": {
+      "AGENT": 3,
+      "MODEL": 3
+    }
+  }
+}

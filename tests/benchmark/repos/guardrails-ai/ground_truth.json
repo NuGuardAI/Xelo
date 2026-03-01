@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-07T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/guardrails-ai/guardrails",
+  "nodes": [
+    {
+      "id": "44232bcd-dc02-5c00-bf87-d4a569d8ebe2",
+      "name": "guard",
+      "component_type": "GUARDRAIL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Guard instance from Guard() instantiation",
+          "synonyms": [
+            "Guard"
+          ]
+        },
+        "framework": "guardrails"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "Guard(",
+          "location": {
+            "path": "guardrails/cli/create.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "guard",
+          "location": {
+            "path": "guardrails/cli/create.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "aacb843d-b213-53b9-a99d-e56d680d5276",
+      "name": "api_key",
+      "component_type": "AUTH",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "OpenAI API key from environment variable",
+          "synonyms": [
+            "OPENAI_API_KEY"
+          ]
+        },
+        "framework": "openai"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "os.getenv",
+          "location": {
+            "path": "guardrails/utils/openai_utils/base.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "api_key",
+          "location": {
+            "path": "guardrails/utils/openai_utils/base.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "OPENAI_API_KEY",
+          "location": {
+            "path": "guardrails/utils/openai_utils/base.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "31c05f9d-7c71-5fe5-afa5-7d24b8a4637d",
+      "name": "gd_response_tool",
+      "component_type": "TOOL",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Tool for guardrail response handling"
+        },
+        "framework": "guardrails"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "@tool",
+          "location": {
+            "path": "guardrails/utils/structured_data_utils.py",
+            "line": null
+          }
+        },
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "gd_response_tool",
+          "location": {
+            "path": "guardrails/utils/structured_data_utils.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "2d361c10-4a25-5b54-8288-1b1963cbc815",
+      "name": "Prompt",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Prompt class for managing LLM prompts"
+        },
+        "framework": "guardrails"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class Prompt",
+          "location": {
+            "path": "guardrails/prompt/prompt.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "6dacb290-d28e-51cf-88e8-8a0b6f5e2779",
+      "name": "Instructions",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Instructions class for prompt instructions"
+        },
+        "framework": "guardrails"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class Instructions",
+          "location": {
+            "path": "guardrails/prompt/instructions.py",
+            "line": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "938f56a2-2455-59c4-8714-49ffc4fbe947",
+      "name": "Messages",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Messages class for chat prompt messages"
+        },
+        "framework": "guardrails"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "class Messages",
+          "location": {
+            "path": "guardrails/prompt/messages.py",
+            "line": null
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "guardrails",
+      "openai",
+      "langchain"
+    ],
+    "node_counts": {
+      "GUARDRAIL": 1,
+      "AUTH": 1,
+      "TOOL": 1,
+      "PROMPT": 3
+    }
+  }
+}

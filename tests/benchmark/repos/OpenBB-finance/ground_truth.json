@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-02-14T00:00:00Z",
+  "generator": "xelo",
+  "target": "https://github.com/NuGuardAI/OpenBB-finance",
+  "nodes": [
+    {
+      "id": "1964379b-dc5e-5b5c-9f65-488c7e6fddcc",
+      "name": "hovertemplate",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Chart hover template prompt string extracted from derivatives view rendering."
+        },
+        "framework": "openbb"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "hovertemplate",
+          "location": {
+            "path": "openbb_platform/extensions/derivatives/openbb_derivatives/derivatives_views.py",
+            "line": 155
+          }
+        }
+      ]
+    },
+    {
+      "id": "fd9bfb9c-8620-5671-a2f4-6a3648a95c21",
+      "name": "prompt_102",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Template prompt string used in chart style generation."
+        },
+        "framework": "openbb"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "prompt_102",
+          "location": {
+            "path": "openbb_platform/obbject_extensions/charting/openbb_charting/core/chart_style.py",
+            "line": 102
+          }
+        }
+      ]
+    },
+    {
+      "id": "e31fdbeb-d235-57af-8847-0249dfa323e0",
+      "name": "prompt_104",
+      "component_type": "PROMPT",
+      "confidence": 1.0,
+      "metadata": {
+        "extras": {
+          "description": "Template prompt string used in chart style generation."
+        },
+        "framework": "openbb"
+      },
+      "evidence": [
+        {
+          "kind": "ground_truth",
+          "confidence": 1.0,
+          "detail": "prompt_104",
+          "location": {
+            "path": "openbb_platform/obbject_extensions/charting/openbb_charting/core/chart_style.py",
+            "line": 104
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "deps": [],
+  "summary": {
+    "frameworks": [
+      "openbb"
+    ],
+    "node_counts": {
+      "PROMPT": 3
+    }
+  }
+}
