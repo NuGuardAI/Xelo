@@ -57,4 +57,4 @@ echo ""
 echo "Test your setup by running:"
 echo "  python claude-foundry-terminal-test.py"
 echo ""
-claude -c
+claude
