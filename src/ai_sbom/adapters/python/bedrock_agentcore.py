@@ -7,6 +7,7 @@ Detects usage of the AWS ``bedrock-agentcore`` SDK:
 - ``requires_access_token(...)`` / ``@app.oauth2_token(...)`` → AUTH nodes
 - ``AgentCoreMemorySessionManager`` instantiation → DATASTORE node
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -79,19 +80,21 @@ class BedrockAgentCoreAdapter(FrameworkAdapter):
 
             elif inst.class_name in _MEMORY_CLASSES:
                 mem_name = _clean(inst.assigned_to or f"memory_{inst.line}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.DATASTORE,
-                    canonical_name=canonicalize_text(f"bedrock_agentcore:memory:{mem_name}"),
-                    display_name=mem_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.88,
-                    metadata={"framework": "bedrock_agentcore", "datastore_type": "memory"},
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.DATASTORE,
+                        canonical_name=canonicalize_text(f"bedrock_agentcore:memory:{mem_name}"),
+                        display_name=mem_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.88,
+                        metadata={"framework": "bedrock_agentcore", "datastore_type": "memory"},
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{inst.class_name}(...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         # Pass 2: Function calls / decorators in parse_result.function_calls
         # After the AST parser extension, @app.entrypoint results in a ParsedCall
@@ -105,37 +108,41 @@ class BedrockAgentCoreAdapter(FrameworkAdapter):
             ):
                 handler_name = _clean(call.assigned_to or f"handler_{call.line}")
                 canon = canonicalize_text(f"bedrock_agentcore:agent:{handler_name}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AGENT,
-                    canonical_name=canon,
-                    display_name=handler_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={"framework": "bedrock_agentcore", "decorator": fn},
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"@{recv or 'app'}.{fn}",
-                    evidence_kind="ast_decorator",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.AGENT,
+                        canonical_name=canon,
+                        display_name=handler_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={"framework": "bedrock_agentcore", "decorator": fn},
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"@{recv or 'app'}.{fn}",
+                        evidence_kind="ast_decorator",
+                    )
+                )
 
             elif fn in _TASK_DECORATORS and (
                 recv is None or recv in app_var_names or recv == "app"
             ):
                 task_name = _clean(call.assigned_to or f"task_{call.line}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=canonicalize_text(f"bedrock_agentcore:tool:{task_name}"),
-                    display_name=task_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.85,
-                    metadata={"framework": "bedrock_agentcore", "decorator": fn},
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"@{recv or 'app'}.{fn}",
-                    evidence_kind="ast_decorator",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=canonicalize_text(f"bedrock_agentcore:tool:{task_name}"),
+                        display_name=task_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={"framework": "bedrock_agentcore", "decorator": fn},
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"@{recv or 'app'}.{fn}",
+                        evidence_kind="ast_decorator",
+                    )
+                )
 
             elif fn in _AUTH_FUNCTIONS:
                 auth_flow = _clean((call.args or {}).get("auth_flow", ""))
@@ -143,22 +150,24 @@ class BedrockAgentCoreAdapter(FrameworkAdapter):
                 canon = canonicalize_text(
                     f"bedrock_agentcore:auth:{provider or auth_flow or 'oauth2'}"
                 )
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AUTH,
-                    canonical_name=canon,
-                    display_name=provider or auth_flow or "oauth2",
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.88,
-                    metadata={
-                        "framework": "bedrock_agentcore",
-                        "auth_type": "oauth2",
-                        "auth_flow": auth_flow,
-                    },
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"@{fn}(provider={provider!r})",
-                    evidence_kind="ast_decorator",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.AUTH,
+                        canonical_name=canon,
+                        display_name=provider or auth_flow or "oauth2",
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.88,
+                        metadata={
+                            "framework": "bedrock_agentcore",
+                            "auth_type": "oauth2",
+                            "auth_flow": auth_flow,
+                        },
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"@{fn}(provider={provider!r})",
+                        evidence_kind="ast_decorator",
+                    )
+                )
 
         return detected

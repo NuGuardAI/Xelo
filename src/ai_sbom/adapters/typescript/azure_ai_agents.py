@@ -215,7 +215,11 @@ class AzureAIAgentsTSAdapter(TSFrameworkAdapter):
                     if call.positional_args:
                         raw = self._clean(call.positional_args[0]) or ""
                         # Reject complex values (arrays, objects, long expressions)
-                        if raw and not any(c in raw for c in ("{", "[", ".", "(")) and len(raw) < 60:
+                        if (
+                            raw
+                            and not any(c in raw for c in ("{", "[", ".", "("))
+                            and len(raw) < 60
+                        ):
                             tool_name = raw
                 if not tool_name:
                     tool_name = self._assignment_name(source, call.line_start) or tool_type

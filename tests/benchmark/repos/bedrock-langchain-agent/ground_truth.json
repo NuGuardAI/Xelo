@@ -1,169 +1,78 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://bedrock-langchain-agent",
   "nodes": [
     {
-      "id": "e1da9fb4-9a98-51a6-8ad7-37c8093738be",
-      "name": "langchain",
+      "id": "99fccee0-74bc-4d8f-b11b-da71a5bd0dd8",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "cfn/GenAI-FSI-Agent.yml",
+            "line": 23
+          }
+        }
+      ]
+    },
+    {
+      "id": "f4c43093-791d-49de-b4bb-82a22ff0d203",
+      "name": "framework:langchain",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "langchain",
-          "adapter": "framework"
+          "canonical_name": "framework:langchain",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.95,
-          "detail": "from langchain.agents.tools import Tool",
-          "location": {
-            "path": "agent/lambda/agent-handler/fsi_agent.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "6ffc96af-372d-5bbe-8d78-27a1c004da58",
-      "name": "FSIAgent",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "FSIAgent",
-          "adapter": "langchain"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "class FSIAgent with ConversationalAgent.from_llm_and_tools(...)",
-          "location": {
-            "path": "agent/lambda/agent-handler/fsi_agent.py",
-            "line": 12
-          }
-        }
-      ]
-    },
-    {
-      "id": "0c06b700-ecd1-58fb-a6be-500b229fba1e",
-      "name": "anthropic.claude-3-sonnet-20240229-v1:0",
-      "component_type": "MODEL",
-      "confidence": 0.95,
-      "metadata": {
-        "extras": {
-          "canonical_name": "anthropic.claude-3-sonnet-20240229-v1:0",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.95,
-          "detail": "modelId=anthropic.claude-3-sonnet-20240229-v1:0 in invokeLLM",
-          "location": {
-            "path": "agent/lambda/agent-handler/tools.py",
-            "line": 104
-          }
-        }
-      ]
-    },
-    {
-      "id": "caf33682-765d-548d-bc25-d90afd7dbaca",
-      "name": "AnyCompany",
-      "component_type": "TOOL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "AnyCompany",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "Tool(name=AnyCompany, func=self.kendra_search, ...)",
-          "location": {
-            "path": "agent/lambda/agent-handler/tools.py",
-            "line": 15
-          }
-        }
-      ]
-    },
-    {
-      "id": "244d38ae-1822-5f87-ade2-7036ab4769de",
-      "name": "dynamodb",
-      "component_type": "DATASTORE",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "dynamodb",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "dynamodb = boto3.client(dynamodb) for conversation memory + user accounts",
+          "detail": "FRAMEWORK: framework:langchain",
           "location": {
             "path": "agent/lambda/agent-handler/chat.py",
-            "line": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "11dff70d-d4c1-570e-a935-7f35316e1faf",
-      "name": "generic",
-      "component_type": "DEPLOYMENT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "AWS Lambda deployment in GenAI-FSI-Agent.yml CloudFormation template",
-          "location": {
-            "path": "cfn/GenAI-FSI-Agent.yml",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "a8bdac88-b121-5dc3-9a41-daa9e108dca9",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.85,
+      "id": "53308580-9bc3-45fb-8a28-fdb5ece1c97b",
+      "name": "claude-3-sonnet-20240229-v1",
+      "component_type": "MODEL",
+      "confidence": 0.55,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "claude-3-sonnet-20240229-v1",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "env_var",
-          "confidence": 0.85,
-          "detail": "AWS_REGION env var, IAM role auth for Bedrock and DynamoDB",
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "MODEL: claude-3-sonnet-20240229-v1",
           "location": {
-            "path": "agent/lambda/agent-handler/tools.py",
-            "line": 1
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": 701
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

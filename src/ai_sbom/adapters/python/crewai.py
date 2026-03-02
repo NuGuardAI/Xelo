@@ -7,6 +7,7 @@ Detects usage of the ``crewai`` library:
 - ``llm`` / ``llm_config`` arguments → MODEL references
 - ``tools=[...]`` argument → TOOL references
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -22,8 +23,14 @@ class CrewAIAdapter(FrameworkAdapter):
 
     name = "crewai"
     priority = 50
-    handles_imports = ["crewai", "crewai.agent", "crewai.task", "crewai.crew",
-                        "crewai.tools", "crewai_tools"]
+    handles_imports = [
+        "crewai",
+        "crewai.agent",
+        "crewai.task",
+        "crewai.crew",
+        "crewai.tools",
+        "crewai_tools",
+    ]
 
     def extract(
         self,
@@ -42,8 +49,12 @@ class CrewAIAdapter(FrameworkAdapter):
             # ---- Agent ----
             if inst.class_name == "Agent":
                 args = inst.args or {}
-                role = _clean(args.get("role") or (inst.positional_args[0] if inst.positional_args else None))
-                agent_name = _clean(args.get("name") or inst.assigned_to) or role or f"agent_{inst.line}"
+                role = _clean(
+                    args.get("role") or (inst.positional_args[0] if inst.positional_args else None)
+                )
+                agent_name = (
+                    _clean(args.get("name") or inst.assigned_to) or role or f"agent_{inst.line}"
+                )
                 goal = _clean(args.get("goal", ""))
                 backstory = _clean(args.get("backstory", ""))
                 llm_ref = _clean(args.get("llm") or args.get("llm_config"))
@@ -56,42 +67,50 @@ class CrewAIAdapter(FrameworkAdapter):
                 if llm_ref:
                     provider = infer_provider(llm_ref)
                     model_canon = canonicalize_text(llm_ref.lower())
-                    rels.append(RelationshipHint(
-                        source_canonical=canon,
-                        source_type=ComponentType.AGENT,
-                        target_canonical=model_canon,
-                        target_type=ComponentType.MODEL,
-                        relationship_type="USES",
-                    ))
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=model_canon,
+                            target_type=ComponentType.MODEL,
+                            relationship_type="USES",
+                        )
+                    )
                     # Emit model node
                     details = get_model_details(llm_ref, provider)
-                    detected.append(ComponentDetection(
-                        component_type=ComponentType.MODEL,
-                        canonical_name=model_canon,
-                        display_name=llm_ref,
-                        adapter_name=self.name,
-                        priority=self.priority,
-                        confidence=0.85,
-                        metadata={"provider": provider,
-                                   **{k: v for k, v in details.items() if v is not None}},
-                        file_path=file_path,
-                        line=inst.line,
-                        snippet=f"Agent(llm={llm_ref!r})",
-                        evidence_kind="ast_instantiation",
-                    ))
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.MODEL,
+                            canonical_name=model_canon,
+                            display_name=llm_ref,
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.85,
+                            metadata={
+                                "provider": provider,
+                                **{k: v for k, v in details.items() if v is not None},
+                            },
+                            file_path=file_path,
+                            line=inst.line,
+                            snippet=f"Agent(llm={llm_ref!r})",
+                            evidence_kind="ast_instantiation",
+                        )
+                    )
 
                 # Tool references
                 if isinstance(tools_raw, list):
                     for tool_ref in tools_raw:
                         if isinstance(tool_ref, str) and not tool_ref.startswith("$"):
                             tool_canon = canonicalize_text(f"crewai:tool:{tool_ref}")
-                            rels.append(RelationshipHint(
-                                source_canonical=canon,
-                                source_type=ComponentType.AGENT,
-                                target_canonical=tool_canon,
-                                target_type=ComponentType.TOOL,
-                                relationship_type="CALLS",
-                            ))
+                            rels.append(
+                                RelationshipHint(
+                                    source_canonical=canon,
+                                    source_type=ComponentType.AGENT,
+                                    target_canonical=tool_canon,
+                                    target_type=ComponentType.TOOL,
+                                    relationship_type="CALLS",
+                                )
+                            )
 
                 meta: dict[str, Any] = {
                     "framework": "crewai",
@@ -111,28 +130,31 @@ class CrewAIAdapter(FrameworkAdapter):
                 if role and len(role) < 3:
                     continue
 
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AGENT,
-                    canonical_name=canon,
-                    display_name=agent_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=agent_confidence,
-                    metadata=meta,
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"Agent(role={role!r})",
-                    evidence_kind="ast_instantiation",
-                    relationships=rels,
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.AGENT,
+                        canonical_name=canon,
+                        display_name=agent_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=agent_confidence,
+                        metadata=meta,
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"Agent(role={role!r})",
+                        evidence_kind="ast_instantiation",
+                        relationships=rels,
+                    )
+                )
                 agent_canonicals.append(canon)
 
             # ---- Task ----
             elif inst.class_name == "Task":
                 args = inst.args or {}
-                description = _clean(args.get("description") or (
-                    inst.positional_args[0] if inst.positional_args else None
-                ))
+                description = _clean(
+                    args.get("description")
+                    or (inst.positional_args[0] if inst.positional_args else None)
+                )
                 task_name = _clean(inst.assigned_to) or f"task_{inst.line}"
                 canon = canonicalize_text(f"crewai:task:{task_name}")
                 task_meta: dict[str, Any] = {
@@ -142,19 +164,21 @@ class CrewAIAdapter(FrameworkAdapter):
                 if description:
                     task_meta["description_preview"] = description[:200]
 
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=canon,
-                    display_name=task_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.80,
-                    metadata=task_meta,
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet="Task(description=...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=canon,
+                        display_name=task_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.80,
+                        metadata=task_meta,
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet="Task(description=...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
                 task_canonicals.append(canon)
 
             # ---- Crew ----
@@ -175,19 +199,21 @@ class CrewAIAdapter(FrameworkAdapter):
                     or f"tool_{inst.line}"
                 )
                 canon = canonicalize_text(f"crewai:tool:{tool_name}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=canon,
-                    display_name=tool_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.85,
-                    metadata={"framework": "crewai"},
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(name={tool_name!r})",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=canon,
+                        display_name=tool_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={"framework": "crewai"},
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{inst.class_name}(name={tool_name!r})",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         return detected
 

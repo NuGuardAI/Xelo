@@ -7,6 +7,7 @@ Detects usage of the ``agno`` library:
   with an ``id=`` keyword argument → MODEL nodes
 - Tool references from ``tools=[...]`` → TOOL nodes
 """
+
 from __future__ import annotations
 
 import re
@@ -143,17 +144,9 @@ class AgnoAdapter(FrameworkAdapter):
                     or f"agent_{inst.line}"
                 )
             elif inst.class_name == "Team":
-                agent_name = _clean(
-                    args.get("name")
-                    or inst.assigned_to
-                    or f"team_{inst.line}"
-                )
+                agent_name = _clean(args.get("name") or inst.assigned_to or f"team_{inst.line}")
             else:  # Workflow
-                agent_name = _clean(
-                    args.get("name")
-                    or inst.assigned_to
-                    or f"workflow_{inst.line}"
-                )
+                agent_name = _clean(args.get("name") or inst.assigned_to or f"workflow_{inst.line}")
 
             canon = canonicalize_text(f"agno:{agent_name}")
             rels: list[RelationshipHint] = []
@@ -164,13 +157,15 @@ class AgnoAdapter(FrameworkAdapter):
                 for tool_ref in tools_raw:
                     if isinstance(tool_ref, str) and not tool_ref.startswith("$"):
                         tool_canon = canonicalize_text(f"agno:tool:{tool_ref}")
-                        rels.append(RelationshipHint(
-                            source_canonical=canon,
-                            source_type=ComponentType.AGENT,
-                            target_canonical=tool_canon,
-                            target_type=ComponentType.TOOL,
-                            relationship_type="CALLS",
-                        ))
+                        rels.append(
+                            RelationshipHint(
+                                source_canonical=canon,
+                                source_type=ComponentType.AGENT,
+                                target_canonical=tool_canon,
+                                target_type=ComponentType.TOOL,
+                                relationship_type="CALLS",
+                            )
+                        )
 
             instructions = _clean(args.get("instructions") or args.get("description", ""))
             meta: dict[str, Any] = {
@@ -179,20 +174,22 @@ class AgnoAdapter(FrameworkAdapter):
                 "has_instructions": bool(instructions),
             }
 
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=canon,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata=meta,
-                file_path=file_path,
-                line=inst.line,
-                snippet=f"{inst.class_name}(name={agent_name!r})",
-                evidence_kind="ast_instantiation",
-                relationships=rels,
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=canon,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata=meta,
+                    file_path=file_path,
+                    line=inst.line,
+                    snippet=f"{inst.class_name}(name={agent_name!r})",
+                    evidence_kind="ast_instantiation",
+                    relationships=rels,
+                )
+            )
             agent_canonicals.append(canon)
 
         # Pass 3: @agent.tool decorated functions → TOOL nodes
@@ -204,18 +201,20 @@ class AgnoAdapter(FrameworkAdapter):
                 )
                 display = tool_name_override or tool_name
                 tool_canon = canonicalize_text(f"agno:tool:{display}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=tool_canon,
-                    display_name=display,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.88,
-                    metadata={"framework": "agno"},
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"@{call.receiver}.tool",
-                    evidence_kind="ast_decorator",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=tool_canon,
+                        display_name=display,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.88,
+                        metadata={"framework": "agno"},
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"@{call.receiver}.tool",
+                        evidence_kind="ast_decorator",
+                    )
+                )
 
         return detected

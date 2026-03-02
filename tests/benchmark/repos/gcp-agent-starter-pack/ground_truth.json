@@ -1,238 +1,242 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://gcp-agent-starter-pack",
   "nodes": [
     {
-      "id": "b305e618-ed87-5ee9-8245-af15d1f568e2",
-      "name": "google_adk",
+      "id": "94890b9f-de26-4d83-809e-912e05bf3fce",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "API_ENDPOINT: generic",
+          "location": {
+            "path": "agent_starter_pack/deployment_targets/agent_engine/python/{{cookiecutter.agent_directory}}/app_utils/expose_app.py",
+            "line": 338
+          }
+        }
+      ]
+    },
+    {
+      "id": "ba6435d7-f950-4027-a12c-6b32bfaacffa",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.63,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.63,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "agent_starter_pack/base_templates/go/.cloudbuild/staging.yaml",
+            "line": 66
+          }
+        }
+      ]
+    },
+    {
+      "id": "3ea8ebcc-9a9e-48a0-839b-473cba2fff15",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "DATASTORE: postgres",
+          "location": {
+            "path": "agent_starter_pack/deployment_targets/cloud_run/python/{{cookiecutter.agent_directory}}/fast_api_app.py",
+            "line": 406
+          }
+        }
+      ]
+    },
+    {
+      "id": "53c6f118-081e-4d3c-a4b7-0277912ca170",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.98,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.98,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": ".cloudbuild/ci/lint_templated_agents.yaml",
+            "line": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": "89c765d5-5f02-4e84-99c2-fc5875816852",
+      "name": "framework:google_adk_ts",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "google_adk",
-          "adapter": "framework"
-        }
+          "canonical_name": "framework:google_adk_ts",
+          "adapter": "gt"
+        },
+        "framework": "google_adk_ts"
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.95,
-          "detail": "from google.adk.agents import Agent",
+          "detail": "FRAMEWORK: framework:google_adk_ts",
           "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 13
+            "path": "agent_starter_pack/agents/adk_ts/app/agent.ts",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "a2804ccf-9cb1-5a9b-af7a-05dbe041b011",
-      "name": "langgraph",
+      "id": "ea7bd804-ad30-4bde-9784-2e829d84afc3",
+      "name": "framework:langgraph",
       "component_type": "FRAMEWORK",
-      "confidence": 0.9,
+      "confidence": 0.98,
       "metadata": {
         "extras": {
-          "canonical_name": "langgraph",
-          "adapter": "framework"
+          "canonical_name": "framework:langgraph",
+          "adapter": "gt"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.98,
+          "detail": "FRAMEWORK: framework:langgraph",
+          "location": {
+            "path": "agent_starter_pack/agents/agentic_rag/app/templates.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "90060020-151b-48b5-ade3-f4a43c350ad1",
+      "name": "framework:llm_clients",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:llm_clients",
+          "adapter": "gt"
+        },
+        "framework": "llm_clients"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:llm_clients",
+          "location": {
+            "path": "agent_starter_pack/deployment_targets/agent_engine/python/{{cookiecutter.agent_directory}}/app_utils/expose_app.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "c891531b-57e0-486d-af16-5d0abe3866e5",
+      "name": "gemini-2.5",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini-2.5",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "from langgraph.graph.state import CompiledStateGraph",
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "MODEL: gemini-2.5",
+          "location": {
+            "path": "agent_starter_pack/agents/adk_ts/app/agent.ts",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "ee901050-5a92-49fc-9c6b-5ff752be08c6",
+      "name": "gemini-3",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini-3",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: gemini-3",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 79
+          }
+        }
+      ]
+    },
+    {
+      "id": "02ae50f4-d7a4-4f23-a452-f64f09fd172e",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "PROMPT: generic",
           "location": {
             "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 7
-          }
-        }
-      ]
-    },
-    {
-      "id": "f47b2a66-1b86-5f38-aa78-8db7f674b3e6",
-      "name": "root_agent",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "root_agent",
-          "adapter": "google_adk"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "root_agent = Agent(name=root_agent, model=Gemini(...))",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 50
-          }
-        }
-      ]
-    },
-    {
-      "id": "bc8e7f97-9fb3-5112-9734-c36f0d7ad4f5",
-      "name": "gemini-2.5-flash",
-      "component_type": "MODEL",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gemini-2.5-flash",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "gemini-2.5-flash configured via MODEL env var",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/.template/templateconfig.yaml",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "ed79d730-72cd-5deb-8933-ff594143e989",
-      "name": "gemini-live-2.5-flash-native-audio",
-      "component_type": "MODEL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gemini-live-2.5-flash-native-audio",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "model=gemini-live-2.5-flash-native-audio in adk_live agent",
-          "location": {
-            "path": "agent_starter_pack/agents/adk_live/app/agent.py",
-            "line": 32
-          }
-        }
-      ]
-    },
-    {
-      "id": "f77459fc-af14-5a32-b915-9497a3b3fe3b",
-      "name": "text-embedding-005",
-      "component_type": "MODEL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "text-embedding-005",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "EMBEDDING_MODEL = text-embedding-005",
-          "location": {
-            "path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
-            "line": 35
-          }
-        }
-      ]
-    },
-    {
-      "id": "bf7b4590-bc57-5793-8c0d-1177bb0e63d2",
-      "name": "get_weather",
-      "component_type": "TOOL",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "get_weather",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "def get_weather(query: str) -> str: weather simulation tool",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 25
-          }
-        }
-      ]
-    },
-    {
-      "id": "27207dd8-bfdf-59a8-9edf-5401e6bae9b8",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.8,
-          "detail": "google.auth.default() for Application Default Credentials",
-          "location": {
-            "path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
-            "line": 30
-          }
-        }
-      ]
-    },
-    {
-      "id": "81090bca-097d-5ab0-9ddc-307a6cfffa2e",
-      "name": "postgres",
-      "component_type": "DATASTORE",
-      "confidence": 0.75,
-      "metadata": {
-        "extras": {
-          "canonical_name": "postgres",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.75,
-          "detail": "postgres as optional RAG backend in agentic_rag template",
-          "location": {
-            "path": "agent_starter_pack/agents/agentic_rag/tests/eval/eval_config.json",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "34aedc26-7514-53cb-a29e-ff4c46ca94aa",
-      "name": "generic",
-      "component_type": "DEPLOYMENT",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.8,
-          "detail": "deployment_targets: agent_engine, cloud_run in templateconfig",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/.template/templateconfig.yaml",
-            "line": 1
+            "line": 47
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

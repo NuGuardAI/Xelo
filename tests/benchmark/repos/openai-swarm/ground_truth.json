@@ -36,7 +36,9 @@
         "extras": {
           "canonical_name": "triage_agent",
           "adapter": "ast",
-          "synonyms": ["Triage Agent"]
+          "synonyms": [
+            "Triage Agent"
+          ]
         }
       },
       "evidence": [
@@ -60,7 +62,9 @@
         "extras": {
           "canonical_name": "sales_agent",
           "adapter": "ast",
-          "synonyms": ["Sales Agent"]
+          "synonyms": [
+            "Sales Agent"
+          ]
         }
       },
       "evidence": [
@@ -84,7 +88,9 @@
         "extras": {
           "canonical_name": "refunds_agent",
           "adapter": "ast",
-          "synonyms": ["Refunds Agent"]
+          "synonyms": [
+            "Refunds Agent"
+          ]
         }
       },
       "evidence": [
@@ -108,7 +114,10 @@
         "extras": {
           "canonical_name": "flight_change",
           "adapter": "ast",
-          "synonyms": ["Flight change traversal", "flight_change"]
+          "synonyms": [
+            "Flight change traversal",
+            "flight_change"
+          ]
         }
       },
       "evidence": [
@@ -132,7 +141,10 @@
         "extras": {
           "canonical_name": "flight_cancel",
           "adapter": "ast",
-          "synonyms": ["Flight cancel traversal", "flight_cancel"]
+          "synonyms": [
+            "Flight cancel traversal",
+            "flight_cancel"
+          ]
         }
       },
       "evidence": [
@@ -156,7 +168,10 @@
         "extras": {
           "canonical_name": "lost_baggage",
           "adapter": "ast",
-          "synonyms": ["Lost baggage traversal", "lost_baggage"]
+          "synonyms": [
+            "Lost baggage traversal",
+            "lost_baggage"
+          ]
         }
       },
       "evidence": [

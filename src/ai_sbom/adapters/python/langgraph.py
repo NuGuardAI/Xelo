@@ -72,7 +72,32 @@ class LangGraphAdapter(FrameworkAdapter):
         if parse_result is None:
             return []
 
-        detected: list[ComponentDetection] = [self._framework_node(file_path)]
+        # Determine if langgraph is actually imported (vs just langchain)
+        imported_modules = {imp.module or "" for imp in parse_result.imports}
+        has_langgraph = any(
+            m == "langgraph" or m.startswith("langgraph.")
+            for m in imported_modules
+        )
+        # Emit the correct framework node
+        if has_langgraph:
+            framework_det = self._framework_node(file_path)
+        else:
+            # Only langchain imported — emit framework:langchain, not framework:langgraph
+            from ai_sbom.types import ComponentType as _CT
+            framework_det = ComponentDetection(
+                component_type=_CT.FRAMEWORK,
+                canonical_name="framework:langchain",
+                display_name="framework:langchain",
+                adapter_name=self.name,
+                priority=self.priority,
+                confidence=0.95,
+                metadata={"framework": "langchain"},
+                file_path=file_path,
+                line=0,
+                snippet="import langchain",
+                evidence_kind="ast_import",
+            )
+        detected: list[ComponentDetection] = [framework_det]
 
         # Track node canonical names for relationship building
         agent_canonicals: list[str] = []

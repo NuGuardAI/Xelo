@@ -16,6 +16,7 @@ Two sets of fixtures are covered:
 
 Cross-cutting quality tests are in ``TestQuality`` at the bottom.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -32,6 +33,7 @@ from conftest import APPS, FIXTURES, PY_ONLY, adapters, extract, names, nodes
 # ═══════════════════════════════════════════════════════════════════════════
 # fixtures/apps/ — scenario tests
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 class TestCustomerServiceBot:
     """LangGraph multi-agent routing system with two LLM providers."""
@@ -55,14 +57,14 @@ class TestCustomerServiceBot:
     def test_two_model_providers(self, doc: AiBomDocument) -> None:
         models = nodes(doc, ComponentType.MODEL)
         providers = {n.metadata.extras.get("provider") for n in models}
-        assert "openai" in providers,    f"OpenAI model not found. providers={providers}"
+        assert "openai" in providers, f"OpenAI model not found. providers={providers}"
         assert "anthropic" in providers, f"Anthropic model not found. providers={providers}"
 
     def test_model_metadata_enriched(self, doc: AiBomDocument) -> None:
         for m in nodes(doc, ComponentType.MODEL):
             extras = m.metadata.extras
             assert extras.get("model_card_url"), f"Model {m.name!r} missing model_card_url"
-            assert extras.get("provider"),        f"Model {m.name!r} missing provider"
+            assert extras.get("provider"), f"Model {m.name!r} missing provider"
 
     def test_tools_detected(self, doc: AiBomDocument) -> None:
         assert nodes(doc, ComponentType.TOOL), "Expected at least one TOOL node (ToolNode)"
@@ -93,13 +95,11 @@ class TestResearchAssistant:
     def test_two_agents_found(self, doc: AiBomDocument) -> None:
         agent_names = names(doc, ComponentType.AGENT)
         assert "research_assistant" in agent_names, f"research_assistant not found: {agent_names}"
-        assert "report_writer"      in agent_names, f"report_writer not found: {agent_names}"
+        assert "report_writer" in agent_names, f"report_writer not found: {agent_names}"
 
     def test_gpt4o_model_extracted(self, doc: AiBomDocument) -> None:
         model_names = names(doc, ComponentType.MODEL)
-        assert any("gpt-4o" in n for n in model_names), (
-            f"Expected gpt-4o model, got: {model_names}"
-        )
+        assert any("gpt-4o" in n for n in model_names), f"Expected gpt-4o model, got: {model_names}"
 
     def test_function_tools_detected(self, doc: AiBomDocument) -> None:
         tools = nodes(doc, ComponentType.TOOL)
@@ -111,7 +111,8 @@ class TestResearchAssistant:
         prompts = nodes(doc, ComponentType.PROMPT)
         assert prompts, "Expected at least one PROMPT node from agent instructions"
         enriched = [
-            p for p in prompts
+            p
+            for p in prompts
             if p.metadata.extras.get("content_preview") or p.metadata.extras.get("char_count")
         ]
         assert enriched, (
@@ -137,7 +138,9 @@ class TestRagPipeline:
         return extract(APPS / "rag_pipeline")
 
     def test_framework_detected(self, doc: AiBomDocument) -> None:
-        fw_adapters = {n.metadata.extras.get("adapter") for n in nodes(doc, ComponentType.FRAMEWORK)}
+        fw_adapters = {
+            n.metadata.extras.get("adapter") for n in nodes(doc, ComponentType.FRAMEWORK)
+        }
         assert "llamaindex" in fw_adapters
 
     def test_vector_store_as_datastore(self, doc: AiBomDocument) -> None:
@@ -160,7 +163,8 @@ class TestRagPipeline:
 
     def test_claude_model_card_url(self, doc: AiBomDocument) -> None:
         anthropic_models = [
-            m for m in nodes(doc, ComponentType.MODEL)
+            m
+            for m in nodes(doc, ComponentType.MODEL)
             if m.metadata.extras.get("provider") == "anthropic"
         ]
         if anthropic_models:
@@ -183,7 +187,8 @@ class TestCodeReviewCrew:
 
     def test_three_crewai_agents(self, doc: AiBomDocument) -> None:
         crewai_agents = [
-            a for a in nodes(doc, ComponentType.AGENT)
+            a
+            for a in nodes(doc, ComponentType.AGENT)
             if a.metadata.extras.get("adapter") == "crewai"
             and a.metadata.extras.get("class_name") != "Crew"
         ]
@@ -194,7 +199,8 @@ class TestCodeReviewCrew:
 
     def test_autogen_agents_detected(self, doc: AiBomDocument) -> None:
         autogen_agents = [
-            a for a in nodes(doc, ComponentType.AGENT)
+            a
+            for a in nodes(doc, ComponentType.AGENT)
             if a.metadata.extras.get("adapter") == "autogen"
         ]
         assert autogen_agents, "Expected AutoGen AssistantAgent / UserProxyAgent"
@@ -205,7 +211,8 @@ class TestCodeReviewCrew:
 
     def test_crewai_tasks_as_tools(self, doc: AiBomDocument) -> None:
         crewai_tools = [
-            t for t in nodes(doc, ComponentType.TOOL)
+            t
+            for t in nodes(doc, ComponentType.TOOL)
             if t.metadata.extras.get("adapter") == "crewai"
         ]
         assert crewai_tools, "Expected CrewAI Task nodes mapped to TOOL components"
@@ -215,6 +222,7 @@ class TestCodeReviewCrew:
 # fixtures/ (root) — integration tests
 # ═══════════════════════════════════════════════════════════════════════════
 
+
 class TestLangGraphResearchAgent:
     """agents.py: StateGraph + researcher/tools/writer nodes + ChatAnthropic."""
 
@@ -223,7 +231,9 @@ class TestLangGraphResearchAgent:
         return extract(FIXTURES / "langgraph_research_agent")
 
     def test_detects_framework(self, doc: AiBomDocument) -> None:
-        fw_adapters = {n.metadata.extras.get("adapter") for n in nodes(doc, ComponentType.FRAMEWORK)}
+        fw_adapters = {
+            n.metadata.extras.get("adapter") for n in nodes(doc, ComponentType.FRAMEWORK)
+        }
         assert "langgraph" in fw_adapters
 
     def test_detects_graph_nodes_as_agents(self, doc: AiBomDocument) -> None:
@@ -241,8 +251,11 @@ class TestLangGraphResearchAgent:
 
     def test_claude_model_has_metadata(self, doc: AiBomDocument) -> None:
         claude = next(
-            (n for n in doc.nodes
-             if n.component_type == ComponentType.MODEL and "claude" in n.name.lower()),
+            (
+                n
+                for n in doc.nodes
+                if n.component_type == ComponentType.MODEL and "claude" in n.name.lower()
+            ),
             None,
         )
         assert claude is not None
@@ -283,8 +296,8 @@ class TestOpenAIAgentsTriage:
 
     def test_detects_all_three_agents(self, doc: AiBomDocument) -> None:
         agent_names = names(doc, ComponentType.AGENT)
-        assert "triage_agent"    in agent_names
-        assert "billing_agent"   in agent_names
+        assert "triage_agent" in agent_names
+        assert "billing_agent" in agent_names
         assert "technical_agent" in agent_names
 
     def test_detects_function_tools(self, doc: AiBomDocument) -> None:
@@ -293,16 +306,15 @@ class TestOpenAIAgentsTriage:
 
     def test_detects_gpt_models(self, doc: AiBomDocument) -> None:
         model_names = names(doc, ComponentType.MODEL)
-        assert any("gpt" in n for n in model_names), (
-            f"Expected GPT model nodes, got: {model_names}"
-        )
+        assert any("gpt" in n for n in model_names), f"Expected GPT model nodes, got: {model_names}"
 
     def test_detects_instructions_as_prompts(self, doc: AiBomDocument) -> None:
         assert nodes(doc, ComponentType.PROMPT), "Expected PROMPT nodes from agent instructions"
 
     def test_model_has_openai_provider(self, doc: AiBomDocument) -> None:
         gpt_nodes = [
-            n for n in doc.nodes
+            n
+            for n in doc.nodes
             if n.component_type == ComponentType.MODEL and "gpt" in n.name.lower()
         ]
         assert gpt_nodes
@@ -343,7 +355,7 @@ class TestCrewAIBlogTeam:
     def test_detects_both_models(self, doc: AiBomDocument) -> None:
         model_names = names(doc, ComponentType.MODEL)
         has_claude = any("claude" in n for n in model_names)
-        has_gpt    = any("gpt" in n for n in model_names)
+        has_gpt = any("gpt" in n for n in model_names)
         assert has_claude or has_gpt, f"Expected AI models, got: {model_names}"
 
     def test_no_duplicate_models(self, doc: AiBomDocument) -> None:
@@ -354,7 +366,8 @@ class TestCrewAIBlogTeam:
 
     def test_backstory_as_prompt_or_metadata(self, doc: AiBomDocument) -> None:
         crewai_agents = [
-            n for n in doc.nodes
+            n
+            for n in doc.nodes
             if n.component_type == ComponentType.AGENT
             and n.metadata.extras.get("framework") == "crewai"
         ]
@@ -381,30 +394,24 @@ class TestLlamaIndexRag:
 
     def test_detects_openai_model(self, doc: AiBomDocument) -> None:
         model_names = names(doc, ComponentType.MODEL)
-        assert any("gpt" in n for n in model_names), (
-            f"Expected GPT-4o model, got: {model_names}"
-        )
+        assert any("gpt" in n for n in model_names), f"Expected GPT-4o model, got: {model_names}"
 
     def test_detects_anthropic_model(self, doc: AiBomDocument) -> None:
         model_names = names(doc, ComponentType.MODEL)
-        assert any("claude" in n for n in model_names), (
-            f"Expected Claude model, got: {model_names}"
-        )
+        assert any("claude" in n for n in model_names), f"Expected Claude model, got: {model_names}"
 
     def test_detects_query_engine_as_agent(self, doc: AiBomDocument) -> None:
         assert names(doc, ComponentType.AGENT), "Expected AGENT node for RetrieverQueryEngine"
 
     def test_models_have_provider_metadata(self, doc: AiBomDocument) -> None:
-        enriched = [
-            n for n in nodes(doc, ComponentType.MODEL)
-            if n.metadata.extras.get("provider")
-        ]
+        enriched = [n for n in nodes(doc, ComponentType.MODEL) if n.metadata.extras.get("provider")]
         assert enriched, "At least one model should have a provider annotation"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Cross-fixture quality tests
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 class TestQuality:
     """Cross-cutting correctness and deduplication assertions."""
@@ -442,7 +449,8 @@ class TestQuality:
         (tmp_path / "b.py").write_text("import langgraph\n")
         doc = SbomExtractor().extract_from_path(tmp_path, PY_ONLY)
         fw = [
-            n for n in doc.nodes
+            n
+            for n in doc.nodes
             if n.component_type == ComponentType.FRAMEWORK
             and n.metadata.extras.get("adapter") == "langgraph"
         ]
@@ -452,12 +460,12 @@ class TestQuality:
     def test_model_name_deduplicates_across_adapters(self, tmp_path: Path) -> None:
         """AST-detected model and regex-detected model for same name merge."""
         (tmp_path / "app.py").write_text(
-            "from langchain_openai import ChatOpenAI\n"
-            "llm = ChatOpenAI(model='gpt-4o')\n"
+            "from langchain_openai import ChatOpenAI\nllm = ChatOpenAI(model='gpt-4o')\n"
         )
         doc = SbomExtractor().extract_from_path(tmp_path, PY_ONLY)
         gpt_nodes = [
-            n for n in doc.nodes
+            n
+            for n in doc.nodes
             if n.component_type == ComponentType.MODEL and "gpt" in n.name.lower()
         ]
         assert len(gpt_nodes) == 1, f"Expected single gpt-4o node, got {len(gpt_nodes)}"
@@ -468,8 +476,21 @@ class TestQuality:
         priorities = [a.priority for a in adapters_list]
         assert priorities == sorted(priorities)
         adapter_names = {a.name for a in adapters_list}
-        assert {"langgraph", "openai_agents", "autogen", "semantic_kernel",
-                "crewai", "llamaindex", "llm_clients"} <= adapter_names
-        assert {"langgraph_ts", "openai_agents_ts", "google_adk_ts",
-                "llm_clients_ts", "bedrock_agents_ts",
-                "datastore_ts", "prompt_ts"} <= adapter_names
+        assert {
+            "langgraph",
+            "openai_agents",
+            "autogen",
+            "semantic_kernel",
+            "crewai",
+            "llamaindex",
+            "llm_clients",
+        } <= adapter_names
+        assert {
+            "langgraph_ts",
+            "openai_agents_ts",
+            "google_adk_ts",
+            "llm_clients_ts",
+            "bedrock_agents_ts",
+            "datastore_ts",
+            "prompt_ts",
+        } <= adapter_names

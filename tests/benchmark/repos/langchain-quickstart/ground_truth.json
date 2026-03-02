@@ -1,238 +1,1067 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://langchain-quickstart",
   "nodes": [
     {
-      "id": "326054ae-9d87-513b-8870-0979c91143e5",
-      "name": "langchain",
+      "id": "90fce1a3-f142-4fc6-8123-5f6b5b3ce9f8",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "libs/core/langchain_core/runnables/config.py",
+            "line": 263
+          }
+        }
+      ]
+    },
+    {
+      "id": "9268bec0-9b50-4ea7-8e88-2ec067601903",
+      "name": "chroma",
+      "component_type": "DATASTORE",
+      "confidence": 0.93,
+      "metadata": {
+        "extras": {
+          "canonical_name": "chroma",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.93,
+          "detail": "DATASTORE: chroma",
+          "location": {
+            "path": ".pre-commit-config.yaml",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "ac4046f9-2561-4bd8-91bf-21e99bedd857",
+      "name": "mysql",
+      "component_type": "DATASTORE",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "mysql",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "DATASTORE: mysql",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 125
+          }
+        }
+      ]
+    },
+    {
+      "id": "60685606-c481-4b78-8904-39e86a33ca0f",
+      "name": "framework:langgraph",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "langchain",
-          "adapter": "framework"
+          "canonical_name": "framework:langgraph",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.95,
-          "detail": "langchain framework library - langchain_classic and langchain_core",
+          "detail": "FRAMEWORK: framework:langgraph",
           "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/config.py",
+            "path": "libs/core/langchain_core/prompt_values.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "150b7250-a5c4-563b-9a46-153dc2ca025d",
-      "name": "gpt-4o",
+      "id": "ae3af802-d239-48b6-88f4-bdfcdcfdaff1",
+      "name": "claude-3-haiku-20240307",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "claude-3-haiku-20240307",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "MODEL: claude-3-haiku-20240307",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/few_shot.py",
+            "line": 367
+          }
+        }
+      ]
+    },
+    {
+      "id": "e5cf9045-3882-44ed-8799-b95d3b5ffa02",
+      "name": "gpt-3.5-turbo-0125",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-3.5-turbo-0125",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: gpt-3.5-turbo-0125",
+          "location": {
+            "path": "libs/core/langchain_core/runnables/configurable.py",
+            "line": 502
+          }
+        }
+      ]
+    },
+    {
+      "id": "3115f746-18c7-4a5b-8aee-60ff37c881d0",
+      "name": "gpt-4o-mini",
       "component_type": "MODEL",
       "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "gpt-4o",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.9,
-          "detail": "gpt-4o used in langchain examples and tests",
-          "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "2cedbad2-4a26-5758-9ee4-bb892250a563",
-      "name": "gpt-4o-mini",
-      "component_type": "MODEL",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
           "canonical_name": "gpt-4o-mini",
-          "adapter": "regex"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "regex_pattern",
-          "confidence": 0.85,
-          "detail": "gpt-4o-mini used in langchain examples",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "MODEL: gpt-4o-mini",
           "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
-            "line": 1
+            "path": "libs/langchain/langchain_classic/chains/router/multi_prompt.py",
+            "line": 52
           }
         }
       ]
     },
     {
-      "id": "c6cc0b54-f4a2-53f6-bde7-b82b6031841e",
-      "name": "gpt-3.5-turbo",
-      "component_type": "MODEL",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gpt-3.5-turbo",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.85,
-          "detail": "gpt-3.5-turbo referenced in langchain examples",
-          "location": {
-            "path": "libs/langchain/langchain_classic/smith/evaluation/config.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "86a1ac93-1c7a-5325-b07f-442cfb594097",
-      "name": "claude-3-haiku-20240307",
-      "component_type": "MODEL",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "claude-3-haiku-20240307",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.8,
-          "detail": "claude-3-haiku-20240307 referenced in langchain multi-model examples",
-          "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "3020dca5-bc6c-590e-a2d5-68f92d12bd0b",
-      "name": "chroma",
-      "component_type": "DATASTORE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "chroma",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.85,
-          "detail": "chromadb integration for vector store in langchain",
-          "location": {
-            "path": "libs/langchain/langchain_classic/schema/prompt.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "53ff7e4f-ec30-5c12-a2b7-9036feb03ae7",
-      "name": "faiss",
-      "component_type": "DATASTORE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "faiss",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.85,
-          "detail": "faiss vector store integration in langchain",
-          "location": {
-            "path": "libs/langchain/langchain_classic/schema/prompt.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "37e210e2-27ce-5a48-9bd9-0fc1d56274fd",
-      "name": "postgres",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "postgres",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.8,
-          "detail": "postgres integration for langchain memory/history",
-          "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/config.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "c7fe2811-c623-5318-9e94-d3629deb5893",
-      "name": "chat_prompt_template",
+      "id": "90892ed6-16a6-4f01-bc68-893224aca716",
+      "name": "System Message",
       "component_type": "PROMPT",
       "confidence": 0.8,
       "metadata": {
         "extras": {
-          "canonical_name": "chat_prompt_template",
-          "adapter": "ast"
+          "canonical_name": "System Message",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "gt",
           "confidence": 0.8,
-          "detail": "ChatPromptTemplate.from_messages() in langchain examples",
+          "detail": "PROMPT: System Message",
           "location": {
-            "path": "libs/langchain/langchain_classic/schema/prompt.py",
-            "line": 1
+            "path": "libs/langchain/langchain_classic/evaluation/agents/trajectory_eval_prompt.py",
+            "line": 139
           }
         }
       ]
     },
     {
-      "id": "5d88188e-2794-5c5e-bd4e-566468ceae84",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.85,
+      "id": "84819e9e-0f28-4ab5-ba78-02281e0b8d52",
+      "name": "System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.8,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "System Message",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "env_var",
-          "confidence": 0.85,
-          "detail": "OPENAI_API_KEY and ANTHROPIC_API_KEY env vars required",
+          "kind": "gt",
+          "confidence": 0.8,
+          "detail": "PROMPT: System Message",
           "location": {
-            "path": "libs/langchain/langchain_classic/schema/runnable/config.py",
-            "line": 1
+            "path": "libs/langchain/langchain_classic/evaluation/agents/trajectory_eval_prompt.py",
+            "line": 99
+          }
+        }
+      ]
+    },
+    {
+      "id": "ed4d2319-f297-4a7e-92d7-eeba3894494b",
+      "name": "Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/question_answering/map_rerank_prompt.py",
+            "line": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "24aa27c6-aeb1-4676-bee0-ebbc63160d5d",
+      "name": "Mssql Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Mssql Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Mssql Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 104
+          }
+        }
+      ]
+    },
+    {
+      "id": "c0dbc5e0-b1c9-4a94-94e5-4f36532ea3c2",
+      "name": "Tool Free Eval Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Tool Free Eval Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Tool Free Eval Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/agents/trajectory_eval_prompt.py",
+            "line": 109
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2600d5f-7231-42f0-843e-8cc49439bb6b",
+      "name": "Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/chat_vector_db/prompts.py",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "5154eae9-1048-486e-8df0-68080a8c28a8",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/memory/prompt.py",
+            "line": 114
+          }
+        }
+      ]
+    },
+    {
+      "id": "49819ba0-a971-4a37-8720-5c75e20bab25",
+      "name": "Combine Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Combine Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Combine Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/map_reduce_prompt.py",
+            "line": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "03c172b8-55f6-4fdd-a4b9-8012b4010e48",
+      "name": "Mysql Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Mysql Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Mysql Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 125
+          }
+        }
+      ]
+    },
+    {
+      "id": "67961c0a-15c9-4284-a4f9-e49cc2fdfd16",
+      "name": "Templ1",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Templ1",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Templ1",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_generation/prompt.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "df9f1949-eccf-4b11-88f3-230fbac1af36",
+      "name": "Mariadb Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Mariadb Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Mariadb Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 146
+          }
+        }
+      ]
+    },
+    {
+      "id": "99efa51f-1ffc-466f-91be-1dee1f4f5600",
+      "name": "Oracle Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Oracle Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Oracle Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 167
+          }
+        }
+      ]
+    },
+    {
+      "id": "1373f509-d4ea-4553-a986-b770f2871e2d",
+      "name": "Test Mustache Prompt From Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Test Mustache Prompt From Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Test Mustache Prompt From Template",
+          "location": {
+            "path": "libs/core/tests/unit_tests/prompts/test_prompt.py",
+            "line": 177
+          }
+        }
+      ]
+    },
+    {
+      "id": "826a3d65-3572-4532-979b-7b8750973131",
+      "name": "Postgres Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Postgres Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Postgres Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 188
+          }
+        }
+      ]
+    },
+    {
+      "id": "37c402dc-b4f5-4e26-93b6-7a6101d00b3e",
+      "name": "Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/flare/prompts.py",
+            "line": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "435781c6-650b-4760-b075-e19a40d1fb48",
+      "name": "Sqlite Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Sqlite Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Sqlite Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 209
+          }
+        }
+      ]
+    },
+    {
+      "id": "36d9702c-93e8-4058-9dde-3b6402230384",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/criteria/prompt.py",
+            "line": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "3b210695-ec50-4c59-8204-029ce60071b0",
+      "name": "Context Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Context Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Context Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/qa/eval_prompt.py",
+            "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "1800267b-7a85-4e79-87c6-da19d1f13817",
+      "name": "Clickhouse Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Clickhouse Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Clickhouse Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 229
+          }
+        }
+      ]
+    },
+    {
+      "id": "64b02a4d-16d4-4cd6-8f22-6b543667f5c5",
+      "name": "Default Answer Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Answer Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Answer Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 23
+          }
+        }
+      ]
+    },
+    {
+      "id": "e25263da-03fa-4d7e-8d95-97fddda4778c",
+      "name": "Prestodb Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Prestodb Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Prestodb Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 249
+          }
+        }
+      ]
+    },
+    {
+      "id": "f116835a-867d-46f1-b88d-c5ab8025c322",
+      "name": "Default Summarizer Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Summarizer Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Summarizer Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/memory/prompt.py",
+            "line": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "4e89b832-ae22-437b-a561-3d24e78a3533",
+      "name": "Refine Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Refine Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Refine Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/question_answering/refine_prompts.py",
+            "line": 26
+          }
+        }
+      ]
+    },
+    {
+      "id": "43c5066d-80fa-43d7-bd1f-746e5f8cfa98",
+      "name": "Default Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/self_ask_with_search/prompt.py",
+            "line": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "b913e86f-e949-40e0-a4ab-99cd2ebdbb38",
+      "name": "Decider Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Decider Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Decider Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "84008bc4-6e43-4185-9fb8-d1b7d0fefcb4",
+      "name": "Question Generator Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Question Generator Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Question Generator Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/flare/prompts.py",
+            "line": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "4c49d18e-2077-4761-a7f5-916e10dfbda0",
+      "name": "Combine Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Combine Prompt Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Combine Prompt Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/question_answering/map_reduce_prompt.py",
+            "line": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": "e9dcc744-013c-408e-8aa0-fa15bc424469",
+      "name": "Default Refine Prompt Tmpl",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Refine Prompt Tmpl",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Refine Prompt Tmpl",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/refine_prompts.py",
+            "line": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "c07a995f-8664-404a-9734-2bb711863e88",
+      "name": "Cot Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Cot Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Cot Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/qa/eval_prompt.py",
+            "line": 42
+          }
+        }
+      ]
+    },
+    {
+      "id": "fc79046f-0d3f-47d8-8d57-89539a046e6a",
+      "name": "Cratedb Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Cratedb Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Cratedb Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 43
+          }
+        }
+      ]
+    },
+    {
+      "id": "306ff1c3-ff6b-4d6f-925f-80cf5793af58",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/criteria/prompt.py",
+            "line": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "f70d06be-daee-4ee3-96a2-751838e604a7",
+      "name": "Default Entity Extraction Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Entity Extraction Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Entity Extraction Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/memory/prompt.py",
+            "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "e15f4b17-6dbb-43c9-b5aa-7a5660487b25",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/indexes/prompts/knowledge_triplet_extraction.py",
+            "line": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "dca80c48-c651-49ab-bbc9-6ec92df1a9ca",
+      "name": "Duckdb Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Duckdb Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Duckdb Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 63
+          }
+        }
+      ]
+    },
+    {
+      "id": "75b44056-cb56-45f5-8ada-d3719845f3fb",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/evaluation/qa/eval_prompt.py",
+            "line": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "d9cbb703-6997-4250-8e16-6d632fae7210",
+      "name": "System Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/question_answering/map_reduce_prompt.py",
+            "line": 70
+          }
+        }
+      ]
+    },
+    {
+      "id": "a616e431-d42b-4296-bc1e-f650e760fa50",
+      "name": "Googlesql Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Googlesql Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Googlesql Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/sql_database/prompt.py",
+            "line": 83
+          }
+        }
+      ]
+    },
+    {
+      "id": "83586975-76bc-4d91-94e8-95f630e9883f",
+      "name": "Default Entity Summarization Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Entity Summarization Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Entity Summarization Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/memory/prompt.py",
+            "line": 88
+          }
+        }
+      ]
+    },
+    {
+      "id": "361551b4-f264-4ab1-a84e-4085e19f19f1",
+      "name": "Default Dsl Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Default Dsl Template",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: Default Dsl Template",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 9
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

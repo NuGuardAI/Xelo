@@ -8,6 +8,7 @@ Detects usage of the Azure AI Projects / Agents SDK:
 - ``DefaultAzureCredential()`` / ``ManagedIdentityCredential()`` → AUTH nodes
 - Agent name extracted from env-var or string args → AGENT node
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -94,34 +95,38 @@ class AzureAIAgentsAdapter(FrameworkAdapter):
 
             if cn in _TOOL_CLASSES:
                 tool_display = _clean(inst.assigned_to or cn)
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=canonicalize_text(f"azure_ai:{cn.lower()}:{tool_display}"),
-                    display_name=cn,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={"framework": "azure_ai_agent_service", "tool_class": cn},
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{cn}(...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=canonicalize_text(f"azure_ai:{cn.lower()}:{tool_display}"),
+                        display_name=cn,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={"framework": "azure_ai_agent_service", "tool_class": cn},
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{cn}(...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             elif cn in _CREDENTIAL_CLASSES:
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AUTH,
-                    canonical_name=canonicalize_text(f"azure_ai:auth:{cn.lower()}"),
-                    display_name=cn,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.88,
-                    metadata={"framework": "azure_ai_agent_service", "credential_type": cn},
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{cn}()",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.AUTH,
+                        canonical_name=canonicalize_text(f"azure_ai:auth:{cn.lower()}"),
+                        display_name=cn,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.88,
+                        metadata={"framework": "azure_ai_agent_service", "credential_type": cn},
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{cn}()",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         # Pass 2: Static factory calls (AIProjectClient.from_connection_string)
         # These appear as function_calls with receiver = "AIProjectClient"
@@ -155,21 +160,23 @@ class AzureAIAgentsAdapter(FrameworkAdapter):
                         break
 
                 canon = canonicalize_text(f"azure_ai:agent:{agent_name}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AGENT,
-                    canonical_name=canon,
-                    display_name=agent_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.82,
-                    metadata={
-                        "framework": "azure_ai_agent_service",
-                        "model": model or None,
-                    },
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"{call.receiver}.{call.function_name}(...)",
-                    evidence_kind="ast_method_call",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.AGENT,
+                        canonical_name=canon,
+                        display_name=agent_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.82,
+                        metadata={
+                            "framework": "azure_ai_agent_service",
+                            "model": model or None,
+                        },
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"{call.receiver}.{call.function_name}(...)",
+                        evidence_kind="ast_method_call",
+                    )
+                )
 
         return detected

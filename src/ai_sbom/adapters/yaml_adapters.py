@@ -14,6 +14,7 @@ Supported patterns
     Detects agent configs from AutoGen-style YAML files (``OAI_CONFIG_LIST``
     or ``autogen_config`` keys with ``model`` entries).
 """
+
 from __future__ import annotations
 
 import logging
@@ -30,10 +31,12 @@ _log = logging.getLogger(__name__)
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _try_load_yaml(content: str) -> Any:
     """Parse YAML content, returning None on failure."""
     try:
         import yaml  # type: ignore[import-untyped]
+
         return yaml.safe_load(content)
     except Exception as exc:  # noqa: BLE001
         _log.debug("YAML parse error: %s", exc)
@@ -43,6 +46,7 @@ def _try_load_yaml(content: str) -> Any:
 # ---------------------------------------------------------------------------
 # CrewAI agents.yaml adapter
 # ---------------------------------------------------------------------------
+
 
 class CrewAIYAMLAdapter:
     """Detect CrewAI agents defined in YAML configuration files.
@@ -136,7 +140,7 @@ class CrewAIYAMLAdapter:
 _AUTOGEN_PATH_RE = re.compile(
     r"(autogen|OAI_CONFIG|model_config).*\.ya?ml$"
     r"|config\.ya?ml$",  # generic config.yaml files may use autogen format
-    re.IGNORECASE
+    re.IGNORECASE,
 )
 _AUTOGEN_MODEL_FIELDS = {"model", "engine", "api_engine"}
 
@@ -183,19 +187,21 @@ class AutoGenYAMLAdapter:
                     model = (config_block.get(field) or "").strip()
                     if model:
                         line = _find_key_line(line_cache, model)
-                        detections.append(ComponentDetection(
-                            component_type=ComponentType.MODEL,
-                            canonical_name=model.lower(),
-                            display_name=model,
-                            adapter_name=self.name,
-                            priority=self.priority,
-                            confidence=0.85,
-                            metadata={"framework": "autogen", "source": "yaml_config"},
-                            file_path=rel_path,
-                            line=line,
-                            snippet=f"model: {model}",
-                            evidence_kind="yaml",
-                        ))
+                        detections.append(
+                            ComponentDetection(
+                                component_type=ComponentType.MODEL,
+                                canonical_name=model.lower(),
+                                display_name=model,
+                                adapter_name=self.name,
+                                priority=self.priority,
+                                confidence=0.85,
+                                metadata={"framework": "autogen", "source": "yaml_config"},
+                                file_path=rel_path,
+                                line=line,
+                                snippet=f"model: {model}",
+                                evidence_kind="yaml",
+                            )
+                        )
             # Check model_config sub-block too
             mc = data.get("model_config") or {}
             if isinstance(mc, dict):
@@ -204,19 +210,21 @@ class AutoGenYAMLAdapter:
                     model = (cfg.get("model") or "").strip()
                     if model:
                         line = _find_key_line(line_cache, model)
-                        detections.append(ComponentDetection(
-                            component_type=ComponentType.MODEL,
-                            canonical_name=model.lower(),
-                            display_name=model,
-                            adapter_name=self.name,
-                            priority=self.priority,
-                            confidence=0.85,
-                            metadata={"framework": "autogen", "source": "yaml_config"},
-                            file_path=rel_path,
-                            line=line,
-                            snippet=f"model: {model}",
-                            evidence_kind="yaml",
-                        ))
+                        detections.append(
+                            ComponentDetection(
+                                component_type=ComponentType.MODEL,
+                                canonical_name=model.lower(),
+                                display_name=model,
+                                adapter_name=self.name,
+                                priority=self.priority,
+                                confidence=0.85,
+                                metadata={"framework": "autogen", "source": "yaml_config"},
+                                file_path=rel_path,
+                                line=line,
+                                snippet=f"model: {model}",
+                                evidence_kind="yaml",
+                            )
+                        )
 
         # Pattern 2: OAI_CONFIG_LIST style (list of dicts with model field)
         for key in ("config_list", "models"):
@@ -230,19 +238,21 @@ class AutoGenYAMLAdapter:
                             if model and model not in seen:
                                 seen.add(model)
                                 line = _find_key_line(line_cache, model)
-                                detections.append(ComponentDetection(
-                                    component_type=ComponentType.MODEL,
-                                    canonical_name=model.lower(),
-                                    display_name=model,
-                                    adapter_name=self.name,
-                                    priority=self.priority,
-                                    confidence=0.80,
-                                    metadata={"framework": "autogen", "source": "yaml_config"},
-                                    file_path=rel_path,
-                                    line=line,
-                                    snippet=f"model: {model}",
-                                    evidence_kind="yaml",
-                                ))
+                                detections.append(
+                                    ComponentDetection(
+                                        component_type=ComponentType.MODEL,
+                                        canonical_name=model.lower(),
+                                        display_name=model,
+                                        adapter_name=self.name,
+                                        priority=self.priority,
+                                        confidence=0.80,
+                                        metadata={"framework": "autogen", "source": "yaml_config"},
+                                        file_path=rel_path,
+                                        line=line,
+                                        snippet=f"model: {model}",
+                                        evidence_kind="yaml",
+                                    )
+                                )
 
         # Pattern 3: AutoGen distributed chat agents (top-level keys with
         # description + system_message sub-keys)
@@ -252,31 +262,43 @@ class AutoGenYAMLAdapter:
             if not any(k in val for k in _AUTOGEN_AGENT_KEYS):
                 continue
             # Skip non-agent keys (host, group_chat_manager, client_config, etc.)
-            if key in {"host", "client_config", "group_chat_manager", "model_config",
-                       "config_list", "models", "host", "ui_agent"}:
+            if key in {
+                "host",
+                "client_config",
+                "group_chat_manager",
+                "model_config",
+                "config_list",
+                "models",
+                "host",
+                "ui_agent",
+            }:
                 continue
             agent_name = str(key).strip()
             if not agent_name:
                 continue
             description = (val.get("description") or "").strip()
             line = _find_key_line(line_cache, agent_name)
-            detections.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=agent_name,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.80,
-                metadata={
-                    "framework": "autogen",
-                    "description": description[:100] if description else None,
-                    "source": "yaml_config",
-                },
-                file_path=rel_path,
-                line=line,
-                snippet=f"{agent_name}: description={description[:60]!r}" if description else agent_name,
-                evidence_kind="yaml",
-            ))
+            detections.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=agent_name,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.80,
+                    metadata={
+                        "framework": "autogen",
+                        "description": description[:100] if description else None,
+                        "source": "yaml_config",
+                    },
+                    file_path=rel_path,
+                    line=line,
+                    snippet=f"{agent_name}: description={description[:60]!r}"
+                    if description
+                    else agent_name,
+                    evidence_kind="yaml",
+                )
+            )
             _log.debug("autogen_yaml: agent %r in %s", agent_name, rel_path)
 
         return detections
@@ -297,6 +319,7 @@ class AutoGenYAMLAdapter:
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
 
 def _build_line_index(content: str) -> list[str]:
     """Split content into lines (1-indexed via list[0] = line 1)."""

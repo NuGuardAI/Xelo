@@ -139,17 +139,20 @@ class LLMClientsAdapter(FrameworkAdapter):
         for call in parse_result.function_calls:
             func = call.function_name or ""
             args = call.args or {}
-            # Determine if this is a model-specifying call
-            is_model_call = (
-                "create" in func or "generate" in func
-                or (call.receiver or "").lower() == "ollama"
-            )
-            if not is_model_call:
+
+            # Determine call strength:
+            # - Strong: known LLM API method names → allow positional-arg fallback
+            # - Weak: generic create/generate → require explicit model= kwarg only
+            is_ollama = (call.receiver or "").lower() == "ollama"
+            is_strong_call = bool(_MODEL_SPECIFYING_METHODS.search(func)) or is_ollama
+            is_weak_call = not is_strong_call and ("create" in func or "generate" in func)
+            if not is_strong_call and not is_weak_call:
                 continue
 
             model_name = self._clean_str(args.get("model") or args.get("model_name"))
-            if not model_name:
-                # Check positional args for model strings
+            if not model_name and is_strong_call:
+                # Only fall back to positional args for well-known LLM API calls
+                # to avoid false positives from unrelated generate_*/create_* functions
                 for pa in call.positional_args:
                     if isinstance(pa, str) and not pa.startswith("$"):
                         model_name = pa.strip("'\"")
