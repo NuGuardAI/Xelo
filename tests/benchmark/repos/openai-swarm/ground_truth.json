@@ -35,17 +35,18 @@
       "metadata": {
         "extras": {
           "canonical_name": "triage_agent",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Triage Agent"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.9,
-          "detail": "triage_agent = Agent(...) routes to specialized agents",
+          "detail": "triage_agent = Agent(name='Triage Agent', ...) routes to specialized agents",
           "location": {
-            "path": "examples/airline/main.py",
-            "line": 1
+            "path": "examples/triage_agent/agents.py",
+            "line": 16
           }
         }
       ]
@@ -58,17 +59,18 @@
       "metadata": {
         "extras": {
           "canonical_name": "sales_agent",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Sales Agent"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "sales_agent = Agent(...)",
+          "detail": "sales_agent = Agent(name='Sales Agent', ...)",
           "location": {
-            "path": "examples/airline/main.py",
-            "line": 1
+            "path": "examples/triage_agent/agents.py",
+            "line": 21
           }
         }
       ]
@@ -81,40 +83,18 @@
       "metadata": {
         "extras": {
           "canonical_name": "refunds_agent",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Refunds Agent"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "refunds_agent = Agent(...)",
+          "detail": "refunds_agent = Agent(name='Refunds Agent', ...)",
           "location": {
-            "path": "examples/airline/main.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "c1663152-85ec-5702-a14b-8aa959c330d6",
-      "name": "help_center_agent",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "help_center_agent",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "help_center_agent = Agent(...)",
-          "location": {
-            "path": "examples/customer_service_streaming/main.py",
-            "line": 1
+            "path": "examples/triage_agent/agents.py",
+            "line": 26
           }
         }
       ]
@@ -127,16 +107,17 @@
       "metadata": {
         "extras": {
           "canonical_name": "flight_change",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Flight change traversal", "flight_change"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "flight_change = Agent(...)",
+          "detail": "flight_change = Agent(name='Flight change traversal', ...)",
           "location": {
-            "path": "examples/airline/main.py",
+            "path": "examples/airline/configs/agents.py",
             "line": 1
           }
         }
@@ -150,16 +131,17 @@
       "metadata": {
         "extras": {
           "canonical_name": "flight_cancel",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Flight cancel traversal", "flight_cancel"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "flight_cancel = Agent(...)",
+          "detail": "flight_cancel = Agent(name='Flight cancel traversal', ...)",
           "location": {
-            "path": "examples/airline/main.py",
+            "path": "examples/airline/configs/agents.py",
             "line": 1
           }
         }
@@ -173,16 +155,17 @@
       "metadata": {
         "extras": {
           "canonical_name": "lost_baggage",
-          "adapter": "ast"
+          "adapter": "ast",
+          "synonyms": ["Lost baggage traversal", "lost_baggage"]
         }
       },
       "evidence": [
         {
           "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "lost_baggage = Agent(...)",
+          "detail": "lost_baggage = Agent(name='Lost baggage traversal', ...)",
           "location": {
-            "path": "examples/airline/main.py",
+            "path": "examples/airline/configs/agents.py",
             "line": 1
           }
         }

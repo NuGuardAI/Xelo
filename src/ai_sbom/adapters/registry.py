@@ -45,10 +45,12 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         AzureAIAgentsAdapter,
         BedrockAgentCoreAdapter,
         CrewAIAdapter,
+        GoogleADKPythonAdapter,
         GuardrailsAIAdapter,
         LangGraphAdapter,
         LlamaIndexAdapter,
         LLMClientsAdapter,
+        MCPServerAdapter,
         OpenAIAgentsAdapter,
         SemanticKernelAdapter,
     )
@@ -79,6 +81,8 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         AgnoAdapter(),
         AzureAIAgentsAdapter(),
         BedrockAgentCoreAdapter(),
+        GoogleADKPythonAdapter(),
+        MCPServerAdapter(),
         # TypeScript / JavaScript adapters
         LangGraphTSAdapter(),
         OpenAIAgentsTSAdapter(),

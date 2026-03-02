@@ -7,6 +7,7 @@ Detects usage of the ``openai-agents`` (``agents``) Python SDK:
 - ``model`` argument → MODEL reference
 - ``Handoff`` / ``handoff()`` → AGENT-CALLS-AGENT relationship
 """
+
 from __future__ import annotations
 
 import re
@@ -25,7 +26,7 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
 
     name = "openai_agents"
     priority = 20
-    handles_imports = ["agents", "openai_agents", "openai.agents"]
+    handles_imports = ["agents", "openai_agents", "openai.agents", "swarm"]
 
     def extract(
         self,
@@ -47,24 +48,26 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
             # InputGuardrail / OutputGuardrail → GUARDRAIL node
             if inst.class_name in {"InputGuardrail", "OutputGuardrail"}:
                 guardrail_name = _clean(
-                    inst.assigned_to
-                    or (inst.args or {}).get("name")
-                    or f"guardrail_{inst.line}"
+                    inst.assigned_to or (inst.args or {}).get("name") or f"guardrail_{inst.line}"
                 )
                 guardrail_type = "input" if "Input" in inst.class_name else "output"
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.GUARDRAIL,
-                    canonical_name=canonicalize_text(f"openai_agents:guardrail:{guardrail_name}"),
-                    display_name=guardrail_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.92,
-                    metadata={"guardrail_type": guardrail_type, "framework": "openai_agents"},
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.GUARDRAIL,
+                        canonical_name=canonicalize_text(
+                            f"openai_agents:guardrail:{guardrail_name}"
+                        ),
+                        display_name=guardrail_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.92,
+                        metadata={"guardrail_type": guardrail_type, "framework": "openai_agents"},
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{inst.class_name}(...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
                 continue
             if inst.class_name not in {"Agent", "AssistantAgent", "SwarmAgent"}:
                 continue
@@ -77,7 +80,8 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
             )
             instructions = _clean(args.get("instructions") or args.get("system_prompt", ""))
             model_name = _clean(args.get("model", ""))
-            tools_raw = args.get("tools", [])
+            # swarm uses 'functions' instead of 'tools'
+            tools_raw = args.get("tools") or args.get("functions") or []
 
             # Classify as GUARDRAIL if this agent variable is invoked inside an @input_guardrail fn
             is_guardrail = bool(inst.assigned_to and inst.assigned_to in guardrail_vars)
@@ -95,46 +99,57 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                     "provider": provider,
                     **{k: v for k, v in model_details.items() if v is not None},
                 }
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=model_canon,
-                    display_name=model_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata=model_meta,
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"Agent(model={model_name!r})",
-                    evidence_kind="ast_instantiation",
-                ))
-                rels.append(RelationshipHint(
-                    source_canonical=canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=model_canon,
-                    target_type=ComponentType.MODEL,
-                    relationship_type="USES",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=model_canon,
+                        display_name=model_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata=model_meta,
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"Agent(model={model_name!r})",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=model_canon,
+                        target_type=ComponentType.MODEL,
+                        relationship_type="USES",
+                    )
+                )
 
             # Tool references
             if isinstance(tools_raw, list):
                 for tool_ref in tools_raw:
                     if isinstance(tool_ref, str) and not tool_ref.startswith("$"):
                         tool_canon = canonicalize_text(f"openai_agents:tool:{tool_ref}")
-                        rels.append(RelationshipHint(
-                            source_canonical=canon,
-                            source_type=ComponentType.AGENT,
-                            target_canonical=tool_canon,
-                            target_type=ComponentType.TOOL,
-                            relationship_type="CALLS",
-                        ))
+                        rels.append(
+                            RelationshipHint(
+                                source_canonical=canon,
+                                source_type=ComponentType.AGENT,
+                                target_canonical=tool_canon,
+                                target_type=ComponentType.TOOL,
+                                relationship_type="CALLS",
+                            )
+                        )
 
             # If instructions is a function reference, find string literals from that function
             instructions_raw = args.get("instructions") or args.get("system_prompt", "")
-            if not instructions and isinstance(instructions_raw, str) and instructions_raw.startswith("$"):
+            if (
+                not instructions
+                and isinstance(instructions_raw, str)
+                and instructions_raw.startswith("$")
+            ):
                 func_name = instructions_raw[1:]  # strip "$"
                 func_literals = [
-                    lit.value for lit in parse_result.string_literals
+                    lit.value
+                    for lit in parse_result.string_literals
                     if lit.context == func_name and len(lit.value) >= 40 and not lit.is_docstring
                 ]
                 if func_literals:
@@ -155,20 +170,22 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                 meta.update({k: v for k, v in details.items() if v is not None})
 
             comp_type = ComponentType.GUARDRAIL if is_guardrail else ComponentType.AGENT
-            detected.append(ComponentDetection(
-                component_type=comp_type,
-                canonical_name=canon,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.92,
-                metadata=meta,
-                file_path=file_path,
-                line=inst.line,
-                snippet=f"Agent(name={agent_name!r})",
-                evidence_kind="ast_instantiation",
-                relationships=rels,
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=comp_type,
+                    canonical_name=canon,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.92,
+                    metadata=meta,
+                    file_path=file_path,
+                    line=inst.line,
+                    snippet=f"Agent(name={agent_name!r})",
+                    evidence_kind="ast_instantiation",
+                    relationships=rels,
+                )
+            )
             if not is_guardrail:
                 agent_canonicals.append(canon)
 
@@ -176,44 +193,48 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
             if instructions and len(instructions) >= 40:
                 prompt_display = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(f"openai_agents:prompt:{inst.line}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.PROMPT,
-                    canonical_name=prompt_canon,
-                    display_name=prompt_display,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.92,
-                    metadata={
-                        "role": "system",
-                        "content_preview": instructions[:500],
-                        "char_count": len(instructions),
-                        "is_template": bool(template_vars),
-                        "template_variables": template_vars,
-                    },
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=instructions[:80],
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.PROMPT,
+                        canonical_name=prompt_canon,
+                        display_name=prompt_display,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.92,
+                        metadata={
+                            "role": "system",
+                            "content_preview": instructions[:500],
+                            "char_count": len(instructions),
+                            "is_template": bool(template_vars),
+                            "template_variables": template_vars,
+                        },
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=instructions[:80],
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             # Inline tool list strings
             if isinstance(tools_raw, list):
                 for tool_ref in tools_raw:
                     if isinstance(tool_ref, str) and not tool_ref.startswith("$"):
                         tool_canon = canonicalize_text(f"openai_agents:tool:{tool_ref}")
-                        detected.append(ComponentDetection(
-                            component_type=ComponentType.TOOL,
-                            canonical_name=tool_canon,
-                            display_name=tool_ref,
-                            adapter_name=self.name,
-                            priority=self.priority,
-                            confidence=0.75,
-                            metadata={"framework": "openai_agents"},
-                            file_path=file_path,
-                            line=inst.line,
-                            snippet=f"tools=[..., {tool_ref!r}, ...]",
-                            evidence_kind="ast_instantiation",
-                        ))
+                        detected.append(
+                            ComponentDetection(
+                                component_type=ComponentType.TOOL,
+                                canonical_name=tool_canon,
+                                display_name=tool_ref,
+                                adapter_name=self.name,
+                                priority=self.priority,
+                                confidence=0.75,
+                                metadata={"framework": "openai_agents"},
+                                file_path=file_path,
+                                line=inst.line,
+                                snippet=f"tools=[..., {tool_ref!r}, ...]",
+                                evidence_kind="ast_instantiation",
+                            )
+                        )
 
         # 2. @function_tool / @tool decorated functions → TOOL
         # Detected as function_calls if used as decorator - look for calls named "function_tool" or "tool"
@@ -227,19 +248,21 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                     or f"tool_{call.line}"
                 )
                 tool_canon = canonicalize_text(f"openai_agents:tool:{tool_name}")
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.TOOL,
-                    canonical_name=tool_canon,
-                    display_name=tool_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.85,
-                    metadata={"framework": "openai_agents", "decorator": call.function_name},
-                    file_path=file_path,
-                    line=call.line,
-                    snippet=f"@{call.function_name}",
-                    evidence_kind="ast_call",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.TOOL,
+                        canonical_name=tool_canon,
+                        display_name=tool_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={"framework": "openai_agents", "decorator": call.function_name},
+                        file_path=file_path,
+                        line=call.line,
+                        snippet=f"@{call.function_name}",
+                        evidence_kind="ast_call",
+                    )
+                )
 
         # 3. Handoff → AGENT-CALLS-AGENT relationship hint
         for inst in parse_result.instantiations:
@@ -251,13 +274,15 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                 if target_agent and agent_canonicals:
                     target_canon = canonicalize_text(f"openai_agents:{target_agent}")
                     if detected:
-                        detected[-1].relationships.append(RelationshipHint(
-                            source_canonical=agent_canonicals[-1],
-                            source_type=ComponentType.AGENT,
-                            target_canonical=target_canon,
-                            target_type=ComponentType.AGENT,
-                            relationship_type="CALLS",
-                        ))
+                        detected[-1].relationships.append(
+                            RelationshipHint(
+                                source_canonical=agent_canonicals[-1],
+                                source_type=ComponentType.AGENT,
+                                target_canonical=target_canon,
+                                target_type=ComponentType.AGENT,
+                                relationship_type="CALLS",
+                            )
+                        )
 
         return detected
 
