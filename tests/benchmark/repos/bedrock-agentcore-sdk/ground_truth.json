@@ -1,49 +1,140 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://bedrock-agentcore-sdk",
   "nodes": [
     {
-      "id": "627b5e98-05e7-56e5-aa2b-7face204e175",
-      "name": "bedrock_agentcore",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.95,
+      "id": "ee879ba7-dea2-4ad5-bd99-14e577aecbd4",
+      "name": "agent_invocation",
+      "component_type": "AGENT",
+      "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "bedrock_agentcore",
-          "adapter": "framework"
+          "canonical_name": "agent_invocation",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.95,
-          "detail": "BedrockAgentCoreApp import in integration test sample agents",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: agent_invocation",
           "location": {
-            "path": "tests_integ/agents/sample_agent.py",
-            "line": 3
+            "path": "tests_integ/agents/streaming_agent.py",
+            "line": 9
           }
         }
       ]
     },
     {
-      "id": "a1b2c3d4-0001-0001-0001-000000000001",
-      "name": "invoke",
+      "id": "41803ed1-388e-472f-a45f-f6d49aa44904",
+      "name": "dummy_handler",
       "component_type": "AGENT",
-      "confidence": 0.90,
+      "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "invoke",
-          "adapter": "bedrock_agentcore",
-          "synonyms": ["handler", "agent_invocation", "streaming_handler"]
+          "canonical_name": "dummy_handler",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_decorator",
-          "confidence": 0.90,
-          "detail": "@app.entrypoint decorated async handler function",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: dummy_handler",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 240
+          }
+        }
+      ]
+    },
+    {
+      "id": "d4c281cf-24d1-465e-883e-9df59895117c",
+      "name": "handler",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "handler",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: handler",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_app.py",
+            "line": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc831be3-5b02-41b5-bf23-60095a690f72",
+      "name": "handler_with_context",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "handler_with_context",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: handler_with_context",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_manual_async_tasks.py",
+            "line": 422
+          }
+        }
+      ]
+    },
+    {
+      "id": "5df43e68-c4a1-468e-8e76-230b08c3264e",
+      "name": "handler_without_context",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "handler_without_context",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: handler_without_context",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_manual_async_tasks.py",
+            "line": 426
+          }
+        }
+      ]
+    },
+    {
+      "id": "8ba5ef5c-8a2e-449b-bfea-cd64a3ab7255",
+      "name": "invoke",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "invoke",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: invoke",
           "location": {
             "path": "tests_integ/agents/sample_agent.py",
             "line": 8
@@ -52,51 +143,442 @@
       ]
     },
     {
-      "id": "a1b2c3d4-0002-0002-0002-000000000002",
-      "name": "background_job",
-      "component_type": "TOOL",
-      "confidence": 0.85,
+      "id": "87c6851d-d46d-4e50-b963-402c5ddeca29",
+      "name": "non_streaming_handler",
+      "component_type": "AGENT",
+      "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "background_job",
-          "adapter": "bedrock_agentcore",
-          "synonyms": ["decorated_task", "concurrent_task", "long_task", "instant_task", "background_work", "valid_async_function", "test_task", "failing_task"]
+          "canonical_name": "non_streaming_handler",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_decorator",
-          "confidence": 0.85,
-          "detail": "@app.async_task decorated async background task function",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: non_streaming_handler",
           "location": {
-            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "path": "tests/bedrock_agentcore/runtime/test_app.py",
+            "line": 1256
+          }
+        }
+      ]
+    },
+    {
+      "id": "ef256729-fbe9-4639-b926-550dc632059e",
+      "name": "streaming_handler",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "streaming_handler",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: streaming_handler",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_app.py",
+            "line": 1267
+          }
+        }
+      ]
+    },
+    {
+      "id": "e41faae7-0814-40ea-b6c1-0e3968145aef",
+      "name": "test_handler",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "test_handler",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: test_handler",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_app.py",
+            "line": 51
+          }
+        }
+      ]
+    },
+    {
+      "id": "e16c78ac-d3c9-4f07-b9e2-3bef9524719d",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "API_ENDPOINT: generic",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_app.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "f9450bf5-e7c0-40f2-830d-5d2c6d0bf1e0",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "src/bedrock_agentcore/identity/auth.py",
+            "line": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "f6a40c3c-f185-496d-810e-74125460dddf",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "src/bedrock_agentcore/runtime/app.py",
+            "line": 77
+          }
+        }
+      ]
+    },
+    {
+      "id": "a6d38cc6-081a-4058-8320-63bb7d8e8779",
+      "name": "framework:bedrock_agentcore",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:bedrock_agentcore",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:bedrock_agentcore",
+          "location": {
+            "path": "src/bedrock_agentcore/evaluation/__init__.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "8d0024fa-7388-5779-b5e4-4979fb81ea61",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.9,
+      "id": "c0cab58e-3c83-4009-8a61-4f88bcd7552f",
+      "name": "crewai",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.55,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "crewai",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "Bearer token auth headers in runtime SDK",
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "FRAMEWORK: crewai",
           "location": {
-            "path": "",
-            "line": 1
+            "path": "src/bedrock_agentcore/_utils/user_agent.py",
+            "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "a6ca3a2b-ae66-4ee5-a828-a73ead685dcb",
+      "name": "langgraph",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "langgraph",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "FRAMEWORK: langgraph",
+          "location": {
+            "path": "src/bedrock_agentcore/evaluation/span_to_adot_serializer/__init__.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "07559fcd-87b5-44bd-9f12-c4d7750f2624",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "PROMPT: generic",
+          "location": {
+            "path": "tests_integ/evaluation/integrations/strands_agents_evals/test_strands_evaluation.py",
+            "line": 51
+          }
+        }
+      ]
+    },
+    {
+      "id": "5816f962-99b6-4274-88ca-d2249a8deb5b",
+      "name": "background_job",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "background_job",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: background_job",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 500
+          }
+        }
+      ]
+    },
+    {
+      "id": "d1ff4206-6167-4c58-871f-6d7809e23b59",
+      "name": "concurrent_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "concurrent_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: concurrent_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 69
+          }
+        }
+      ]
+    },
+    {
+      "id": "b8b7400b-1886-40ab-8e68-78c596e839dd",
+      "name": "decorated_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "decorated_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: decorated_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_manual_async_tasks.py",
+            "line": 278
+          }
+        }
+      ]
+    },
+    {
+      "id": "0c2986ac-bc1a-4353-9b61-2629acea9256",
+      "name": "failing_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "failing_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: failing_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 103
+          }
+        }
+      ]
+    },
+    {
+      "id": "f110dfbf-3bc6-4d15-9a5c-4eb4954ca5a5",
+      "name": "instant_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "instant_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: instant_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 450
+          }
+        }
+      ]
+    },
+    {
+      "id": "26e9b07c-224f-4f74-9ed8-8e917a2cce65",
+      "name": "invalid_sync_function",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "invalid_sync_function",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: invalid_sync_function",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "53553b4f-edea-4599-af08-9e833c613035",
+      "name": "long_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "long_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: long_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 467
+          }
+        }
+      ]
+    },
+    {
+      "id": "4591e569-8cc2-423b-bb5b-e0f54b9a2b1e",
+      "name": "test_task",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "test_task",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: test_task",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 39
+          }
+        }
+      ]
+    },
+    {
+      "id": "1d26ff40-0081-40d3-9378-1e94beb37323",
+      "name": "valid_async_function",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "valid_async_function",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "TOOL: valid_async_function",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
+            "line": 20
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

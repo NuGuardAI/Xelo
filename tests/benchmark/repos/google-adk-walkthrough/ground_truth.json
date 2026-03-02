@@ -1,238 +1,216 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://google-adk-walkthrough",
   "nodes": [
     {
-      "id": "8ef06ca0-ae8b-56a9-adc7-d26737da447d",
-      "name": "google_adk",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.95,
+      "id": "f93c4571-d2dd-4fe0-ac74-6701aafd14d8",
+      "name": "agent_basic",
+      "component_type": "AGENT",
+      "confidence": 0.92,
       "metadata": {
         "extras": {
-          "canonical_name": "google_adk",
-          "adapter": "framework"
+          "canonical_name": "agent_basic",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.95,
-          "detail": "from google.adk.agents import Agent",
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "AGENT: agent_basic",
+          "location": {
+            "path": "chapter1_main_basic.py",
+            "line": 82
+          }
+        }
+      ]
+    },
+    {
+      "id": "749b8b90-7b99-47bd-9908-5e5a3e4e8625",
+      "name": "agent_grammar",
+      "component_type": "AGENT",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "agent_grammar",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "AGENT: agent_grammar",
+          "location": {
+            "path": "agent_grammar/agent.py",
+            "line": 171
+          }
+        }
+      ]
+    },
+    {
+      "id": "b6f054b2-f6d8-4fcc-a5ba-65b3a0a4fd5b",
+      "name": "agent_math",
+      "component_type": "AGENT",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "agent_math",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "AGENT: agent_math",
           "location": {
             "path": "agent_maths/agent.py",
+            "line": 113
+          }
+        }
+      ]
+    },
+    {
+      "id": "79038196-44fe-4cd2-8db3-327f79a6b61d",
+      "name": "agent_summary",
+      "component_type": "AGENT",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "agent_summary",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "AGENT: agent_summary",
+          "location": {
+            "path": "agent_summary/agent.py",
+            "line": 65
+          }
+        }
+      ]
+    },
+    {
+      "id": "87081c71-d6ab-45b9-93cd-dfe40e4c3448",
+      "name": "agent_teaching_assistant",
+      "component_type": "AGENT",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "agent_teaching_assistant",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "AGENT: agent_teaching_assistant",
+          "location": {
+            "path": "chapter3_main_multi_agent.py",
+            "line": 105
+          }
+        }
+      ]
+    },
+    {
+      "id": "f0c65447-cdae-4f46-9385-4038fa6d175a",
+      "name": "framework:google_adk",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:google_adk",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:google_adk",
+          "location": {
+            "path": "agent_grammar/agent.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "83e2af29-18c0-599f-b2e2-c2f0d062edc8",
-      "name": "agent_math",
-      "component_type": "AGENT",
-      "confidence": 0.9,
+      "id": "783dcb97-6ddb-4d08-b046-c1708bb1618b",
+      "name": "gemini-2.0",
+      "component_type": "MODEL",
+      "confidence": 0.6,
       "metadata": {
         "extras": {
-          "canonical_name": "agent_math",
-          "adapter": "google_adk"
+          "canonical_name": "gemini-2.0",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "agent_math = Agent(model=MODEL, ...) for math calculations",
-          "location": {
-            "path": "agent_maths/agent.py",
-            "line": 50
-          }
-        }
-      ]
-    },
-    {
-      "id": "0e084df7-8969-56a4-ab34-43189433cf90",
-      "name": "agent_grammar",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "agent_grammar",
-          "adapter": "google_adk"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "agent_grammar = Agent(model=MODEL_AGENT, ...) for grammar checking",
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: gemini-2.0",
           "location": {
             "path": "agent_grammar/agent.py",
-            "line": 50
+            "line": 21
           }
         }
       ]
     },
     {
-      "id": "abc061c9-9493-54bb-9a7e-c96deaee7532",
-      "name": "agent_summary",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "agent_summary",
-          "adapter": "google_adk"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "agent_summary = Agent for student feedback",
-          "location": {
-            "path": "agent_summary/agent.py",
-            "line": 50
-          }
-        }
-      ]
-    },
-    {
-      "id": "dd472791-5c96-5b9d-b98b-c8df1c98999d",
-      "name": "sequential_agent",
-      "component_type": "AGENT",
+      "id": "7fc26c6f-bdaa-4adb-aa2a-ba68d220402d",
+      "name": "add",
+      "component_type": "TOOL",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "sequential_agent",
-          "adapter": "google_adk"
+          "canonical_name": "add",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.85,
-          "detail": "from google.adk.agents import SequentialAgent",
-          "location": {
-            "path": "chapter3_main_multi_agent.py",
-            "line": 6
-          }
-        }
-      ]
-    },
-    {
-      "id": "3091a346-afd1-589f-89b7-a40ff3945532",
-      "name": "gemini-2.0-flash-001",
-      "component_type": "MODEL",
-      "confidence": 0.95,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gemini-2.0-flash-001",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.95,
-          "detail": "MODEL = \"gemini-2.0-flash-001\"",
+          "detail": "TOOL: add",
           "location": {
             "path": "agent_maths/agent.py",
-            "line": 3
+            "line": 113
           }
         }
       ]
     },
     {
-      "id": "966a2abf-6369-5e4b-a8c6-6eba008c56c2",
-      "name": "gemini-2.0-flash",
-      "component_type": "MODEL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gemini-2.0-flash",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "MODEL = os.getenv(\"MODEL\", \"gemini-2.0-flash\")",
-          "location": {
-            "path": "chapter2_main_single_agent.py",
-            "line": 14
-          }
-        }
-      ]
-    },
-    {
-      "id": "3a3afbec-edc0-536a-8483-99a8bc3a7b79",
-      "name": "summary_instruction_prompt",
-      "component_type": "PROMPT",
+      "id": "dd3a7730-4550-4037-a975-0b43203c5637",
+      "name": "check_grammar",
+      "component_type": "TOOL",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "summary_instruction_prompt",
-          "adapter": "ast"
+          "canonical_name": "check_grammar",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "gt",
           "confidence": 0.85,
-          "detail": "summary_instruction_prompt multi-paragraph system message",
-          "location": {
-            "path": "agent_summary/agent.py",
-            "line": 4
-          }
-        }
-      ]
-    },
-    {
-      "id": "1d56e2be-d641-5edc-9b01-beb55b8c4538",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "env_var",
-          "confidence": 0.8,
-          "detail": "GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION env vars",
+          "detail": "TOOL: check_grammar",
           "location": {
             "path": "agent_grammar/agent.py",
-            "line": 10
-          }
-        }
-      ]
-    },
-    {
-      "id": "aedd74b8-c897-5960-b589-bce4920776f7",
-      "name": "generic",
-      "component_type": "DEPLOYMENT",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.8,
-          "detail": "vertexai.agent_engines for cloud deployment",
-          "location": {
-            "path": "chapter4_agent_deployment.py",
-            "line": 4
+            "line": 171
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

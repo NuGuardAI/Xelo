@@ -1,163 +1,48 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://synthetic-simple",
   "nodes": [
     {
-      "id": "b49d3abc-06b4-5a35-9aa7-173f7c003ef4",
-      "name": "langchain",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.95,
-      "metadata": {
-        "extras": {
-          "canonical_name": "langchain",
-          "adapter": "framework"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.95,
-          "detail": "from langchain.agents import create_react_agent",
-          "location": {
-            "path": "src/agents/support.py",
-            "line": 2
-          }
-        }
-      ]
-    },
-    {
-      "id": "83ea79e3-18ef-54c6-80b0-82aed3eb2958",
+      "id": "07d8f899-177e-402a-bbb9-d1d8dc26ec6a",
       "name": "support_agent",
       "component_type": "AGENT",
       "confidence": 0.9,
       "metadata": {
         "extras": {
           "canonical_name": "support_agent",
-          "adapter": "langchain"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "gt",
           "confidence": 0.9,
-          "detail": "support_agent = create_react_agent(llm=llm, tools=[...])",
+          "detail": "AGENT: support_agent",
           "location": {
             "path": "src/agents/support.py",
-            "line": 16
+            "line": 15
           }
         }
       ]
     },
     {
-      "id": "4643c31a-44af-5966-a977-8279a4c9cb04",
-      "name": "gpt-4",
-      "component_type": "MODEL",
-      "confidence": 0.95,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gpt-4",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.95,
-          "detail": "ChatOpenAI(model=\"gpt-4\")",
-          "location": {
-            "path": "src/agents/support.py",
-            "line": 11
-          }
-        }
-      ]
-    },
-    {
-      "id": "c9f1e772-697b-5187-b258-6419fbfb029e",
-      "name": "text-embedding-3-small",
-      "component_type": "MODEL",
-      "confidence": 0.95,
-      "metadata": {
-        "extras": {
-          "canonical_name": "text-embedding-3-small",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.95,
-          "detail": "OpenAIEmbeddings(model=\"text-embedding-3-small\")",
-          "location": {
-            "path": "src/vectorstore/index.py",
-            "line": 8
-          }
-        }
-      ]
-    },
-    {
-      "id": "7c2da98c-941e-5682-bbbb-6bd9899460f7",
-      "name": "search_knowledge_base",
-      "component_type": "TOOL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "search_knowledge_base",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "@tool def search_knowledge_base(query: str) -> str",
-          "location": {
-            "path": "src/tools/search.py",
-            "line": 4
-          }
-        }
-      ]
-    },
-    {
-      "id": "b40eaec0-1f9b-5c50-843f-6c7ad94aab08",
-      "name": "create_ticket",
-      "component_type": "TOOL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "create_ticket",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.9,
-          "detail": "@tool def create_ticket(title, description, priority='medium')",
-          "location": {
-            "path": "src/tools/ticketing.py",
-            "line": 4
-          }
-        }
-      ]
-    },
-    {
-      "id": "4ff7ed1d-f8af-54a4-9dbe-233cf4fef421",
+      "id": "0df2ac72-d2fb-4d7c-8d8e-2960a09f1c9e",
       "name": "pinecone",
       "component_type": "DATASTORE",
-      "confidence": 0.9,
+      "confidence": 0.65,
       "metadata": {
         "extras": {
           "canonical_name": "pinecone",
-          "adapter": "regex"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "from langchain_pinecone import Pinecone",
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DATASTORE: pinecone",
           "location": {
             "path": "src/vectorstore/index.py",
             "line": 3
@@ -166,50 +51,74 @@
       ]
     },
     {
-      "id": "2d8b64c9-128f-5f0a-a3b6-96f5f7f6b881",
-      "name": "support_system_prompt",
-      "component_type": "PROMPT",
-      "confidence": 0.85,
+      "id": "9398195c-e7c4-471b-8e73-d6be8cd91e0b",
+      "name": "framework:langchain",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "support_system_prompt",
-          "adapter": "ast"
+          "canonical_name": "framework:langchain",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "SystemMessagePromptTemplate with support agent instructions",
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:langchain",
           "location": {
-            "path": "src/prompts/system.py",
-            "line": 4
+            "path": "src/agents/support.py",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "3e6b9118-7225-56ae-bf89-80e994594a17",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.85,
+      "id": "6829e0f0-7edf-497f-a293-fce02b72e7a7",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "gpt-4",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "env_var",
-          "confidence": 0.85,
-          "detail": "OPENAI_API_KEY, PINECONE_API_KEY environment variables",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "MODEL: gpt-4",
           "location": {
-            "path": "src/vectorstore/index.py",
+            "path": "src/agents/support.py",
+            "line": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "d945e9fe-8625-4571-a2d2-b3c012233384",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "src/prompts/system.py",
             "line": 5
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

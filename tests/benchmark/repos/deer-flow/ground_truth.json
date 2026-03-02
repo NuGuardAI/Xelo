@@ -1,330 +1,216 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://deer-flow",
   "nodes": [
     {
-      "id": "9e9cd756-8d88-5693-913b-d53bc1baa283",
-      "name": "langgraph",
+      "id": "5ad281eb-94c1-4010-929b-881b85b45f71",
+      "name": "enhancer",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "enhancer",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "AGENT: enhancer",
+          "location": {
+            "path": "src/prompt_enhancer/graph/builder.py",
+            "line": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "a5bea761-696c-4880-95fd-2cd0e57f8b92",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "API_ENDPOINT: generic",
+          "location": {
+            "path": "src/server/app.py",
+            "line": 247
+          }
+        }
+      ]
+    },
+    {
+      "id": "b3e31175-9db3-4ee9-9d8c-f52349a2a3c2",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "src/server/app.py",
+            "line": 974
+          }
+        }
+      ]
+    },
+    {
+      "id": "01a66518-0c25-490c-ac21-4c27a2a7d505",
+      "name": "milvus",
+      "component_type": "DATASTORE",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "milvus",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "DATASTORE: milvus",
+          "location": {
+            "path": "src/config/tools.py",
+            "line": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": "66cd0331-1907-4d37-a47d-15f18cce6a16",
+      "name": "mongodb",
+      "component_type": "DATASTORE",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "mongodb",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "DATASTORE: mongodb",
+          "location": {
+            "path": "src/server/app.py",
+            "line": 29
+          }
+        }
+      ]
+    },
+    {
+      "id": "8d10929d-0645-43cd-8932-9d28f44c8d04",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "web/next.config.js",
+            "line": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "ef46755c-485d-4dfe-bdd0-2d18b000f9d3",
+      "name": "framework:langchain",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "langgraph",
-          "adapter": "framework"
+          "canonical_name": "framework:langchain",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.95,
-          "detail": "langgraph for agent orchestration in DeerFlow",
+          "detail": "FRAMEWORK: framework:langchain",
           "location": {
-            "path": "src/graph.py",
+            "path": "src/config/configuration.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "4ecc7582-427f-5c58-95cd-632d9ef7782f",
-      "name": "langchain",
+      "id": "40170823-b0cb-463c-a820-a1edfd3cde84",
+      "name": "framework:langgraph",
       "component_type": "FRAMEWORK",
-      "confidence": 0.9,
+      "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "langchain",
-          "adapter": "framework"
+          "canonical_name": "framework:langgraph",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "langchain used across DeerFlow agents",
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:langgraph",
           "location": {
-            "path": "src/agents/researcher.py",
+            "path": "src/prompt_enhancer/graph/builder.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "9ff98be2-ba97-5b7f-9335-28e8910ec8a9",
-      "name": "coordinator",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "coordinator",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "coordinator: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 10
-          }
-        }
-      ]
-    },
-    {
-      "id": "8fb57669-e81b-5109-94b4-abb856eb8610",
-      "name": "planner",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "planner",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "planner: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 11
-          }
-        }
-      ]
-    },
-    {
-      "id": "870b4888-75f4-5e3d-8e5b-9832a7df5b40",
-      "name": "researcher",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "researcher",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "researcher: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 12
-          }
-        }
-      ]
-    },
-    {
-      "id": "5c2a2990-016f-5924-830f-abbba64e04b7",
-      "name": "analyst",
-      "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "analyst",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "analyst: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 13
-          }
-        }
-      ]
-    },
-    {
-      "id": "88c8b989-af9e-5380-b0ea-b6e290ba00db",
-      "name": "coder",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "coder",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "coder: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 14
-          }
-        }
-      ]
-    },
-    {
-      "id": "2a05e98e-db18-5e22-b188-840e33cfa77c",
-      "name": "reporter",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "reporter",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "reporter: basic LLM type in AGENT_LLM_MAP",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": 15
-          }
-        }
-      ]
-    },
-    {
-      "id": "28cba946-0c32-5d50-ac16-b2591924cc3d",
-      "name": "postgres",
-      "component_type": "DATASTORE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "postgres",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "postgres as RAG provider option",
-          "location": {
-            "path": "src/config/tools.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "98e49aff-e0f1-57e9-a35b-7c702cec205b",
-      "name": "qdrant",
-      "component_type": "DATASTORE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "qdrant",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "qdrant as RAG provider option",
-          "location": {
-            "path": "src/config/tools.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "53b060fb-20e6-55b3-9d2a-252eda143657",
-      "name": "redis",
-      "component_type": "DATASTORE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "redis",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.85,
-          "detail": "redis as RAG provider option",
-          "location": {
-            "path": "src/config/tools.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "25136673-c2aa-549b-85a3-93460e1c9dbb",
-      "name": "mongodb",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "mongodb",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.8,
-          "detail": "mongodb as RAG provider option",
-          "location": {
-            "path": "src/config/tools.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "62cec34a-3c24-583e-9f76-a0a39704efab",
-      "name": "milvus",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "milvus",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.8,
-          "detail": "milvus as RAG provider option",
-          "location": {
-            "path": "src/config/tools.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "62b1bffa-c9c1-565b-8951-9938ee0224e2",
+      "id": "c7b2297c-c3cf-4100-95e5-c7c7ab595ecd",
       "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.85,
+      "component_type": "PROMPT",
+      "confidence": 0.95,
       "metadata": {
         "extras": {
           "canonical_name": "generic",
-          "adapter": "regex"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "env_var",
-          "confidence": 0.85,
-          "detail": "SEARCH_API, RAG_PROVIDER and LLM API key env vars",
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "PROMPT: generic",
           "location": {
-            "path": "src/config/tools.py",
-            "line": 5
+            "path": "src/prompts/template.py",
+            "line": 23
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

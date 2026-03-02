@@ -1,94 +1,71 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://autogen-graphrag",
   "nodes": [
     {
-      "id": "349fda19-6b4d-55ac-a5b1-2889827e6c3b",
-      "name": "autogen",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.95,
+      "id": "92478a4e-7b89-47c0-85cf-318bed8df4ab",
+      "name": "groupchat",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "autogen",
-          "adapter": "framework"
+          "canonical_name": "groupchat",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.95,
-          "detail": "from autogen.agentchat import Agent, AssistantAgent",
-          "location": {
-            "path": "utils/chainlit_agents.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "24e5416e-5ced-5ce3-96ab-26093d891f52",
-      "name": "graphrag",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "graphrag",
-          "adapter": "framework"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "from graphrag.query.cli import run_global_search",
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "AGENT: groupchat",
           "location": {
             "path": "appUI.py",
-            "line": 6
+            "line": 150
           }
         }
       ]
     },
     {
-      "id": "8423e0e7-9914-514b-a53f-d99e673da3e3",
+      "id": "aebe225c-4327-42fb-90cb-229e43fe7395",
+      "name": "manager",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "manager",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "AGENT: manager",
+          "location": {
+            "path": "appUI.py",
+            "line": 157
+          }
+        }
+      ]
+    },
+    {
+      "id": "f3eb659b-2043-44a1-a2cb-653cd68c4324",
       "name": "Retriever",
       "component_type": "AGENT",
       "confidence": 0.9,
       "metadata": {
         "extras": {
           "canonical_name": "Retriever",
-          "adapter": "autogen"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "gt",
           "confidence": 0.9,
-          "detail": "retriever = AssistantAgent(name=Retriever, ...)",
-          "location": {
-            "path": "appUI.py",
-            "line": 41
-          }
-        }
-      ]
-    },
-    {
-      "id": "69e97534-1002-5a09-a3f5-70fc4b8ead61",
-      "name": "User_Proxy",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "User_Proxy",
-          "adapter": "autogen"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "user_proxy = ChainlitUserProxyAgent(name=User_Proxy, ...)",
+          "detail": "AGENT: Retriever",
           "location": {
             "path": "appUI.py",
             "line": 54
@@ -97,50 +74,120 @@
       ]
     },
     {
-      "id": "eaa4db5a-52b5-56ee-989e-d0b783f3498a",
-      "name": "nomic-embed-text",
-      "component_type": "MODEL",
-      "confidence": 0.85,
+      "id": "f4751144-d5c4-40e2-b218-63bdc186a832",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.68,
       "metadata": {
         "extras": {
-          "canonical_name": "nomic-embed-text",
-          "adapter": "ast"
+          "canonical_name": "generic",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "ollama.embeddings(model=nomic-embed-text, ...)",
+          "kind": "gt",
+          "confidence": 0.68,
+          "detail": "AUTH: generic",
           "location": {
-            "path": "utils/openai_embeddings_llm.py",
-            "line": 30
+            "path": "appUI.py",
+            "line": 17
           }
         }
       ]
     },
     {
-      "id": "4608ba1a-67b9-519a-8bbb-1e46a9aa46e2",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.8,
+      "id": "c31a50dc-39cd-4410-9de8-929943a7b468",
+      "name": "framework:autogen",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "framework:autogen",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "config_file",
-          "confidence": 0.8,
-          "detail": "llm_config with api_key: ollama (local endpoint)",
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:autogen",
           "location": {
             "path": "appUI.py",
-            "line": 12
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "b430bb58-09d5-4e9e-87c5-77765e1b1fb9",
+      "name": "framework:llm_clients",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:llm_clients",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:llm_clients",
+          "location": {
+            "path": "utils/embedding.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "859e5731-ab72-4e9b-b773-abf9ea0286e1",
+      "name": "nomic-embed-text",
+      "component_type": "MODEL",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "nomic-embed-text",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "MODEL: nomic-embed-text",
+          "location": {
+            "path": "utils/openai_embeddings_llm.py",
+            "line": 38
+          }
+        }
+      ]
+    },
+    {
+      "id": "ffbe2e4f-55f8-4818-a8c2-f14582ccd6e4",
+      "name": "Retriever System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Retriever System Message",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "PROMPT: Retriever System Message",
+          "location": {
+            "path": "appUI.py",
+            "line": 54
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }

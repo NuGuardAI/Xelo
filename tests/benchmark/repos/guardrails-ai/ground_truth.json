@@ -1,169 +1,308 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-07-30T00:00:00Z",
+  "generated_at": "2026-03-02T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://guardrails-ai",
   "nodes": [
     {
-      "id": "12f75722-f2b6-5fdc-90be-25503f99888f",
-      "name": "guardrails",
+      "id": "67fd0d7d-eaec-4ffa-863e-3cd4325c291c",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.75,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "guardrails/cli/configure.py",
+            "line": 118
+          }
+        }
+      ]
+    },
+    {
+      "id": "75103ba0-4968-4aa3-97ca-041376463c39",
+      "name": "faiss",
+      "component_type": "DATASTORE",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "faiss",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DATASTORE: faiss",
+          "location": {
+            "path": "guardrails/vectordb/__init__.py",
+            "line": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "f0ce00a3-5873-45fe-9d9e-9100a61eef91",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "DATASTORE: postgres",
+          "location": {
+            "path": "docs/dist/examples/data/config.py",
+            "line": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "6cf8b586-d0e1-4c3c-863c-468473768920",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "docs/docusaurus.config.js",
+            "line": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "a09b0c9f-4cc2-4e00-bc71-1d7640316511",
+      "name": "framework:langchain",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "guardrails",
-          "adapter": "framework"
+          "canonical_name": "framework:langchain",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
+          "kind": "gt",
           "confidence": 0.95,
-          "detail": "import guardrails as gd - Guardrails AI validation library",
+          "detail": "FRAMEWORK: framework:langchain",
           "location": {
-            "path": "guardrails/prompt/__init__.py",
+            "path": "guardrails/classes/input_type.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "4e8c9c1d-c583-5d04-bb23-5d5713eb7dd8",
+      "id": "b5217759-735d-4117-8c1c-7043881a7e85",
+      "name": "llamaindex",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "llamaindex",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "FRAMEWORK: llamaindex",
+          "location": {
+            "path": "guardrails/integrations/llama_index/__init__.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "f53624bc-52d7-4f82-9c6a-7c27a14a7715",
       "name": "guard",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "guard",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "GUARDRAIL: guard",
+          "location": {
+            "path": "tests/integration_tests/test_litellm.py",
+            "line": 61
+          }
+        }
+      ]
+    },
+    {
+      "id": "6a0ea50c-be42-435b-b58a-34b156c5568b",
+      "name": "install",
       "component_type": "GUARDRAIL",
       "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "guard",
-          "adapter": "ast"
+          "canonical_name": "install",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "gt",
           "confidence": 0.9,
-          "detail": "Guard.from_rail() or Guard.from_string() in guardrails library examples",
+          "detail": "GUARDRAIL: install",
           "location": {
-            "path": "docs/src/examples/data/config.py",
-            "line": 1
+            "path": "guardrails/__init__.py",
+            "line": 12
           }
         }
       ]
     },
     {
-      "id": "5c51f77d-ef48-5183-92c6-965173eb0da6",
-      "name": "ArbitraryType",
+      "id": "c00564f5-fc15-4001-a09b-9f64de12d653",
+      "name": "RegexMatch",
       "component_type": "GUARDRAIL",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "metadata": {
         "extras": {
-          "canonical_name": "ArbitraryType",
-          "adapter": "ast"
+          "canonical_name": "RegexMatch",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "ArbitraryType validator in guardrails",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "GUARDRAIL: RegexMatch",
           "location": {
-            "path": "guardrails/schema/validator.py",
-            "line": 1
+            "path": "docs/dist/examples/data/config.py",
+            "line": 20
           }
         }
       ]
     },
     {
-      "id": "65aff7c6-3c5f-559e-8e69-53c608f64c1e",
+      "id": "7bdb4c79-a69b-4c17-b2a8-1f86329b8057",
+      "name": "trace",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "trace",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "GUARDRAIL: trace",
+          "location": {
+            "path": "guardrails/cli/hub/list.py",
+            "line": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "a89b348b-a6b3-4508-9317-0cbeccd22105",
+      "name": "ValidatorPackageService",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "ValidatorPackageService",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "GUARDRAIL: ValidatorPackageService",
+          "location": {
+            "path": "guardrails/cli/hub/list.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "f6acaf8b-ceb5-4981-9369-88d1f8a27bbf",
       "name": "gpt-3.5-turbo",
       "component_type": "MODEL",
-      "confidence": 0.85,
+      "confidence": 0.65,
       "metadata": {
         "extras": {
           "canonical_name": "gpt-3.5-turbo",
-          "adapter": "regex"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "regex_pattern",
-          "confidence": 0.85,
-          "detail": "gpt-3.5-turbo used in guardrails guards for output validation",
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-3.5-turbo",
           "location": {
-            "path": "docs/dist/examples/data/config.py",
-            "line": 1
+            "path": "guardrails/llm_providers.py",
+            "line": 150
           }
         }
       ]
     },
     {
-      "id": "d62ff49e-17fc-51ee-9411-a9e70892eb2b",
+      "id": "5a3bb006-ceae-4b09-861f-cd1137cf79ed",
       "name": "gpt-4o",
       "component_type": "MODEL",
-      "confidence": 0.8,
+      "confidence": 0.9,
       "metadata": {
         "extras": {
           "canonical_name": "gpt-4o",
-          "adapter": "regex"
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "regex_pattern",
-          "confidence": 0.8,
-          "detail": "gpt-4o referenced in guardrails examples",
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "MODEL: gpt-4o",
           "location": {
-            "path": "server_ci/config.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "43578eea-f201-5e13-87bf-bef2746de232",
-      "name": "faiss",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "faiss",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.8,
-          "detail": "faiss used for vector similarity in guardrails docs examples",
-          "location": {
-            "path": "docs/src/examples/data/config.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "b797da5e-7144-5b60-97c9-840298e13609",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex_pattern",
-          "confidence": 0.85,
-          "detail": "OPENAI_API_KEY and guardrails token in ~/.guardrailsrc",
-          "location": {
-            "path": "guardrails/cli/configure.py",
-            "line": 1
+            "path": "tests/integration_tests/test_litellm.py",
+            "line": 42
           }
         }
       ]
     }
-  ]
+  ],
+  "edges": []
 }
