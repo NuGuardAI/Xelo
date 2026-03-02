@@ -9,7 +9,7 @@ Wraps litellm to provide a provider-agnostic interface supporting:
 - Graceful degradation: callers catch exceptions and fall back to
   deterministic output
 
-Only imported when ExtractionConfig.deterministic_only=False.
+Only imported when ExtractionConfig.enable_llm=True.
 """
 from __future__ import annotations
 

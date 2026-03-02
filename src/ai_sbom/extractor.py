@@ -11,7 +11,7 @@ Orchestrates the extraction pipeline:
    files (YAML, Terraform, Dockerfiles, etc.) and as a catch-all for Python
    files that the framework adapters didn't fully cover.
 
-3. **LLM enrichment** (optional, when ``ExtractionConfig.deterministic_only=False``):
+3. **LLM enrichment** (optional, when ``ExtractionConfig.enable_llm=True``):
    Verifies uncertain detections, re-aggregates confidence scores with LLM
    input, and enriches the scan-level summary.
 
@@ -339,8 +339,8 @@ class SbomExtractor:
                                dc_metadata=_dc_metadata)
         )
 
-        # Phase 3: LLM enrichment (skipped when deterministic_only=True)
-        if not config.deterministic_only:
+        # Phase 3: LLM enrichment (skipped unless enable_llm=True)
+        if config.enable_llm:
             try:
                 doc = asyncio.run(self._llm_enrich(doc, file_contents, config))
             except Exception as exc:  # noqa: BLE001

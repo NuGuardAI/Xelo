@@ -7,8 +7,6 @@ xelo scan path <PATH>
     --format json          Xelo-native JSON (default)
     --format cyclonedx     AI components only as CycloneDX 1.6
     --format unified       Standard deps BOM + AI-BOM merged (CycloneDX 1.6)
-    --cdx-bom <FILE>       Supply a pre-generated CycloneDX BOM to merge into
-                           instead of running the built-in generator.
 
 xelo scan repo <URL>
     Clone a git repository and scan it (requires git on PATH).
@@ -84,9 +82,10 @@ def _load_dotenv(path: Path = Path(".env")) -> None:
 
 def _build_extraction_config(args: argparse.Namespace) -> ExtractionConfig:
     config = ExtractionConfig()
-    # CLI overrides env-backed defaults from ExtractionConfig.
-    if args.deterministic_only is not None:
-        config.deterministic_only = args.deterministic_only
+    # For scan commands, --enable-llm is the single CLI switch:
+    # absent => deterministic only, present => enable enrichment.
+    if hasattr(args, "enable_llm"):
+        config.enable_llm = bool(args.enable_llm)
     if args.llm_model is not None:
         config.llm_model = args.llm_model
     if args.llm_budget_tokens is not None:
@@ -162,26 +161,10 @@ def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401
     )
     p.add_argument("--output", required=True, metavar="<file>")
     p.add_argument(
-        "--cdx-bom",
-        metavar="<file>",
-        dest="cdx_bom",
-        help="Path to an existing CycloneDX BOM JSON to merge with (unified format only). "
-        "If omitted, Xelo generates one automatically.",
-    )
-    llm_mode = p.add_mutually_exclusive_group()
-    llm_mode.add_argument(
-        "--deterministic-only",
-        dest="deterministic_only",
-        action="store_true",
-        default=None,
-        help="Disable LLM enrichment for this run (overrides .env).",
-    )
-    llm_mode.add_argument(
         "--enable-llm",
-        dest="deterministic_only",
-        action="store_false",
-        default=None,
-        help="Enable LLM enrichment for this run (overrides .env).",
+        dest="enable_llm",
+        action="store_true",
+        help="Enable LLM enrichment for this run.",
     )
     p.add_argument(
         "--llm-model",
@@ -211,21 +194,11 @@ def _add_scan_repo_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--ref", default="main")
     p.add_argument("--format", choices=["json", "cyclonedx", "unified"], default="json")
     p.add_argument("--output", required=True, metavar="<file>")
-    p.add_argument("--cdx-bom", metavar="<file>", dest="cdx_bom")
-    llm_mode = p.add_mutually_exclusive_group()
-    llm_mode.add_argument(
-        "--deterministic-only",
-        dest="deterministic_only",
-        action="store_true",
-        default=None,
-        help="Disable LLM enrichment for this run (overrides .env).",
-    )
-    llm_mode.add_argument(
+    p.add_argument(
         "--enable-llm",
-        dest="deterministic_only",
-        action="store_false",
-        default=None,
-        help="Enable LLM enrichment for this run (overrides .env).",
+        dest="enable_llm",
+        action="store_true",
+        help="Enable LLM enrichment for this run.",
     )
     p.add_argument(
         "--llm-model",
@@ -315,32 +288,14 @@ def _handle_unified(
     ai_doc: AiBomDocument,
     out: Path,
 ) -> None:
-    """Generate or load the standard CycloneDX BOM then merge with AI-BOM."""
+    """Generate the standard CycloneDX BOM then merge with AI-BOM."""
     from .cdx_tools import CycloneDxGenerator
     from .merger import AiBomMerger
 
-    if getattr(args, "cdx_bom", None):
-        cdx_path = Path(args.cdx_bom)
-        _log.info("loading supplied CycloneDX BOM from %s", cdx_path)
-        try:
-            raw = cdx_path.read_text(encoding="utf-8")
-        except FileNotFoundError:
-            _die(f"--cdx-bom file not found: {cdx_path}", args)
-            return
-        except OSError as exc:
-            _die(f"cannot read --cdx-bom file: {exc}", args)
-            return
-        try:
-            std_bom = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            _die(f"--cdx-bom is not valid JSON: {exc}", args)
-            return
-        method = f"supplied:{args.cdx_bom}"
-    else:
-        _log.info("generating standard CycloneDX BOM for %s", root)
-        gen = CycloneDxGenerator()
-        std_bom, method = gen.generate(root)
-        _log.info("standard BOM generated via %s", method)
+    _log.info("generating standard CycloneDX BOM for %s", root)
+    gen = CycloneDxGenerator()
+    std_bom, method = gen.generate(root)
+    _log.info("standard BOM generated via %s", method)
 
     _log.info(
         "merging standard BOM (%d components) with AI-BOM (%d nodes)",

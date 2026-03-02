@@ -63,7 +63,7 @@ Run `xelo --help` or `xelo <command> --help` for all flags.
 
 Environment variables:
 
-- `AISBOM_DETERMINISTIC_ONLY=true|false`
+- `AISBOM_ENABLE_LLM=true|false`
 - `AISBOM_LLM_MODEL=<litellm model string>`
 - `AISBOM_LLM_BUDGET_TOKENS=<int>`
 - `AISBOM_LLM_API_KEY=<optional key>`
@@ -85,6 +85,12 @@ pytest
 
 ## Project Docs
 
+- [Documentation Index](./docs/README.md)
+- [Getting Started](./docs/getting-started.md)
+- [CLI Reference](./docs/cli-reference.md)
+- [Developer Guide](./docs/developer-guide.md)
+- [Troubleshooting](./docs/troubleshooting.md)
+- [Documentation Changelog](./docs/CHANGELOG.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Security Policy](./SECURITY.md)
 - [Support](./SUPPORT.md)

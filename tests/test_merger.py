@@ -22,7 +22,7 @@ from ai_sbom.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prom
 from ai_sbom.models import AiBomDocument
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
-_PY_ONLY = ExtractionConfig(include_extensions={".py"}, deterministic_only=True)
+_PY_ONLY = ExtractionConfig(include_extensions={".py"}, enable_llm=False)
 
 
 def _extract(app: str) -> AiBomDocument:

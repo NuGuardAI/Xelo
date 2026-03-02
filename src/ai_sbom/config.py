@@ -1,6 +1,6 @@
 import os
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 def _env_bool(name: str, default: bool) -> bool:
@@ -92,6 +92,17 @@ def _default_vertex_location() -> str | None:
     return os.getenv("VERTEXAI_LOCATION") or None
 
 
+def _default_enable_llm() -> bool:
+    explicit = os.getenv("AISBOM_ENABLE_LLM")
+    if explicit is not None:
+        return _env_bool("AISBOM_ENABLE_LLM", False)
+    # Backward-compatibility: older config used deterministic_only
+    legacy = os.getenv("AISBOM_DETERMINISTIC_ONLY")
+    if legacy is not None:
+        return not _env_bool("AISBOM_DETERMINISTIC_ONLY", True)
+    return False
+
+
 class ExtractionConfig(BaseModel):
     max_files: int = Field(default=1000, ge=1, le=10000)
     max_file_size_bytes: int = Field(default=1024 * 1024, ge=1024)
@@ -104,10 +115,8 @@ class ExtractionConfig(BaseModel):
             ".json", ".yaml", ".yml", ".tf", ".md",
         }
     )
-    deterministic_only: bool = Field(
-        default_factory=lambda: _env_bool("AISBOM_DETERMINISTIC_ONLY", True)
-    )
-    # LLM enrichment (used when deterministic_only=False)
+    enable_llm: bool = Field(default_factory=_default_enable_llm)
+    # LLM enrichment (used when enable_llm=True)
     llm_model: str = Field(default_factory=_default_llm_model)
     llm_api_key: str | None = Field(default_factory=_default_llm_api_key)
     llm_api_base: str | None = Field(default_factory=_default_llm_api_base)
@@ -117,3 +126,20 @@ class ExtractionConfig(BaseModel):
     # Vertex AI — direct httpx path (bypasses litellm when google_api_key is set)
     google_api_key: str | None = Field(default_factory=_default_google_api_key)
     vertex_location: str | None = Field(default_factory=_default_vertex_location)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _migrate_legacy_deterministic_only(cls, data: object) -> object:
+        """Accept legacy ``deterministic_only`` input for compatibility."""
+        if not isinstance(data, dict):
+            return data
+        if "deterministic_only" in data and "enable_llm" not in data:
+            copied = dict(data)
+            copied["enable_llm"] = not bool(copied.pop("deterministic_only"))
+            return copied
+        return data
+
+    @property
+    def deterministic_only(self) -> bool:
+        """Backward-compatible view of the old configuration field."""
+        return not self.enable_llm

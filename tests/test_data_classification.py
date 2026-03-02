@@ -15,8 +15,8 @@ from ai_sbom.models import AiBomDocument
 from ai_sbom.types import ComponentType
 from conftest import APPS
 
-_SQL_ONLY = ExtractionConfig(include_extensions={".sql"}, deterministic_only=True)
-_SQL_AND_PY = ExtractionConfig(include_extensions={".py", ".sql"}, deterministic_only=True)
+_SQL_ONLY = ExtractionConfig(include_extensions={".sql"}, enable_llm=False)
+_SQL_AND_PY = ExtractionConfig(include_extensions={".py", ".sql"}, enable_llm=False)
 _PORTAL = APPS / "patient_portal"
 
 
