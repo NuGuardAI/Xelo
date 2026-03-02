@@ -1,13 +1,192 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:32.991840Z",
-  "generator": "xelo",
-  "target": "https://github.com/haris-musa/excel-mcp-server",
-  "nodes": [],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [],
-    "node_counts": {}
-  }
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://excel-mcp-server",
+  "nodes": [
+    {
+      "id": "699094fe-108c-57eb-b4c8-6a32ec406a0b",
+      "name": "mcp",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "mcp",
+          "adapter": "framework"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.95,
+          "detail": "mcp[cli] and fastmcp used as MCP server framework",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "06ed54a0-4ac8-52ce-8cd5-8d60c0879f56",
+      "name": "create_chart",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "create_chart",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "create_chart_in_sheet imported and registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "0046e577-ef9c-5625-b1ae-9f0fdd0d242c",
+      "name": "create_pivot_table",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "create_pivot_table",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "create_pivot_table_impl registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "0c6fbcc5-2bf6-5638-8b1d-2bbd0195422e",
+      "name": "write_data",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "write_data",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "write_data from excel_mcp.data registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "be5c8912-fd21-5f76-ab6a-4f6008d2dfaa",
+      "name": "get_workbook_info",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "get_workbook_info",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "get_workbook_info from excel_mcp.workbook registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "28c1b626-b43b-5cd9-ae02-41408088766a",
+      "name": "create_excel_table",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "create_excel_table",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.85,
+          "detail": "create_table_impl from excel_mcp.tables registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 26
+          }
+        }
+      ]
+    },
+    {
+      "id": "13bb5cf6-8f89-528b-8883-ad1d19d9b044",
+      "name": "copy_sheet",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "copy_sheet",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.85,
+          "detail": "copy_sheet from excel_mcp.sheet registered as MCP tool",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "1cdaea4a-e723-52ec-bb56-c0db070676b7",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "FastMCP server with SSE and streamable HTTP transport modes",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 55
+          }
+        }
+      ]
+    }
+  ]
 }

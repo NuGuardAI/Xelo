@@ -1,505 +1,238 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:33.133016Z",
-  "generator": "xelo",
-  "target": "https://github.com/GoogleCloudPlatform/agent-starter-pack",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://gcp-agent-starter-pack",
   "nodes": [
     {
-      "id": "6771cb44-5dd2-5266-9b25-94fa3f314af0",
-      "name": "get_product_details",
+      "id": "b305e618-ed87-5ee9-8245-af15d1f568e2",
+      "name": "google_adk",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "google_adk",
+          "adapter": "framework"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.95,
+          "detail": "from google.adk.agents import Agent",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2804ccf-9cb1-5a9b-af7a-05dbe041b011",
+      "name": "langgraph",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "langgraph",
+          "adapter": "framework"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "from langgraph.graph.state import CompiledStateGraph",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
+            "line": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "f47b2a66-1b86-5f38-aa78-8db7f674b3e6",
+      "name": "root_agent",
       "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "root_agent",
+          "adapter": "google_adk"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "root_agent = Agent(name=root_agent, model=Gemini(...))",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc8e7f97-9fb3-5112-9734-c36f0d7ad4f5",
+      "name": "gemini-2.5-flash",
+      "component_type": "MODEL",
       "confidence": 0.85,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "langgraph_get_product_details",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "registration_method": "add_node",
-          "framework": "langgraph"
+          "canonical_name": "gemini-2.5-flash",
+          "adapter": "config_file"
         }
       },
       "evidence": [
         {
-          "kind": "ast_call",
+          "kind": "config_file",
           "confidence": 0.85,
-          "detail": "langgraph: add_node('get_product_details', ...)",
+          "detail": "gemini-2.5-flash configured via MODEL env var",
           "location": {
-            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
-            "line": 329
+            "path": "agent_starter_pack/agents/adk/.template/templateconfig.yaml",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "4bfe8696-3d99-5a7b-a246-db02219c9fba",
-      "name": "get_product_price",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "langgraph_get_product_price",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "registration_method": "add_node",
-          "framework": "langgraph"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('get_product_price', ...)",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
-            "line": 330
-          }
-        }
-      ]
-    },
-    {
-      "id": "db178529-8c81-5ef8-a408-2ff38dd30c43",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.98,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 17,
-          "detected_by_tiers": [
-            "code",
-            "iac"
-          ]
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.7,
-          "detail": "auth_generic: authentication",
-          "location": {
-            "path": ".cloudbuild/cd/test_gemini_enterprise.yaml",
-            "line": 44
-          }
-        }
-      ]
-    },
-    {
-      "id": "7e6f7164-61b0-5504-ac14-b943338c8de5",
-      "name": "postgres",
-      "component_type": "DATASTORE",
-      "confidence": 0.6,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PII"
-        ],
-        "classified_tables": [
-          "DependencyChange",
-          "TemplateConfig"
-        ],
-        "classified_fields": {
-          "TemplateConfig": [
-            "name"
-          ],
-          "DependencyChange": [
-            "name"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "postgres",
-          "adapter": "datastore_generic",
-          "evidence_count": 2,
-          "normalizer": "datastore"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.6,
-          "detail": "datastore_generic: postgres",
-          "location": {
-            "path": "agent_starter_pack/deployment_targets/cloud_run/python/{{cookiecutter.agent_directory}}/fast_api_app.py",
-            "line": 406
-          }
-        }
-      ]
-    },
-    {
-      "id": "1863b0af-a076-546e-9f35-49c6376bf70a",
-      "name": "ChatVertexAI",
+      "id": "ed79d730-72cd-5deb-8933-ff594143e989",
+      "name": "gemini-live-2.5-flash-native-audio",
       "component_type": "MODEL",
       "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "chatvertexai",
-          "adapter": "langgraph",
-          "evidence_count": 2,
-          "class_name": "ChatVertexAI",
-          "provider": "google",
-          "api_endpoint": "https://generativelanguage.googleapis.com",
-          "model_card_url": "https://ai.google.dev/gemini-api/docs/models/chatvertexai"
+          "canonical_name": "gemini-live-2.5-flash-native-audio",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "ast_instantiation",
+          "kind": "ast_assignment",
           "confidence": 0.9,
-          "detail": "langgraph: ChatVertexAI(...)",
+          "detail": "model=gemini-live-2.5-flash-native-audio in adk_live agent",
           "location": {
-            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
-            "line": 322
+            "path": "agent_starter_pack/agents/adk_live/app/agent.py",
+            "line": 32
           }
         }
       ]
     },
     {
-      "id": "14e49352-39bc-595c-aa04-6b4884fcbb05",
-      "name": "gemini-2.0",
+      "id": "f77459fc-af14-5a32-b915-9497a3b3fe3b",
+      "name": "text-embedding-005",
       "component_type": "MODEL",
-      "confidence": 0.55,
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gemini_2_0",
-          "adapter": "model_generic",
-          "evidence_count": 4,
-          "normalizer": "model-name"
+          "canonical_name": "text-embedding-005",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gemini-2.0",
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "EMBEDDING_MODEL = text-embedding-005",
           "location": {
-            "path": "agent_starter_pack/agents/adk/notebooks/evaluating_adk_agent.ipynb",
-            "line": 557
+            "path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
+            "line": 35
           }
         }
       ]
     },
     {
-      "id": "0260dab4-48e0-5efc-b104-7857777ad56d",
-      "name": "gemini-2.5",
-      "component_type": "MODEL",
-      "confidence": 0.55,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "gemini_2_5",
-          "adapter": "model_generic",
-          "evidence_count": 3,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gemini-2.5",
-          "location": {
-            "path": "agent_starter_pack/agents/adk_ts/app/agent.ts",
-            "line": 18
-          }
-        }
-      ]
-    },
-    {
-      "id": "0ede457c-a184-5157-90b2-9c5df695f189",
-      "name": "gemini-3",
-      "component_type": "MODEL",
-      "confidence": 0.6,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "gemini_3",
-          "adapter": "model_generic",
-          "evidence_count": 4,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gemini-3",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 79
-          }
-        }
-      ]
-    },
-    {
-      "id": "fa006a42-e4aa-5307-98b5-4640931c472d",
-      "name": "generic",
-      "component_type": "PRIVILEGE",
-      "confidence": 0.55,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "privilege_generic",
-          "adapter": "privilege_generic",
-          "evidence_count": 1
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "privilege_generic: access control",
-          "location": {
-            "path": "agent_starter_pack/deployment_targets/agent_engine/python/{{cookiecutter.agent_directory}}/app_utils/deploy.py",
-            "line": 298
-          }
-        }
-      ]
-    },
-    {
-      "id": "fd96fed6-978a-5c6c-a240-8240792d3796",
-      "name": "generic",
-      "component_type": "PROMPT",
-      "confidence": 0.6,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "prompt_generic",
-          "adapter": "prompt_generic",
-          "evidence_count": 5
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.6,
-          "detail": "prompt_generic: prompt template",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/notebooks/evaluating_adk_agent.ipynb",
-            "line": 1112
-          }
-        }
-      ]
-    },
-    {
-      "id": "1129bbd7-d924-5a9a-a5eb-777bfb88432d",
-      "name": "tool_node",
+      "id": "bf7b4590-bc57-5793-8c0d-1177bb0e63d2",
+      "name": "get_weather",
       "component_type": "TOOL",
       "confidence": 0.85,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "langgraph_toolnode_tool_node",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "tool_type": "ToolNode",
-          "framework": "langgraph"
+          "canonical_name": "get_weather",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "ast_instantiation",
+          "kind": "ast_assignment",
           "confidence": 0.85,
-          "detail": "langgraph: ToolNode(...)",
+          "detail": "def get_weather(query: str) -> str: weather simulation tool",
           "location": {
-            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
-            "line": 328
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 25
+          }
+        }
+      ]
+    },
+    {
+      "id": "27207dd8-bfdf-59a8-9edf-5401e6bae9b8",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.8,
+          "detail": "google.auth.default() for Application Default Credentials",
+          "location": {
+            "path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "81090bca-097d-5ab0-9ddc-307a6cfffa2e",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "config_file",
+          "confidence": 0.75,
+          "detail": "postgres as optional RAG backend in agentic_rag template",
+          "location": {
+            "path": "agent_starter_pack/agents/agentic_rag/tests/eval/eval_config.json",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "34aedc26-7514-53cb-a29e-ff4c46ca94aa",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "config_file"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "config_file",
+          "confidence": 0.8,
+          "detail": "deployment_targets: agent_engine, cloud_run in templateconfig",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/.template/templateconfig.yaml",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [
-    {
-      "source": "6771cb44-5dd2-5266-9b25-94fa3f314af0",
-      "target": "1863b0af-a076-546e-9f35-49c6376bf70a",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "4bfe8696-3d99-5a7b-a246-db02219c9fba",
-      "target": "1863b0af-a076-546e-9f35-49c6376bf70a",
-      "relationship_type": "USES"
-    }
-  ],
-  "deps": [],
-  "summary": {
-    "frameworks": [
-      "langgraph"
-    ],
-    "node_counts": {
-      "AGENT": 2,
-      "AUTH": 1,
-      "DATASTORE": 1,
-      "MODEL": 4,
-      "PRIVILEGE": 1,
-      "PROMPT": 1,
-      "TOOL": 1
-    }
-  }
+  ]
 }

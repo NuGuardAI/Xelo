@@ -1,77 +1,41 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:21.740132Z",
-  "generator": "xelo",
+  "generated_at": "2026-03-02T00:00:00Z",
+  "generator": "github_copilot",
   "target": "https://github.com/NuGuardAI/Healthcare-voice-agent",
   "nodes": [
     {
-      "id": "83f5c281-5504-5e8e-a766-289aa69144e1",
-      "name": "fetch_doctor_details_agent",
-      "component_type": "AGENT",
-      "confidence": 0.85,
+      "id": "ea6aa4b8-c521-51ac-9d5e-8ff243163fff",
+      "name": "langgraph",
+      "component_type": "FRAMEWORK",
+      "confidence": 1.0,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "langgraph_fetch_doctor_details_agent",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "registration_method": "add_node",
-          "framework": "langgraph"
+          "canonical_name": "framework_langgraph",
+          "adapter": "langgraph"
         }
       },
       "evidence": [
         {
-          "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('fetch_doctor_details_agent', ...)",
+          "kind": "ast_import",
+          "confidence": 0.95,
+          "detail": "from langgraph.graph import StateGraph, END",
           "location": {
             "path": "backend/langgraph_llm_agents.py",
-            "line": 211
+            "line": 8
           }
         }
       ]
     },
     {
-      "id": "98c5b847-48df-532a-b4b1-8ad19b5f0e08",
+      "id": "fd62e72b-8bb9-5bfc-b2b9-bf1f65edd399",
       "name": "normalize_agent",
       "component_type": "AGENT",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_normalize_agent",
           "adapter": "langgraph",
-          "evidence_count": 1,
           "registration_method": "add_node",
           "framework": "langgraph"
         }
@@ -79,8 +43,8 @@
       "evidence": [
         {
           "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('normalize_agent', ...)",
+          "confidence": 0.9,
+          "detail": "langgraph: add_node('normalize_agent', normalize_agent)",
           "location": {
             "path": "backend/langgraph_llm_agents.py",
             "line": 207
@@ -89,31 +53,14 @@
       ]
     },
     {
-      "id": "c98e4f5d-d0d6-540f-bd23-b2b94f43844c",
+      "id": "26054f0a-9019-5ad7-8921-2b81515aeff0",
       "name": "prognosis_search_agent",
       "component_type": "AGENT",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_prognosis_search_agent",
           "adapter": "langgraph",
-          "evidence_count": 1,
           "registration_method": "add_node",
           "framework": "langgraph"
         }
@@ -121,8 +68,8 @@
       "evidence": [
         {
           "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('prognosis_search_agent', ...)",
+          "confidence": 0.9,
+          "detail": "langgraph: add_node('prognosis_search_agent', prognosis_search_agent)",
           "location": {
             "path": "backend/langgraph_llm_agents.py",
             "line": 208
@@ -131,73 +78,14 @@
       ]
     },
     {
-      "id": "0711c986-1924-55b1-add0-b7fe16d65e0e",
-      "name": "recommend_specialists_agent",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "langgraph_recommend_specialists_agent",
-          "adapter": "langgraph",
-          "evidence_count": 1,
-          "registration_method": "add_node",
-          "framework": "langgraph"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('recommend_specialists_agent', ...)",
-          "location": {
-            "path": "backend/langgraph_llm_agents.py",
-            "line": 210
-          }
-        }
-      ]
-    },
-    {
-      "id": "2dc1d392-6570-5377-9d87-cffd86eb1dd1",
+      "id": "aeb39bfa-7084-5c32-a1fb-738109a13280",
       "name": "specialist_lookup_agent",
       "component_type": "AGENT",
-      "confidence": 0.85,
+      "confidence": 0.9,
       "metadata": {
-        "framework": "langgraph",
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
           "canonical_name": "langgraph_specialist_lookup_agent",
           "adapter": "langgraph",
-          "evidence_count": 1,
           "registration_method": "add_node",
           "framework": "langgraph"
         }
@@ -205,8 +93,8 @@
       "evidence": [
         {
           "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "langgraph: add_node('specialist_lookup_agent', ...)",
+          "confidence": 0.9,
+          "detail": "langgraph: add_node('specialist_lookup_agent', specialist_lookup_agent)",
           "location": {
             "path": "backend/langgraph_llm_agents.py",
             "line": 209
@@ -215,111 +103,198 @@
       ]
     },
     {
-      "id": "7b6861af-b57d-54ca-98c2-3a7525609b19",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.55,
+      "id": "3d8340e2-f5b0-5761-974e-cb7d03e236f5",
+      "name": "recommend_specialists_agent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 1
+          "canonical_name": "langgraph_recommend_specialists_agent",
+          "adapter": "langgraph",
+          "registration_method": "add_node",
+          "framework": "langgraph"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "auth_generic: apiKey",
+          "kind": "ast_call",
+          "confidence": 0.9,
+          "detail": "langgraph: add_node('recommend_specialists_agent', recommend_specialists_agent)",
           "location": {
-            "path": "src/gemini.js",
-            "line": 4
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 210
           }
         }
       ]
     },
     {
-      "id": "7ecd54c1-e453-5d18-ac53-273d3b2a8a88",
+      "id": "10a245df-5c2a-5381-9a16-5a78fa369109",
+      "name": "fetch_doctor_details_agent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "langgraph_fetch_doctor_details_agent",
+          "adapter": "langgraph",
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.9,
+          "detail": "langgraph: add_node('fetch_doctor_details_agent', fetch_doctor_details_agent)",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 211
+          }
+        }
+      ]
+    },
+    {
+      "id": "1daeff2b-6c07-5d55-b66f-6fbaa9973d66",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "langgraph",
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "model_family": "gpt",
+          "api_endpoint": "https://api.openai.com/v1"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.95,
+          "detail": "ChatOpenAI(model='gpt-4', temperature=0.2, openai_api_key=...)",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 31
+          }
+        }
+      ]
+    },
+    {
+      "id": "2b34b17e-64b6-529f-8ceb-301cdb5bcbe6",
+      "name": "gemini-2.0-flash",
+      "component_type": "MODEL",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini_2_0_flash",
+          "adapter": "llm_clients_ts",
+          "provider": "google",
+          "api_call": "ai.models.generateContent",
+          "api_endpoint": "https://generativelanguage.googleapis.com",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.95,
+          "detail": "ai.models.generateContent({model: 'gemini-2.0-flash', ...})",
+          "location": {
+            "path": "src/gemini.js",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "2b91d35e-562c-5009-ad20-de05445ad951",
+      "name": "Medical Triage System Instruction",
+      "component_type": "PROMPT",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "medical_triage_system_instruction",
+          "adapter": "prompt_ts",
+          "role": "system",
+          "context": "systemInstruction",
+          "language": "typescript",
+          "is_template": false,
+          "char_count": 417,
+          "content_preview": "You are a helpful AI Medical Triage Assistant. Your goal is to gather a clear list of symptoms from the patient through follow-up questions..."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.95,
+          "detail": "systemInstruction: 'You are a helpful AI Medical Triage Assistant. Your goal is to gather a clear list of symptoms...'",
+          "location": {
+            "path": "src/gemini.js",
+            "line": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "940ec3ef-e2d7-593e-b903-db9487fb4b7c",
+      "name": "Normalize Agent Instruction",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "normalize_agent_instruction",
+          "adapter": "langgraph",
+          "role": "user",
+          "context": "normalize_agent",
+          "language": "python",
+          "is_template": true,
+          "char_count": 164,
+          "content_preview": "You are a medical assistant. Normalize the following patient symptom phrases into a list of clinical symptom terms. Only output comma-separated clinical terms."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "HumanMessage: 'You are a medical assistant. Normalize the following patient symptom phrases into a list of clinical symptom terms...'",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "9a2b4edd-edb6-55c1-90e7-760c26b80585",
       "name": "postgres",
       "component_type": "DATASTORE",
-      "confidence": 0.55,
+      "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PHI",
-          "PII"
-        ],
-        "classified_tables": [
-          "AppointmentRequest",
-          "LoginRequest",
-          "MedicalHistoryResponse",
-          "PatientDetailsResponse"
-        ],
-        "classified_fields": {
-          "LoginRequest": [
-            "email",
-            "password"
-          ],
-          "AppointmentRequest": [
-            "patient_id"
-          ],
-          "PatientDetailsResponse": [
-            "blood_group",
-            "contact_number",
-            "date_of_birth",
-            "gender",
-            "marital_status",
-            "medical_record_number",
-            "name"
-          ],
-          "MedicalHistoryResponse": [
-            "family_medical_history",
-            "hospital_admissions",
-            "immunization_records",
-            "past_diagnoses",
-            "surgeries"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
           "canonical_name": "postgres",
           "adapter": "datastore_generic",
-          "evidence_count": 1,
-          "normalizer": "datastore"
+          "datastore_type": "relational",
+          "data_classification": [
+            "PHI",
+            "PII"
+          ],
+          "classified_tables": [
+            "appointments",
+            "doctors",
+            "hospitals",
+            "patient_history",
+            "patients",
+            "specialists",
+            "symptoms",
+            "users"
+          ]
         }
       },
       "evidence": [
         {
           "kind": "regex",
-          "confidence": 0.55,
-          "detail": "datastore_generic: postgres",
+          "confidence": 0.95,
+          "detail": "docker-compose.yml: image: postgres:15-alpine",
           "location": {
             "path": "docker-compose.yml",
             "line": 3
@@ -328,205 +303,169 @@
       ]
     },
     {
-      "id": "15afdf29-23d8-572e-b2e3-06e0ac1233ba",
-      "name": "gemini-2.0-flash",
-      "component_type": "MODEL",
-      "confidence": 0.88,
+      "id": "a2be359c-3de5-5121-9efc-875614fa8c4f",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gemini_2_0_flash",
-          "adapter": "llm_clients_ts",
-          "evidence_count": 2,
-          "api_call": "ai.models.generateContent",
-          "provider": "google",
-          "model_card_url": "https://ai.google.dev/gemini-api/docs/models",
-          "api_endpoint": "https://generativelanguage.googleapis.com",
-          "language": "typescript"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "auth_mechanisms": [
+            "api_key",
+            "password"
+          ],
+          "note": "GEMINI_API_KEY + OPENAI_API_KEY env vars; /login endpoint with email+password"
         }
       },
       "evidence": [
         {
           "kind": "ast_call",
-          "confidence": 0.88,
-          "detail": "llm_clients_ts: ai.models.generateContent({\n    model: \"gemini-2.0-flash\",\n    contents: conversationHistory.join('\\",
+          "confidence": 0.9,
+          "detail": "GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY })",
           "location": {
             "path": "src/gemini.js",
-            "line": 15
+            "line": 3
           }
-        }
-      ]
-    },
-    {
-      "id": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "name": "gpt-4",
-      "component_type": "MODEL",
-      "confidence": 0.9,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "gpt_4",
-          "adapter": "langgraph",
-          "evidence_count": 2,
-          "class_name": "ChatOpenAI",
-          "provider": "openai",
-          "version": "4",
-          "api_endpoint": "https://api.openai.com/v1",
-          "model_card_url": "https://platform.openai.com/docs/models/gpt-4",
-          "model_family": "gpt",
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
+        },
         {
           "kind": "ast_instantiation",
           "confidence": 0.9,
-          "detail": "langgraph: ChatOpenAI(...)",
+          "detail": "ChatOpenAI(openai_api_key=os.getenv('OPENAI_API_KEY'))",
           "location": {
             "path": "backend/langgraph_llm_agents.py",
-            "line": 34
+            "line": 31
+          }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.85,
+          "detail": "@app.post('/login') with email+password credentials",
+          "location": {
+            "path": "backend/main.py",
+            "line": 55
           }
         }
       ]
     },
     {
-      "id": "8c4bd14e-cffb-5cdc-8316-d3649be9756f",
-      "name": "System Instruction",
-      "component_type": "PROMPT",
-      "confidence": 0.65,
+      "id": "28f46990-af7c-5ae6-b708-a035aba6b465",
+      "name": "node:20",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "system_instruction",
-          "adapter": "prompt_ts",
-          "evidence_count": 4,
-          "is_template": false,
-          "is_template_literal": false,
-          "template_variables": [],
-          "injection_risk_score": 0.0,
-          "role": "system",
-          "context": "systemInstruction",
-          "enclosing_function": null,
-          "content_preview": "You are a helpful AI Medical Triage Assistant. Your goal is to gather a clear list of symptoms from the patient ",
-          "language": "typescript"
+          "canonical_name": "container_image_node_20",
+          "adapter": "dockerfile",
+          "image_name": "node",
+          "image_tag": "20",
+          "registry": "docker.io",
+          "base_image": "node:20",
+          "dockerfile": "Dockerfile",
+          "stage": "frontend-builder"
         }
       },
       "evidence": [
         {
-          "kind": "ast_string_literal",
-          "confidence": 0.65,
-          "detail": "prompt_ts: You are a helpful AI Medical Triage Assistant. Your goal is to gather a clear li",
+          "kind": "dockerfile",
+          "confidence": 0.99,
+          "detail": "FROM node:20 AS frontend-builder",
           "location": {
-            "path": "src/gemini.js",
-            "line": 19
+            "path": "Dockerfile",
+            "line": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "dbc15a87-c672-515b-a167-8d8bb2bcf1a4",
+      "name": "python:3.11-slim",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
+      "metadata": {
+        "extras": {
+          "canonical_name": "container_image_python_3_11_slim",
+          "adapter": "dockerfile",
+          "image_name": "python",
+          "image_tag": "3.11-slim",
+          "registry": "docker.io",
+          "base_image": "python:3.11-slim",
+          "dockerfile": "Dockerfile"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "dockerfile",
+          "confidence": 0.99,
+          "detail": "FROM python:3.11-slim",
+          "location": {
+            "path": "Dockerfile",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "59a837b1-487e-5f33-8b91-2abb23fd5155",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "deployment_generic",
+          "adapter": "deployment_generic",
+          "deployment_type": "docker_compose",
+          "services": [
+            "app",
+            "db"
+          ],
+          "exposed_port": 8080
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.9,
+          "detail": "docker-compose.yml: multi-service (app + postgres) deployment",
+          "location": {
+            "path": "docker-compose.yml",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "5ea2bbcc-1211-58b1-b202-00cc76657c94",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "api_endpoint_generic",
+          "adapter": "api_endpoint_generic",
+          "framework": "fastapi",
+          "endpoints": [
+            "/api/health",
+            "/login",
+            "/patient-details/{user_id}",
+            "/medical-history/{user_id}",
+            "/normalize",
+            "/run_langgraph",
+            "/appointments"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.95,
+          "detail": "FastAPI @app.get / @app.post endpoints",
+          "location": {
+            "path": "backend/main.py",
+            "line": 50
           }
         }
       ]
     }
-  ],
-  "edges": [
-    {
-      "source": "98c5b847-48df-532a-b4b1-8ad19b5f0e08",
-      "target": "c98e4f5d-d0d6-540f-bd23-b2b94f43844c",
-      "relationship_type": "CALLS"
-    },
-    {
-      "source": "c98e4f5d-d0d6-540f-bd23-b2b94f43844c",
-      "target": "2dc1d392-6570-5377-9d87-cffd86eb1dd1",
-      "relationship_type": "CALLS"
-    },
-    {
-      "source": "2dc1d392-6570-5377-9d87-cffd86eb1dd1",
-      "target": "0711c986-1924-55b1-add0-b7fe16d65e0e",
-      "relationship_type": "CALLS"
-    },
-    {
-      "source": "0711c986-1924-55b1-add0-b7fe16d65e0e",
-      "target": "83f5c281-5504-5e8e-a766-289aa69144e1",
-      "relationship_type": "CALLS"
-    },
-    {
-      "source": "98c5b847-48df-532a-b4b1-8ad19b5f0e08",
-      "target": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "c98e4f5d-d0d6-540f-bd23-b2b94f43844c",
-      "target": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "2dc1d392-6570-5377-9d87-cffd86eb1dd1",
-      "target": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "0711c986-1924-55b1-add0-b7fe16d65e0e",
-      "target": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "relationship_type": "USES"
-    },
-    {
-      "source": "83f5c281-5504-5e8e-a766-289aa69144e1",
-      "target": "c382cda4-fc48-58be-a5dd-f10fbd127ecd",
-      "relationship_type": "USES"
-    }
-  ],
-  "deps": [],
-  "summary": {
-    "frameworks": [
-      "langgraph"
-    ],
-    "node_counts": {
-      "AGENT": 5,
-      "AUTH": 1,
-      "DATASTORE": 1,
-      "MODEL": 2,
-      "PROMPT": 1
-    }
-  }
+  ]
 }

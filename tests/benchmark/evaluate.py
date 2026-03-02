@@ -649,22 +649,33 @@ async def run_discovery_pipeline(
     use_llm: bool = False
 ) -> List[DiscoveredAsset]:
     """
-    Run local benchmark discovery using ai_asset_service extractor.
+    Run local benchmark discovery using the Xelo SbomExtractor.
 
     Args:
         files: List of (path, content) tuples
-        detected_frameworks: Retained for compatibility; unused by ai_asset_service extractor
-        use_llm: Retained for compatibility; local ai_asset_service discovery is deterministic
+        detected_frameworks: Retained for compatibility; unused by Xelo extractor
+        use_llm: Retained for compatibility; Xelo deterministic extraction ignores LLM flag
     """
     del detected_frameworks
     if use_llm:
-        logger.info("  Local mode uses ai_asset_service deterministic extraction; --llm is ignored in this mode.")
+        logger.info("  Local mode uses Xelo deterministic extraction; --llm is ignored in this mode.")
 
-    from ai_asset_service.adapters.registry import AIBOMExtractor
+    from ai_sbom.extractor import SbomExtractor
+    from ai_sbom.config import ExtractionConfig
 
-    extractor = AIBOMExtractor()
-    aibom = extractor.extract_from_files(files, source_ref="benchmark-local", branch="main")
-    return _convert_aibom_nodes_to_discovered_assets(aibom.nodes, evidence_source="aibom_local")
+    temp_dir = tempfile.mkdtemp(prefix="benchmark_pipeline_")
+    try:
+        root = Path(temp_dir)
+        for path, content in files:
+            target = root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+        extractor = SbomExtractor()
+        config = ExtractionConfig(deterministic_only=True)
+        doc = extractor.extract_from_path(temp_dir, config, source_ref="benchmark-local")
+        return _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local")
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 def _extract_file_path(properties: Dict[str, Any], node_id: str, evidence_index: Dict[str, List[Dict[str, Any]]]) -> str:
@@ -717,7 +728,7 @@ def _extract_line_range(
 
 def convert_aibom_export_to_discovered_assets(export_payload: Dict[str, Any]) -> List[DiscoveredAsset]:
     """
-    Convert ai_asset_service export payload into benchmark DiscoveredAsset list.
+    Convert AIBOM API export payload into benchmark DiscoveredAsset list.
     """
     nodes = export_payload.get("nodes", []) if isinstance(export_payload, dict) else []
     evidence = export_payload.get("evidence", []) if isinstance(export_payload, dict) else []
@@ -819,16 +830,80 @@ def _write_cached_files_to_temp_dir(cached_files_path: Path) -> str:
 
 def _run_local_folder_discovery(folder_path: str) -> List[DiscoveredAsset]:
     """
-    Run local folder extraction/discovery using AIBOM extractor and convert to benchmark assets.
+    Run local folder extraction using the Xelo SbomExtractor.
     """
-    from ai_asset_service.test_harness import collect_files
-    from ai_asset_service.adapters.registry import AIBOMExtractor
+    from ai_sbom.extractor import SbomExtractor
+    from ai_sbom.config import ExtractionConfig
 
-    files = collect_files(Path(folder_path))
-    extractor = AIBOMExtractor()
-    aibom = extractor.extract_from_files(files, source_ref=folder_path, branch="main")
+    extractor = SbomExtractor()
+    config = ExtractionConfig(deterministic_only=True)
+    doc = extractor.extract_from_path(folder_path, config, source_ref=folder_path)
+    return _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local_folder")
 
-    return _convert_aibom_nodes_to_discovered_assets(aibom.nodes, evidence_source="local_folder")
+
+def _convert_xelo_nodes_to_discovered_assets(
+    nodes: List[Any],
+    evidence_source: str,
+) -> List[DiscoveredAsset]:
+    """Convert Xelo AiBomDocument Node objects to benchmark DiscoveredAsset entries."""
+    discovered: List[DiscoveredAsset] = []
+    seen: Set[Tuple[str, str, str]] = set()
+
+    for node in nodes:
+        # component_type is a ComponentType enum; .value gives uppercase string e.g. "AGENT"
+        ct = getattr(node, "component_type", None)
+        node_type_raw = str(getattr(ct, "value", ct) or "").strip()
+        mapped_type = XeloComponentToAssetType.get(node_type_raw.upper())
+        if not mapped_type:
+            continue
+
+        name = str(getattr(node, "name", "") or "").strip()
+        if not name:
+            continue
+
+        # Extract file path and line from first evidence entry
+        evidence = getattr(node, "evidence", []) or []
+        file_path = ""
+        line_start = None
+        if evidence:
+            first_ev = evidence[0]
+            location = getattr(first_ev, "location", None)
+            if location:
+                file_path = str(getattr(location, "path", "") or "").strip()
+                line_start = getattr(location, "line", None)
+
+        key = (mapped_type, normalize_name(name), normalize_path(file_path))
+        if key in seen:
+            continue
+        seen.add(key)
+
+        metadata = getattr(node, "metadata", None)
+        framework = None
+        if metadata:
+            framework = getattr(metadata, "framework", None)
+        framework_str = framework.strip() if isinstance(framework, str) and framework.strip() else None
+
+        confidence = getattr(node, "confidence", None)
+        confidence_value = float(confidence) if isinstance(confidence, (int, float)) else None
+
+        discovered.append(
+            DiscoveredAsset(
+                asset_type=mapped_type,
+                name=name,
+                file_path=file_path or "",
+                line_start=line_start,
+                line_end=line_start,
+                description=None,
+                confidence=confidence_value,
+                regex_confidence=None,
+                llm_confidence=None,
+                framework=framework_str,
+                evidence_sources=[evidence_source],
+                matched_pattern=None,
+            )
+        )
+
+    return discovered
 
 
 async def evaluate_repo(
@@ -900,23 +975,18 @@ async def evaluate_repo(
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
         else:
-            logger.info(f"  Running AIBOM API discovery for: {gt.repo_url}")
-            from ai_asset_service.test_ai_asset_service import run_github_scan
-
-            scan_result = await run_github_scan(
-                gt.repo_url,
-                branch=gt.branch or "main",
-                data_service_url=data_service_url,
-                asset_service_url=asset_service_url,
-                auth_token=auth_token,
-                email=auth_email,
-                password=auth_password,
-                application_name=f"benchmark-{repo_name}",
-                github_token=github_token,
-                timeout_seconds=timeout_seconds,
-            )
-            export_payload = scan_result.get("export", {})
-            discovered = convert_aibom_export_to_discovered_assets(export_payload)
+            logger.info(f"  Running local discovery via cached files for: {gt.repo_url}")
+            cache_path = REPOS_DIR / repo_name / "cached_files.json"
+            if not cache_path.exists():
+                raise FileNotFoundError(
+                    f"No cached files for '{repo_name}'. "
+                    f"Run the fetcher first or provide a cached_files.json at {cache_path}"
+                )
+            temp_dir = _write_cached_files_to_temp_dir(cache_path)
+            try:
+                discovered = _run_local_folder_discovery(temp_dir)
+            finally:
+                shutil.rmtree(temp_dir, ignore_errors=True)
     else:
         # Legacy local mode (in-process discovery pipeline)
         cache_path = REPOS_DIR / repo_name / "cached_files.json"
@@ -1168,7 +1238,7 @@ def main():
         "--mode",
         choices=["api", "local"],
         default="api",
-        help="Discovery mode: api (ai_asset_service test cli flow) or local (legacy in-process). Default: api."
+        help="Discovery mode: api (uses cached files + local Xelo extractor) or local (same pipeline). Default: api."
     )
     parser.add_argument(
         "--data-service-url",
@@ -1179,8 +1249,8 @@ def main():
     parser.add_argument(
         "--asset-service-url",
         type=str,
-        default=os.getenv("AI_ASSET_SERVICE_URL", "http://localhost:8004"),
-        help="AI asset service base URL."
+        default=os.getenv("XELO_SERVICE_URL", "http://localhost:8004"),
+        help="Xelo service base URL (reserved for future remote mode)."
     )
     parser.add_argument(
         "--auth-token",

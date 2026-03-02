@@ -1,145 +1,169 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:29.455801Z",
-  "generator": "xelo",
-  "target": "https://github.com/aws-samples/generative-ai-amazon-bedrock-langchain-agent-example",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://bedrock-langchain-agent",
   "nodes": [
     {
-      "id": "62aa2dac-5fce-5a2e-82ad-9d2f89632390",
-      "name": "agent/assets/Mortgage-Loan-Application-Completed.pdf",
-      "component_type": "MODEL",
+      "id": "e1da9fb4-9a98-51a6-8ad7-37c8093738be",
+      "name": "langchain",
+      "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "agent_assets_mortgage_loan_application_completed_pdf",
-          "adapter": "llm_clients",
-          "evidence_count": 1,
-          "source": "api_call",
-          "api_method": "create_presigned_url",
-          "provider": "bedrock"
+          "canonical_name": "langchain",
+          "adapter": "framework"
         }
       },
       "evidence": [
         {
-          "kind": "ast_call",
+          "kind": "ast_import",
           "confidence": 0.95,
-          "detail": "llm_clients: create_presigned_url(model='agent/assets/Mortgage-Loan-Application-Completed.pdf')",
+          "detail": "from langchain.agents.tools import Tool",
           "location": {
-            "path": "agent/lambda/agent-handler/lambda_function.py",
-            "line": 671
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "13f28059-7108-528d-bc10-de7295747036",
-      "name": "claude-3-sonnet-20240229-v1",
-      "component_type": "MODEL",
-      "confidence": 0.55,
+      "id": "6ffc96af-372d-5bbe-8d78-27a1c004da58",
+      "name": "FSIAgent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "claude_3_sonnet_20240229_v1",
-          "adapter": "model_generic",
-          "evidence_count": 2,
-          "normalizer": "model-name"
+          "canonical_name": "FSIAgent",
+          "adapter": "langchain"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: claude-3-sonnet-20240229-v1",
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "class FSIAgent with ConversationalAgent.from_llm_and_tools(...)",
           "location": {
-            "path": "agent/lambda/agent-handler/lambda_function.py",
-            "line": 701
+            "path": "agent/lambda/agent-handler/fsi_agent.py",
+            "line": 12
           }
         }
       ]
     },
     {
-      "id": "55c87be2-c601-5d9f-94a2-a07231eb9d27",
-      "name": "get_object",
+      "id": "0c06b700-ecd1-58fb-a6be-500b229fba1e",
+      "name": "anthropic.claude-3-sonnet-20240229-v1:0",
       "component_type": "MODEL",
       "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "get_object",
-          "adapter": "llm_clients",
-          "evidence_count": 1,
-          "source": "api_call",
-          "api_method": "generate_presigned_url",
-          "provider": "bedrock"
+          "canonical_name": "anthropic.claude-3-sonnet-20240229-v1:0",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "ast_call",
+          "kind": "ast_assignment",
           "confidence": 0.95,
-          "detail": "llm_clients: generate_presigned_url(model='get_object')",
+          "detail": "modelId=anthropic.claude-3-sonnet-20240229-v1:0 in invokeLLM",
           "location": {
-            "path": "agent/lambda/agent-handler/lambda_function.py",
-            "line": 188
+            "path": "agent/lambda/agent-handler/tools.py",
+            "line": 104
+          }
+        }
+      ]
+    },
+    {
+      "id": "caf33682-765d-548d-bc25-d90afd7dbaca",
+      "name": "AnyCompany",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "AnyCompany",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "Tool(name=AnyCompany, func=self.kendra_search, ...)",
+          "location": {
+            "path": "agent/lambda/agent-handler/tools.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "244d38ae-1822-5f87-ade2-7036ab4769de",
+      "name": "dynamodb",
+      "component_type": "DATASTORE",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "dynamodb",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "dynamodb = boto3.client(dynamodb) for conversation memory + user accounts",
+          "location": {
+            "path": "agent/lambda/agent-handler/chat.py",
+            "line": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "11dff70d-d4c1-570e-a935-7f35316e1faf",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "config_file"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "config_file",
+          "confidence": 0.85,
+          "detail": "AWS Lambda deployment in GenAI-FSI-Agent.yml CloudFormation template",
+          "location": {
+            "path": "cfn/GenAI-FSI-Agent.yml",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "a8bdac88-b121-5dc3-9a41-daa9e108dca9",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "env_var",
+          "confidence": 0.85,
+          "detail": "AWS_REGION env var, IAM role auth for Bedrock and DynamoDB",
+          "location": {
+            "path": "agent/lambda/agent-handler/tools.py",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [
-      "langgraph"
-    ],
-    "node_counts": {
-      "MODEL": 3
-    }
-  }
+  ]
 }

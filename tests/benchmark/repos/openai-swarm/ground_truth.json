@@ -1,526 +1,353 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:42.079508Z",
-  "generator": "xelo",
-  "target": "https://github.com/openai/swarm",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://openai-swarm",
   "nodes": [
     {
-      "id": "47503a8b-f062-5399-b5f0-e8559ca258a1",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.7,
+      "id": "3b86212c-740d-5f73-9beb-56221a498d4f",
+      "name": "openai_swarm",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 24
+          "canonical_name": "openai_swarm",
+          "adapter": "framework"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.7,
-          "detail": "auth_generic: Bearer",
+          "kind": "config_file",
+          "confidence": 0.95,
+          "detail": "OpenAI Swarm framework repo - swarm agent examples",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6283125.json",
+            "path": "examples/airline/configs/tools.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "e31c7715-fbf3-5f37-9f4c-eec431cf494b",
-      "name": "pinecone",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
+      "id": "9dbb6c6d-f3f0-5cce-bf18-8110cb3612e6",
+      "name": "triage_agent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PII"
-        ],
-        "classified_tables": [
-          "Agent",
-          "Assistant",
-          "FunctionTool"
-        ],
-        "classified_fields": {
-          "Assistant": [
-            "name"
-          ],
-          "FunctionTool": [
-            "name"
-          ],
-          "Agent": [
-            "name"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "pinecone",
-          "adapter": "datastore_generic",
-          "evidence_count": 8,
-          "normalizer": "datastore"
+          "canonical_name": "triage_agent",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.75,
-          "detail": "datastore_generic: Pinecone",
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "triage_agent = Agent(...) routes to specialized agents",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6233728.json",
+            "path": "examples/airline/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "dde1297e-b630-5e0a-92b5-9c3fe91ad36d",
-      "name": "qdrant",
-      "component_type": "DATASTORE",
-      "confidence": 0.8300000000000001,
+      "id": "91cea6dd-9b2c-5210-9107-a7a86d46fe17",
+      "name": "sales_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PII"
-        ],
-        "classified_tables": [
-          "Agent",
-          "Assistant",
-          "FunctionTool"
-        ],
-        "classified_fields": {
-          "Assistant": [
-            "name"
-          ],
-          "FunctionTool": [
-            "name"
-          ],
-          "Agent": [
-            "name"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "qdrant",
-          "adapter": "datastore_generic",
-          "evidence_count": 7,
-          "detected_by_tiers": [
-            "code",
-            "iac"
-          ],
-          "normalizer": "datastore"
+          "canonical_name": "sales_agent",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.7,
-          "detail": "datastore_generic: qdrant",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "sales_agent = Agent(...)",
           "location": {
-            "path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
-            "line": 8
-          }
-        }
-      ]
-    },
-    {
-      "id": "f034c781-8063-54dc-ba8c-847b816f84e5",
-      "name": "gpt-2",
-      "component_type": "MODEL",
-      "confidence": 0.8,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "gpt_2",
-          "adapter": "model_generic",
-          "evidence_count": 2,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.8,
-          "detail": "model_generic: GPT-2",
-          "location": {
-            "path": "examples/customer_service_streaming/data/article_6824809.json",
+            "path": "examples/airline/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "d4538446-caa1-5551-98f7-7d070ed7712e",
-      "name": "gpt-3",
-      "component_type": "MODEL",
-      "confidence": 0.6,
+      "id": "7f5569c4-2459-5ef8-8b28-403c4a43af8d",
+      "name": "refunds_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_3",
-          "adapter": "model_generic",
-          "evidence_count": 30,
-          "normalizer": "model-name"
+          "canonical_name": "refunds_agent",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gpt-3",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "refunds_agent = Agent(...)",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6233728.json",
+            "path": "examples/airline/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "7925120e-1c39-54f3-bb92-cf3ea04de0df",
-      "name": "gpt-3.5",
-      "component_type": "MODEL",
-      "confidence": 0.55,
+      "id": "c1663152-85ec-5702-a14b-8aa959c330d6",
+      "name": "help_center_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_3_5",
-          "adapter": "model_generic",
-          "evidence_count": 4,
-          "normalizer": "model-name"
+          "canonical_name": "help_center_agent",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: GPT-3.5",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "help_center_agent = Agent(...)",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6783457.json",
+            "path": "examples/customer_service_streaming/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "0191ba9e-eb37-57c3-8e0b-5fc46d19436b",
-      "name": "gpt-3.5-turbo",
-      "component_type": "MODEL",
-      "confidence": 0.65,
+      "id": "1a6696f6-5b72-55b8-b383-d64f4360e2fa",
+      "name": "flight_change",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_3_5_turbo",
-          "adapter": "model_generic",
-          "evidence_count": 2,
-          "normalizer": "model-name"
+          "canonical_name": "flight_change",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.65,
-          "detail": "model_generic: gpt-3.5-turbo",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "flight_change = Agent(...)",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6643200.json",
+            "path": "examples/airline/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "3868a011-bccc-527e-ab99-4a7e31a09296",
-      "name": "gpt-4",
-      "component_type": "MODEL",
-      "confidence": 0.98,
+      "id": "fb6d0fd7-87cf-53a5-82bd-f2201a5bab5d",
+      "name": "flight_cancel",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_4",
-          "adapter": "model_generic",
-          "evidence_count": 5,
-          "detected_by_tiers": [
-            "code",
-            "iac"
-          ],
-          "normalizer": "model-name"
+          "canonical_name": "flight_cancel",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gpt-4",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "flight_cancel = Agent(...)",
           "location": {
-            "path": "examples/customer_service_streaming/data/article_6643004.json",
+            "path": "examples/airline/main.py",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "24e59211-9560-5bd8-9ac2-4c49a16e64f6",
+      "id": "48906dd5-8746-5fe8-9d06-3223e5c60152",
+      "name": "lost_baggage",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "lost_baggage",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "lost_baggage = Agent(...)",
+          "location": {
+            "path": "examples/airline/main.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "3072b850-096b-5caf-84f6-ce478047fd16",
       "name": "gpt-4-0125-preview",
       "component_type": "MODEL",
-      "confidence": 0.5800000000000001,
+      "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_4_0125_preview",
-          "adapter": "model_generic",
-          "evidence_count": 2,
-          "detected_by_tiers": [
-            "code",
-            "iac"
-          ],
-          "normalizer": "model-name"
+          "canonical_name": "gpt-4-0125-preview",
+          "adapter": "regex"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gpt-4-0125-preview",
+          "kind": "regex_pattern",
+          "confidence": 0.9,
+          "detail": "gpt-4-0125-preview used in swarm examples",
           "location": {
-            "path": "examples/customer_service_streaming/configs/assistants/user_interface/assistant.json",
+            "path": "examples/basic/agent_handoff.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "68a431a5-2af1-5fa7-8b80-d8cc64813c9d",
+      "name": "text-embedding-3-large",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "text-embedding-3-large",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "EMBEDDING_MODEL = text-embedding-3-large for qdrant embeddings",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "e29b15f0-115c-5d75-8aed-adacf3bef785",
+      "name": "submit_ticket",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "submit_ticket",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "def submit_ticket(description) tool",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/submit_ticket/handler.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "49563da9-6333-509d-b326-58f36b512f19",
+      "name": "send_email",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "send_email",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "def send_email(email_address, message) tool",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/send_email/handler.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "ba5c035c-4893-5115-a11d-f336068070ca",
+      "name": "query_docs",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "query_docs",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "def query_docs(query) qdrant search tool",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+            "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "f8d7bb9d-2764-5dc8-8bd5-a203f09fddfd",
+      "name": "qdrant",
+      "component_type": "DATASTORE",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "qdrant",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "import qdrant_client for knowledge base vector search",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
             "line": 3
           }
         }
       ]
     },
     {
-      "id": "2a25a73b-1613-578d-9768-73e564b4c465",
-      "name": "gpt-4-turbo-preview",
-      "component_type": "MODEL",
-      "confidence": 0.95,
+      "id": "79005203-8228-55c7-ada8-7ec0983b91af",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_4_turbo_preview",
-          "adapter": "llm_clients",
-          "evidence_count": 2,
-          "source": "api_call",
-          "api_method": "create",
-          "provider": "openai",
-          "version": "4-turbo",
-          "api_endpoint": "https://api.openai.com/v1",
-          "model_card_url": "https://platform.openai.com/docs/models/gpt-4-turbo-preview",
-          "model_family": "gpt",
-          "normalizer": "model-name"
+          "canonical_name": "generic",
+          "adapter": "regex"
         }
       },
       "evidence": [
         {
-          "kind": "ast_call",
-          "confidence": 0.95,
-          "detail": "llm_clients: create(model='gpt-4-turbo-preview')",
+          "kind": "env_var",
+          "confidence": 0.85,
+          "detail": "OPENAI_API_KEY required for OpenAI Swarm API",
           "location": {
-            "path": "examples/customer_service_streaming/src/evals/eval_function.py",
-            "line": 45
-          }
-        }
-      ]
-    },
-    {
-      "id": "71ea8b6e-5fba-5f51-908a-c393ee37865b",
-      "name": "gpt-4o",
-      "component_type": "MODEL",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "gpt_4o",
-          "adapter": "llm_clients",
-          "evidence_count": 4,
-          "normalizer": "model-name",
-          "source": "api_call",
-          "api_method": "create_with_completion",
-          "provider": "openai",
-          "version": "4o",
-          "api_endpoint": "https://api.openai.com/v1",
-          "model_card_url": "https://platform.openai.com/docs/models/gpt-4o",
-          "model_family": "gpt"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gpt-4o",
-          "location": {
-            "path": "examples/support_bot/prep_data.py",
-            "line": 10
+            "path": "examples/basic/agent_handoff.py",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [],
-    "node_counts": {
-      "AUTH": 1,
-      "DATASTORE": 2,
-      "MODEL": 8
-    }
-  }
+  ]
 }

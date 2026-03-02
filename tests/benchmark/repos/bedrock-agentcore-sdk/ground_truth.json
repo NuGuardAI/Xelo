@@ -1,142 +1,146 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:28.904564Z",
-  "generator": "xelo",
-  "target": "https://github.com/aws/bedrock-agentcore-sdk-python",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://bedrock-agentcore-sdk",
   "nodes": [
     {
-      "id": "8f21292f-99ac-55d3-a00f-094c1d6cb9c5",
-      "name": "generic",
-      "component_type": "AUTH",
+      "id": "627b5e98-05e7-56e5-aa2b-7face204e175",
+      "name": "bedrock_agentcore",
+      "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 10
+          "canonical_name": "bedrock_agentcore",
+          "adapter": "framework"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
+          "kind": "ast_import",
           "confidence": 0.95,
-          "detail": "auth_generic: OAuth2",
+          "detail": "BedrockAgentCoreApp extends Starlette - Bedrock AgentCore SDK",
           "location": {
-            "path": "src/bedrock_agentcore/identity/auth.py",
-            "line": 35
+            "path": "src/bedrock_agentcore/runtime/app.py",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "ba528aa4-89a5-5d3b-a60e-1fe0ac10d269",
-      "name": "claude-3-5-sonnet-20241022-v2",
-      "component_type": "MODEL",
-      "confidence": 0.55,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "claude_3_5_sonnet_20241022_v2",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: claude-3-5-sonnet-20241022-v2",
-          "location": {
-            "path": "tests_integ/memory/test_devex.py",
-            "line": 463
-          }
-        }
-      ]
-    },
-    {
-      "id": "220b528f-0c75-514e-a8da-d672abd4baba",
+      "id": "8d0024fa-7388-5779-b5e4-4979fb81ea61",
       "name": "generic",
-      "component_type": "PROMPT",
+      "component_type": "AUTH",
       "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "prompt_generic",
-          "adapter": "prompt_generic",
-          "evidence_count": 2
+          "canonical_name": "generic",
+          "adapter": "regex"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.7,
-          "detail": "prompt_generic: system_prompt",
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "ACCESS_TOKEN_HEADER and AUTHORIZATION_HEADER constants for Bearer token auth",
           "location": {
-            "path": "tests_integ/evaluation/integrations/strands_agents_evals/test_strands_evaluation.py",
-            "line": 51
+            "path": "src/bedrock_agentcore/runtime/models.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "7329c097-5939-5c25-915e-c01c749a7539",
+      "name": "aws_iam",
+      "component_type": "AUTH",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "aws_iam",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "IAM-based auth for Bedrock AgentCore identity module",
+          "location": {
+            "path": "src/bedrock_agentcore/identity/auth.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "560a78c8-6014-5890-93f6-ff2638e6175b",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "BedrockAgentCoreApp as Starlette app with /invocation endpoint",
+          "location": {
+            "path": "src/bedrock_agentcore/runtime/app.py",
+            "line": 100
+          }
+        }
+      ]
+    },
+    {
+      "id": "9fd71b8f-b13c-5dff-a11b-cd78dc879fa8",
+      "name": "oauth2_tool",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "oauth2_tool",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.8,
+          "detail": "OAuth2 token handling in tools/config.py",
+          "location": {
+            "path": "src/bedrock_agentcore/tools/config.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "4e45d637-2140-5de4-8d8b-514acea5c110",
+      "name": "memory",
+      "component_type": "DATASTORE",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "memory",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.8,
+          "detail": "AgentCoreMemorySessionManager for persistent conversation storage",
+          "location": {
+            "path": "src/bedrock_agentcore/memory/README.md",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [
-      "crewai",
-      "langgraph"
-    ],
-    "node_counts": {
-      "AUTH": 1,
-      "MODEL": 1,
-      "PROMPT": 1
-    }
-  }
+  ]
 }

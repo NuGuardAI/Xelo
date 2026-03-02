@@ -1,229 +1,77 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:22.064291Z",
-  "generator": "xelo",
-  "target": "https://github.com/NuGuardAI/OpenBB-finance",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://OpenBB-finance",
   "nodes": [
     {
-      "id": "1380c556-b609-52bd-876e-12f75bf3ab64",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.95,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 13
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "auth_generic: api_key",
-          "location": {
-            "path": "cookiecutter/openbb_cookiecutter/template/{{cookiecutter.project_tag}}/{{cookiecutter.package_name}}/providers/{{cookiecutter.provider_name}}/__init__.py",
-            "line": 14
-          }
-        }
-      ]
-    },
-    {
-      "id": "41626e48-bdf1-5197-ac25-0b514dc22914",
+      "id": "4240d013-70a7-53a0-b6b2-bf6dbb1e34ff",
       "name": "gpt-4.1",
       "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4.1",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex_pattern",
+          "confidence": 0.85,
+          "detail": "gpt-4.1 referenced in OpenBB platform AI component",
+          "location": {
+            "path": "assets/scripts/generate_extension_data.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "e84196cb-30b4-5a4f-9b81-510494b53b8a",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
       "confidence": 0.9,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_4_1",
-          "adapter": "langgraph",
-          "evidence_count": 2,
-          "class_name": "ChatOpenAI",
-          "provider": "openai",
-          "version": "4",
-          "api_endpoint": "https://api.openai.com/v1",
-          "model_card_url": "https://platform.openai.com/docs/models/gpt-4.1",
-          "model_family": "gpt",
-          "normalizer": "model-name"
+          "canonical_name": "generic",
+          "adapter": "ast"
         }
       },
       "evidence": [
         {
-          "kind": "ast_instantiation",
+          "kind": "ast_import",
           "confidence": 0.9,
-          "detail": "langgraph: ChatOpenAI(...)",
+          "detail": "FastAPI-based OpenBB platform API in openbb_platform/extensions/platform_api",
           "location": {
-            "path": "examples/openbb_vs_langchain.ipynb",
-            "line": 11
+            "path": "cli/openbb_cli/__init__.py",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "a6415dea-794b-54cd-bbd8-f6fb699bb932",
-      "name": "o5",
-      "component_type": "MODEL",
-      "confidence": 0.55,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o5",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: o5",
-          "location": {
-            "path": "examples/currencyExchangeRateForecasting.ipynb",
-            "line": 1264
-          }
-        }
-      ]
-    },
-    {
-      "id": "d5ada7df-eb0a-502b-9704-65a0dc796574",
-      "name": "o7",
-      "component_type": "MODEL",
-      "confidence": 0.65,
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o7",
-          "adapter": "model_generic",
-          "evidence_count": 2,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "regex",
-          "confidence": 0.65,
-          "detail": "model_generic: o7",
-          "location": {
-            "path": "examples/BacktestingMomentumTrading.ipynb",
-            "line": 508
-          }
-        }
-      ]
-    },
-    {
-      "id": "acee19b6-ff09-5905-9536-305f0ce3b63f",
+      "id": "39fb0c07-9d27-5e13-971e-3c75c11f12d9",
       "name": "generic",
-      "component_type": "PROMPT",
-      "confidence": 0.55,
+      "component_type": "AUTH",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "prompt_generic",
-          "adapter": "prompt_generic",
-          "evidence_count": 1
+          "canonical_name": "generic",
+          "adapter": "regex"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "prompt_generic: chain of thought",
+          "kind": "env_var",
+          "confidence": 0.85,
+          "detail": "API keys for financial data providers (OPENBB_API_KEY etc)",
           "location": {
-            "path": "examples/openbb_vs_langchain.ipynb",
-            "line": 299
+            "path": "cli/openbb_cli/argparse_translator/argparse_argument.py",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [
-      "langgraph"
-    ],
-    "node_counts": {
-      "AUTH": 1,
-      "MODEL": 3,
-      "PROMPT": 1
-    }
-  }
+  ]
 }

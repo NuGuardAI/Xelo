@@ -1,98 +1,215 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T19:25:21.894682Z",
-  "generator": "xelo",
-  "target": "https://github.com/NuGuardAI/IT-Service-Desk-Agent",
+  "generated_at": "2025-07-30T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://IT-Service-Desk-Agent",
   "nodes": [
     {
-      "id": "f64fe663-c82c-5e15-89e1-aee5f23b09cd",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.55,
+      "id": "e0c8c56f-a334-5f33-b9fb-077bee2bc533",
+      "name": "azure_ai_agent_service",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "auth_generic",
-          "adapter": "auth_generic",
-          "evidence_count": 1
+          "canonical_name": "azure_ai_agent_service",
+          "adapter": "framework"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "auth_generic: authenticate",
+          "kind": "ast_import",
+          "confidence": 0.95,
+          "detail": "from azure.ai.projects import AIProjectClient",
           "location": {
-            "path": "enterprise-streaming-agent.ipynb",
-            "line": 64
+            "path": "infra/azure-deployment/main.py",
+            "line": 15
           }
         }
       ]
     },
     {
-      "id": "ddb1e7bb-41c3-5fca-8ef1-d9fa84174b5a",
-      "name": "gpt-4o",
-      "component_type": "MODEL",
-      "confidence": 0.55,
+      "id": "3b045567-51ec-5cdc-830b-4dcb4c591e91",
+      "name": "enterprise_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
         "extras": {
-          "canonical_name": "gpt_4o",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
+          "canonical_name": "enterprise_agent",
+          "adapter": "azure_ai"
         }
       },
       "evidence": [
         {
-          "kind": "regex",
-          "confidence": 0.55,
-          "detail": "model_generic: gpt-4o",
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "Agent loaded from Azure Foundry by AGENT_NAME env var",
           "location": {
-            "path": "enterprise-streaming-agent.ipynb",
-            "line": 279
+            "path": "infra/azure-deployment/main.py",
+            "line": 58
+          }
+        }
+      ]
+    },
+    {
+      "id": "d7ca857b-5c96-54cb-b09e-c037e96d8dc0",
+      "name": "gpt-4o",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4o",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "config_file",
+          "confidence": 0.9,
+          "detail": "gpt-4o hosted on Azure AI Foundry (per README)",
+          "location": {
+            "path": "README.md",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "628268b0-a222-58d1-bd83-b5d2b23a375e",
+      "name": "BingGroundingTool",
+      "component_type": "TOOL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "BingGroundingTool",
+          "adapter": "azure_ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.9,
+          "detail": "from azure.ai.projects.models import BingGroundingTool",
+          "location": {
+            "path": "infra/azure-deployment/main.py",
+            "line": 31
+          }
+        }
+      ]
+    },
+    {
+      "id": "2947957f-d57f-5ac4-abe9-6c8c9456353a",
+      "name": "fetch_weather",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "fetch_weather",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "enterprise_fns includes fetch_weather",
+          "location": {
+            "path": "enterprise_functions.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "315a3a5f-9ede-517b-9a69-e0acac032284",
+      "name": "send_email",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "send_email",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.85,
+          "detail": "enterprise_fns includes send_email",
+          "location": {
+            "path": "enterprise_functions.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "6270bd0a-2ee2-5c75-bda6-5787beaf57e3",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_assignment",
+          "confidence": 0.9,
+          "detail": "credential = DefaultAzureCredential()",
+          "location": {
+            "path": "infra/azure-deployment/main.py",
+            "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "8a594ca8-bed1-5af8-a1ca-23c887d848fb",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "ast"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_import",
+          "confidence": 0.85,
+          "detail": "FastAPI used in main.py",
+          "location": {
+            "path": "infra/azure-deployment/main.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "d3ff5262-846c-50b4-8568-38e3b7dd9353",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "regex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "config_file",
+          "confidence": 0.8,
+          "detail": "Project deployed to Azure AI Foundry",
+          "location": {
+            "path": "azure-deployment/main.py",
+            "line": 1
           }
         }
       ]
     }
-  ],
-  "edges": [],
-  "deps": [],
-  "summary": {
-    "frameworks": [],
-    "node_counts": {
-      "AUTH": 1,
-      "MODEL": 1
-    }
-  }
+  ]
 }
