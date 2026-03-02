@@ -158,43 +158,13 @@ class CrewAIAdapter(FrameworkAdapter):
                 task_canonicals.append(canon)
 
             # ---- Crew ----
+            # Crew is the orchestration container, not an individual agent.
+            # Emitting it as AGENT produces many FPs; skip it entirely since
+            # the FRAMEWORK node (emitted above) already signals crewai usage.
+            # Relationships to member agents are captured via the agents=[...]
+            # arg already processed when each Agent() was visited.
             elif inst.class_name == "Crew":
-                var_name = inst.assigned_to or f"crew_{inst.line}"
-                canon = canonicalize_text(f"crewai:crew:{var_name}")
-                agents_raw = inst.args.get("agents", [])
-                tasks_raw = inst.args.get("tasks", [])
-                crew_rels: list[RelationshipHint] = []
-
-                for agent_ref in (agents_raw if isinstance(agents_raw, list) else []):
-                    if isinstance(agent_ref, str) and agent_ref.startswith("$"):
-                        ref_canon = canonicalize_text(f"crewai:{agent_ref[1:]}")
-                        crew_rels.append(RelationshipHint(
-                            source_canonical=canon,
-                            source_type=ComponentType.AGENT,
-                            target_canonical=ref_canon,
-                            target_type=ComponentType.AGENT,
-                            relationship_type="CALLS",
-                        ))
-
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.AGENT,
-                    canonical_name=canon,
-                    display_name=var_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.88,
-                    metadata={
-                        "orchestrator_type": "Crew",
-                        "framework": "crewai",
-                        "agent_count": len(agents_raw) if isinstance(agents_raw, list) else 0,
-                        "task_count": len(tasks_raw) if isinstance(tasks_raw, list) else 0,
-                    },
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet="Crew(agents=[...])",
-                    evidence_kind="ast_instantiation",
-                    relationships=crew_rels,
-                ))
+                pass  # intentionally not emitting a separate node for Crew
 
             # ---- @tool decorated functions (crewai.tools.tool) ----
             elif inst.class_name in {"BaseTool", "Tool"}:

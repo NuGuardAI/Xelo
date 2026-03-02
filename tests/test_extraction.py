@@ -333,7 +333,9 @@ class TestCrewAIBlogTeam:
         assert len(names(doc, ComponentType.AGENT)) >= 2
 
     def test_detects_crew_orchestrator(self, doc: AiBomDocument) -> None:
-        assert any("crew" in n for n in names(doc, ComponentType.AGENT))
+        # Crew() objects are the orchestration container, not individual agents.
+        # The FRAMEWORK node for crewai should be present instead.
+        assert "crewai" in adapters(doc), "Expected crewai framework to be detected"
 
     def test_detects_tasks_as_tools(self, doc: AiBomDocument) -> None:
         assert nodes(doc, ComponentType.TOOL), "Expected Task nodes registered as TOOL components"

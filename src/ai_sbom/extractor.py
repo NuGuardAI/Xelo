@@ -41,6 +41,7 @@ from .adapters.base import (
 from .adapters.data_classification import DataClassificationSQLAdapter
 from .adapters.dockerfile import DockerfileAdapter
 from .adapters.registry import default_framework_adapters, default_registry
+from .adapters.yaml_adapters import AutoGenYAMLAdapter, CrewAIYAMLAdapter
 from .adapters.typescript._ts_regex import TSFrameworkAdapter
 from .config import ExtractionConfig
 from .core.application_summary import build_scan_summary
@@ -178,6 +179,7 @@ class SbomExtractor:
         regex_adapters: tuple[DetectionAdapter, ...] | None = None,
         sql_adapters: tuple[DataClassificationSQLAdapter, ...] | None = None,
         dockerfile_adapter: DockerfileAdapter | None = None,
+        yaml_adapters: tuple[Any, ...] | None = None,
     ) -> None:
         self.framework_adapters = (
             framework_adapters if framework_adapters is not None else default_framework_adapters()
@@ -188,6 +190,11 @@ class SbomExtractor:
         )
         self.dockerfile_adapter = (
             dockerfile_adapter if dockerfile_adapter is not None else DockerfileAdapter()
+        )
+        self.yaml_adapters = (
+            yaml_adapters
+            if yaml_adapters is not None
+            else (CrewAIYAMLAdapter(), AutoGenYAMLAdapter())
         )
 
     # ------------------------------------------------------------------
@@ -319,6 +326,18 @@ class SbomExtractor:
                         self._merge_detection(node_map, det)
                 except Exception as exc:
                     _log.warning("dockerfile adapter failed on %s: %s", rel_path, exc)
+
+            # Phase 1e: YAML-aware framework adapters (e.g. CrewAI agents.yaml)
+            if suffix in {".yaml", ".yml"}:
+                for yaml_adapter in self.yaml_adapters:
+                    _log.debug("running YAML adapter %r on %s", yaml_adapter.name, rel_path)
+                    try:
+                        for det in yaml_adapter.scan(content, rel_path):
+                            self._merge_detection(node_map, det)
+                    except Exception as exc:
+                        _log.warning(
+                            "YAML adapter %r failed on %s: %s", yaml_adapter.name, rel_path, exc
+                        )
 
             # Phase 2: Regex fallback
             # Skip documentation and shell-script files to eliminate CI/README FP floods.

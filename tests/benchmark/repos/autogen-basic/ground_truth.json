@@ -5,208 +5,484 @@
   "target": "local://autogen-basic",
   "nodes": [
     {
-      "id": "0afb3a73-fc62-58c0-a620-fce9d8956d66",
-      "name": "autogen",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.95,
+      "id": "12886b2c-91dc-5666-b11e-c96e1ffba8e4",
+      "name": "ai_player",
+      "component_type": "AGENT",
+      "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "autogen",
-          "adapter": "framework"
+          "canonical_name": "aiplayer",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "ast_import",
-          "confidence": 0.95,
-          "detail": "autogen_ext and autogen used throughout samples",
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "AGENT: ai_player",
           "location": {
-            "path": "python/samples/agentchat_chainlit/model_config.yaml",
+            "path": "",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "93714130-f35e-52bb-876a-40644db14dd6",
-      "name": "writer_agent",
+      "id": "7ac5193a-5ccc-5264-915f-9ab4e4b928b8",
+      "name": "assistant",
       "component_type": "AGENT",
-      "confidence": 0.9,
+      "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "writer_agent",
-          "adapter": "config_file"
+          "canonical_name": "assistant",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "writer_agent: Writer for creating text content in distributed group chat",
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "AGENT: assistant",
           "location": {
-            "path": "python/samples/core_distributed-group-chat/config.yaml",
-            "line": 8
+            "path": "",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "43515d56-256d-57ba-ae5c-4fd5832abd1b",
+      "id": "7d4a7358-bc61-5ef8-8734-085aa5b1e105",
       "name": "editor_agent",
       "component_type": "AGENT",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "editor_agent",
-          "adapter": "config_file"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "config_file",
-          "confidence": 0.9,
-          "detail": "editor_agent: Editor for planning and reviewing content in distributed group chat",
-          "location": {
-            "path": "python/samples/core_distributed-group-chat/config.yaml",
-            "line": 14
-          }
-        }
-      ]
-    },
-    {
-      "id": "3f2a83d6-b304-5b67-bc20-b75554f4a592",
-      "name": "assistant_agent",
-      "component_type": "AGENT",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "assistant_agent",
-          "adapter": "ast"
+          "canonical_name": "editoragent",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "ast",
           "confidence": 0.85,
-          "detail": "AssistantAgent commonly used in autogen samples",
+          "detail": "AGENT: editor_agent",
           "location": {
-            "path": "python/packages/agbench/benchmarks/HumanEval/config.yaml",
+            "path": "",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "820f679f-2224-5356-a59d-15ebab7627bf",
-      "name": "user_proxy_agent",
+      "id": "b0cddc97-4ff4-5802-958e-3e657ae5b9cc",
+      "name": "search_assistant",
       "component_type": "AGENT",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "user_proxy_agent",
-          "adapter": "ast"
+          "canonical_name": "searchassistant",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "ast_assignment",
+          "kind": "ast",
           "confidence": 0.85,
-          "detail": "UserProxyAgent used as human-in-the-loop in autogen samples",
+          "detail": "AGENT: search_assistant",
           "location": {
-            "path": "python/packages/agbench/benchmarks/HumanEval/config.yaml",
+            "path": "",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "6cc4796c-216a-5c0f-be57-27b02bba0461",
+      "id": "ebe45868-7292-5094-98a2-02c338f78383",
+      "name": "teachable_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "teachableagent",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "AGENT: teachable_agent",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "a06b8b9d-bd53-5857-bca8-b12fd2761709",
+      "name": "writer_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "writeragent",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "AGENT: writer_agent",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "82b4ac3a-c80d-5d7e-8152-288b2ca9d6ba",
+      "name": "generic",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "API_ENDPOINT: generic",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "a0d15161-0154-5f03-9dca-ca2ec413cfb9",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "ea13bf39-5876-5049-a904-85f96c1a34ef",
+      "name": "redis",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "redis",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "DATASTORE: redis",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "b772a8a2-1b92-5f3c-8f67-0ccc13b29d47",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "883c86e2-7460-5e8a-851c-b2b9aff63f8b",
+      "name": "framework:autogen",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "frameworkautogen",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "FRAMEWORK: framework:autogen",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "f8f81ca5-1791-5379-9c6d-2368cce933d3",
+      "name": "framework:mcp_server",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "frameworkmcpserver",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "FRAMEWORK: framework:mcp_server",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "dae9776c-74db-549e-a28d-da1e6f33367a",
+      "name": "openai_agents",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "openaiagents",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "FRAMEWORK: openai_agents",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "3a7e77a1-26b1-53aa-8822-fffee59c4dc5",
       "name": "gpt-4o",
       "component_type": "MODEL",
-      "confidence": 0.95,
+      "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "gpt-4o",
-          "adapter": "config_file"
+          "canonical_name": "gpt4o",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "config_file",
-          "confidence": 0.95,
-          "detail": "model: gpt-4o used in agentchat_chainlit and distributed-group-chat config",
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "MODEL: gpt-4o",
           "location": {
-            "path": "python/samples/agentchat_chainlit/model_config.yaml",
-            "line": 3
+            "path": "",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "8ce4a420-3759-57fd-b0b2-c19c349b88b0",
+      "id": "0242411b-d274-5316-96b4-ff6992621d0b",
+      "name": "gpt-4o-2024-08-06",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt4o20240806",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "MODEL: gpt-4o-2024-08-06",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "27bbd568-39f8-52a5-a4e1-64fd572598ed",
       "name": "gpt-4o-mini",
       "component_type": "MODEL",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "gpt-4o-mini",
-          "adapter": "regex"
+          "canonical_name": "gpt4omini",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "regex_pattern",
+          "kind": "ast",
           "confidence": 0.85,
-          "detail": "gpt-4o-mini referenced in autogen sample configs",
+          "detail": "MODEL: gpt-4o-mini",
           "location": {
-            "path": "python/packages/autogen-studio/autogenstudio/web/config.py",
+            "path": "",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "610c4273-075c-5bfa-8323-16867830d909",
-      "name": "gpt-4.1",
+      "id": "71fc9f34-8b17-536f-a7e2-2352c1e32b52",
+      "name": "o1",
       "component_type": "MODEL",
       "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "gpt-4.1",
-          "adapter": "regex"
+          "canonical_name": "o1",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "regex_pattern",
+          "kind": "ast",
           "confidence": 0.85,
-          "detail": "gpt-4.1 referenced in autogen sample configs",
+          "detail": "MODEL: o1",
           "location": {
-            "path": "python/packages/autogen-studio/autogenstudio/web/config.py",
+            "path": "",
             "line": 1
           }
         }
       ]
     },
     {
-      "id": "e5159bec-9363-5c25-ba4c-17570d816f67",
-      "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.9,
+      "id": "8bbf53c3-993c-5002-b492-3217e466927b",
+      "name": "Render Prompt Result",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
       "metadata": {
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "regex"
+          "canonical_name": "renderpromptresult",
+          "adapter": "autogen"
         }
       },
       "evidence": [
         {
-          "kind": "env_var",
-          "confidence": 0.9,
-          "detail": "api_key: REPLACE_WITH_YOUR_API_KEY in model_config.yaml",
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "PROMPT: Render Prompt Result",
           "location": {
-            "path": "python/samples/agentchat_chainlit/model_config.yaml",
-            "line": 4
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "f8014af4-ccff-595b-bef6-e34af0e8fceb",
+      "name": "assistant System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "assistantsystemmessage",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "PROMPT: assistant System Message",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "0f1cbe0c-69be-567b-9d62-0f6c5d99f9cc",
+      "name": "search_assistant System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "searchassistantsystemmessage",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "PROMPT: search_assistant System Message",
+          "location": {
+            "path": "",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "274cf417-8a8c-55d0-8e97-610dc702dd50",
+      "name": "teachable_agent System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "teachableagentsystemmessage",
+          "adapter": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast",
+          "confidence": 0.85,
+          "detail": "PROMPT: teachable_agent System Message",
+          "location": {
+            "path": "",
+            "line": 1
           }
         }
       ]
