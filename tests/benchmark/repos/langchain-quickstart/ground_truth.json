@@ -1,15 +1,1242 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-08T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:38.682615Z",
   "generator": "xelo",
   "target": "https://github.com/langchain-ai/langchain",
-  "nodes": [],
+  "nodes": [
+    {
+      "id": "e8e40423-b364-533d-9603-95dbda812648",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 3
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: api_key",
+          "location": {
+            "path": "libs/core/langchain_core/runnables/config.py",
+            "line": 272
+          }
+        }
+      ]
+    },
+    {
+      "id": "26772204-5095-53b3-bc47-6fdb9c157885",
+      "name": "chroma",
+      "component_type": "DATASTORE",
+      "confidence": 0.93,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ConstitutionalPrinciple",
+          "VectorStoreInfo"
+        ],
+        "classified_fields": {
+          "VectorStoreInfo": [
+            "name"
+          ],
+          "ConstitutionalPrinciple": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chroma",
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ],
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.9,
+          "detail": "datastore_generic: chroma",
+          "location": {
+            "path": ".pre-commit-config.yaml",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "a8b9befe-99c1-5383-bb5f-8d459d6fa17f",
+      "name": "faiss",
+      "component_type": "DATASTORE",
+      "confidence": 0.75,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ConstitutionalPrinciple",
+          "VectorStoreInfo"
+        ],
+        "classified_fields": {
+          "VectorStoreInfo": [
+            "name"
+          ],
+          "ConstitutionalPrinciple": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "faiss",
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "datastore_generic: FAISS",
+          "location": {
+            "path": "libs/core/langchain_core/example_selectors/semantic_similarity.py",
+            "line": 156
+          }
+        }
+      ]
+    },
+    {
+      "id": "2b37c236-221f-57c1-9bd0-1a9e07116601",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.7,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ConstitutionalPrinciple",
+          "VectorStoreInfo"
+        ],
+        "classified_fields": {
+          "VectorStoreInfo": [
+            "name"
+          ],
+          "ConstitutionalPrinciple": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "datastore_generic",
+          "evidence_count": 1,
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "datastore_generic: postgres",
+          "location": {
+            "path": "libs/core/langchain_core/indexing/base.py",
+            "line": 115
+          }
+        }
+      ]
+    },
+    {
+      "id": "0f3680e0-e397-5912-b3ac-7414cb140c3c",
+      "name": "ChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chatopenai",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/chatopenai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatOpenAI(...)",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/flare/base.py",
+            "line": 278
+          }
+        }
+      ]
+    },
+    {
+      "id": "4ac40edf-03c0-564d-a609-b1b62e947727",
+      "name": "claude-2",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "claude_2",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: claude-2",
+          "location": {
+            "path": "libs/core/langchain_core/runnables/history.py",
+            "line": 138
+          }
+        }
+      ]
+    },
+    {
+      "id": "3b66f3e6-c016-58cc-96a3-3a0655305d6f",
+      "name": "claude-3-haiku-20240307",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "claude_3_haiku_20240307",
+          "adapter": "model_generic",
+          "evidence_count": 5,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: claude-3-haiku-20240307",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/few_shot.py",
+            "line": 367
+          }
+        }
+      ]
+    },
+    {
+      "id": "d5f29e2b-5687-55ca-9a11-e603b8710019",
+      "name": "gpt-2",
+      "component_type": "MODEL",
+      "confidence": 0.8500000000000001,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_2",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.8500000000000001,
+          "detail": "model_generic: GPT-2",
+          "location": {
+            "path": "libs/core/langchain_core/language_models/base.py",
+            "line": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": "97770421-254f-58a4-9c2e-0a59061a177d",
+      "name": "gpt-3",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: GPT-3",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/natbot/__init__.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "add6f238-d4c8-50de-977e-181ff1ff15fa",
+      "name": "gpt-3.5-turbo",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3_5_turbo",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: gpt-3.5-turbo",
+          "location": {
+            "path": "libs/core/langchain_core/caches.py",
+            "line": 169
+          }
+        }
+      ]
+    },
+    {
+      "id": "66af03bc-be96-5995-9ba0-0a7ec3feedbd",
+      "name": "gpt-3.5-turbo-0125",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3_5_turbo_0125",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: gpt-3.5-turbo-0125",
+          "location": {
+            "path": "libs/core/langchain_core/runnables/configurable.py",
+            "line": 502
+          }
+        }
+      ]
+    },
+    {
+      "id": "151f91fd-7ba4-5daf-8eea-1724e57b7f40",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "model_generic",
+          "evidence_count": 3,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4",
+          "location": {
+            "path": "libs/core/langchain_core/messages/content.py",
+            "line": 73
+          }
+        }
+      ]
+    },
+    {
+      "id": "95621f2d-c91b-556b-aded-202232801023",
+      "name": "gpt-4-1106-preview",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4_1106_preview",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "model_generic: gpt-4-1106-preview",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/openai_assistant/base.py",
+            "line": 151
+          }
+        }
+      ]
+    },
+    {
+      "id": "b25c2e4d-54f4-5b5f-8c7e-c663d1b9f51c",
+      "name": "gpt-4o",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4o",
+          "location": {
+            "path": "libs/core/langchain_core/messages/utils.py",
+            "line": 1228
+          }
+        }
+      ]
+    },
+    {
+      "id": "057a9dd8-c545-535f-b587-af4f13f0b6d8",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o_mini",
+          "adapter": "model_generic",
+          "evidence_count": 7,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "model_generic: gpt-4o-mini",
+          "location": {
+            "path": "libs/core/langchain_core/callbacks/usage.py",
+            "line": 26
+          }
+        }
+      ]
+    },
+    {
+      "id": "90db6f41-6221-5305-95b5-19d3be03df94",
+      "name": "o1",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "o1",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: o1",
+          "location": {
+            "path": "libs/core/langchain_core/messages/ai.py",
+            "line": 99
+          }
+        }
+      ]
+    },
+    {
+      "id": "6a3bcb20-8f0e-528b-9a97-1a7ec7b2e381",
+      "name": "Prompt 105",
+      "component_type": "PROMPT",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_105",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "message_type": "ChatPromptTemplate",
+          "role": null,
+          "content_preview": "['$SystemMessage', '$HumanMessagePromptTemplate.from_template']",
+          "char_count": 63,
+          "is_template": false,
+          "template_variables": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "langgraph: ChatPromptTemplate(content=...)",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/citation_fuzzy_match.py",
+            "line": 105
+          }
+        }
+      ]
+    },
+    {
+      "id": "097e1efa-bce1-5793-a34c-66e3375f1557",
+      "name": "System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_107",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "message_type": "SystemMessage",
+          "role": "system",
+          "content_preview": "You are a world class algorithm to answer questions with correct and exact citations.",
+          "char_count": 85,
+          "is_template": false,
+          "template_variables": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "langgraph: SystemMessage(content=...)",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/citation_fuzzy_match.py",
+            "line": 107
+          }
+        }
+      ]
+    },
+    {
+      "id": "10c74559-b126-52b8-883f-996cffcb6292",
+      "name": "Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_11",
+          "adapter": "langgraph",
+          "evidence_count": 39,
+          "role": "user",
+          "content_preview": "Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.\n\n{context}\n\nQuestion: {question}\nHelpful Answer:",
+          "char_count": 211,
+          "is_template": true,
+          "template_variables": [
+            "context",
+            "question"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Use the following pieces of context to answer the question at the end. If you do...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/chat_vector_db/prompts.py",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "b3c058f4-b1d6-572c-886e-e18e0a828d23",
+      "name": "Combine Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_12",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "user",
+          "content_preview": "Given the following extracted parts of a long document and a question, create a final answer with references (\"SOURCES\").\nIf you don't know the answer, just say that you don't know. Don't try to make up an answer.\nALWAYS return a \"SOURCES\" part in your answer.\n\nQUESTION: Which state/country's law governs the interpretation of the contract?\n=========\nContent: This Agreement is governed by English law and the parties submit to the exclusive jurisdiction of the English courts in  relation to any di",
+          "char_count": 6146,
+          "is_template": true,
+          "template_variables": [
+            "question",
+            "summaries"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Given the following extracted parts of a long document and a question, create a ...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/map_reduce_prompt.py",
+            "line": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "49820afe-9f34-55f9-bcd0-73d0df3a8540",
+      "name": "Templ1",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_13",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "role": "system",
+          "content_preview": "You are a smart assistant designed to help high school teachers come up with reading comprehension questions.\nGiven a piece of text, you must come up with a question and answer pair that can be used to test a student's reading comprehension abilities.\nWhen coming up with this question/answer pair, you must respond in the following format:\n```\n{{\n    \"question\": \"$YOUR_QUESTION_HERE\",\n    \"answer\": \"$THE_ANSWER_HERE\"\n}}\n```\n\nEverything between the ``` must be valid json.\n",
+          "char_count": 475,
+          "is_template": false,
+          "template_variables": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a smart assistant designed to help high school teachers come up with rea...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_generation/prompt.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "21c9e871-611d-5797-b264-d72240eb8218",
+      "name": "Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_19",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": null,
+          "content_preview": "Respond to the user message using any relevant context. If context is provided, you should ground your answer in that context. Once you're done responding return FINISHED.\n\n>>> CONTEXT: {context}\n>>> USER INPUT: {user_input}\n>>> RESPONSE: {response}",
+          "char_count": 249,
+          "is_template": true,
+          "template_variables": [
+            "context",
+            "user_input",
+            "response"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Respond to the user message using any relevant context. If context is provided, ...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/flare/prompts.py",
+            "line": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "8ef8e001-cbcf-5b44-9fa8-d8dae58a9335",
+      "name": "Default Answer Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_23",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "user",
+          "content_preview": "Given an input question and relevant data from a database, answer the user question.\n\nUse the following format:\n\nQuestion: Question here\nData: Relevant data here\nAnswer: Final answer here\n\nQuestion: {input}\nData: {data}\nAnswer:",
+          "char_count": 227,
+          "is_template": true,
+          "template_variables": [
+            "input",
+            "data"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Given an input question and relevant data from a database, answer the user quest...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 23
+          }
+        }
+      ]
+    },
+    {
+      "id": "7201521a-e5cd-5281-b57d-caec08604622",
+      "name": "Default Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_3",
+          "adapter": "langgraph",
+          "evidence_count": 5,
+          "role": "user",
+          "content_preview": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAre follow up questions needed here: Yes.\nFollow up: How old was Muhammad Ali when he died?\nIntermediate answer: Muhammad Ali was 74 years old when he died.\nFollow up: How old was Alan Turing when he died?\nIntermediate answer: Alan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nAre follow up questions needed here: Yes.\nFollow up: Who was the founder of craigsli",
+          "char_count": 1721,
+          "is_template": true,
+          "template_variables": [
+            "input",
+            "agent_scratchpad"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Question: Who lived longer, Muhammad Ali or Alan Turing?\nAre follow up questions...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/self_ask_with_search/prompt.py",
+            "line": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "14041531-5b03-58d1-88e3-d52f07cc0f3c",
+      "name": "Question Generator Prompt Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_35",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "role": null,
+          "content_preview": "Given a user input and an existing partial response as context, ask a question to which the answer is the given term/entity/phrase:\n\n>>> USER INPUT: {user_input}\n>>> EXISTING PARTIAL RESPONSE: {current_response}\n\nThe question to which the answer is the term/entity/phrase \"{uncertain_span}\" is:",
+          "char_count": 294,
+          "is_template": true,
+          "template_variables": [
+            "user_input",
+            "current_response",
+            "uncertain_span"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Given a user input and an existing partial response as context, ask a question t...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/flare/prompts.py",
+            "line": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "8ff287a6-ae4e-5be9-b004-fdde941dab54",
+      "name": "Default Refine Prompt Tmpl",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_4",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": null,
+          "content_preview": "The original question is as follows: {question}\nWe have provided an existing answer, including sources: {existing_answer}\nWe have the opportunity to refine the existing answer(only if needed) with some more context below.\n------------\n{context_str}\n------------\nGiven the new context, refine the original answer to better answer the question. If you do update it, please update the sources as well. If the context isn't useful, return the original answer.",
+          "char_count": 455,
+          "is_template": true,
+          "template_variables": [
+            "question",
+            "existing_answer",
+            "context_str"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: The original question is as follows: {question}\nWe have provided an existing ans...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/refine_prompts.py",
+            "line": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "8d2dd17a-acda-5036-bb20-aef6781fbdd5",
+      "name": "Default Dsl Template",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_9",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "user",
+          "content_preview": "Given an input question, create a syntactically correct Elasticsearch query to run. Unless the user specifies in their question a specific number of examples they wish to obtain, always limit your query to at most {top_k} results. You can order the results by a relevant column to return the most interesting examples in the database.\n\nUnless told to do not query for all the columns from a specific index, only ask for a few relevant columns given the question.\n\nPay attention to use only the column",
+          "char_count": 793,
+          "is_template": true,
+          "template_variables": [
+            "top_k"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: Given an input question, create a syntactically correct Elasticsearch query to r...",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 9
+          }
+        }
+      ]
+    }
+  ],
   "edges": [],
   "deps": [],
   "summary": {
     "frameworks": [
-      "langchain"
+      "langgraph"
     ],
-    "node_counts": {}
+    "node_counts": {
+      "AUTH": 1,
+      "DATASTORE": 3,
+      "MODEL": 12,
+      "PROMPT": 11
+    }
   }
 }

@@ -1,250 +1,3618 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-08T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:29.554201Z",
   "generator": "xelo",
   "target": "https://github.com/crewAIInc/crewAI-examples",
   "nodes": [
     {
-      "id": "557f1e1a-ed6d-58e2-a60f-e90e05a5c4d9",
-      "name": "agent_1_name",
+      "id": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "name": "agent",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Placeholder CrewAI agent 1"
-        },
-        "framework": "crewai"
+          "canonical_name": "crewai_agent",
+          "adapter": "crewai",
+          "evidence_count": 3,
+          "framework": "crewai",
+          "role": "Principal Researcher",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Do amazing researches and summaries based on the content you are working with",
+          "backstory_preview": "You're a Principal Researcher at a big company and you need to do a research about a given topic."
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Principal Researcher')",
           "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "role=",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "agent_1_name",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "path": "crews/instagram_post/tools/browser_tools.py",
+            "line": 26
           }
         }
       ]
     },
     {
-      "id": "ed004dcd-2a22-564a-9db0-03a2b5b9889d",
-      "name": "agent_2_name",
+      "id": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "name": "analyst",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.55,
       "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Placeholder CrewAI agent 2"
-        },
-        "framework": "crewai"
+          "canonical_name": "crewai_analyst",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "",
+          "has_goal": false,
+          "has_backstory": false
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "ast_instantiation",
+          "confidence": 0.55,
+          "detail": "crewai: Agent(role='')",
           "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "role=",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "agent_2_name",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 26
           }
         }
       ]
     },
     {
-      "id": "f89b1c6c-ca6e-5201-b5fc-72301a59ada6",
+      "id": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "name": "blog_researcher",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_blog_researcher",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "Blog Content Researcher",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Extract and analyze web content to identify key insights for blog posts",
+          "backstory_preview": "You are an expert content researcher who specializes in analyzing\n        web content and identifying the most valuable insights for creating engaging blog posts.\n        You excel at understanding co"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Blog Content Researcher')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 45
+          }
+        }
+      ]
+    },
+    {
+      "id": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "name": "blog_writer",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_blog_writer",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "Blog Content Writer",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Transform research into engaging, well-structured blog posts",
+          "backstory_preview": "You are a skilled blog writer with expertise in creating compelling content\n        that engages readers and drives meaningful discussions. You excel at taking complex\n        information and making i"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Blog Content Writer')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 57
+          }
+        }
+      ]
+    },
+    {
+      "id": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "name": "coding_assistant",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_coding_assistant",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "Coding Assistant",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Provide accurate and executable code solutions using LCEL",
+          "backstory_preview": "You are a coding assistant with expertise in LCEL, LangChain expression language. \n\n    Here is the LCEL documentation:  \n ------- \n  {context} \n ------- \n\n    Answer the user  question based on the \n"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Coding Assistant')",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 406
+          }
+        }
+      ]
+    },
+    {
+      "id": "ff059da0-4840-51bb-89ce-deb285ae95c3",
+      "name": "blog_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_blog_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 2,
+          "task_count": 0
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 294
+          }
+        }
+      ]
+    },
+    {
+      "id": "9dfde898-eb33-532d-9268-da48fab8a3c9",
+      "name": "code_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_code_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 1,
+          "task_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 435
+          }
+        }
+      ]
+    },
+    {
+      "id": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "name": "copy_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_copy_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 3,
+          "task_count": 4
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "crews/instagram_post/main.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "5f00bdbb-0ac1-5b79-99f8-d1b47c4fd2a6",
       "name": "crew",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.88,
       "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "CrewAI Crew orchestrator for custom agents"
-        },
-        "framework": "crewai"
+          "canonical_name": "crewai_crew_crew",
+          "adapter": "crewai",
+          "evidence_count": 7,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 4,
+          "task_count": 4
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Crew(",
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
           "location": {
-            "path": "crews/starter_template/main.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "agents=",
-          "location": {
-            "path": "crews/starter_template/main.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "tasks=",
-          "location": {
-            "path": "crews/starter_template/main.py",
-            "line": null
+            "path": "crews/prep-for-a-meeting/main.py",
+            "line": 34
           }
         }
       ]
     },
     {
-      "id": "8c41b2b0-f59c-5603-ab92-baac97377c87",
+      "id": "f63bcd65-8a2f-5342-9692-f60e0e42d049",
+      "name": "fix_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_fix_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 1,
+          "task_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 521
+          }
+        }
+      ]
+    },
+    {
+      "id": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "name": "image_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_image_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 2,
+          "task_count": 2
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "crews/instagram_post/main.py",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "b355cef3-0a04-512b-b195-fd136c66b649",
+      "name": "linkedin_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_linkedin_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 2,
+          "task_count": 0
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 338
+          }
+        }
+      ]
+    },
+    {
+      "id": "1e41db2b-0a56-5a42-ba32-f98b78c751da",
+      "name": "newsletter_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_newsletter_crew",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 2,
+          "task_count": 0
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 316
+          }
+        }
+      ]
+    },
+    {
+      "id": "d583c8d4-4aa9-5830-9764-9b1fbd268889",
+      "name": "tech_crew",
+      "component_type": "AGENT",
+      "confidence": 0.88,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_crew_tech_crew",
+          "adapter": "crewai",
+          "evidence_count": 2,
+          "orchestrator_type": "Crew",
+          "framework": "crewai",
+          "agent_count": 1,
+          "task_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.88,
+          "detail": "crewai: Crew(agents=[...])",
+          "location": {
+            "path": "integrations/azure_model/main.py",
+            "line": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": "080f106b-a455-5120-a197-a0883ec83105",
+      "name": "formatter",
+      "component_type": "AGENT",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_formatter",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "",
+          "has_goal": false,
+          "has_backstory": false
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.55,
+          "detail": "crewai: Agent(role='')",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "name": "linkedin_researcher",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_linkedin_researcher",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "LinkedIn Content Researcher",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Extract professional insights suitable for LinkedIn audience",
+          "backstory_preview": "You are an expert at identifying professional insights and industry\n        trends that resonate with LinkedIn's professional audience. You understand what\n        content drives engagement on profess"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='LinkedIn Content Researcher')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 99
+          }
+        }
+      ]
+    },
+    {
+      "id": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "name": "linkedin_writer",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_linkedin_writer",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "LinkedIn Content Writer",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Create engaging LinkedIn posts that drive professional engagement",
+          "backstory_preview": "You are a LinkedIn content specialist who knows how to craft posts\n        that get noticed in the professional feed. You excel at creating content that\n        sparks meaningful professional discussi"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='LinkedIn Content Writer')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 111
+          }
+        }
+      ]
+    },
+    {
+      "id": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "name": "newsletter_researcher",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_newsletter_researcher",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "Newsletter Content Researcher",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Extract key insights from web content for newsletter format",
+          "backstory_preview": "You are an expert at identifying the most newsworthy and actionable\n        insights from web content. You understand what makes content valuable for newsletter\n        subscribers and how to present "
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Newsletter Content Researcher')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 72
+          }
+        }
+      ]
+    },
+    {
+      "id": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "name": "newsletter_writer",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_newsletter_writer",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "Newsletter Writer",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Create engaging newsletter content that provides immediate value",
+          "backstory_preview": "You are a newsletter specialist who knows how to craft content that\n        busy professionals want to read. You excel at creating scannable, actionable content\n        with clear takeaways."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Newsletter Writer')",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 84
+          }
+        }
+      ]
+    },
+    {
+      "id": "ab6aa422-a1cf-5ef5-96d1-79e9a461176d",
+      "name": "research_agent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_research_agent",
+          "adapter": "crewai",
+          "evidence_count": 2,
+          "framework": "crewai",
+          "role": "You are a helpful assistant that can answer questions about the web.",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Answer the user's question.",
+          "backstory_preview": "You have access to a vast knowledge base of information from the web."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='You are a helpful assistant that can answer questions about the web.')",
+          "location": {
+            "path": "notebooks/QA Agent/crewai.ipynb",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "name": "researcher",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_researcher",
+          "adapter": "crewai",
+          "evidence_count": 2,
+          "framework": "crewai",
+          "role": "Senior Researcher",
+          "has_goal": true,
+          "has_backstory": true,
+          "goal_preview": "Discover groundbreaking technologies",
+          "backstory_preview": "A curious mind fascinated by cutting-edge innovation and the potential to change the world, you know everything about tech."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "crewai: Agent(role='Senior Researcher')",
+          "location": {
+            "path": "integrations/azure_model/main.py",
+            "line": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "name": "scorer",
+      "component_type": "AGENT",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_scorer",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "",
+          "has_goal": false,
+          "has_backstory": false
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.55,
+          "detail": "crewai: Agent(role='')",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 37
+          }
+        }
+      ]
+    },
+    {
+      "id": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "name": "scriptwriter",
+      "component_type": "AGENT",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_scriptwriter",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "",
+          "has_goal": false,
+          "has_backstory": false
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.55,
+          "detail": "crewai: Agent(role='')",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "name": "spamfilter",
+      "component_type": "AGENT",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_spamfilter",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "role": "",
+          "has_goal": false,
+          "has_backstory": false
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.55,
+          "detail": "crewai: Agent(role='')",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "8adf5533-1b72-5301-8d21-f6995cfbad81",
+      "name": "agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_agent",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('agent', ...)",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 235
+          }
+        }
+      ]
+    },
+    {
+      "id": "282230be-490a-5048-abb7-50835d5f0ffa",
+      "name": "check_code",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_check_code",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('check_code', ...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 368
+          }
+        }
+      ]
+    },
+    {
+      "id": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "name": "check_new_emails",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_check_new_emails",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('check_new_emails', ...)",
+          "location": {
+            "path": "integrations/CrewAI-LangGraph/src/graph.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "393dde3a-ceb7-5f8c-8ef5-46ecaacea20a",
+      "name": "draft_responses",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_draft_responses",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('draft_responses', ...)",
+          "location": {
+            "path": "integrations/CrewAI-LangGraph/src/graph.py",
+            "line": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "name": "generate",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_generate",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('generate', ...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 367
+          }
+        }
+      ]
+    },
+    {
+      "id": "5e8a61ef-5662-5d32-860b-27449e4fa88d",
+      "name": "reflect",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_reflect",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('reflect', ...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 369
+          }
+        }
+      ]
+    },
+    {
+      "id": "da90d963-9090-5fcd-9bf9-a07b55e68817",
+      "name": "retrieve",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_retrieve",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('retrieve', ...)",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": "28ba82cd-86ff-554d-8efb-edc439c0fd9a",
+      "name": "rewrite",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_rewrite",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('rewrite', ...)",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 238
+          }
+        }
+      ]
+    },
+    {
+      "id": "2ee32b36-7131-50a7-929a-88b60d02e5e7",
+      "name": "wait_next_run",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_wait_next_run",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('wait_next_run', ...)",
+          "location": {
+            "path": "integrations/CrewAI-LangGraph/src/graph.py",
+            "line": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "53bccd58-0915-5a28-b078-250e3ab9ce91",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.75,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 6
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: api_key",
+          "location": {
+            "path": "crews/prep-for-a-meeting/tools/ExaSearchTool.py",
+            "line": 58
+          }
+        }
+      ]
+    },
+    {
+      "id": "cacd52b4-9c7c-5713-a690-46034a4f7174",
+      "name": "chroma",
+      "component_type": "DATASTORE",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "Activity",
+          "CampaignIdea",
+          "Candidate",
+          "Itinerary",
+          "MarketStrategy",
+          "MeetingTask",
+          "ScoredCandidate"
+        ],
+        "classified_fields": {
+          "MarketStrategy": [
+            "name"
+          ],
+          "CampaignIdea": [
+            "name"
+          ],
+          "Activity": [
+            "name"
+          ],
+          "Itinerary": [
+            "name"
+          ],
+          "Candidate": [
+            "email",
+            "name"
+          ],
+          "ScoredCandidate": [
+            "email",
+            "name"
+          ],
+          "MeetingTask": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chroma",
+          "adapter": "datastore_generic",
+          "evidence_count": 1,
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "datastore_generic: Chroma",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 60
+          }
+        }
+      ]
+    },
+    {
+      "id": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "name": "AzureChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "azurechatopenai",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "class_name": "AzureChatOpenAI",
+          "provider": "azure",
+          "api_endpoint": "$environ.get",
+          "model_card_url": "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: AzureChatOpenAI(...)",
+          "location": {
+            "path": "integrations/azure_model/main.py",
+            "line": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "bba73784-89df-5b14-a177-27127628e1be",
+      "name": "ChatAnthropic",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chatanthropic",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "class_name": "ChatAnthropic",
+          "provider": "anthropic",
+          "api_endpoint": "https://api.anthropic.com",
+          "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatAnthropic(...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 89
+          }
+        }
+      ]
+    },
+    {
+      "id": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "name": "ChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chatopenai",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/chatopenai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatOpenAI(...)",
+          "location": {
+            "path": "crews/markdown_validator/src/markdown_validator/main.py",
+            "line": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "d7c67a74-9fec-5977-9749-6793ade6f5e7",
       "name": "gpt-3.5-turbo",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "OpenAI GPT-3.5-turbo model via ChatOpenAI",
-          "synonyms": [
-            "OpenAIGPT35"
-          ]
-        },
-        "framework": "openai"
+          "canonical_name": "gpt_3_5_turbo",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "version": "3.5-turbo",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-3.5-turbo",
+          "model_family": "gpt",
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ChatOpenAI",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatOpenAI(...)",
           "location": {
             "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model_name=\"gpt-3.5-turbo\"",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "line": 12
           }
         }
       ]
     },
     {
-      "id": "7c52d7bd-d1a1-54b2-800e-2350b84f6e1a",
+      "id": "7007692a-9fe8-5f43-9171-80b5b9327e8f",
       "name": "gpt-4",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "OpenAI GPT-4 model via ChatOpenAI",
-          "synonyms": [
-            "OpenAIGPT4"
-          ]
-        },
-        "framework": "openai"
+          "canonical_name": "gpt_4",
+          "adapter": "langgraph",
+          "evidence_count": 4,
+          "normalizer": "model-name",
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "version": "4",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4",
+          "model_family": "gpt"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ChatOpenAI",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4",
           "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model_name=\"gpt-4\"",
-          "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "path": "crews/landing_page_generator/src/landing_page_generator/main.py",
+            "line": 15
           }
         }
       ]
     },
     {
-      "id": "898db200-6f68-56a6-b312-e4ca3f261d08",
-      "name": "openhermes",
+      "id": "d90b3a44-2bc6-5741-afa0-c2b4102bc2a8",
+      "name": "gpt-4-turbo",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Ollama local model (openhermes)",
-          "synonyms": [
-            "Ollama"
-          ]
-        },
-        "framework": "ollama"
+          "canonical_name": "gpt_4_turbo",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "version": "4-turbo",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4-turbo",
+          "model_family": "gpt"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Ollama",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatOpenAI(...)",
           "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 150
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.95,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o_mini",
+          "adapter": "langgraph",
+          "evidence_count": 16,
+          "normalizer": "model-name",
+          "provider": "openai",
+          "version": "4o",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4o-mini",
+          "model_family": "gpt",
+          "class_name": "ChatOpenAI"
+        }
+      },
+      "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model=\"openhermes\"",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4o-mini",
           "location": {
-            "path": "crews/starter_template/agents.py",
-            "line": null
+            "path": "crews/markdown_validator/src/markdown_validator/main.py",
+            "line": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "934f0dcd-38f3-5d9e-8f36-212576b2ad14",
+      "name": "llama-2-7b-chat",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llama_2_7b_chat",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: llama-2-7b-chat",
+          "location": {
+            "path": "integrations/nvidia_models/marketing_strategy/marketing_posts.ipynb",
+            "line": 98
+          }
+        }
+      ]
+    },
+    {
+      "id": "dec9fad5-bf14-5b55-8b43-1b8bfaf2e6a0",
+      "name": "llama-3.1-8b-instruct",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llama_3_1_8b_instruct",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: llama-3.1-8b-instruct",
+          "location": {
+            "path": "integrations/nvidia_models/intro/main.py",
+            "line": 118
+          }
+        }
+      ]
+    },
+    {
+      "id": "903415a8-3429-54ed-9142-16c639c5305a",
+      "name": "Grade Documents",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_103",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "You are a grader assessing relevance of a retrieved document to a user question. \n\n        Here is the retrieved document: \n\n {context} \n\n\n        Here is the user question: {question} \n\n        If the document contains keyword(s) or semantic meaning related to the user question, grade it as relevant. \n\n        Give a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question.",
+          "char_count": 414,
+          "is_template": true,
+          "template_variables": [
+            "context",
+            "question"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a grader assessing relevance of a retrieved document to a user question....",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 103
+          }
+        }
+      ]
+    },
+    {
+      "id": "32f096ef-fe04-5be9-ab6b-3dea93235a79",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_37",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "You are a coding assistant with expertise in LCEL, LangChain expression language. \n\n    Here is a full set of LCEL documentation:  \n ------- \n  {context} \n ------- \n Answer the user\n    question based on the above provided documentation. Ensure any code you provide can be executed \n\n    with all required imports and variables defined. Structure your answer with a description of the code solution. \n\n    Then list the imports. And finally list the functioning code block. Here is the user question:",
+          "char_count": 500,
+          "is_template": true,
+          "template_variables": [
+            "context"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a coding assistant with expertise in LCEL, LangChain expression language...",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 37
+          }
+        }
+      ]
+    },
+    {
+      "id": "1e90649f-2c76-5b47-b748-6f448aca4fe3",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_409",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "You are a coding assistant with expertise in LCEL, LangChain expression language. \n\n    Here is the LCEL documentation:  \n ------- \n  {context} \n ------- \n\n    Answer the user  question based on the \n\n    above provided documentation. Ensure any code you provide can be executed with all required imports and variables \n\n    defined.",
+          "char_count": 333,
+          "is_template": true,
+          "template_variables": [
+            "context"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a coding assistant with expertise in LCEL, LangChain expression language...",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 409
+          }
+        }
+      ]
+    },
+    {
+      "id": "9d11d15f-b4e9-5717-af0f-d3de0a2dae5a",
+      "name": "Email Response Writer",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_47",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "\t\t\t\tYou are a skilled writer, adept at crafting clear, concise, and effective email responses.\n\t\t\t\tYour strength lies in your ability to communicate effectively, ensuring that each response is\n\t\t\t\ttailored to address the specific needs and context of the email.",
+          "char_count": 261,
+          "is_template": false,
+          "template_variables": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: \t\t\t\tYou are a skilled writer, adept at crafting clear, concise, and effective em...",
+          "location": {
+            "path": "integrations/CrewAI-LangGraph/src/crew/agents.py",
+            "line": 47
+          }
+        }
+      ]
+    },
+    {
+      "id": "becd8610-3097-59cf-8173-544f370fe4e9",
+      "name": "Fix Code",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_496",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "You are a coding assistant with expertise in LCEL, LangChain expression language.\n          Here is a full set of LCEL documentation:\n          -------\n          {context}\n          -------\n\n          The previous code attempt failed with the following error:\n          {error}\n\n          Your coding task:\n          {question}\n\n          Previous code attempt:\n          {explanation}\n          {imports}\n          {code}\n\n          Answer with a description of the code solution, followed by the im",
+          "char_count": 615,
+          "is_template": true,
+          "template_variables": [
+            "context",
+            "error",
+            "question",
+            "explanation",
+            "imports",
+            "code"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a coding assistant with expertise in LCEL, LangChain expression language...",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 496
+          }
+        }
+      ]
+    },
+    {
+      "id": "90cf95e6-e716-5501-ac0a-33cfaebf4b74",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_76",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "<instructions> You are a coding assistant with expertise in LCEL, LangChain expression language. \n\n    Here is the LCEL documentation:  \n ------- \n  {context} \n ------- \n Answer the user  question based on the \n\n    above provided documentation. Ensure any code you provide can be executed with all required imports and variables \n\n    defined. Structure your answer: 1) a prefix describing the code solution, 2) the imports, 3) the functioning code block. \n\n    Invoke the code tool to structure the",
+          "char_count": 563,
+          "is_template": true,
+          "template_variables": [
+            "context"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: <instructions> You are a coding assistant with expertise in LCEL, LangChain expr...",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": "21fc3bbc-2788-51bf-8d69-ec024ebc7419",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.8500000000000001,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.8500000000000001,
+          "detail": "prompt_generic: prompt template",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 162
+          }
+        }
+      ]
+    },
+    {
+      "id": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "name": "code_fix_task",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_code_fix_task",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task",
+          "description_preview": "You are a coding assistant with expertise in LCEL, LangChain expression language.\n          Here is a full set of LCEL documentation:\n          -------\n          {context}\n          -------\n\n         "
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 495
+          }
+        }
+      ]
+    },
+    {
+      "id": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "name": "code_generation_task",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_code_generation_task",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task",
+          "description_preview": "Answer the user question based on the above provided documentation. Ensure any code you provide can be executed\n    with all required imports and variables defined. Structure your answer:\n    1) a pre"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "notebooks/Coding Assistant/coding_assistant_eval.ipynb",
+            "line": 419
+          }
+        }
+      ]
+    },
+    {
+      "id": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "name": "research_task",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_research_task",
+          "adapter": "crewai",
+          "evidence_count": 5,
+          "framework": "crewai",
+          "task_type": "Task",
+          "description_preview": "Identify the next big trend in AI"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "integrations/azure_model/main.py",
+            "line": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "name": "task",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task",
+          "adapter": "crewai",
+          "evidence_count": 5,
+          "framework": "crewai",
+          "task_type": "Task",
+          "description_preview": "Analyze and make a LONG summary the content bellow, make sure to include the ALL relevant information in the summary, return only the summary nothing else.\n\nCONTENT\n----------\n{\u2026}"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/instagram_post/tools/browser_tools.py",
+            "line": 34
+          }
+        }
+      ]
+    },
+    {
+      "id": "77cd5c6a-7118-530a-8bc5-e660906ffff0",
+      "name": "task0",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task0",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 101
+          }
+        }
+      ]
+    },
+    {
+      "id": "7fd830f8-2832-5a35-8235-c5a5553f9f6a",
+      "name": "task1",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task1",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 112
+          }
+        }
+      ]
+    },
+    {
+      "id": "16785540-dcec-5d13-afce-c4cf66125652",
+      "name": "task2",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task2",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 118
+          }
+        }
+      ]
+    },
+    {
+      "id": "8a87da42-04bf-57f0-9f12-407160296c15",
+      "name": "task3",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task3",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 124
+          }
+        }
+      ]
+    },
+    {
+      "id": "67c53a7f-bb00-51bc-8baf-d49c0266dac3",
+      "name": "task4",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_task4",
+          "adapter": "crewai",
+          "evidence_count": 1,
+          "framework": "crewai",
+          "task_type": "Task"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "crews/screenplay_writer/screenplay_writer.py",
+            "line": 144
+          }
+        }
+      ]
+    },
+    {
+      "id": "e3ce520f-96f5-5820-8ebf-2ba8120b926f",
+      "name": "writing_task",
+      "component_type": "TOOL",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "crewai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "crewai_task_writing_task",
+          "adapter": "crewai",
+          "evidence_count": 3,
+          "framework": "crewai",
+          "task_type": "Task",
+          "description_preview": "\n        Create an engaging blog post based on the research findings.\n\n        Requirements:\n        - 800-1200 words\n        - Engaging headline\n        - Clear introduction with hook\n        - Well-"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.8,
+          "detail": "crewai: Task(description=...)",
+          "location": {
+            "path": "notebooks/Flows_101/crewai_flows_101.ipynb",
+            "line": 144
+          }
+        }
+      ]
+    },
+    {
+      "id": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "name": "retrieve",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_toolnode_retrieve",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "tool_type": "ToolNode",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "langgraph: ToolNode(...)",
+          "location": {
+            "path": "notebooks/QA Agent/laggraph.ipynb",
+            "line": 236
           }
         }
       ]
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "source": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "282230be-490a-5048-abb7-50835d5f0ffa",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5e8a61ef-5662-5d32-860b-27449e4fa88d",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "8adf5533-1b72-5301-8d21-f6995cfbad81",
+      "target": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "da90d963-9090-5fcd-9bf9-a07b55e68817",
+      "target": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "28ba82cd-86ff-554d-8efb-edc439c0fd9a",
+      "target": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "target": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5f00bdbb-0ac1-5b79-99f8-d1b47c4fd2a6",
+      "target": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5f00bdbb-0ac1-5b79-99f8-d1b47c4fd2a6",
+      "target": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5f00bdbb-0ac1-5b79-99f8-d1b47c4fd2a6",
+      "target": "080f106b-a455-5120-a197-a0883ec83105",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5f00bdbb-0ac1-5b79-99f8-d1b47c4fd2a6",
+      "target": "ab6aa422-a1cf-5ef5-96d1-79e9a461176d",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "393dde3a-ceb7-5f8c-8ef5-46ecaacea20a",
+      "target": "2ee32b36-7131-50a7-929a-88b60d02e5e7",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "2ee32b36-7131-50a7-929a-88b60d02e5e7",
+      "target": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d583c8d4-4aa9-5830-9764-9b1fbd268889",
+      "target": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "28ba82cd-86ff-554d-8efb-edc439c0fd9a",
+      "target": "8adf5533-1b72-5301-8d21-f6995cfbad81",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "target": "282230be-490a-5048-abb7-50835d5f0ffa",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5e8a61ef-5662-5d32-860b-27449e4fa88d",
+      "target": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "282230be-490a-5048-abb7-50835d5f0ffa",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5e8a61ef-5662-5d32-860b-27449e4fa88d",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "9dfde898-eb33-532d-9268-da48fab8a3c9",
+      "target": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f63bcd65-8a2f-5342-9692-f60e0e42d049",
+      "target": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ff059da0-4840-51bb-89ce-deb285ae95c3",
+      "target": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "1e41db2b-0a56-5a42-ba32-f98b78c751da",
+      "target": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b355cef3-0a04-512b-b195-fd136c66b649",
+      "target": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ab6aa422-a1cf-5ef5-96d1-79e9a461176d",
+      "target": "731d50ff-5bc5-594a-9238-590ba8de58d2",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "8adf5533-1b72-5301-8d21-f6995cfbad81",
+      "target": "d90b3a44-2bc6-5741-afa0-c2b4102bc2a8",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "da90d963-9090-5fcd-9bf9-a07b55e68817",
+      "target": "d90b3a44-2bc6-5741-afa0-c2b4102bc2a8",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "28ba82cd-86ff-554d-8efb-edc439c0fd9a",
+      "target": "d90b3a44-2bc6-5741-afa0-c2b4102bc2a8",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "543698c9-7242-5cf4-bfce-a50e03edf5a7",
+      "target": "d90b3a44-2bc6-5741-afa0-c2b4102bc2a8",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ee08ee7e-09cc-57cd-a1c6-44e9880dc6d8",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0727dfea-0979-58cb-955b-0b0511c2be81",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "699992c0-5523-5f94-aeb6-f58b1412cd2d",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "4b1f8550-f1fa-560f-aa75-5f80e885dd1f",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "69727a11-a3a9-5af2-9720-6bba5c787c41",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "b0a58e1b-57bb-5c8e-ae45-145dcc927232",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "ef86f159-ac5d-584b-8d16-fada6dded367",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "080f106b-a455-5120-a197-a0883ec83105",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "72ad690e-9f65-5f50-86b9-185d2ffc5b82",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "f503a8c9-a31a-5b8d-b18e-48dea2c8ff0b",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "3bb25eee-99a6-5d94-ab97-93a6836347c5",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "17c433ca-e701-5836-94c9-cb00538faeef",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "dfff47dd-bdfa-5a10-b22e-c3729ae689f6",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "0c5ea6e7-ea81-511e-8d2a-e4df0d727c4d",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5a443fee-18cc-5a54-8a26-083f989c8ebe",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "c980dedc-3a1c-59ce-a72a-b48ca2543fc9",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "45247201-bacf-56c3-afd9-30d2072bdb61",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "0962abe7-c4ac-5f18-85a6-e49033729891",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "a8607ac6-1161-50a0-95be-8081cf6671a0",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "1b52b03f-b8b1-50b7-8306-e5997902865b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "29839c88-71ea-59a3-b70a-ef4f51310ce3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "81aa8756-f4f1-5e22-9554-c7a9e494b1df",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "bba73784-89df-5b14-a177-27127628e1be",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "d263d295-61d0-5e2e-882a-080dc943883c",
+      "target": "cd549d5f-e3c9-5a10-afaf-2760c859fc11",
+      "relationship_type": "USES"
+    }
+  ],
   "deps": [],
   "summary": {
     "frameworks": [
       "crewai",
-      "langchain",
-      "openai",
-      "ollama"
+      "langgraph"
     ],
     "node_counts": {
-      "AGENT": 3,
-      "MODEL": 3
+      "AGENT": 33,
+      "AUTH": 1,
+      "DATASTORE": 1,
+      "MODEL": 9,
+      "PROMPT": 7,
+      "TOOL": 11
     }
   }
 }

@@ -1,230 +1,86 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-06T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:42.511904Z",
   "generator": "xelo",
   "target": "https://github.com/NuGuardAI/real-estate-agent",
   "nodes": [
     {
-      "id": "f3f38c39-cb56-52df-83da-7f7ef9ee9034",
-      "name": "property_search_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Property search agent created with Agno framework for finding property listings"
-        },
-        "framework": "agno"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "agent.py",
-            "line": 177
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Property Search Agent\"",
-          "location": {
-            "path": "agent.py",
-            "line": 177
-          }
-        }
-      ]
-    },
-    {
-      "id": "93e11438-a21f-5bbe-a635-0ee25d09046e",
-      "name": "market_analysis_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Market analysis agent that provides concise market insights"
-        },
-        "framework": "agno"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "agent.py",
-            "line": 208
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Market Analysis Agent\"",
-          "location": {
-            "path": "agent.py",
-            "line": 208
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model=llm",
-          "location": {
-            "path": "agent.py",
-            "line": 208
-          }
-        }
-      ]
-    },
-    {
-      "id": "4235a45b-08f3-5ccc-8256-3ea4072f2878",
-      "name": "property_valuation_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Property valuation agent that provides concise property assessments"
-        },
-        "framework": "agno"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "agent.py",
-            "line": 221
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Property Valuation Agent\"",
-          "location": {
-            "path": "agent.py",
-            "line": 221
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model=llm",
-          "location": {
-            "path": "agent.py",
-            "line": 221
-          }
-        }
-      ]
-    },
-    {
-      "id": "d9dd86fa-657e-51ff-9160-e40ca84ecaa6",
-      "name": "model",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "OpenAI GPT-4o model integration via Agno framework - detected as 'model' variable",
-          "synonyms": [
-            "OpenAIChat"
-          ]
-        },
-        "framework": "openai"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "OpenAIChat(id=\"gpt-4o\"",
-          "location": {
-            "path": "agent.py",
-            "line": 46
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "api_key=openai_api_key",
-          "location": {
-            "path": "agent.py",
-            "line": 46
-          }
-        }
-      ]
-    },
-    {
-      "id": "6637f5d1-00bc-5f88-8077-366e0b0b3f54",
-      "name": "llm",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "OpenAI LLM initialization in run_sequential_analysis - detected as 'llm' variable",
-          "synonyms": [
-            "OpenAIChat"
-          ]
-        },
-        "framework": "openai"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "llm = OpenAIChat(id=\"gpt-4o\"",
-          "location": {
-            "path": "agent.py",
-            "line": 258
-          }
-        }
-      ]
-    },
-    {
-      "id": "8ee106b3-c7b8-571f-99c5-77c046176990",
-      "name": "firecrawl",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Firecrawl integration for web scraping real estate listings - detected as 'firecrawl' variable",
-          "synonyms": [
-            "app",
-            "FirecrawlApp"
-          ]
-        },
-        "framework": "firecrawl"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "FirecrawlApp(api_key=firecrawl_api_key)",
-          "location": {
-            "path": "agent.py",
-            "line": 50
-          }
-        }
-      ]
-    },
-    {
-      "id": "fa7ff597-aae6-5093-a35e-d6e7f3be1db2",
-      "name": "OPENAI_API_KEY",
+      "id": "89f444c4-6a59-553a-8621-b8c449e681e8",
+      "name": "generic",
       "component_type": "AUTH",
-      "confidence": 1.0,
+      "confidence": 0.65,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "OpenAI API key loaded from environment variable"
-        },
-        "framework": "openai"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 1
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "os.getenv(\"OPENAI_API_KEY\")",
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "auth_generic: api_key",
           "location": {
             "path": "agent.py",
-            "line": 19
+            "line": 46
+          }
+        }
+      ]
+    },
+    {
+      "id": "ccf21718-6205-5458-985b-4ca7a712c1fa",
+      "name": "gpt-4o",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "model_generic: gpt-4o",
+          "location": {
+            "path": "agent.py",
+            "line": 44
           }
         }
       ]
@@ -233,16 +89,10 @@
   "edges": [],
   "deps": [],
   "summary": {
-    "frameworks": [
-      "agno",
-      "openai",
-      "firecrawl"
-    ],
+    "frameworks": [],
     "node_counts": {
-      "AGENT": 3,
-      "MODEL": 2,
-      "TOOL": 1,
-      "AUTH": 1
+      "AUTH": 1,
+      "MODEL": 1
     }
   }
 }

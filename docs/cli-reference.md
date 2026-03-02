@@ -105,6 +105,88 @@ schema written → <output-file>
 - Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
 - If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
 
+## LLM Configuration
+
+`scan` commands support these LLM-related options:
+
+- `--enable-llm`: enable enrichment for this run.
+- `--llm-model <model>`: provider/model identifier (litellm-compatible string).
+- `--llm-budget-tokens <n>`: token budget across enrichment calls.
+- `--llm-api-key <key>`: explicit API key override.
+- `--llm-api-base <url>`: explicit API base URL override.
+
+Environment variables consumed by Xelo directly:
+
+- `AISBOM_ENABLE_LLM=true|false`
+- `AISBOM_LLM_MODEL=<model-string>`
+- `AISBOM_LLM_BUDGET_TOKENS=<int>`
+- `AISBOM_LLM_API_KEY=<key>`
+- `AISBOM_LLM_API_BASE=<url>`
+- `GEMINI_API_KEY` or `GOOGLE_CLOUD_API_KEY` (for direct Vertex AI mode when using `vertex_ai/*` models)
+- `VERTEXAI_LOCATION` (reserved for Vertex location metadata)
+
+Provider-native variables are also supported through litellm, depending on provider setup (for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, Azure OpenAI variables, or AWS credentials for Bedrock).
+
+## LLM Provider Examples
+
+OpenAI:
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=gpt-4o-mini
+export OPENAI_API_KEY=your_openai_key
+xelo scan path ./my-repo --format json --output sbom.json --enable-llm
+```
+
+Gemini (via litellm):
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=gemini/gemini-2.0-flash
+export GOOGLE_API_KEY=your_google_ai_studio_key
+xelo scan path ./my-repo --output sbom.json --enable-llm
+```
+
+Anthropic:
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=anthropic/claude-3-5-sonnet-latest
+export ANTHROPIC_API_KEY=your_anthropic_key
+xelo scan path ./my-repo --output sbom.json --enable-llm
+```
+
+Azure OpenAI:
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=azure/gpt-4o-mini
+export AZURE_API_KEY=your_azure_openai_key
+export AZURE_API_BASE=https://<resource>.openai.azure.com/
+export AZURE_API_VERSION=2024-10-21
+xelo scan path ./my-repo --output sbom.json --enable-llm
+```
+
+Vertex AI Gemini (direct Vertex path in Xelo):
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=vertex_ai/gemini-2.5-flash
+export GEMINI_API_KEY=your_vertex_key
+xelo scan path ./my-repo --output sbom.json --enable-llm
+```
+
+Bedrock Claude:
+
+```bash
+export AISBOM_ENABLE_LLM=true
+export AISBOM_LLM_MODEL=bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+export AWS_REGION=us-east-1
+export AWS_ACCESS_KEY_ID=your_access_key
+export AWS_SECRET_ACCESS_KEY=your_secret_key
+xelo scan path ./my-repo --output sbom.json --enable-llm
+```
+
 ## Exit and Error Conventions
 
 - On success: command-specific stdout summary is printed.

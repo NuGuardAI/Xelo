@@ -1,220 +1,126 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:28.904564Z",
   "generator": "xelo",
   "target": "https://github.com/aws/bedrock-agentcore-sdk-python",
   "nodes": [
     {
-      "id": "95af83b7-ec29-5edd-a053-ab70b3f244f2",
-      "name": "Agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "8f21292f-99ac-55d3-a00f-094c1d6cb9c5",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Strands agent for streaming integration tests"
-        },
-        "framework": "strands"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 10
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
+          "kind": "regex",
+          "confidence": 0.95,
+          "detail": "auth_generic: OAuth2",
           "location": {
-            "path": "tests_integ/agents/streaming_agent.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "from strands import Agent",
-          "location": {
-            "path": "tests_integ/agents/streaming_agent.py",
-            "line": null
+            "path": "src/bedrock_agentcore/identity/auth.py",
+            "line": 35
           }
         }
       ]
     },
     {
-      "id": "8067f3a0-c44f-588f-a393-d709a44e538d",
-      "name": "BedrockAgentCoreApp",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "ba528aa4-89a5-5d3b-a60e-1fe0ac10d269",
+      "name": "claude-3-5-sonnet-20241022-v2",
+      "component_type": "MODEL",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Bedrock AgentCore application"
-        },
-        "framework": "aws-bedrock"
+          "canonical_name": "claude_3_5_sonnet_20241022_v2",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "BedrockAgentCoreApp",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: claude-3-5-sonnet-20241022-v2",
           "location": {
-            "path": "tests_integ/agents/sample_agent.py",
-            "line": null
+            "path": "tests_integ/memory/test_devex.py",
+            "line": 463
           }
         }
       ]
     },
     {
-      "id": "e5bebfdc-0373-5d65-abf7-66c94e7dc435",
-      "name": "start_data_processing",
-      "component_type": "TOOL",
-      "confidence": 1.0,
+      "id": "220b528f-0c75-514e-a8da-d672abd4baba",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Tool for starting data processing in async strand tests"
-        },
-        "framework": "aws-bedrock"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "start_data_processing",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 2
         }
-      ]
-    },
-    {
-      "id": "ec631c88-606e-541b-8b72-cfea32aa00b7",
-      "name": "get_processing_progress",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Tool for getting processing progress"
-        },
-        "framework": "aws-bedrock"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "get_processing_progress",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "2d57a3da-8a40-5862-857f-7ae846826354",
-      "name": "get_health_status",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Tool for getting health status"
-        },
-        "framework": "aws-bedrock"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "get_health_status",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "5031863b-38ef-5888-ba9b-7309a1199853",
-      "name": "list_available_options",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Tool for listing available options"
-        },
-        "framework": "aws-bedrock"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "list_available_options",
-          "location": {
-            "path": "tests_integ/async/interactive_async_strands.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "eec7f263-15e5-5b52-ada0-c50389b005ef",
-      "name": "calculator",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Calculator tool for math evaluations in tests"
-        },
-        "framework": "aws-bedrock"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "prompt_generic: system_prompt",
           "location": {
             "path": "tests_integ/evaluation/integrations/strands_agents_evals/test_strands_evaluation.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "calculator",
-          "location": {
-            "path": "tests_integ/evaluation/integrations/strands_agents_evals/test_strands_evaluation.py",
-            "line": null
+            "line": 51
           }
         }
       ]
@@ -224,12 +130,13 @@
   "deps": [],
   "summary": {
     "frameworks": [
-      "aws-bedrock",
-      "boto3"
+      "crewai",
+      "langgraph"
     ],
     "node_counts": {
-      "AGENT": 2,
-      "TOOL": 5
+      "AUTH": 1,
+      "MODEL": 1,
+      "PROMPT": 1
     }
   }
 }

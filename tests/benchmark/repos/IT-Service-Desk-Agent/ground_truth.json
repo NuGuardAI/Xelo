@@ -1,630 +1,86 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-08T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:21.894682Z",
   "generator": "xelo",
   "target": "https://github.com/NuGuardAI/IT-Service-Desk-Agent",
   "nodes": [
     {
-      "id": "84248e5b-a63a-520b-9e93-42876cf77333",
-      "name": "enterprise_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "f64fe663-c82c-5e15-89e1-aee5f23b09cd",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Azure AI Agent Service enterprise agent created via AIProjectClient, handles IT service desk queries with streaming responses",
-          "synonyms": [
-            "found_agent",
-            "agent",
-            "AGENT_NAME"
-          ]
-        },
-        "framework": "azure-ai-projects"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 1
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "project_client.agents",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: authenticate",
           "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 42
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AIProjectClient",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 42
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AGENT_NAME",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 42
+            "path": "enterprise-streaming-agent.ipynb",
+            "line": 64
           }
         }
       ]
     },
     {
-      "id": "8e11c0e6-d998-5197-adf7-08781e2a72fc",
+      "id": "ddb1e7bb-41c3-5fca-8ef1-d9fa84174b5a",
       "name": "gpt-4o",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "GPT-4o model used by Azure AI Agent Service via Azure AI Foundry",
-          "synonyms": [
-            "found_agent.model",
-            "model"
-          ]
-        },
-        "framework": "azure-ai-projects"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "found_agent.model",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 58
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "update_agent",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 58
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model=found_agent.model",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 58
-          }
+          "canonical_name": "gpt_4o",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
         }
-      ]
-    },
-    {
-      "id": "7465418a-4c7b-50df-bc1b-adea3a542ec5",
-      "name": "BingGroundingTool",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Bing grounding tool for web search capabilities, connected via BING_CONNECTION_NAME",
-          "synonyms": [
-            "bing_tool",
-            "bing_grounding"
-          ]
-        },
-        "framework": "azure-ai-projects"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "BingGroundingTool",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4o",
           "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 53
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "connection_id=conn_id",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 53
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "BING_CONNECTION_NAME",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 53
-          }
-        }
-      ]
-    },
-    {
-      "id": "ff29135c-f793-5943-ad97-25ccf0a4bc50",
-      "name": "FileSearchTool",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "File search tool for RAG over vector store containing HR/policy documents",
-          "synonyms": [
-            "file_search_tool",
-            "file_search"
-          ]
-        },
-        "framework": "azure-ai-projects"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "FileSearchTool",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 63
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "vector_store_ids",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 63
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "VECTOR_STORE_NAME",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 63
-          }
-        }
-      ]
-    },
-    {
-      "id": "6714e3de-e3b8-5322-9e17-b163d6a64a15",
-      "name": "fetch_weather",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Custom function tool that fetches weather data from OpenWeather API for specified locations",
-          "synonyms": [
-            "weather_tool"
-          ]
-        },
-        "framework": "custom"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def fetch_weather",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 35
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "OPENWEATHER_ONE_API_KEY",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 35
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "OPENWEATHER_GEO_API_KEY",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 35
-          }
-        }
-      ]
-    },
-    {
-      "id": "10182ed3-6423-5a3f-98c7-fc4c159f791a",
-      "name": "fetch_stock_price",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Custom function tool that fetches stock price data using yfinance library",
-          "synonyms": [
-            "stock_tool",
-            "fetch_stock"
-          ]
-        },
-        "framework": "custom"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def fetch_stock_price",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 132
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "yfinance",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 132
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "stock.history",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 132
-          }
-        }
-      ]
-    },
-    {
-      "id": "12593466-6893-5ea0-97d0-9545e2baf14a",
-      "name": "send_email",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Custom function tool that sends emails (mock implementation in this version)",
-          "synonyms": [
-            "email_tool"
-          ]
-        },
-        "framework": "custom"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def send_email",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 160
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "recipient",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 160
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "subject",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 160
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "body",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 160
-          }
-        }
-      ]
-    },
-    {
-      "id": "2ede8872-87d9-54ca-acb9-41ff95badf00",
-      "name": "fetch_datetime",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Custom function tool that returns current datetime with timezone support",
-          "synonyms": [
-            "datetime_tool"
-          ]
-        },
-        "framework": "custom"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def fetch_datetime",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 11
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "format_str",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 11
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "timezone",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 11
-          }
-        }
-      ]
-    },
-    {
-      "id": "3b12111d-3702-543b-8810-43b0c331ef5d",
-      "name": "vector_store",
-      "component_type": "DATASTORE",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure AI Foundry vector store containing HR policies and company documents for RAG",
-          "synonyms": [
-            "VECTOR_STORE_NAME",
-            "existing_vector_store"
-          ]
-        },
-        "framework": "azure-ai-projects"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "list_vector_stores",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 60
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "VECTOR_STORE_NAME",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 60
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "vector_store_id",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 60
-          }
-        }
-      ]
-    },
-    {
-      "id": "c3c7111e-5b0e-5dc5-8242-036726ba380f",
-      "name": "DefaultAzureCredential",
-      "component_type": "AUTH",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure managed identity authentication using DefaultAzureCredential",
-          "synonyms": [
-            "credential",
-            "managed_identity"
-          ]
-        },
-        "framework": "azure-identity"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "DefaultAzureCredential()",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 25
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "credential=credential",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 25
-          }
-        }
-      ]
-    },
-    {
-      "id": "28c3e1f3-83cc-57b7-8cfc-4c7e59493d52",
-      "name": "PROJECT_CONNECTION_STRING",
-      "component_type": "AUTH",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure AI Foundry project connection string containing subscription, resource group, and project info",
-          "synonyms": [
-            "conn_str"
-          ]
-        },
-        "framework": "azure-ai-projects"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "PROJECT_CONNECTION_STRING",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 30
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "from_connection_string",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 30
-          }
-        }
-      ]
-    },
-    {
-      "id": "45dbb3ad-90d2-516a-975c-a0d73b3e8159",
-      "name": "OPENWEATHER_API_KEYS",
-      "component_type": "AUTH",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "OpenWeather API keys for geocoding and weather data retrieval",
-          "synonyms": [
-            "geo_api_key",
-            "one_api_key"
-          ]
-        },
-        "framework": "custom"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "OPENWEATHER_GEO_API_KEY",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 50
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "OPENWEATHER_ONE_API_KEY",
-          "location": {
-            "path": "infra/azure-deployment/enterprise_functions.py",
-            "line": 50
-          }
-        }
-      ]
-    },
-    {
-      "id": "6241b089-ee5e-5332-bfd2-bc8e372ea9a6",
-      "name": "BING_CONNECTION",
-      "component_type": "AUTH",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure AI Foundry connection for Bing grounding service",
-          "synonyms": [
-            "bing_connection",
-            "BING_CONNECTION_NAME"
-          ]
-        },
-        "framework": "azure-ai-projects"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "BING_CONNECTION_NAME",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 51
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "connections.get",
-          "location": {
-            "path": "infra/azure-deployment/main.py",
-            "line": 51
-          }
-        }
-      ]
-    },
-    {
-      "id": "d1111078-5ddf-5ee8-84a7-37b7ec5c754e",
-      "name": "Contributor",
-      "component_type": "PRIVILEGE",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure Contributor role assigned to Web App managed identity for resource group access",
-          "synonyms": [
-            "contributor_role"
-          ]
-        },
-        "framework": "azure"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "--role \"Contributor\"",
-          "location": {
-            "path": "infra/azure-deployment/deploy.sh",
-            "line": 45
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "role assignment create",
-          "location": {
-            "path": "infra/azure-deployment/deploy.sh",
-            "line": 45
-          }
-        }
-      ]
-    },
-    {
-      "id": "ebf105bf-4da2-5954-9d5d-6c928e7e0cdb",
-      "name": "Azure AI Developer",
-      "component_type": "PRIVILEGE",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Azure AI Developer role assigned to Web App managed identity for AI Foundry access",
-          "synonyms": [
-            "ai_developer_role"
-          ]
-        },
-        "framework": "azure"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "--role \"Azure AI Developer\"",
-          "location": {
-            "path": "infra/azure-deployment/deploy.sh",
-            "line": 50
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "role assignment create",
-          "location": {
-            "path": "infra/azure-deployment/deploy.sh",
-            "line": 50
+            "path": "enterprise-streaming-agent.ipynb",
+            "line": 279
           }
         }
       ]
@@ -633,18 +89,10 @@
   "edges": [],
   "deps": [],
   "summary": {
-    "frameworks": [
-      "azure-ai-projects",
-      "gradio",
-      "fastapi"
-    ],
+    "frameworks": [],
     "node_counts": {
-      "AGENT": 1,
-      "MODEL": 1,
-      "TOOL": 6,
-      "DATASTORE": 1,
-      "AUTH": 4,
-      "PRIVILEGE": 2
+      "AUTH": 1,
+      "MODEL": 1
     }
   }
 }

@@ -1,163 +1,384 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2025-02-05T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:41.761932Z",
   "generator": "xelo",
   "target": "https://github.com/run-llama/rags",
   "nodes": [
     {
-      "id": "f5b27c99-b53a-552e-90ce-fd9efa8f78ce",
-      "name": "RAGAgentBuilder",
+      "id": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "name": "agent",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.82,
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "RAG Agent Builder class"
-        },
-        "framework": "llamaindex"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "RAGAgentBuilder",
-          "location": {
-            "path": "core/agent_builder/base.py",
-            "line": 1
-          }
+          "canonical_name": "llamaindex_agent_agent",
+          "adapter": "llamaindex",
+          "evidence_count": 3,
+          "agent_class": "OpenAIAgent",
+          "framework": "llamaindex"
         }
-      ]
-    },
-    {
-      "id": "e78dc749-da54-5b64-bbab-8866d373a7d6",
-      "name": "MultimodalRAGAgentBuilder",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Multimodal RAG Agent Builder"
-        },
-        "framework": "llamaindex"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "MultimodalRAGAgentBuilder",
-          "location": {
-            "path": "core/agent_builder/multimodal.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "45bec7e0-2062-55cd-befa-c0686f2e717f",
-      "name": "vector_query_engine",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Vector query engine"
-        },
-        "framework": "llamaindex"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "as_query_engine",
+          "kind": "ast_call",
+          "confidence": 0.82,
+          "detail": "llamaindex: OpenAIAgent.from_args(...)",
           "location": {
             "path": "core/utils.py",
-            "line": 252
+            "line": 159
           }
         }
       ]
     },
     {
-      "id": "79f04d36-6b0e-5aeb-a61c-c4fdcf1431b5",
-      "name": "summary_query_engine",
+      "id": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "name": "web_agent",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.82,
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Summary query engine"
-        },
-        "framework": "llamaindex"
+          "canonical_name": "llamaindex_agent_web_agent",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "agent_class": "OpenAIAgent",
+          "framework": "llamaindex"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "as_query_engine",
+          "kind": "ast_call",
+          "confidence": 0.82,
+          "detail": "llamaindex: OpenAIAgent.from_args(...)",
           "location": {
             "path": "core/utils.py",
-            "line": 268
+            "line": 322
           }
         }
       ]
     },
     {
-      "id": "34d3333e-50a0-5e6f-8ba1-aeca0e075f50",
-      "name": "vector_tool",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "d725f9a5-0847-5f0c-8a6f-754930c4ca52",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Vector tool for querying"
-        },
-        "framework": "llamaindex"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 1
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "QueryEngineTool",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: api_key",
           "location": {
             "path": "core/utils.py",
-            "line": 256
+            "line": 308
           }
         }
       ]
     },
     {
-      "id": "50ff8ce5-1860-5ba8-b338-bca9c4336db1",
-      "name": "summary_tool",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "7b54bfaa-b11e-53a8-953e-2001e57ffbaa",
+      "name": "mm_vector_index",
+      "component_type": "DATASTORE",
+      "confidence": 0.8,
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Summary tool for querying"
-        },
-        "framework": "llamaindex"
+          "canonical_name": "llamaindex_datastore_mm_vector_index",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "build_method": "from_documents",
+          "framework": "llamaindex"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "QueryEngineTool",
+          "kind": "ast_call",
+          "confidence": 0.8,
+          "detail": "llamaindex: from_documents(...)",
           "location": {
             "path": "core/utils.py",
-            "line": 269
+            "line": 450
           }
         }
       ]
     },
     {
-      "id": "5d72e73b-990e-5887-83db-ad14438ed203",
-      "name": "BUILDER_LLM",
+      "id": "68e41481-dbda-5f97-a03a-e4ebdf1ec76d",
+      "name": "summary_index",
+      "component_type": "DATASTORE",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llamaindex_datastore_summary_index",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "build_method": "from_documents",
+          "framework": "llamaindex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.8,
+          "detail": "llamaindex: from_documents(...)",
+          "location": {
+            "path": "core/utils.py",
+            "line": 265
+          }
+        }
+      ]
+    },
+    {
+      "id": "6db0fde3-3679-525e-a303-f026cd0cd39e",
+      "name": "vector_index",
+      "component_type": "DATASTORE",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llamaindex_datastore_vector_index",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "build_method": "from_documents",
+          "framework": "llamaindex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.8,
+          "detail": "llamaindex: from_documents(...)",
+          "location": {
+            "path": "core/utils.py",
+            "line": 244
+          }
+        }
+      ]
+    },
+    {
+      "id": "2bf149d7-f51a-5150-95e3-e8eabcad67c4",
+      "name": "Anthropic",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Builder LLM configuration"
-        },
-        "framework": "llamaindex"
+          "canonical_name": "anthropic",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "class_name": "Anthropic",
+          "provider": "anthropic",
+          "api_endpoint": "https://api.anthropic.com",
+          "model_card_url": "https://docs.anthropic.com/en/docs/about-claude/models"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "BUILDER_LLM = OpenAI(",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "llamaindex: Anthropic(model='Anthropic')",
+          "location": {
+            "path": "core/utils.py",
+            "line": 92
+          }
+        }
+      ]
+    },
+    {
+      "id": "88e9b9a3-8059-5e61-8904-239f01203076",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "model_generic: GPT-4",
+          "location": {
+            "path": "core/utils.py",
+            "line": 60
+          }
+        }
+      ]
+    },
+    {
+      "id": "6d30d24c-b735-525c-9f98-0c772bbcb5fe",
+      "name": "gpt-4-1106-preview",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4_1106_preview",
+          "adapter": "llamaindex",
+          "evidence_count": 2,
+          "class_name": "OpenAI",
+          "provider": "openai",
+          "version": "4",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4-1106-preview",
+          "model_family": "gpt",
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "llamaindex: OpenAI(model='gpt-4-1106-preview')",
           "location": {
             "path": "core/builder_config.py",
             "line": 14
@@ -166,21 +387,42 @@
       ]
     },
     {
-      "id": "5767451c-5c28-5b0f-b979-4a0ae5db6b3e",
-      "name": "LLM",
+      "id": "45ea8237-68a5-5567-a02a-ad038db72437",
+      "name": "OpenAI",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "LLM constant (uppercase)"
-        },
-        "framework": "openai"
+          "canonical_name": "openai",
+          "adapter": "llamaindex",
+          "evidence_count": 2,
+          "class_name": "OpenAI",
+          "provider": "openai",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/openai"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "LLM = OpenAI(",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "llamaindex: OpenAI(model='OpenAI')",
           "location": {
             "path": "core/utils.py",
             "line": 84
@@ -189,179 +431,246 @@
       ]
     },
     {
-      "id": "6d54ee11-4d52-5043-acc2-76e9b4cabf8c",
-      "name": "llm",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "LLM variable (lowercase)"
-        },
-        "framework": "openai"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "llm = OpenAI(",
-          "location": {
-            "path": "core/utils.py",
-            "line": 89
-          }
-        }
-      ]
-    },
-    {
-      "id": "a1a9c2ee-e57a-58f5-935e-0c38a7fa8255",
-      "name": "system_prompt",
+      "id": "c49868d0-fc70-5c95-8e3c-b822e3d1875f",
+      "name": "generic",
       "component_type": "PROMPT",
-      "confidence": 1.0,
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "System prompt definition"
-        },
-        "framework": "llamaindex"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "system_prompt",
-          "location": {
-            "path": "pages/2_\u2699\ufe0f_RAG_Config.py",
-            "line": null
-          }
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 6
         }
-      ]
-    },
-    {
-      "id": "b38a54f1-be15-50d1-adf0-f02b3a417dd8",
-      "name": "RAG_BUILDER_SYS_STR",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "RAG builder system prompt string"
-        },
-        "framework": "llamaindex"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "RAG_BUILDER_SYS_STR",
-          "location": {
-            "path": "core/agent_builder/loader.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "1a298589-238b-56ea-b9cf-f0e7321ed2ea",
-      "name": "GEN_SYS_PROMPT_STR",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Generated system prompt string"
-        },
-        "framework": "llamaindex"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "GEN_SYS_PROMPT_STR",
+          "kind": "regex",
+          "confidence": 0.95,
+          "detail": "prompt_generic: System prompt",
           "location": {
             "path": "core/agent_builder/base.py",
-            "line": null
+            "line": 21
           }
         }
       ]
     },
     {
-      "id": "d1aae73f-3247-5a17-8597-84d1bbe9906b",
-      "name": "GEN_SYS_PROMPT_TMPL",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
+      "id": "2988d6c2-a42a-5706-99ee-d8caf915d735",
+      "name": "summary_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Generated system prompt template"
-        },
-        "framework": "llamaindex"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "GEN_SYS_PROMPT_TMPL",
-          "location": {
-            "path": "core/agent_builder/base.py",
-            "line": null
-          }
+          "canonical_name": "llamaindex_tool_summary_tool",
+          "adapter": "llamaindex",
+          "evidence_count": 2,
+          "tool_class": "ToolMetadata",
+          "framework": "llamaindex"
         }
-      ]
-    },
-    {
-      "id": "4c135517-9d23-57cf-bc7d-77e869a4d452",
-      "name": "reader",
-      "component_type": "DATASTORE",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Simple directory reader"
-        },
-        "framework": "llamaindex"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "SimpleDirectoryReader",
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "llamaindex: ToolMetadata(name='summary_tool')",
           "location": {
             "path": "core/utils.py",
-            "line": 119
+            "line": 271
           }
         }
       ]
     },
     {
-      "id": "6ad6a562-9759-5853-8e6b-33d1d4424af1",
-      "name": "mm_retriever",
-      "component_type": "DATASTORE",
-      "confidence": 1.0,
+      "id": "42ec3408-0453-5171-9d0d-012530bff429",
+      "name": "vector_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Multimodal retriever"
-        },
-        "framework": "llamaindex"
+          "canonical_name": "llamaindex_tool_vector_tool",
+          "adapter": "llamaindex",
+          "evidence_count": 2,
+          "tool_class": "ToolMetadata",
+          "framework": "llamaindex"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "as_retriever",
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "llamaindex: ToolMetadata(name='vector_tool')",
           "location": {
             "path": "core/utils.py",
-            "line": 456
+            "line": 258
+          }
+        }
+      ]
+    },
+    {
+      "id": "221fa1f6-05f2-570b-8c99-f38e649597aa",
+      "name": "web_agent_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llamaindex_tool_web_agent_tool",
+          "adapter": "llamaindex",
+          "evidence_count": 1,
+          "tool_class": "QueryEngineTool",
+          "framework": "llamaindex"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "llamaindex: QueryEngineTool.from_defaults(...)",
+          "location": {
+            "path": "core/utils.py",
+            "line": 331
           }
         }
       ]
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "2988d6c2-a42a-5706-99ee-d8caf915d735",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "42ec3408-0453-5171-9d0d-012530bff429",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "221fa1f6-05f2-570b-8c99-f38e649597aa",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "2bf149d7-f51a-5150-95e3-e8eabcad67c4",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "45ea8237-68a5-5567-a02a-ad038db72437",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "1f7b6c86-f60a-59fb-8e88-6b219108e04b",
+      "target": "88e9b9a3-8059-5e61-8904-239f01203076",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "2988d6c2-a42a-5706-99ee-d8caf915d735",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "42ec3408-0453-5171-9d0d-012530bff429",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "221fa1f6-05f2-570b-8c99-f38e649597aa",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "2bf149d7-f51a-5150-95e3-e8eabcad67c4",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "45ea8237-68a5-5567-a02a-ad038db72437",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "5d2c0c92-5a60-5a8f-a7f2-2aa69cf0242d",
+      "target": "88e9b9a3-8059-5e61-8904-239f01203076",
+      "relationship_type": "USES"
+    }
+  ],
   "deps": [],
   "summary": {
     "frameworks": [
-      "llamaindex",
-      "langchain"
+      "llamaindex"
     ],
     "node_counts": {
-      "AGENT": 6,
-      "MODEL": 3,
-      "PROMPT": 4,
-      "DATASTORE": 2
+      "AGENT": 2,
+      "AUTH": 1,
+      "DATASTORE": 3,
+      "MODEL": 4,
+      "PROMPT": 1,
+      "TOOL": 3
     }
   }
 }

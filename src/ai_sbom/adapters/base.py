@@ -117,6 +117,10 @@ class ComponentDetection:
     line: int = 0
     snippet: str = ""
     evidence_kind: str = "regex"  # "ast_import" | "ast_instantiation" | "ast_call" | "regex"
+    # Source tier used by the dedup phase to resolve precedence when the same
+    # component is detected from multiple source categories.
+    # Values: "code" | "iac" | "docs"  (set automatically by the extractor)
+    source_tier: str = "code"
     # Relationships to other components detected in the same pass
     relationships: list[RelationshipHint] = field(default_factory=list)
 

@@ -104,13 +104,20 @@ class CrewAIAdapter(FrameworkAdapter):
                 if backstory:
                     meta["backstory_preview"] = backstory[:200]
 
+                # Require behavioral evidence; bare role-only agents are low-signal
+                has_behavioral_evidence = bool(llm_ref or goal or backstory or tools_raw)
+                agent_confidence = 0.90 if has_behavioral_evidence else 0.55
+                # Skip agents where role string is too short to be meaningful
+                if role and len(role) < 3:
+                    continue
+
                 detected.append(ComponentDetection(
                     component_type=ComponentType.AGENT,
                     canonical_name=canon,
                     display_name=agent_name,
                     adapter_name=self.name,
                     priority=self.priority,
-                    confidence=0.90,
+                    confidence=agent_confidence,
                     metadata=meta,
                     file_path=file_path,
                     line=inst.line,

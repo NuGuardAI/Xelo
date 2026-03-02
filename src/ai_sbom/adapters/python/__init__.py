@@ -2,6 +2,7 @@
 
 from .autogen import AutoGenAdapter
 from .crewai import CrewAIAdapter
+from .guardrails_ai import GuardrailsAIAdapter
 from .langgraph import LangGraphAdapter
 from .llamaindex import LlamaIndexAdapter
 from .llm_clients import LLMClientsAdapter
@@ -11,6 +12,7 @@ from .semantic_kernel import SemanticKernelAdapter
 __all__ = [
     "AutoGenAdapter",
     "CrewAIAdapter",
+    "GuardrailsAIAdapter",
     "LangGraphAdapter",
     "LlamaIndexAdapter",
     "LLMClientsAdapter",

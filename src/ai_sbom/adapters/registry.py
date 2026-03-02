@@ -42,6 +42,7 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
     from ai_sbom.adapters.python import (
         AutoGenAdapter,
         CrewAIAdapter,
+        GuardrailsAIAdapter,
         LangGraphAdapter,
         LlamaIndexAdapter,
         LLMClientsAdapter,
@@ -65,6 +66,7 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         LangGraphAdapter(),
         OpenAIAgentsAdapter(),
         AutoGenAdapter(),
+        GuardrailsAIAdapter(),
         SemanticKernelAdapter(),
         CrewAIAdapter(),
         LlamaIndexAdapter(),
@@ -127,7 +129,14 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 name="auth_generic",
                 component_type=ComponentType.AUTH,
                 priority=140,
-                patterns=(re.compile(r"\b(jwt|oauth|apikey|api_key|token|auth)\b", re.IGNORECASE),),
+                patterns=(
+                    # Auth scheme identifiers — short, unambiguous
+                    re.compile(r"\b(jwt|oauth2?|apikey|api_key|bearer)\b", re.IGNORECASE),
+                    # Full authentication/authorization words — avoids gcloud auth, auth@v2, etc.
+                    re.compile(r"\bauth(?:entication|orization|enticate|orize)\b", re.IGNORECASE),
+                    # Compound token forms — avoids bare CI token vars like token=$TOKEN
+                    re.compile(r"\b(?:access|refresh|api|auth|id)_token\b", re.IGNORECASE),
+                ),
                 canonical_name="auth:generic",
             ),
             RegexAdapter(
@@ -135,7 +144,10 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 component_type=ComponentType.PRIVILEGE,
                 priority=150,
                 patterns=(
-                    re.compile(r"\b(admin|scope|role|rbac|permission|least privilege)\b", re.IGNORECASE),
+                    re.compile(
+                        r"\b(rbac|least[_ ]privilege|privilege[_ ]escalation|access[_ ]control|role[_.]based)\b",
+                        re.IGNORECASE,
+                    ),
                 ),
                 canonical_name="privilege:generic",
             ),
@@ -163,7 +175,11 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 component_type=ComponentType.PROMPT,
                 priority=180,
                 patterns=(
-                    re.compile(r"\b(system prompt|prompt template|instructions?)\b", re.IGNORECASE),
+                    re.compile(
+                        r"\b(system[_ ]prompt|prompt[_ ]template"
+                        r"|few[_. ]shot|chain[_. ]of[_. ]thought|prompt[_ ]injection)\b",
+                        re.IGNORECASE,
+                    ),
                 ),
                 canonical_name="prompt:generic",
             ),

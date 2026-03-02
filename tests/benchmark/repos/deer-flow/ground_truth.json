@@ -1,357 +1,928 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:30.268340Z",
   "generator": "xelo",
   "target": "https://github.com/bytedance/deer-flow",
   "nodes": [
     {
-      "id": "5c56635c-c924-5ece-a941-80fd1015957b",
-      "name": "coordinator",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "1e377776-ed4c-5d76-bbc0-5bd1bed69978",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.98,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Coordinator agent orchestrating the multi-agent workflow"
-        },
-        "framework": "langgraph"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 24,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ]
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "coordinator",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "auth_generic: JWT",
           "location": {
-            "path": "src/graph/builder.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/graph/builder.py",
-            "line": null
+            "path": "backend/src/agents/lead_agent/prompt.py",
+            "line": 186
           }
         }
       ]
     },
     {
-      "id": "aca6fec0-4d76-5529-83b0-a924507262d3",
-      "name": "planner",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "664db6e2-5e19-564c-a5dc-d00a67c6c2fb",
+      "name": "mongodb",
+      "component_type": "DATASTORE",
+      "confidence": 0.7,
       "metadata": {
-        "extras": {
-          "description": "Planning agent for task decomposition"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ModelConfig",
+          "ModelResponse",
+          "Skill",
+          "SkillResponse",
+          "SubagentConfig",
+          "ToolConfig",
+          "ToolGroupConfig"
+        ],
+        "classified_fields": {
+          "ModelConfig": [
+            "display_name",
+            "name"
+          ],
+          "ToolGroupConfig": [
+            "name"
+          ],
+          "ToolConfig": [
+            "name"
+          ],
+          "ModelResponse": [
+            "display_name",
+            "name"
+          ],
+          "SkillResponse": [
+            "name"
+          ],
+          "Skill": [
+            "name"
+          ],
+          "SubagentConfig": [
+            "name"
+          ]
         },
-        "framework": "langgraph"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "mongodb",
+          "adapter": "datastore_generic",
+          "evidence_count": 1,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "planner",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "datastore_generic: mongodb",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "frontend/pnpm-lock.yaml",
+            "line": 2437
           }
         }
       ]
     },
     {
-      "id": "0a21d9bb-dace-5bb8-bcfe-baaea6b60bff",
-      "name": "researcher",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "0e37244c-4d20-502f-8534-11d7138d5294",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.6,
       "metadata": {
-        "extras": {
-          "description": "Research agent for information gathering"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ModelConfig",
+          "ModelResponse",
+          "Skill",
+          "SkillResponse",
+          "SubagentConfig",
+          "ToolConfig",
+          "ToolGroupConfig"
+        ],
+        "classified_fields": {
+          "ModelConfig": [
+            "display_name",
+            "name"
+          ],
+          "ToolGroupConfig": [
+            "name"
+          ],
+          "ToolConfig": [
+            "name"
+          ],
+          "ModelResponse": [
+            "display_name",
+            "name"
+          ],
+          "SkillResponse": [
+            "name"
+          ],
+          "Skill": [
+            "name"
+          ],
+          "SubagentConfig": [
+            "name"
+          ]
         },
-        "framework": "langgraph"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "researcher",
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "datastore_generic: postgres",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "extensions_config.example.json",
+            "line": 21
           }
         }
       ]
     },
     {
-      "id": "36e5c9f8-af69-5560-8741-d1fe144b0c8d",
-      "name": "analyst",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "efefbae8-1957-53fd-96bd-bd565254fb05",
+      "name": "qdrant",
+      "component_type": "DATASTORE",
+      "confidence": 0.95,
       "metadata": {
-        "extras": {
-          "description": "Analysis agent for data processing"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ModelConfig",
+          "ModelResponse",
+          "Skill",
+          "SkillResponse",
+          "SubagentConfig",
+          "ToolConfig",
+          "ToolGroupConfig"
+        ],
+        "classified_fields": {
+          "ModelConfig": [
+            "display_name",
+            "name"
+          ],
+          "ToolGroupConfig": [
+            "name"
+          ],
+          "ToolConfig": [
+            "name"
+          ],
+          "ModelResponse": [
+            "display_name",
+            "name"
+          ],
+          "SkillResponse": [
+            "name"
+          ],
+          "Skill": [
+            "name"
+          ],
+          "SubagentConfig": [
+            "name"
+          ]
         },
-        "framework": "langgraph"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "qdrant",
+          "adapter": "datastore_generic",
+          "evidence_count": 1,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "analyst",
+          "kind": "regex",
+          "confidence": 0.95,
+          "detail": "datastore_generic: Qdrant",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "frontend/public/demo/threads/fe3f7974-1bcb-4a01-a950-79673baafefd/thread.json",
+            "line": 313
           }
         }
       ]
     },
     {
-      "id": "933271f0-6fe8-5f5a-9aea-b65436a20b59",
-      "name": "coder",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "c00bed2b-7f1f-5320-9fa3-683801f61bfc",
+      "name": "redis",
+      "component_type": "DATASTORE",
+      "confidence": 0.75,
       "metadata": {
-        "extras": {
-          "description": "Coding agent for code generation"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "ModelConfig",
+          "ModelResponse",
+          "Skill",
+          "SkillResponse",
+          "SubagentConfig",
+          "ToolConfig",
+          "ToolGroupConfig"
+        ],
+        "classified_fields": {
+          "ModelConfig": [
+            "display_name",
+            "name"
+          ],
+          "ToolGroupConfig": [
+            "name"
+          ],
+          "ToolConfig": [
+            "name"
+          ],
+          "ModelResponse": [
+            "display_name",
+            "name"
+          ],
+          "SkillResponse": [
+            "name"
+          ],
+          "Skill": [
+            "name"
+          ],
+          "SubagentConfig": [
+            "name"
+          ]
         },
-        "framework": "langgraph"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "redis",
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "coder",
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "datastore_generic: Redis",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "backend/src/community/aio_sandbox/aio_sandbox_provider.py",
+            "line": 5
           }
         }
       ]
     },
     {
-      "id": "8abdc5f3-4a9a-5def-bf56-095e2a10fc79",
-      "name": "reporter",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "b4c74baa-1d07-5cbc-9b0d-e5d4e311c459",
+      "name": "gemini-3",
+      "component_type": "MODEL",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Reporter agent for generating reports"
-        },
-        "framework": "langgraph"
+          "canonical_name": "gemini_3",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "reporter",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gemini-3",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "skills/public/image-generation/scripts/generate.py",
+            "line": 69
           }
         }
       ]
     },
     {
-      "id": "638329db-c81f-5293-825b-7fe0b1304d98",
-      "name": "podcast_script_writer",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "e75bf234-1769-5816-835b-d6b1e59a9862",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.8800000000000001,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Agent for writing podcast scripts"
-        },
-        "framework": "langgraph"
+          "canonical_name": "gpt_4",
+          "adapter": "model_generic",
+          "evidence_count": 4,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ],
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "podcast_script_writer",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: GPT-4",
           "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
+            "path": "backend/src/agents/memory/prompt.py",
+            "line": 148
           }
         }
       ]
     },
     {
-      "id": "777fe8de-a77f-5008-a71b-8b821f00d154",
-      "name": "ppt_composer",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Agent for composing presentations"
-        },
-        "framework": "langgraph"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ppt_composer",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "23731c62-6d6a-5e35-ac0c-aded7a2bac01",
-      "name": "prose_writer",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Agent for prose writing"
-        },
-        "framework": "langgraph"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "prose_writer",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "a01ee2f4-1d0a-5512-b365-2a494b605252",
-      "name": "prompt_enhancer",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Agent for enhancing prompts"
-        },
-        "framework": "langgraph"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "prompt_enhancer",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent",
-          "location": {
-            "path": "src/config/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "1b6e1dd5-0572-5528-9f4c-32807fd29909",
+      "id": "5c9fdec5-5bd7-5fb4-8b89-f466f5b0c18f",
       "name": "gpt-4o",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.8,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "OpenAI GPT-4o model configuration"
-        },
-        "framework": "openai"
+          "canonical_name": "gpt_4o",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "gpt-4o",
+          "kind": "regex",
+          "confidence": 0.8,
+          "detail": "model_generic: GPT-4o",
           "location": {
-            "path": "docs/configuration_guide.md",
-            "line": null
+            "path": "frontend/public/demo/threads/fe3f7974-1bcb-4a01-a950-79673baafefd/thread.json",
+            "line": 656
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "5dc8fa85-8de5-578b-a396-8f4dc28d5935",
+      "name": "gpt-5",
+      "component_type": "MODEL",
+      "confidence": 0.75,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_5",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model",
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "model_generic: gpt-5",
           "location": {
-            "path": "docs/configuration_guide.md",
-            "line": null
+            "path": "frontend/src/app/mock/api/models/route.ts",
+            "line": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": "8addd89c-3ea0-546d-9775-4fcfa8a2eac1",
+      "name": "o1",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "o1",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: O1",
+          "location": {
+            "path": "frontend/pnpm-lock.yaml",
+            "line": 315
+          }
+        }
+      ]
+    },
+    {
+      "id": "5d389dda-3622-54fb-81e1-1164285874d6",
+      "name": "o2",
+      "component_type": "MODEL",
+      "confidence": 0.95,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "o2",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.95,
+          "detail": "model_generic: O2",
+          "location": {
+            "path": "frontend/public/demo/threads/ad76c455-5bf9-4335-8517-fc03834ab828/thread.json",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "d2eacec7-6b59-534d-862d-c58b4c345976",
+      "name": "generic",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "privilege_generic",
+          "adapter": "privilege_generic",
+          "evidence_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "privilege_generic: access control",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 100
+          }
+        }
+      ]
+    },
+    {
+      "id": "85fd3ebc-9eac-5147-9bd8-efb4b966f504",
+      "name": "Ate Skill Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "ate_skill_prompt",
+          "adapter": "prompt_ts",
+          "evidence_count": 1,
+          "is_template": false,
+          "is_template_literal": false,
+          "template_variables": [],
+          "injection_risk_score": 0.0,
+          "role": null,
+          "context": "ateSkillPrompt:\n ",
+          "enclosing_function": null,
+          "content_preview": "re going to build a new skill step by step with `skill-creator`. To start, what do you want this skill to do?\", ",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.65,
+          "detail": "prompt_ts: re going to build a new skill step by step with `skill-creator`. To start, what ",
+          "location": {
+            "path": "frontend/src/core/i18n/locales/en-US.ts",
+            "line": 71
+          }
+        }
+      ]
+    },
+    {
+      "id": "e3fb39a6-92cc-5573-acda-70e34e649fec",
+      "name": "Message Attachment",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "message_attachment",
+          "adapter": "prompt_ts",
+          "evidence_count": 2,
+          "is_template": false,
+          "is_template_literal": false,
+          "template_variables": [],
+          "injection_risk_score": 0.0,
+          "role": null,
+          "context": "MessageAttachment",
+          "enclosing_function": null,
+          "content_preview": "bg-background/80 hover:bg-background absolute top-2 right-2 size-6 rounded-full p-0 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.65,
+          "detail": "prompt_ts: bg-background/80 hover:bg-background absolute top-2 right-2 size-6 rounded-full ",
+          "location": {
+            "path": "frontend/src/components/ai-elements/message.tsx",
+            "line": 360
+          }
+        }
+      ]
+    },
+    {
+      "id": "71132152-ce26-559c-bdf2-0541e35c1456",
+      "name": "Message Content",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "message_content",
+          "adapter": "prompt_ts",
+          "evidence_count": 2,
+          "is_template": false,
+          "is_template_literal": false,
+          "template_variables": [],
+          "injection_risk_score": 0.0,
+          "role": "user",
+          "context": "MessageContent",
+          "enclosing_function": null,
+          "content_preview": "is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-visible",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.65,
+          "detail": "prompt_ts: is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-visible",
+          "location": {
+            "path": "frontend/src/components/ai-elements/message.tsx",
+            "line": 47
+          }
+        }
+      ]
+    },
+    {
+      "id": "f42e1822-d6f6-5852-b670-4e3179808437",
+      "name": "Message List Item",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "message_list_item",
+          "adapter": "prompt_ts",
+          "evidence_count": 1,
+          "is_template": false,
+          "is_template_literal": false,
+          "template_variables": [],
+          "injection_risk_score": 0.0,
+          "role": null,
+          "context": "MessageListItem",
+          "enclosing_function": null,
+          "content_preview": "absolute right-0 left-0 z-20 opacity-0 transition-opacity delay-200 duration-300 group-hover/conversation-message:opacity-100",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.65,
+          "detail": "prompt_ts: absolute right-0 left-0 z-20 opacity-0 transition-opacity delay-200 duration-300",
+          "location": {
+            "path": "frontend/src/components/workspace/messages/message-list-item.tsx",
+            "line": 52
+          }
+        }
+      ]
+    },
+    {
+      "id": "da9f136d-49bf-5de7-bf0b-eeb143c30f21",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.73,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 17,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "prompt_generic: system_prompt",
+          "location": {
+            "path": "backend/src/agents/lead_agent/agent.py",
+            "line": 97
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ed2b724-e9d2-539e-8dfa-d99abcee36ea",
+      "name": "Prompt Input Attachment",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_input_attachment",
+          "adapter": "prompt_ts",
+          "evidence_count": 3,
+          "is_template": false,
+          "is_template_literal": false,
+          "template_variables": [],
+          "injection_risk_score": 0.0,
+          "role": null,
+          "context": "PromptInputAttachment",
+          "enclosing_function": null,
+          "content_preview": "group border-border hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 relative flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-1.5 text-sm font-medium transition-all select-none",
+          "language": "typescript"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_string_literal",
+          "confidence": 0.65,
+          "detail": "prompt_ts: group border-border hover:bg-accent hover:text-accent-foreground dark:hover:bg-a",
+          "location": {
+            "path": "frontend/src/components/ai-elements/prompt-input.tsx",
+            "line": 305
           }
         }
       ]
@@ -361,12 +932,15 @@
   "deps": [],
   "summary": {
     "frameworks": [
-      "langchain",
-      "langgraph"
+      "langgraph",
+      "langgraph_ts"
     ],
     "node_counts": {
-      "AGENT": 10,
-      "MODEL": 1
+      "AUTH": 1,
+      "DATASTORE": 4,
+      "MODEL": 6,
+      "PRIVILEGE": 1,
+      "PROMPT": 6
     }
   }
 }

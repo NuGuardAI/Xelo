@@ -95,6 +95,84 @@ Useful environment variables:
 - `AISBOM_LLM_API_KEY`
 - `AISBOM_LLM_API_BASE`
 
+Additional provider-native variables can also be used through litellm (for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, Azure OpenAI variables, or AWS credentials for Bedrock).
+
+## Provider Config Examples (Python Library)
+
+OpenAI:
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="gpt-4o-mini",
+)
+# Set OPENAI_API_KEY in env, or pass llm_api_key="..."
+```
+
+Gemini (via litellm):
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="gemini/gemini-2.0-flash",
+)
+# Set GOOGLE_API_KEY in env, or pass llm_api_key="..."
+```
+
+Anthropic:
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="anthropic/claude-3-5-sonnet-latest",
+)
+# Set ANTHROPIC_API_KEY in env, or pass llm_api_key="..."
+```
+
+Azure OpenAI:
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="azure/gpt-4o-mini",
+    llm_api_key="your_azure_openai_key",
+    llm_api_base="https://<resource>.openai.azure.com/",
+)
+# You may also need AZURE_API_VERSION in env.
+```
+
+Vertex AI Gemini (direct Vertex path in Xelo):
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="vertex_ai/gemini-2.5-flash",
+)
+# Set GEMINI_API_KEY or GOOGLE_CLOUD_API_KEY in env.
+```
+
+Bedrock Claude:
+
+```python
+from xelo import ExtractionConfig
+
+config = ExtractionConfig(
+    enable_llm=True,
+    llm_model="bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0",
+)
+# Set AWS_REGION and AWS credentials in env (or IAM role).
+```
+
 ## Serialize Output
 
 Xelo-native JSON:

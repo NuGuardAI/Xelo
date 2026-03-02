@@ -66,12 +66,12 @@ class LLMClientsAdapter(FrameworkAdapter):
                 is_azure = "Azure" in inst.class_name
                 args = inst.args or {}
 
-                model_name = (
+                model_name = self._clean_str(
                     args.get("model")
                     or args.get("model_name")
+                    or args.get("embedding_model")
                     or (args.get("model_name") if inst.class_name in _MODEL_SPECIFYING_CLASSES else None)
                 )
-                model_name = self._clean_str(model_name)
 
                 # Skip bare client objects without an explicit model
                 if not model_name and inst.class_name not in _MODEL_SPECIFYING_CLASSES:
@@ -112,7 +112,8 @@ class LLMClientsAdapter(FrameworkAdapter):
                 provider = LANGCHAIN_LLM_CLASS_PROVIDERS[inst.class_name]
                 args = inst.args or {}
                 model_name = self._clean_str(
-                    args.get("model") or args.get("model_name") or args.get("deployment_name")
+                    args.get("model") or args.get("model_name")
+                    or args.get("embedding_model") or args.get("deployment_name")
                 ) or inst.class_name
                 details = get_model_details(model_name, provider, args)
 

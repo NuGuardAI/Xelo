@@ -1,215 +1,203 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-05T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:42.557523Z",
   "generator": "xelo",
   "target": "local://synthetic",
   "nodes": [
     {
-      "id": "24021e80-a3fe-5b05-ab9a-116e63f519c0",
+      "id": "ab92aaeb-e43c-5cc6-870f-9f37abc91ebb",
       "name": "support_agent",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": "langchain",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Customer support agent with tools"
-        },
-        "framework": "langchain"
+          "canonical_name": "langgraph_support_agent",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "factory_function": "create_react_agent",
+          "is_agent_graph": true,
+          "framework": "langchain"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "create_react_agent",
+          "kind": "ast_call",
+          "confidence": 0.9,
+          "detail": "langgraph: create_react_agent(...)",
           "location": {
             "path": "src/agents/support.py",
             "line": 15
           }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AgentExecutor",
-          "location": {
-            "path": "src/agents/support.py",
-            "line": 15
-          }
         }
       ]
     },
     {
-      "id": "a547d248-3009-56cd-a3aa-e171959b69b7",
-      "name": "ChatOpenAI",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "OpenAI GPT-4 chat model"
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ChatOpenAI(",
-          "location": {
-            "path": "src/agents/support.py",
-            "line": 8
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model='gpt-4'",
-          "location": {
-            "path": "src/agents/support.py",
-            "line": 8
-          }
-        }
-      ]
-    },
-    {
-      "id": "0d85a34e-18cd-53a4-b340-d3b12dc9a317",
-      "name": "search_knowledge_base",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Tool to search internal knowledge base"
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "src/tools/search.py",
-            "line": 10
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def search_knowledge_base",
-          "location": {
-            "path": "src/tools/search.py",
-            "line": 10
-          }
-        }
-      ]
-    },
-    {
-      "id": "d223acd5-38ad-582e-a9b6-47a6dbf3c96e",
-      "name": "create_ticket",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Tool to create support tickets"
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "@tool",
-          "location": {
-            "path": "src/tools/ticketing.py",
-            "line": 8
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def create_ticket",
-          "location": {
-            "path": "src/tools/ticketing.py",
-            "line": 8
-          }
-        }
-      ]
-    },
-    {
-      "id": "0cc7a1f5-fb0a-5f06-8ce9-3c140038a51f",
-      "name": "support_system_prompt",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "System prompt for support agent"
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "SystemMessagePromptTemplate",
-          "location": {
-            "path": "src/prompts/system.py",
-            "line": 5
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "system_prompt",
-          "location": {
-            "path": "src/prompts/system.py",
-            "line": 5
-          }
-        }
-      ]
-    },
-    {
-      "id": "f1de9fb5-1f49-50b6-a498-8764dbc0c13f",
-      "name": "pinecone_index",
+      "id": "274e47a9-560b-5b38-b114-56bde5b6c1b5",
+      "name": "pinecone",
       "component_type": "DATASTORE",
-      "confidence": 1.0,
+      "confidence": 0.65,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Pinecone vector store for knowledge base"
-        },
-        "framework": "langchain"
+          "canonical_name": "pinecone",
+          "adapter": "datastore_generic",
+          "evidence_count": 1,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Pinecone(",
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "datastore_generic: Pinecone",
           "location": {
             "path": "src/vectorstore/index.py",
-            "line": 12
+            "line": 3
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "e1ff7862-d651-5593-9eee-5043331f6b40",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "version": "4",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4",
+          "model_family": "gpt"
+        }
+      },
+      "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "index_name=",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatOpenAI(...)",
           "location": {
-            "path": "src/vectorstore/index.py",
-            "line": 12
+            "path": "src/agents/support.py",
+            "line": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1f1bb76-2c52-5f52-8eaf-0c562c41a558",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langchain_prompt_str_5",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "You are a helpful customer support agent for TechCorp.\n\nYour responsibilities:\n1. Answer customer questions accurately\n2. Search the knowledge base for information\n3. Create support tickets when needed\n4. Escalate complex issues to human agents\n\nBe polite, professional, and helpful.\nAlways verify information before providing it.\nIf unsure, offer to create a ticket for follow-up.\n",
+          "char_count": 382,
+          "is_template": false,
+          "template_variables": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.6,
+          "detail": "langgraph: You are a helpful customer support agent for TechCorp.\n\nYour responsibilities:\n1...",
+          "location": {
+            "path": "src/prompts/system.py",
+            "line": 5
           }
         }
       ]
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "source": "ab92aaeb-e43c-5cc6-870f-9f37abc91ebb",
+      "target": "e1ff7862-d651-5593-9eee-5043331f6b40",
+      "relationship_type": "USES"
+    }
+  ],
   "deps": [],
   "summary": {
     "frameworks": [
       "langchain",
-      "openai"
+      "langgraph"
     ],
     "node_counts": {
       "AGENT": 1,
+      "DATASTORE": 1,
       "MODEL": 1,
-      "TOOL": 2,
-      "PROMPT": 1,
-      "DATASTORE": 1
+      "PROMPT": 1
     }
   }
 }

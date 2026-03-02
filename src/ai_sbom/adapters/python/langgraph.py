@@ -32,7 +32,7 @@ _LANGGRAPH_IMPORTS = ["langgraph", "langgraph.graph", "langgraph.prebuilt",
 
 _STATEGRAPH_CLASSES = {"StateGraph", "MessageGraph", "Graph"}
 
-_TOOLNODE_CLASSES = {"ToolNode", "tools_condition"}
+_TOOLNODE_CLASSES = {"ToolNode"}
 
 _AGENT_FACTORY_FUNCTIONS = {
     "create_react_agent",
@@ -51,6 +51,9 @@ _PROMPT_CLASSES = {
 }
 
 _TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+
+# Graph-internal node names that should never be emitted as AGENT nodes
+_LANGGRAPH_INTERNAL_NODES = {"__start__", "__end__", "tools", "END", "START"}
 
 
 class LangGraphAdapter(FrameworkAdapter):
@@ -90,7 +93,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 node_name = (
                     _clean(call.args.get("node") or call.args.get("name"))
                 )
-            if not node_name:
+            if not node_name or node_name in _LANGGRAPH_INTERNAL_NODES:
                 continue
             canon = canonicalize_text(f"langgraph:{node_name}")
             det = ComponentDetection(
@@ -254,7 +257,7 @@ class LangGraphAdapter(FrameworkAdapter):
             content_val = _clean(inst.args.get("content") or (
                 inst.positional_args[0] if inst.positional_args else None
             ))
-            if not content_val or len(content_val) < 20:
+            if not content_val or len(content_val) < 40:
                 continue
             role = _detect_role(inst.class_name)
             template_vars = _TEMPLATE_VAR_RE.findall(content_val)
@@ -283,7 +286,7 @@ class LangGraphAdapter(FrameworkAdapter):
 
         # Large string literals that look like prompts
         for lit in parse_result.string_literals:
-            if lit.is_docstring or len(lit.value) < 80:
+            if lit.is_docstring or len(lit.value) < 200:
                 continue
             if not _is_prompt_literal(lit.value, lit.context or ""):
                 continue
@@ -392,13 +395,15 @@ def _detect_role_from_content(text: str) -> str | None:
 def _is_prompt_literal(text: str, context: str) -> bool:
     tl = text.lower()
     ctx = context.lower()
-    if any(m in tl for m in ["system:", "user:", "assistant:", "you are", "your task"]):
+    # Tier 1 — explicit role markers in content (high confidence, no context needed)
+    if any(m in tl for m in ["system:", "user:", "assistant:", "you are a ", "your task is"]):
         return True
-    prompt_ctx = any(h in ctx for h in ["prompt", "instruction", "system", "template", "message"])
-    non_prompt_ctx = any(h in ctx for h in ["description", "summary", "readme", "license", "doc"])
-    if non_prompt_ctx and not prompt_ctx:
+    # Tier 2 — prompt-building context + template variables + length
+    prompt_ctx = any(h in ctx for h in ["prompt", "system", "template"])
+    non_prompt_ctx = any(h in ctx for h in [
+        "description", "summary", "readme", "license", "doc", "log", "error",
+    ])
+    if non_prompt_ctx:
         return False
     template_vars = _TEMPLATE_VAR_RE.findall(text)
-    if template_vars and prompt_ctx:
-        return True
-    return prompt_ctx and len(text) > 120
+    return prompt_ctx and bool(template_vars) and len(text) > 120

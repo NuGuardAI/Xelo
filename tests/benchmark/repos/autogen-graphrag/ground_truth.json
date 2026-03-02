@@ -1,301 +1,294 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:28.864137Z",
   "generator": "xelo",
   "target": "https://github.com/karthik-codex/Autogen_GraphRAG_Ollama",
   "nodes": [
     {
-      "id": "afd1e94b-2b93-52eb-a379-aabec7b7d3f8",
-      "name": "retriever",
+      "id": "f9a7bdaa-c64b-5fc9-95c7-4ff70f042f96",
+      "name": "groupchat",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.85,
       "metadata": {
+        "framework": "autogen",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Retriever assistant agent for GraphRAG queries",
-          "synonyms": [
-            "Retriever",
-            "AssistantAgent"
+          "canonical_name": "autogen_group_groupchat",
+          "adapter": "autogen",
+          "evidence_count": 1,
+          "orchestrator_type": "GroupChat",
+          "framework": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "autogen: GroupChat(...)",
+          "location": {
+            "path": "appUI.py",
+            "line": 150
+          }
+        }
+      ]
+    },
+    {
+      "id": "b26b5ef0-c79f-5dcd-bee0-03fd5dca263c",
+      "name": "manager",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "autogen",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "autogen_group_manager",
+          "adapter": "autogen",
+          "evidence_count": 1,
+          "orchestrator_type": "GroupChatManager",
+          "framework": "autogen"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "autogen: GroupChatManager(...)",
+          "location": {
+            "path": "appUI.py",
+            "line": 157
+          }
+        }
+      ]
+    },
+    {
+      "id": "6a446807-7e8e-5d20-9110-62800a676fd4",
+      "name": "Retriever",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": "autogen",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "autogen_retriever",
+          "adapter": "autogen",
+          "evidence_count": 1,
+          "class_name": "AssistantAgent",
+          "framework": "autogen",
+          "system_message_preview": "Only execute the function query_graphRAG to look for context. \n                    Output 'TERMINATE' when an answer has been provided."
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "autogen: AssistantAgent(name='Retriever')",
+          "location": {
+            "path": "appUI.py",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "45c7d434-d53c-5763-80f5-f3f08da90343",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.68,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 3,
+          "detected_by_tiers": [
+            "code",
+            "iac"
           ]
-        },
-        "framework": "autogen"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AssistantAgent",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: api_key",
           "location": {
             "path": "appUI.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Retriever",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "query_graphRAG",
-          "location": {
-            "path": "appUI.py",
-            "line": null
+            "line": 17
           }
         }
       ]
     },
     {
-      "id": "2b9ff722-b743-5a9b-95d6-071ee52fc632",
-      "name": "ChainlitAssistantAgent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Wrapper class for AutoGen AssistantAgent with Chainlit UI integration"
-        },
-        "framework": "autogen"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "class ChainlitAssistantAgent(AssistantAgent)",
-          "location": {
-            "path": "utils/chainlit_agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AssistantAgent",
-          "location": {
-            "path": "utils/chainlit_agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "d1a45325-da74-5137-814c-7c2cfa15eab1",
-      "name": "ChainlitUserProxyAgent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Wrapper class for AutoGen UserProxyAgent with Chainlit UI integration"
-        },
-        "framework": "autogen"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "class ChainlitUserProxyAgent(UserProxyAgent)",
-          "location": {
-            "path": "utils/chainlit_agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "UserProxyAgent",
-          "location": {
-            "path": "utils/chainlit_agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "f338ce1a-4562-52c6-83c2-83cfe4f0d2c2",
+      "id": "de500dd9-c255-5ac1-adb3-78a5755025f7",
       "name": "nomic-embed-text",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Nomic embedding model for vector embeddings"
-        },
-        "framework": "ollama"
+          "canonical_name": "nomic_embed_text",
+          "adapter": "llm_clients",
+          "evidence_count": 1,
+          "source": "api_call",
+          "api_method": "embeddings",
+          "provider": "ollama"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "nomic-embed-text",
+          "kind": "ast_call",
+          "confidence": 0.95,
+          "detail": "llm_clients: embeddings(model='nomic-embed-text')",
           "location": {
             "path": "utils/openai_embeddings_llm.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ollama.embeddings",
-          "location": {
-            "path": "utils/openai_embeddings_llm.py",
-            "line": null
+            "line": 38
           }
         }
       ]
     },
     {
-      "id": "c9828df3-8602-501a-a0c0-47057b43d689",
-      "name": "litellm",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "LiteLLM for model abstraction"
-        },
-        "framework": "litellm"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "litellm",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "fb592965-8502-548e-be6d-e7e05182b69f",
-      "name": "Retriever_system_message",
+      "id": "eb74ba25-f286-565c-962a-929001aa1eb0",
+      "name": "Retriever System Message",
       "component_type": "PROMPT",
-      "confidence": 1.0,
+      "confidence": 0.9,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "System instruction prompt for the Retriever assistant agent",
-          "synonyms": [
-            "retriever_system_message",
-            "Retriever system_message"
-          ]
-        },
-        "framework": "autogen"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "system_message",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Only execute the function query_graphRAG",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
+          "canonical_name": "autogen_prompt_54",
+          "adapter": "autogen",
+          "evidence_count": 1,
+          "role": "system",
+          "content_preview": "Only execute the function query_graphRAG to look for context. \n                    Output 'TERMINATE' when an answer has been provided.",
+          "char_count": 135
         }
-      ]
-    },
-    {
-      "id": "6f2da6ff-52ff-50cb-949e-574dbeea8324",
-      "name": "query_graphRAG",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "GraphRAG query tool for retrieval"
-        },
-        "framework": "graphrag"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "query_graphRAG",
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "autogen: Only execute the function query_graphRAG to look for context. \n                 ",
           "location": {
             "path": "appUI.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def query",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "df4f79ee-459e-5695-9a56-c1bf86568555",
-      "name": "run_local_search",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Local search tool for GraphRAG"
-        },
-        "framework": "graphrag"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "run_local_search",
-          "location": {
-            "path": "appUI.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "7c1e4ee6-d392-54d3-b62c-07f3c40a48ed",
-      "name": "run_global_search",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Global search tool for GraphRAG"
-        },
-        "framework": "graphrag"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "run_global_search",
-          "location": {
-            "path": "appUI.py",
-            "line": null
+            "line": 54
           }
         }
       ]
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "source": "f9a7bdaa-c64b-5fc9-95c7-4ff70f042f96",
+      "target": "6a446807-7e8e-5d20-9110-62800a676fd4",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "b26b5ef0-c79f-5dcd-bee0-03fd5dca263c",
+      "target": "de500dd9-c255-5ac1-adb3-78a5755025f7",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "6a446807-7e8e-5d20-9110-62800a676fd4",
+      "target": "de500dd9-c255-5ac1-adb3-78a5755025f7",
+      "relationship_type": "USES"
+    }
+  ],
   "deps": [],
   "summary": {
     "frameworks": [
-      "autogen",
-      "graphrag",
-      "ollama"
+      "autogen"
     ],
     "node_counts": {
       "AGENT": 3,
-      "MODEL": 2,
-      "PROMPT": 1,
-      "TOOL": 3
+      "AUTH": 1,
+      "MODEL": 1,
+      "PROMPT": 1
     }
   }
 }

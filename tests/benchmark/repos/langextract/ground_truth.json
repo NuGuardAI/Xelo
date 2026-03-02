@@ -1,48 +1,206 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-14T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:41.270183Z",
   "generator": "xelo",
   "target": "https://github.com/google/langextract",
   "nodes": [
     {
-      "id": "fbb2f9b1-d366-5b7d-825e-3eddaf7d9870",
-      "name": "gemini-2.5-flash",
-      "component_type": "MODEL",
-      "confidence": 1.0,
+      "id": "455ffbc5-0715-575c-99e7-c16dd93a59f2",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Default Gemini model ID configured for the Gemini provider."
-        },
-        "framework": "langextract"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 11
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "_DEFAULT_MODEL_ID = 'gemini-2.5-flash'",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "auth_generic: api_key",
           "location": {
-            "path": "langextract/providers/gemini.py",
-            "line": 36
+            "path": "benchmarks/benchmark.py",
+            "line": 202
           }
         }
       ]
     },
     {
-      "id": "9ed0c4a4-680b-5da5-94ef-70343bf3bb17",
-      "name": "gpt-4o-mini",
+      "id": "f439fe3d-12aa-59e5-95ca-9ca67727b130",
+      "name": "gemini-1.5",
       "component_type": "MODEL",
-      "confidence": 1.0,
+      "confidence": 0.6,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Default OpenAI model ID configured for the OpenAI provider."
-        },
-        "framework": "langextract"
+          "canonical_name": "gemini_1_5",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model_id: str = 'gpt-4o-mini'",
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: gemini-1.5",
+          "location": {
+            "path": "langextract/progress.py",
+            "line": 88
+          }
+        }
+      ]
+    },
+    {
+      "id": "b4f7eea9-3a52-5e03-bddb-51e949fe13dd",
+      "name": "gemini-2.5",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gemini_2_5",
+          "adapter": "model_generic",
+          "evidence_count": 9,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "model_generic: gemini-2.5",
+          "location": {
+            "path": "benchmarks/benchmark.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "007aecfe-e777-5a1d-a631-ca896c431ab9",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "model_generic: gpt-4",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "dbe9d29a-6cdd-56a3-a4f5-109c1f3ab5ca",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o_mini",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "model_generic: gpt-4o-mini",
           "location": {
             "path": "langextract/providers/openai.py",
             "line": 41
@@ -51,24 +209,82 @@
       ]
     },
     {
-      "id": "a169ffb4-ea81-5df5-b502-836ba5485efb",
-      "name": "_ollama_query",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
+      "id": "9eb3a2c5-18ad-5e34-97a3-c5fa1b4cfa4b",
+      "name": "llama-3.2-1b-instruct",
+      "component_type": "MODEL",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Prompt text used by Ollama provider query construction."
-        },
-        "framework": "langextract"
+          "canonical_name": "llama_3_2_1b_instruct",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "_ollama_query",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: Llama-3.2-1B-Instruct",
           "location": {
             "path": "langextract/providers/ollama.py",
-            "line": 298
+            "line": 75
+          }
+        }
+      ]
+    },
+    {
+      "id": "9180b6cd-2a4b-5ddd-8d2b-459f457d5a40",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.8,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 4
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "prompt_generic: prompt_template",
+          "location": {
+            "path": "langextract/annotation.py",
+            "line": 22
           }
         }
       ]
@@ -77,11 +293,10 @@
   "edges": [],
   "deps": [],
   "summary": {
-    "frameworks": [
-      "langextract"
-    ],
+    "frameworks": [],
     "node_counts": {
-      "MODEL": 2,
+      "AUTH": 1,
+      "MODEL": 5,
       "PROMPT": 1
     }
   }

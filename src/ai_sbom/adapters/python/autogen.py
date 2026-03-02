@@ -234,6 +234,38 @@ class AutoGenAdapter(FrameworkAdapter):
                     evidence_kind="ast_call",
                 ))
 
+        # Scan for llm_config = dict(model=...) module/function-level assignments
+        for call in parse_result.function_calls:
+            var = call.assigned_to or ""
+            if call.function_name != "dict":
+                continue
+            if "llm" not in var.lower() and "config" not in var.lower():
+                continue
+            model_val = _clean(call.args.get("model") or call.args.get("model_name") or "")
+            if not model_val:
+                continue
+            provider = infer_provider(model_val)
+            model_canon = canonicalize_text(model_val.lower())
+            details = get_model_details(model_val, provider)
+            detected.append(ComponentDetection(
+                component_type=ComponentType.MODEL,
+                canonical_name=model_canon,
+                display_name=model_val,
+                adapter_name=self.name,
+                priority=self.priority,
+                confidence=0.80,
+                metadata={
+                    "source": "llm_config_dict",
+                    "config_var": var,
+                    "provider": provider,
+                    **{k: v for k, v in details.items() if v is not None},
+                },
+                file_path=file_path,
+                line=call.line,
+                snippet=f"{var} = dict(model={model_val!r})",
+                evidence_kind="ast_call",
+            ))
+
         return detected
 
 

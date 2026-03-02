@@ -1,413 +1,513 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:42.079508Z",
   "generator": "xelo",
   "target": "https://github.com/openai/swarm",
   "nodes": [
     {
-      "id": "35494b6e-d925-5674-8b8b-0917cfd2baa0",
-      "name": "triage_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "47503a8b-f062-5399-b5f0-e8559ca258a1",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.7,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Triage agent routing customer requests"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 24
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "auth_generic: Bearer",
           "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Triage Agent\"",
-          "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6283125.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "568c421c-e2f4-5d10-b07b-51c4144386a0",
-      "name": "sales_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "e31c7715-fbf3-5f37-9f4c-eec431cf494b",
+      "name": "pinecone",
+      "component_type": "DATASTORE",
+      "confidence": 0.8,
       "metadata": {
-        "extras": {
-          "description": "Sales agent for product inquiries"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "Agent",
+          "Assistant",
+          "FunctionTool"
+        ],
+        "classified_fields": {
+          "Assistant": [
+            "name"
+          ],
+          "FunctionTool": [
+            "name"
+          ],
+          "Agent": [
+            "name"
+          ]
         },
-        "framework": "openai-swarm"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "pinecone",
+          "adapter": "datastore_generic",
+          "evidence_count": 8,
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "datastore_generic: Pinecone",
           "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Sales Agent\"",
-          "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6233728.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "f1e018e1-e981-5ff9-b0c8-87cd2ae38e1e",
-      "name": "refunds_agent",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "dde1297e-b630-5e0a-92b5-9c3fe91ad36d",
+      "name": "qdrant",
+      "component_type": "DATASTORE",
+      "confidence": 0.8300000000000001,
       "metadata": {
-        "extras": {
-          "description": "Refunds agent for refund requests"
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "Agent",
+          "Assistant",
+          "FunctionTool"
+        ],
+        "classified_fields": {
+          "Assistant": [
+            "name"
+          ],
+          "FunctionTool": [
+            "name"
+          ],
+          "Agent": [
+            "name"
+          ]
         },
-        "framework": "openai-swarm"
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "qdrant",
+          "adapter": "datastore_generic",
+          "evidence_count": 7,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ],
+          "normalizer": "datastore"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "datastore_generic: qdrant",
           "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "name=\"Refunds Agent\"",
-          "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+            "line": 8
           }
         }
       ]
     },
     {
-      "id": "a5e75e08-e031-529f-b79b-71aff55b1b67",
-      "name": "flight_modification",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "f034c781-8063-54dc-ba8c-847b816f84e5",
+      "name": "gpt-2",
+      "component_type": "MODEL",
+      "confidence": 0.8,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Airline flight modification agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_2",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.8,
+          "detail": "model_generic: GPT-2",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "flight_modification",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6824809.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "2646a345-ae80-5bf2-8148-734dc33a24ec",
-      "name": "flight_cancel",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "d4538446-caa1-5551-98f7-7d070ed7712e",
+      "name": "gpt-3",
+      "component_type": "MODEL",
+      "confidence": 0.6,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Airline flight cancellation agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_3",
+          "adapter": "model_generic",
+          "evidence_count": 30,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-3",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "flight_cancel",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6233728.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "77e2fb17-1962-5659-83c5-c73b8b859f57",
-      "name": "flight_change",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "7925120e-1c39-54f3-bb92-cf3ea04de0df",
+      "name": "gpt-3.5",
+      "component_type": "MODEL",
+      "confidence": 0.55,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Airline flight change agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_3_5",
+          "adapter": "model_generic",
+          "evidence_count": 4,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: GPT-3.5",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "flight_change",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6783457.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "75294e1a-2b15-5393-b0de-b81e81b96915",
-      "name": "lost_baggage",
-      "component_type": "AGENT",
-      "confidence": 1.0,
+      "id": "0191ba9e-eb37-57c3-8e0b-5fc46d19436b",
+      "name": "gpt-3.5-turbo",
+      "component_type": "MODEL",
+      "confidence": 0.65,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Lost baggage handling agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_3_5_turbo",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "Agent(",
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "model_generic: gpt-3.5-turbo",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "lost_baggage",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6643200.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "b55a3be0-c803-581a-bbf9-5d2d5d3273e4",
-      "name": "transfer_to_sales",
-      "component_type": "TOOL",
-      "confidence": 1.0,
+      "id": "3868a011-bccc-527e-ab99-4a7e31a09296",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.98,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Transfer to sales agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_4",
+          "adapter": "model_generic",
+          "evidence_count": 5,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ],
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_sales",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4",
           "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/data/article_6643004.json",
+            "line": 1
           }
         }
       ]
     },
     {
-      "id": "b7a1a7e2-26a9-59dc-b026-28952185f4f1",
-      "name": "transfer_to_refunds",
-      "component_type": "TOOL",
-      "confidence": 1.0,
+      "id": "24e59211-9560-5bd8-9ac2-4c49a16e64f6",
+      "name": "gpt-4-0125-preview",
+      "component_type": "MODEL",
+      "confidence": 0.5800000000000001,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Transfer to refunds agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_4_0125_preview",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ],
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_refunds",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4-0125-preview",
           "location": {
-            "path": "examples/triage_agent/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/configs/assistants/user_interface/assistant.json",
+            "line": 3
           }
         }
       ]
     },
     {
-      "id": "6326798a-ef1d-5e51-8487-470a530b596e",
-      "name": "transfer_to_flight_modification",
-      "component_type": "TOOL",
-      "confidence": 1.0,
+      "id": "2a25a73b-1613-578d-9768-73e564b4c465",
+      "name": "gpt-4-turbo-preview",
+      "component_type": "MODEL",
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Transfer to flight modification agent"
-        },
-        "framework": "openai-swarm"
+          "canonical_name": "gpt_4_turbo_preview",
+          "adapter": "llm_clients",
+          "evidence_count": 2,
+          "source": "api_call",
+          "api_method": "create",
+          "provider": "openai",
+          "version": "4-turbo",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4-turbo-preview",
+          "model_family": "gpt",
+          "normalizer": "model-name"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_flight_modification",
+          "kind": "ast_call",
+          "confidence": 0.95,
+          "detail": "llm_clients: create(model='gpt-4-turbo-preview')",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
+            "path": "examples/customer_service_streaming/src/evals/eval_function.py",
+            "line": 45
           }
         }
       ]
     },
     {
-      "id": "7a3f4df3-fe74-5aa9-aeaa-230c41aeee92",
-      "name": "transfer_to_flight_cancel",
-      "component_type": "TOOL",
-      "confidence": 1.0,
+      "id": "71ea8b6e-5fba-5f51-908a-c393ee37865b",
+      "name": "gpt-4o",
+      "component_type": "MODEL",
+      "confidence": 0.95,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "Transfer to flight cancel agent"
-        },
-        "framework": "openai-swarm"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_flight_cancel",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
+          "canonical_name": "gpt_4o",
+          "adapter": "llm_clients",
+          "evidence_count": 4,
+          "normalizer": "model-name",
+          "source": "api_call",
+          "api_method": "create_with_completion",
+          "provider": "openai",
+          "version": "4o",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4o",
+          "model_family": "gpt"
         }
-      ]
-    },
-    {
-      "id": "52abf14a-ac53-55b6-93a9-365e462ea126",
-      "name": "transfer_to_flight_change",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Transfer to flight change agent"
-        },
-        "framework": "openai-swarm"
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_flight_change",
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gpt-4o",
           "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "312cbaed-73e1-51ab-ae36-fb20dbbba6b3",
-      "name": "transfer_to_lost_baggage",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Transfer to lost baggage agent"
-        },
-        "framework": "openai-swarm"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_lost_baggage",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "794dc7ea-6312-5ed4-95cb-e4fc73c163ae",
-      "name": "transfer_to_triage",
-      "component_type": "TOOL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Transfer back to triage"
-        },
-        "framework": "openai-swarm"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "def transfer_to_triage",
-          "location": {
-            "path": "examples/airline/configs/agents.py",
-            "line": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "51ad644e-3b9b-54cb-a79c-d19584c4437c",
-      "name": "SYSTEM_PROMPT",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "System prompt for triage agent evaluation"
-        },
-        "framework": "openai-swarm"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "SYSTEM_PROMPT",
-          "location": {
-            "path": "examples/triage_agent/evals.py",
-            "line": null
+            "path": "examples/support_bot/prep_data.py",
+            "line": 10
           }
         }
       ]
@@ -416,14 +516,11 @@
   "edges": [],
   "deps": [],
   "summary": {
-    "frameworks": [
-      "openai",
-      "openai-swarm"
-    ],
+    "frameworks": [],
     "node_counts": {
-      "AGENT": 7,
-      "TOOL": 7,
-      "PROMPT": 1
+      "AUTH": 1,
+      "DATASTORE": 2,
+      "MODEL": 8
     }
   }
 }

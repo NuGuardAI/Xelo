@@ -44,6 +44,28 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
 
         # 1. Agent class instantiations
         for inst in parse_result.instantiations:
+            # InputGuardrail / OutputGuardrail → GUARDRAIL node
+            if inst.class_name in {"InputGuardrail", "OutputGuardrail"}:
+                guardrail_name = _clean(
+                    inst.assigned_to
+                    or (inst.args or {}).get("name")
+                    or f"guardrail_{inst.line}"
+                )
+                guardrail_type = "input" if "Input" in inst.class_name else "output"
+                detected.append(ComponentDetection(
+                    component_type=ComponentType.GUARDRAIL,
+                    canonical_name=canonicalize_text(f"openai_agents:guardrail:{guardrail_name}"),
+                    display_name=guardrail_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.92,
+                    metadata={"guardrail_type": guardrail_type, "framework": "openai_agents"},
+                    file_path=file_path,
+                    line=inst.line,
+                    snippet=f"{inst.class_name}(...)",
+                    evidence_kind="ast_instantiation",
+                ))
+                continue
             if inst.class_name not in {"Agent", "AssistantAgent", "SwarmAgent"}:
                 continue
             args = inst.args or {}

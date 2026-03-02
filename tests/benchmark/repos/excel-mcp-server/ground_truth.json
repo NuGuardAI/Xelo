@@ -1,66 +1,13 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:32.991840Z",
   "generator": "xelo",
   "target": "https://github.com/haris-musa/excel-mcp-server",
-  "nodes": [
-    {
-      "id": "02e0a797-4408-5941-91b2-f5294de86dd1",
-      "name": "mcp",
-      "component_type": "MCP_PROVIDER",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "FastMCP server instance for Excel operations",
-          "synonyms": [
-            "excel-mcp",
-            "FastMCP",
-            "excel_mcp_server"
-          ]
-        },
-        "framework": "fastmcp"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "FastMCP",
-          "location": {
-            "path": "src/excel_mcp/server.py",
-            "line": 63
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "mcp = FastMCP",
-          "location": {
-            "path": "src/excel_mcp/server.py",
-            "line": 63
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "excel-mcp",
-          "location": {
-            "path": "src/excel_mcp/server.py",
-            "line": 63
-          }
-        }
-      ]
-    }
-  ],
+  "nodes": [],
   "edges": [],
   "deps": [],
   "summary": {
-    "frameworks": [
-      "mcp",
-      "fastmcp",
-      "openpyxl"
-    ],
-    "node_counts": {
-      "MCP_PROVIDER": 1
-    }
+    "frameworks": [],
+    "node_counts": {}
   }
 }

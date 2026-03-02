@@ -18,6 +18,7 @@ Orchestrates the extraction pipeline:
 Results are deduplicated by ``(component_type, canonical_name)``,
 merged by confidence/priority, and assembled into an ``AiBomDocument``.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -63,10 +64,86 @@ _TYPESCRIPT_EXTENSIONS = {".ts", ".tsx", ".js", ".jsx"}
 _DOCKERFILE_EXTENSIONS = {".dockerfile"}
 _DOCKERFILE_NAMES = {"dockerfile"}  # lower-cased stem match
 
+# ---------------------------------------------------------------------------
+# Source-tier constants for dedup precedence: CODE > IAC > DOCS
+# ---------------------------------------------------------------------------
+_TIER_CODE = "code"
+_TIER_IAC = "iac"
+_TIER_DOCS = "docs"
+# Lower rank number = higher precedence during dedup
+_TIER_RANK: dict[str, int] = {_TIER_CODE: 0, _TIER_IAC: 1, _TIER_DOCS: 2}
+
+_IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".yaml", ".yml", ".json"}
+_DOCS_EXTENSIONS = {
+    ".md",
+    ".rst",
+    ".txt",
+    ".html",
+    ".htm",
+    ".adoc",
+    ".sh",
+    ".bash",
+    ".zsh",
+    ".fish",
+    ".ps1",
+    ".mk",
+}
+_DOCS_STEMS = {
+    "readme",
+    "changelog",
+    "license",
+    "contributing",
+    "makefile",
+    "authors",
+    "notice",
+    "roadmap",
+    "security",
+    "support",
+}
+
+
+def _classify_source_tier(file_path: str, adapter_name: str, evidence_kind: str) -> str:
+    """Classify a detection into one of three source tiers.
+
+    CODE (0) > IAC (1) > DOCS (2).
+
+    AST-derived evidence (``evidence_kind != "regex"``) is always CODE tier
+    regardless of the file extension, since it came from actual program
+    structure.  Regex detections are classified by file extension / adapter
+    name so that the same component detected in source code can override a
+    weaker mention in a README or Dockerfile.
+    """
+    # AST evidence always counts as code — the most authoritative source
+    if evidence_kind != "regex":
+        return _TIER_CODE
+    # Dockerfile adapter is IaC regardless of file name
+    if adapter_name == "dockerfile":
+        return _TIER_IAC
+    if not file_path:
+        return _TIER_CODE
+    p = Path(file_path)
+    suffix = p.suffix.lower()
+    stem = p.stem.lower()
+    if suffix in _DOCS_EXTENSIONS or stem in _DOCS_STEMS:
+        return _TIER_DOCS
+    if suffix in _IAC_EXTENSIONS:
+        return _TIER_IAC
+    # Python / TypeScript / notebook files processed by regex fallback → code
+    return _TIER_CODE
+
 
 @dataclass
 class _NodeAccumulator:
-    """Accumulates detections for a single logical component during dedup."""
+    """Accumulates detections for a single logical component during dedup.
+
+    ``source_tiers`` records every tier ("code", "iac", "docs") that has
+    contributed a detection, enabling cross-tier corroboration and ensuring
+    that code-level attribution always takes precedence over IaC/docs.
+    ``best_tier_rank`` tracks the rank of the highest-priority tier seen so
+    far (lower number = better); used to decide whether incoming metadata
+    should override or merely fill gaps in the accumulated metadata.
+    """
+
     component_type: ComponentType
     canonical_name: str
     display_name: str
@@ -76,6 +153,9 @@ class _NodeAccumulator:
     metadata: dict[str, Any] = field(default_factory=dict)
     evidence: list[Evidence] = field(default_factory=list)
     relationships: list[RelationshipHint] = field(default_factory=list)
+    # Source-tier tracking (populated by _merge_detection)
+    source_tiers: set[str] = field(default_factory=set)
+    best_tier_rank: int = 99  # 0=code, 1=iac, 2=docs; 99=uninitialised
 
 
 class SbomExtractor:
@@ -100,24 +180,14 @@ class SbomExtractor:
         dockerfile_adapter: DockerfileAdapter | None = None,
     ) -> None:
         self.framework_adapters = (
-            framework_adapters
-            if framework_adapters is not None
-            else default_framework_adapters()
+            framework_adapters if framework_adapters is not None else default_framework_adapters()
         )
-        self.regex_adapters = (
-            regex_adapters
-            if regex_adapters is not None
-            else default_registry()
-        )
+        self.regex_adapters = regex_adapters if regex_adapters is not None else default_registry()
         self.sql_adapters = (
-            sql_adapters
-            if sql_adapters is not None
-            else (DataClassificationSQLAdapter(),)
+            sql_adapters if sql_adapters is not None else (DataClassificationSQLAdapter(),)
         )
         self.dockerfile_adapter = (
-            dockerfile_adapter
-            if dockerfile_adapter is not None
-            else DockerfileAdapter()
+            dockerfile_adapter if dockerfile_adapter is not None else DockerfileAdapter()
         )
 
     # ------------------------------------------------------------------
@@ -152,13 +222,12 @@ class SbomExtractor:
             rel_path = str(file_path.relative_to(root))
             file_contents[rel_path] = content
             suffix = file_path.suffix.lower()
-            is_python      = suffix in _PYTHON_EXTENSIONS
-            is_notebook    = suffix in _NOTEBOOK_EXTENSIONS
-            is_typescript  = suffix in _TYPESCRIPT_EXTENSIONS
-            is_sql         = suffix in _SQL_EXTENSIONS
-            is_dockerfile  = (
-                suffix in _DOCKERFILE_EXTENSIONS
-                or file_path.name.lower() in _DOCKERFILE_NAMES
+            is_python = suffix in _PYTHON_EXTENSIONS
+            is_notebook = suffix in _NOTEBOOK_EXTENSIONS
+            is_typescript = suffix in _TYPESCRIPT_EXTENSIONS
+            is_sql = suffix in _SQL_EXTENSIONS
+            is_dockerfile = (
+                suffix in _DOCKERFILE_EXTENSIONS or file_path.name.lower() in _DOCKERFILE_NAMES
             )
 
             # Phase 1a: Python AST-aware framework adapters
@@ -173,7 +242,9 @@ class SbomExtractor:
                     parse_result = self._parse_python(py_source)
                     if parse_result is not None:
                         if parse_result.parse_error:
-                            _log.debug("AST parse error in %s: %s", rel_path, parse_result.parse_error)
+                            _log.debug(
+                                "AST parse error in %s: %s", rel_path, parse_result.parse_error
+                            )
                         imported_modules: set[str] = {
                             imp.module for imp in parse_result.imports if imp.module
                         }
@@ -189,12 +260,16 @@ class SbomExtractor:
                             except Exception as exc:
                                 _log.warning(
                                     "adapter %r failed on %s: %s",
-                                    adapter.name, rel_path, exc,
+                                    adapter.name,
+                                    rel_path,
+                                    exc,
                                 )
                                 continue
                             for det in detections:
-                                if det.component_type == ComponentType.DATASTORE and \
-                                        det.metadata.get("source") in ("sql_schema", "python_model"):
+                                if (
+                                    det.component_type == ComponentType.DATASTORE
+                                    and det.metadata.get("source") in ("sql_schema", "python_model")
+                                ):
                                     _dc_metadata.append(det.metadata)
                                 else:
                                     self._merge_detection(node_map, det)
@@ -206,7 +281,9 @@ class SbomExtractor:
                     try:
                         detections = sql_adapter.scan(content, rel_path)
                     except Exception as exc:
-                        _log.warning("SQL adapter %r failed on %s: %s", sql_adapter.name, rel_path, exc)
+                        _log.warning(
+                            "SQL adapter %r failed on %s: %s", sql_adapter.name, rel_path, exc
+                        )
                         continue
                     for det in detections:
                         _dc_metadata.append(det.metadata)
@@ -226,7 +303,9 @@ class SbomExtractor:
                     except Exception as exc:
                         _log.warning(
                             "TS adapter %r failed on %s: %s",
-                            adapter.name, rel_path, exc,
+                            adapter.name,
+                            rel_path,
+                            exc,
                         )
                         continue
                     for det in detections:
@@ -241,14 +320,23 @@ class SbomExtractor:
                 except Exception as exc:
                     _log.warning("dockerfile adapter failed on %s: %s", rel_path, exc)
 
-            # Phase 2: Regex fallback (all files)
-            for rx_adapter in self.regex_adapters:
+            # Phase 2: Regex fallback
+            # Skip documentation and shell-script files to eliminate CI/README FP floods.
+            for rx_adapter in (
+                self.regex_adapters
+                if suffix not in _DOCS_EXTENSIONS and Path(rel_path).stem.lower() not in _DOCS_STEMS
+                else ()
+            ):
                 detection = rx_adapter.detect(content)
                 if detection is None:
                     continue
                 confidence = min(0.95, 0.50 + 0.05 * len(detection.matches))
                 canonical = canonicalize_text(detection.canonical_name)
-                display = detection.canonical_name.split(":")[-1] if ":" in detection.canonical_name else detection.canonical_name
+                display = (
+                    detection.canonical_name.split(":")[-1]
+                    if ":" in detection.canonical_name
+                    else detection.canonical_name
+                )
                 first = detection.matches[0]
                 comp_det = ComponentDetection(
                     component_type=detection.component_type,
@@ -279,6 +367,13 @@ class SbomExtractor:
         # Build nodes + edges
         for key in sorted(node_map.keys(), key=lambda v: (v[0].value, v[1])):
             acc = node_map[key]
+
+            # Cross-tier corroboration: each additional source tier adds a
+            # small confidence boost (capped at 0.99) because independent
+            # evidence from code + IaC or code + docs raises certainty.
+            if len(acc.source_tiers) > 1:
+                acc.confidence = min(0.99, acc.confidence + 0.03 * (len(acc.source_tiers) - 1))
+
             node = Node(
                 name=acc.display_name,
                 component_type=acc.component_type,
@@ -287,13 +382,24 @@ class SbomExtractor:
             node.metadata.extras["canonical_name"] = acc.canonical_name
             node.metadata.extras["adapter"] = acc.adapter_name
             node.metadata.extras["evidence_count"] = len(acc.evidence)
-            node.metadata.extras.update({
-                k: v for k, v in acc.metadata.items()
-                if k not in (
-                    "adapter", "evidence_count", "canonical_name",
-                    "data_classification", "classified_tables", "classified_fields",
-                )
-            })
+            if len(acc.source_tiers) > 1:
+                # Expose which tiers corroborated this detection for consumers
+                node.metadata.extras["detected_by_tiers"] = sorted(acc.source_tiers)
+            node.metadata.extras.update(
+                {
+                    k: v
+                    for k, v in acc.metadata.items()
+                    if k
+                    not in (
+                        "adapter",
+                        "evidence_count",
+                        "canonical_name",
+                        "data_classification",
+                        "classified_tables",
+                        "classified_fields",
+                    )
+                }
+            )
             # Copy typed metadata fields
             if "framework" in acc.metadata:
                 node.metadata.framework = str(acc.metadata["framework"])
@@ -317,11 +423,11 @@ class SbomExtractor:
                     node.metadata.classified_fields = acc.metadata["classified_fields"]
             # Container image metadata
             if acc.component_type == ComponentType.CONTAINER_IMAGE:
-                node.metadata.image_name    = acc.metadata.get("image_name")
-                node.metadata.image_tag     = acc.metadata.get("image_tag") or None
-                node.metadata.image_digest  = acc.metadata.get("image_digest")
-                node.metadata.registry      = acc.metadata.get("registry")
-                node.metadata.base_image    = acc.metadata.get("base_image")
+                node.metadata.image_name = acc.metadata.get("image_name")
+                node.metadata.image_tag = acc.metadata.get("image_tag") or None
+                node.metadata.image_digest = acc.metadata.get("image_digest")
+                node.metadata.registry = acc.metadata.get("registry")
+                node.metadata.base_image = acc.metadata.get("base_image")
 
             node.evidence = list(acc.evidence)
             doc.nodes.append(node)
@@ -335,8 +441,13 @@ class SbomExtractor:
         # Build deterministic scan-level summary (always populated)
         files_sample = list(file_contents.items())[:200]
         doc.summary = _make_scan_summary(
-            build_scan_summary(doc.nodes, files_sample, source_ref=source_ref, branch=branch,
-                               dc_metadata=_dc_metadata)
+            build_scan_summary(
+                doc.nodes,
+                files_sample,
+                source_ref=source_ref,
+                branch=branch,
+                dc_metadata=_dc_metadata,
+            )
         )
 
         # Phase 3: LLM enrichment (skipped unless enable_llm=True)
@@ -364,6 +475,7 @@ class SbomExtractor:
         """Run the AST parser; return None on parse failure."""
         try:
             from .ast_parser import parse
+
             result = parse(content)
             return result
         except Exception:
@@ -382,6 +494,7 @@ class SbomExtractor:
         the result can be passed directly to the Python AST parser.
         """
         import json
+
         try:
             nb = json.loads(content)
         except (json.JSONDecodeError, ValueError):
@@ -398,8 +511,7 @@ class SbomExtractor:
             if source:
                 # Strip IPython magic lines (e.g. %pip install, !command)
                 clean_lines = [
-                    ln for ln in source.splitlines()
-                    if not ln.lstrip().startswith(("%", "!"))
+                    ln for ln in source.splitlines() if not ln.lstrip().startswith(("%", "!"))
                 ]
                 cleaned = "\n".join(clean_lines).strip()
                 if cleaned:
@@ -411,12 +523,21 @@ class SbomExtractor:
         node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
         det: ComponentDetection,
     ) -> None:
-        """Merge a ComponentDetection into the accumulator map."""
+        """Merge a ComponentDetection into the accumulator map.
+
+        Applies source-tier precedence: CODE > IAC > DOCS.  When the incoming
+        detection comes from a higher tier than what we have accumulated so far,
+        its adapter attribution and metadata take precedence.  Evidence from all
+        tiers is always appended so the final node reflects every source.
+        """
         # Always canonicalize to ensure regex-adapter and AST-adapter nodes
         # for the same component deduplicate correctly.
         canon = canonicalize_text(det.canonical_name)
         key = (det.component_type, canon)
         acc = node_map.get(key)
+
+        tier = _classify_source_tier(det.file_path, det.adapter_name, det.evidence_kind)
+        tier_rank = _TIER_RANK.get(tier, 2)
 
         evidence = Evidence(
             kind=det.evidence_kind,
@@ -435,20 +556,45 @@ class SbomExtractor:
                 confidence=det.confidence,
                 metadata=dict(det.metadata),
                 relationships=list(det.relationships),
+                source_tiers={tier},
+                best_tier_rank=tier_rank,
             )
             acc.evidence.append(evidence)
             node_map[key] = acc
         else:
-            # Keep strongest/most specific adapter attribution
-            if det.priority < acc.priority:
+            current_best_rank = acc.best_tier_rank  # snapshot before any mutation
+            acc.source_tiers.add(tier)
+
+            # Attribution: better tier wins; within the same tier, lower priority wins
+            if tier_rank < current_best_rank or (
+                tier_rank == current_best_rank and det.priority < acc.priority
+            ):
                 acc.adapter_name = det.adapter_name
                 acc.priority = det.priority
                 acc.display_name = det.display_name
+
+            if tier_rank < current_best_rank:
+                acc.best_tier_rank = tier_rank
+
             acc.confidence = max(acc.confidence, det.confidence)
-            # Merge metadata (first write wins for each key)
-            for k, v in det.metadata.items():
-                if v is not None:
-                    acc.metadata.setdefault(k, v)
+
+            # Metadata precedence:
+            #   Better tier  → its values override existing ones; old unique keys kept
+            #   Same/worse tier → only fill gaps (first-write-wins per key)
+            if tier_rank < current_best_rank:
+                # Incoming detection is from a higher-authority tier.
+                # Start from its metadata, then backfill any keys not present
+                # from the accumulated metadata so nothing is lost.
+                new_meta = {k: v for k, v in det.metadata.items() if v is not None}
+                for k, v in acc.metadata.items():
+                    if k not in new_meta and v is not None:
+                        new_meta[k] = v
+                acc.metadata = new_meta
+            else:
+                for k, v in det.metadata.items():
+                    if v is not None:
+                        acc.metadata.setdefault(k, v)
+
             acc.evidence.append(evidence)
             # Accumulate relationship hints
             acc.relationships.extend(det.relationships)
@@ -549,18 +695,24 @@ class SbomExtractor:
                 key = (agent.id, tool.id, "CALLS")
                 if key not in seen_edges:
                     seen_edges.add(key)
-                    doc.edges.append(Edge(
-                        source=agent.id, target=tool.id,
-                        relationship_type=RelationshipType.CALLS,
-                    ))
+                    doc.edges.append(
+                        Edge(
+                            source=agent.id,
+                            target=tool.id,
+                            relationship_type=RelationshipType.CALLS,
+                        )
+                    )
             for model in sorted(by_type.get(ComponentType.MODEL, []), key=lambda n: n.name)[:3]:
                 key = (agent.id, model.id, "USES")
                 if key not in seen_edges:
                     seen_edges.add(key)
-                    doc.edges.append(Edge(
-                        source=agent.id, target=model.id,
-                        relationship_type=RelationshipType.USES,
-                    ))
+                    doc.edges.append(
+                        Edge(
+                            source=agent.id,
+                            target=model.id,
+                            relationship_type=RelationshipType.USES,
+                        )
+                    )
 
     async def _llm_enrich(
         self,
@@ -624,13 +776,14 @@ class SbomExtractor:
         _log.debug("running: %s", " ".join(cmd))
         try:
             result = subprocess.run(cmd, check=True, capture_output=True)
-            _log.debug("git clone succeeded (stderr: %s)",
-                       result.stderr.decode(errors="replace").strip()[:200] or "(none)")
+            _log.debug(
+                "git clone succeeded (stderr: %s)",
+                result.stderr.decode(errors="replace").strip()[:200] or "(none)",
+            )
         except subprocess.CalledProcessError as exc:
             stderr = exc.stderr.decode(errors="replace").strip() if exc.stderr else ""
             raise RuntimeError(
-                f"git clone failed for {url!r} @ {ref!r}"
-                + (f": {stderr}" if stderr else "")
+                f"git clone failed for {url!r} @ {ref!r}" + (f": {stderr}" if stderr else "")
             ) from exc
 
     @staticmethod
@@ -642,8 +795,7 @@ class SbomExtractor:
             suffix = path.suffix.lower()
             # Always include Dockerfile* files (extensionless or .dockerfile suffix)
             is_dockerfile = (
-                suffix in _DOCKERFILE_EXTENSIONS
-                or path.name.lower() in _DOCKERFILE_NAMES
+                suffix in _DOCKERFILE_EXTENSIONS or path.name.lower() in _DOCKERFILE_NAMES
             )
             if suffix not in config.include_extensions and not is_dockerfile:
                 continue
@@ -775,7 +927,10 @@ def _dedup_by_location(
             keys_to_remove.add(loser)
             _log.debug(
                 "dedup_by_location: dropped %s (priority=%d conf=%.2f) → kept %s",
-                loser, node_map[loser].priority, node_map[loser].confidence, winner,
+                loser,
+                node_map[loser].priority,
+                node_map[loser].confidence,
+                winner,
             )
 
     for k in keys_to_remove:

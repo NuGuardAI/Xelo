@@ -1,248 +1,505 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-02-07T00:00:00Z",
+  "generated_at": "2026-03-02T19:25:33.133016Z",
   "generator": "xelo",
   "target": "https://github.com/GoogleCloudPlatform/agent-starter-pack",
   "nodes": [
     {
-      "id": "dab58a82-be29-5691-b36a-d6daff7e24c5",
-      "name": "model",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Google ADK model configuration",
-          "synonyms": [
-            "adk_model",
-            "gemini_model"
-          ]
-        },
-        "framework": "vertex-ai"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "model",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 65
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ChatVertexAI",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 65
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "gemini",
-          "location": {
-            "path": "agent_starter_pack/agents/adk/app/agent.py",
-            "line": 65
-          }
-        }
-      ]
-    },
-    {
-      "id": "bbb54b33-f958-51f0-9241-ced30df1e11d",
-      "name": "llm",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "LangGraph LLM via ChatVertexAI",
-          "synonyms": [
-            "langgraph_llm",
-            "chat_model"
-          ]
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "llm",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 30
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "ChatVertexAI",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 30
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "gemini",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 30
-          }
-        }
-      ]
-    },
-    {
-      "id": "80fa645a-065d-5919-b2e0-d8c04dab05b1",
-      "name": "text-embedding-005",
-      "component_type": "MODEL",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "Vertex AI text embedding model for data ingestion",
-          "synonyms": [
-            "embedding_model",
-            "embeddings"
-          ]
-        },
-        "framework": "vertex-ai"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "text-embedding-005",
-          "location": {
-            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
-            "line": 270
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "VertexAIEmbeddings",
-          "location": {
-            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
-            "line": 270
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "embedding",
-          "location": {
-            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/components/ingest_data.py",
-            "line": 270
-          }
-        }
-      ]
-    },
-    {
-      "id": "3f367c3b-dfec-5f8e-94a9-91d54f9ff1e1",
-      "name": "system_prompt",
-      "component_type": "PROMPT",
-      "confidence": 1.0,
-      "metadata": {
-        "extras": {
-          "description": "System prompt for LangGraph agent",
-          "synonyms": [
-            "SYSTEM_PROMPT",
-            "prompt"
-          ]
-        },
-        "framework": "langchain"
-      },
-      "evidence": [
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "system_prompt",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 45
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "SystemMessage",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 45
-          }
-        },
-        {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "instructions",
-          "location": {
-            "path": "agent_starter_pack/agents/langgraph/app/agent.py",
-            "line": 45
-          }
-        }
-      ]
-    },
-    {
-      "id": "4868eff9-85f8-57e8-b736-19276736383b",
-      "name": "LangGraphAgentExecutor",
+      "id": "6771cb44-5dd2-5266-9b25-94fa3f314af0",
+      "name": "get_product_details",
       "component_type": "AGENT",
-      "confidence": 1.0,
+      "confidence": 0.85,
       "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "description": "LangGraph agent executor for A2A communication",
-          "synonyms": [
-            "agent_executor",
-            "executor"
-          ]
-        },
-        "framework": "langgraph"
+          "canonical_name": "langgraph_get_product_details",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
       },
       "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "LangGraphAgentExecutor",
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('get_product_details', ...)",
           "location": {
-            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
-            "line": 1
+            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
+            "line": 329
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "4bfe8696-3d99-5a7b-a246-db02219c9fba",
+      "name": "get_product_price",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_get_product_price",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "registration_method": "add_node",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "AgentExecutor",
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "langgraph: add_node('get_product_price', ...)",
           "location": {
-            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
-            "line": 1
+            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
+            "line": 330
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "db178529-8c81-5ef8-a408-2ff38dd30c43",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.98,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 17,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ]
+        }
+      },
+      "evidence": [
         {
-          "kind": "ground_truth",
-          "confidence": 1.0,
-          "detail": "StateGraph",
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "auth_generic: authentication",
           "location": {
-            "path": "agent_starter_pack/base_templates/python/{{cookiecutter.agent_directory}}/app_utils/executor/a2a_agent_executor.py",
-            "line": 1
+            "path": ".cloudbuild/cd/test_gemini_enterprise.yaml",
+            "line": 44
+          }
+        }
+      ]
+    },
+    {
+      "id": "7e6f7164-61b0-5504-ac14-b943338c8de5",
+      "name": "postgres",
+      "component_type": "DATASTORE",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PII"
+        ],
+        "classified_tables": [
+          "DependencyChange",
+          "TemplateConfig"
+        ],
+        "classified_fields": {
+          "TemplateConfig": [
+            "name"
+          ],
+          "DependencyChange": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "postgres",
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "datastore_generic: postgres",
+          "location": {
+            "path": "agent_starter_pack/deployment_targets/cloud_run/python/{{cookiecutter.agent_directory}}/fast_api_app.py",
+            "line": 406
+          }
+        }
+      ]
+    },
+    {
+      "id": "1863b0af-a076-546e-9f35-49c6376bf70a",
+      "name": "ChatVertexAI",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "chatvertexai",
+          "adapter": "langgraph",
+          "evidence_count": 2,
+          "class_name": "ChatVertexAI",
+          "provider": "google",
+          "api_endpoint": "https://generativelanguage.googleapis.com",
+          "model_card_url": "https://ai.google.dev/gemini-api/docs/models/chatvertexai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.9,
+          "detail": "langgraph: ChatVertexAI(...)",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
+            "line": 322
+          }
+        }
+      ]
+    },
+    {
+      "id": "14e49352-39bc-595c-aa04-6b4884fcbb05",
+      "name": "gemini-2.0",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gemini_2_0",
+          "adapter": "model_generic",
+          "evidence_count": 4,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gemini-2.0",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/notebooks/evaluating_adk_agent.ipynb",
+            "line": 557
+          }
+        }
+      ]
+    },
+    {
+      "id": "0260dab4-48e0-5efc-b104-7857777ad56d",
+      "name": "gemini-2.5",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gemini_2_5",
+          "adapter": "model_generic",
+          "evidence_count": 3,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gemini-2.5",
+          "location": {
+            "path": "agent_starter_pack/agents/adk_ts/app/agent.ts",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "0ede457c-a184-5157-90b2-9c5df695f189",
+      "name": "gemini-3",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gemini_3",
+          "adapter": "model_generic",
+          "evidence_count": 4,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "model_generic: gemini-3",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/app/agent.py",
+            "line": 79
+          }
+        }
+      ]
+    },
+    {
+      "id": "fa006a42-e4aa-5307-98b5-4640931c472d",
+      "name": "generic",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.55,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "privilege_generic",
+          "adapter": "privilege_generic",
+          "evidence_count": 1
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.55,
+          "detail": "privilege_generic: access control",
+          "location": {
+            "path": "agent_starter_pack/deployment_targets/agent_engine/python/{{cookiecutter.agent_directory}}/app_utils/deploy.py",
+            "line": 298
+          }
+        }
+      ]
+    },
+    {
+      "id": "fd96fed6-978a-5c6c-a240-8240792d3796",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 5
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "prompt_generic: prompt template",
+          "location": {
+            "path": "agent_starter_pack/agents/adk/notebooks/evaluating_adk_agent.ipynb",
+            "line": 1112
+          }
+        }
+      ]
+    },
+    {
+      "id": "1129bbd7-d924-5a9a-a5eb-777bfb88432d",
+      "name": "tool_node",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "framework": "langgraph",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "langgraph_toolnode_tool_node",
+          "adapter": "langgraph",
+          "evidence_count": 1,
+          "tool_type": "ToolNode",
+          "framework": "langgraph"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_instantiation",
+          "confidence": 0.85,
+          "detail": "langgraph: ToolNode(...)",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/notebooks/evaluating_langgraph_agent.ipynb",
+            "line": 328
           }
         }
       ]
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "source": "6771cb44-5dd2-5266-9b25-94fa3f314af0",
+      "target": "1863b0af-a076-546e-9f35-49c6376bf70a",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "4bfe8696-3d99-5a7b-a246-db02219c9fba",
+      "target": "1863b0af-a076-546e-9f35-49c6376bf70a",
+      "relationship_type": "USES"
+    }
+  ],
   "deps": [],
   "summary": {
     "frameworks": [
-      "vertex-ai",
-      "gemini",
-      "langchain",
       "langgraph"
     ],
     "node_counts": {
-      "MODEL": 3,
+      "AGENT": 2,
+      "AUTH": 1,
+      "DATASTORE": 1,
+      "MODEL": 4,
+      "PRIVILEGE": 1,
       "PROMPT": 1,
-      "AGENT": 1
+      "TOOL": 1
     }
   }
 }
