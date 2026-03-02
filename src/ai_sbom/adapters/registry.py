@@ -53,6 +53,8 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         SemanticKernelAdapter,
     )
     from ai_sbom.adapters.typescript import (
+        AgnoTSAdapter,
+        AzureAIAgentsTSAdapter,
         BedrockAgentsTSAdapter,
         DatastoreTSAdapter,
         GoogleADKAdapter,
@@ -85,6 +87,8 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         BedrockAgentsTSAdapter(),
         DatastoreTSAdapter(),
         PromptTSAdapter(),
+        AgnoTSAdapter(),
+        AzureAIAgentsTSAdapter(),
     ]
     return tuple(sorted(adapters, key=lambda a: (a.priority, canonicalize_text(a.name))))
 
@@ -97,6 +101,7 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
     Dockerfiles, etc.) and as a text-based signal for Python comments/configs.
     """
     from ai_sbom.adapters.frameworks import builtin_framework_adapters
+
     adapters: list[DetectionAdapter] = list(builtin_framework_adapters())
 
     # Baseline generic component detectors (used as fallback for non-Python files)
@@ -172,7 +177,9 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 component_type=ComponentType.DEPLOYMENT,
                 priority=170,
                 patterns=(
-                    re.compile(r"\b(docker|kubernetes|helm|terraform|compose|deployment)\b", re.IGNORECASE),
+                    re.compile(
+                        r"\b(docker|kubernetes|helm|terraform|compose|deployment)\b", re.IGNORECASE
+                    ),
                 ),
                 canonical_name="deployment:generic",
             ),
@@ -192,4 +199,6 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
         ]
     )
 
-    return tuple(sorted(adapters, key=lambda adapter: (adapter.priority, canonicalize_text(adapter.name))))
+    return tuple(
+        sorted(adapters, key=lambda adapter: (adapter.priority, canonicalize_text(adapter.name)))
+    )

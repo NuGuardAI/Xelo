@@ -8,8 +8,12 @@ Supports detection of AI frameworks in TypeScript and JavaScript code:
 - Prompt detection and analysis
 - Datastore detection (SQL, Vector DBs, Object Storage)
 - AWS Bedrock Agents
+- Agno (via @ag-ui/agno client package)
+- Azure AI Agent Service (@azure/ai-agents, @azure/ai-projects)
 """
 
+from ai_sbom.adapters.typescript.agno import AgnoTSAdapter
+from ai_sbom.adapters.typescript.azure_ai_agents import AzureAIAgentsTSAdapter
 from ai_sbom.adapters.typescript.bedrock_agents import BedrockAgentsTSAdapter
 from ai_sbom.adapters.typescript.datastores import DatastoreTSAdapter
 from ai_sbom.adapters.typescript.google_adk import GoogleADKAdapter
@@ -19,6 +23,8 @@ from ai_sbom.adapters.typescript.openai_agents import OpenAIAgentsTSAdapter
 from ai_sbom.adapters.typescript.prompts import PromptTSAdapter
 
 __all__ = [
+    "AgnoTSAdapter",
+    "AzureAIAgentsTSAdapter",
     "BedrockAgentsTSAdapter",
     "DatastoreTSAdapter",
     "GoogleADKAdapter",
