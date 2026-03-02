@@ -40,7 +40,10 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
     """
     from ai_sbom.adapters.data_classification import DataClassificationPythonAdapter
     from ai_sbom.adapters.python import (
+        AgnoAdapter,
         AutoGenAdapter,
+        AzureAIAgentsAdapter,
+        BedrockAgentCoreAdapter,
         CrewAIAdapter,
         GuardrailsAIAdapter,
         LangGraphAdapter,
@@ -71,6 +74,9 @@ def default_framework_adapters() -> tuple[FrameworkAdapter, ...]:
         CrewAIAdapter(),
         LlamaIndexAdapter(),
         LLMClientsAdapter(),
+        AgnoAdapter(),
+        AzureAIAgentsAdapter(),
+        BedrockAgentCoreAdapter(),
         # TypeScript / JavaScript adapters
         LangGraphTSAdapter(),
         OpenAIAgentsTSAdapter(),

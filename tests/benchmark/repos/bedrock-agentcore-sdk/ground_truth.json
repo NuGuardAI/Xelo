@@ -19,9 +19,57 @@
         {
           "kind": "ast_import",
           "confidence": 0.95,
-          "detail": "BedrockAgentCoreApp extends Starlette - Bedrock AgentCore SDK",
+          "detail": "BedrockAgentCoreApp import in integration test sample agents",
           "location": {
-            "path": "src/bedrock_agentcore/runtime/app.py",
+            "path": "tests_integ/agents/sample_agent.py",
+            "line": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "invoke",
+      "component_type": "AGENT",
+      "confidence": 0.90,
+      "metadata": {
+        "extras": {
+          "canonical_name": "invoke",
+          "adapter": "bedrock_agentcore",
+          "synonyms": ["handler", "agent_invocation", "streaming_handler"]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_decorator",
+          "confidence": 0.90,
+          "detail": "@app.entrypoint decorated async handler function",
+          "location": {
+            "path": "tests_integ/agents/sample_agent.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "background_job",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "background_job",
+          "adapter": "bedrock_agentcore",
+          "synonyms": ["decorated_task", "concurrent_task", "long_task", "instant_task", "background_work", "valid_async_function", "test_task", "failing_task"]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_decorator",
+          "confidence": 0.85,
+          "detail": "@app.async_task decorated async background task function",
+          "location": {
+            "path": "tests/bedrock_agentcore/runtime/test_async_tasks.py",
             "line": 1
           }
         }
@@ -42,101 +90,9 @@
         {
           "kind": "ast_assignment",
           "confidence": 0.9,
-          "detail": "ACCESS_TOKEN_HEADER and AUTHORIZATION_HEADER constants for Bearer token auth",
+          "detail": "Bearer token auth headers in runtime SDK",
           "location": {
-            "path": "src/bedrock_agentcore/runtime/models.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "7329c097-5939-5c25-915e-c01c749a7539",
-      "name": "aws_iam",
-      "component_type": "AUTH",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "aws_iam",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.9,
-          "detail": "IAM-based auth for Bedrock AgentCore identity module",
-          "location": {
-            "path": "src/bedrock_agentcore/identity/auth.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "560a78c8-6014-5890-93f6-ff2638e6175b",
-      "name": "generic",
-      "component_type": "API_ENDPOINT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "generic",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.85,
-          "detail": "BedrockAgentCoreApp as Starlette app with /invocation endpoint",
-          "location": {
-            "path": "src/bedrock_agentcore/runtime/app.py",
-            "line": 100
-          }
-        }
-      ]
-    },
-    {
-      "id": "9fd71b8f-b13c-5dff-a11b-cd78dc879fa8",
-      "name": "oauth2_tool",
-      "component_type": "TOOL",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "oauth2_tool",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_assignment",
-          "confidence": 0.8,
-          "detail": "OAuth2 token handling in tools/config.py",
-          "location": {
-            "path": "src/bedrock_agentcore/tools/config.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "4e45d637-2140-5de4-8d8b-514acea5c110",
-      "name": "memory",
-      "component_type": "DATASTORE",
-      "confidence": 0.8,
-      "metadata": {
-        "extras": {
-          "canonical_name": "memory",
-          "adapter": "ast"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_import",
-          "confidence": 0.8,
-          "detail": "AgentCoreMemorySessionManager for persistent conversation storage",
-          "location": {
-            "path": "src/bedrock_agentcore/memory/README.md",
+            "path": "",
             "line": 1
           }
         }

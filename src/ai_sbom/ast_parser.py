@@ -151,6 +151,46 @@ class _AstExtractor(ast.NodeVisitor):
                 )
                 if dname == "input_guardrail":
                     is_input_guardrail = True
+            elif isinstance(decorator, ast.Attribute):
+                # @obj.method — e.g. @app.entrypoint, @app.async_task
+                receiver = decorator.value.id if isinstance(decorator.value, ast.Name) else None
+                dname = decorator.attr
+                self.function_calls.append(
+                    ParsedCall(
+                        function_name=dname,
+                        receiver=receiver,
+                        args={},
+                        positional_args=[],
+                        assigned_to=node.name,
+                        line=decorator.lineno,
+                        line_end=decorator.lineno,
+                    )
+                )
+            elif isinstance(decorator, ast.Call) and isinstance(decorator.func, ast.Attribute):
+                # @obj.method(args) — e.g. @app.route("/path"), @agent.tool(description="…")
+                recv_node = decorator.func.value
+                receiver = recv_node.id if isinstance(recv_node, ast.Name) else None
+                dname = decorator.func.attr
+                dargs2: dict[str, Any] = {}
+                for kw in decorator.keywords:
+                    if kw.arg:
+                        v = self._extract_value(kw.value)
+                        if v is not None:
+                            dargs2[kw.arg] = v
+                dpos2 = [
+                    v for v in (self._extract_value(a) for a in decorator.args) if v is not None
+                ]
+                self.function_calls.append(
+                    ParsedCall(
+                        function_name=dname,
+                        receiver=receiver,
+                        args=dargs2,
+                        positional_args=dpos2,
+                        assigned_to=node.name,
+                        line=decorator.lineno,
+                        line_end=decorator.lineno,
+                    )
+                )
 
         prev_guardrail = self._in_input_guardrail
         self._in_input_guardrail = is_input_guardrail or self._in_input_guardrail
