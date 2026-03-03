@@ -173,6 +173,37 @@ config = ExtractionConfig(
 # Set AWS_REGION and AWS credentials in env (or IAM role).
 ```
 
+## Inspect Extracted Data
+
+Useful fields on the returned `AiBomDocument`:
+
+```python
+# Detected AI components
+for node in doc.nodes:
+    print(node.component_type, node.name, node.metadata)
+
+# Directed relationships between components
+for edge in doc.edges:
+    print(edge.source, edge.relationship_type, edge.target)
+
+# Package dependencies (from requirements.txt / pyproject.toml / package.json)
+# Scanned recursively at any depth in the repo tree
+for dep in doc.deps:
+    print(dep.name, dep.version_spec, dep.purl, dep.source_file)
+
+# Scan-level summary: frameworks, modalities, data classification
+print(doc.summary.frameworks)   # e.g. ['langgraph', 'openai_agents']
+print(doc.summary.modalities)   # e.g. ['text', 'audio']
+```
+
+## Supported Frameworks
+
+Xelo detects components from the following frameworks without additional config:
+
+**Python:** LangChain, LangGraph, OpenAI Agents SDK, CrewAI (code + YAML configs), AutoGen (code + YAML configs), Google ADK, LlamaIndex, Agno, AWS BedrockAgentCore, Azure AI Agent Service, Guardrails AI, MCP Server, Semantic Kernel
+
+**TypeScript / JavaScript:** LangChain.js, LangGraph.js, OpenAI Agents (TS), Azure AI Agents (TS), Agno (TS), MCP Server (TS)
+
 ## Serialize Output
 
 Xelo-native JSON:

@@ -104,6 +104,26 @@ schema written → <output-file>
 - `--enable-llm` is the scan-time switch for enrichment; when omitted, scans run deterministic-only.
 - Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
 - If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
+- Dependency manifests (`requirements.txt`, `pyproject.toml`, `package.json`) are discovered recursively at any depth in the project tree; virtual-environment and build directories (`.venv`, `node_modules`, `dist`, etc.) are excluded automatically.
+
+## Detected Component Types
+
+Xelo assigns each detected item one of the following `component_type` values in the output JSON:
+
+| Type | Examples |
+| --- | --- |
+| `AGENT` | Agent class instances, function-based handlers |
+| `MODEL` | LLM model names (gpt-4o, gemini-2.0-flash, etc.) |
+| `TOOL` | Tool-decorated functions, registered tools |
+| `PROMPT` | System prompts, prompt templates |
+| `DATASTORE` | Vector stores, databases (chroma, postgres, redis, etc.) |
+| `FRAMEWORK` | AI framework in use (langgraph, crewai, openai-agents, etc.) |
+| `GUARDRAIL` | Guardrails AI guards and validators |
+| `AUTH` | Authentication patterns |
+| `DEPLOYMENT` | Deployment configs (Docker, k8s, CI/CD) |
+| `CONTAINER_IMAGE` | Docker base images |
+| `API_ENDPOINT` | Exposed API endpoints |
+| `MCP_SERVER` | MCP server definitions |
 
 ## LLM Configuration
 
@@ -225,3 +245,4 @@ xelo validate sbom.json
 - `scan repo` requires `git` available on `PATH`.
 - LLM enrichment requires optional dependency support (`litellm`) and provider credentials.
 - Best standard dependency BOM fidelity in unified mode requires `cyclonedx-py` availability.
+- Repositories with no package manifest files (no `requirements.txt`, `pyproject.toml`, or `package.json` anywhere in the tree) will produce `deps: []` in output — this is expected for documentation-only or walkthrough repos.

@@ -16,6 +16,8 @@ Use this guide to diagnose and fix common Xelo CLI issues.
 | Unified mode output is shallow | `cyclonedx-py` unavailable so fallback used | Install optional dependency: `pip install "xelo[cdx]"` |
 | LLM enrichment fails to start | Missing `litellm` or provider credentials | Install `pip install "xelo[llm]"` and set provider env vars |
 | `scan repo` fails early | `git` missing on PATH, bad URL, or bad ref | Install git, verify repo URL, and verify `--ref` |
+| `deps: []` in output | No package manifest files found anywhere in the repo | Expected for repos with no `requirements.txt`, `pyproject.toml`, or `package.json` (e.g. walkthrough or documentation repos) |
+| `summary.frameworks: []` even though agents were detected | Repository uses a framework not yet in the detection set, or framework is embedded in a non-standard pattern | Run with `--verbose` to inspect detected FRAMEWORK nodes; open an issue if a supported framework is not recognized |
 
 ## Logging Levels
 
