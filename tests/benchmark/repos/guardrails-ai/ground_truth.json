@@ -1,305 +1,4218 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T00:00:00Z",
+  "generated_at": "2026-03-03T01:05:13.145703+00:00",
   "generator": "github_copilot",
-  "target": "local://guardrails-ai",
+  "target": "https://github.com/guardrails-ai/guardrails",
   "nodes": [
     {
-      "id": "67fd0d7d-eaec-4ffa-863e-3cd4325c291c",
+      "id": "b59bb1af-278e-4d75-a343-ff798b2aeb5c",
+      "component_type": "API_ENDPOINT",
       "name": "generic",
-      "component_type": "AUTH",
-      "confidence": 0.75,
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "gt"
+          "canonical_name": "api_endpoint_generic",
+          "adapter": "api_endpoint_generic",
+          "evidence_count": 2
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.75,
-          "detail": "AUTH: generic",
+          "location": {
+            "path": "guardrails/classes/history/call.py",
+            "line": 427
+          },
+          "detail": "api_endpoint_generic: GET /guards/{guard_name}/history/{call_id}",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/server/hub_client.py",
+            "line": 123
+          },
+          "detail": "api_endpoint_generic: GET /guard-templates/{namespace}/{guardTemplateName}",
+          "confidence": 0.65
+        }
+      ]
+    },
+    {
+      "id": "6a28cc73-457e-4a60-8522-d9204152faac",
+      "component_type": "AUTH",
+      "name": "generic",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "auth_generic",
+          "adapter": "auth_generic",
+          "evidence_count": 18,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/package-lock.json",
+            "line": 12623
+          },
+          "detail": "auth_generic: oauth",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 489
+          },
+          "detail": "auth_generic: Authorization",
+          "confidence": 0.75
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_server.ipynb",
+            "line": 219
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.8
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": 560
+          },
+          "detail": "auth_generic: Authorization",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/no_secrets_in_generated_text.ipynb",
+            "line": 337
+          },
+          "detail": "auth_generic: Bearer",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": 295
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.8500000000000001
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/response_is_on_topic.ipynb",
+            "line": 47
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/secrets_detection.ipynb",
+            "line": 108
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.65
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/azure_openai.ipynb",
+            "line": 31
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "guardrails/api_client.py",
+            "line": 29
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/async_guard.py",
+            "line": 489
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.7
+        },
+        {
           "location": {
             "path": "guardrails/cli/configure.py",
             "line": 118
-          }
+          },
+          "detail": "auth_generic: Authenticate",
+          "confidence": 0.65
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/server/hub_client.py",
+            "line": 8
+          },
+          "detail": "auth_generic: jwt",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/embedding.py",
+            "line": 119
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.75
+        },
+        {
+          "location": {
+            "path": "guardrails/guard.py",
+            "line": 124
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/hub_token/token.py",
+            "line": 2
+          },
+          "detail": "auth_generic: jwt",
+          "confidence": 0.7
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/openai_utils/v1.py",
+            "line": 14
+          },
+          "detail": "auth_generic: api_key",
+          "confidence": 0.8500000000000001
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 373
+          },
+          "detail": "auth_generic: Bearer",
+          "confidence": 0.6
         }
       ]
     },
     {
-      "id": "75103ba0-4968-4aa3-97ca-041376463c39",
-      "name": "faiss",
-      "component_type": "DATASTORE",
-      "confidence": 0.65,
+      "id": "62215b46-b8df-4ed7-9193-d8d33ad1ec6d",
+      "component_type": "CONTAINER_IMAGE",
+      "name": "python:3.13",
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": "python",
+        "image_tag": "3.13",
+        "image_digest": null,
+        "registry": "docker.io",
+        "base_image": "python:3.13",
         "extras": {
-          "canonical_name": "faiss",
-          "adapter": "gt"
+          "canonical_name": "container_image_python_3_13",
+          "adapter": "dockerfile",
+          "evidence_count": 1,
+          "base_image": "python:3.13",
+          "image_name": "python",
+          "image_tag": "3.13",
+          "image_digest": null,
+          "registry": "docker.io",
+          "dockerfile": "server_ci/Dockerfile"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.65,
-          "detail": "DATASTORE: faiss",
+          "location": {
+            "path": "server_ci/Dockerfile",
+            "line": 2
+          },
+          "detail": "dockerfile: FROM python:3.13",
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "e535b84b-36aa-452e-beee-98266a58a39b",
+      "component_type": "DATASTORE",
+      "name": "faiss",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PHI",
+          "PII"
+        ],
+        "classified_tables": [
+          "Contributor",
+          "Director",
+          "Dog",
+          "Fee",
+          "Ingredient",
+          "Medication",
+          "ModelAuth",
+          "ModuleManifest",
+          "PatientInfo",
+          "Person",
+          "Pet",
+          "Symptom"
+        ],
+        "classified_fields": {
+          "Symptom": [
+            "symptom"
+          ],
+          "Medication": [
+            "medication"
+          ],
+          "PatientInfo": [
+            "gender"
+          ],
+          "Dog": [
+            "name"
+          ],
+          "Fee": [
+            "name"
+          ],
+          "Person": [
+            "name"
+          ],
+          "Pet": [
+            "name"
+          ],
+          "Ingredient": [
+            "name"
+          ],
+          "Director": [
+            "name"
+          ],
+          "Contributor": [
+            "email",
+            "name"
+          ],
+          "ModelAuth": [
+            "displayName",
+            "name"
+          ],
+          "ModuleManifest": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "faiss",
+          "adapter": "datastore_generic",
+          "evidence_count": 4,
+          "normalizer": "datastore"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/applications/text2sql.py",
+            "line": 13
+          },
+          "detail": "datastore_generic: Faiss",
+          "confidence": 0.75
+        },
+        {
+          "location": {
+            "path": "guardrails/document_store.py",
+            "line": 120
+          },
+          "detail": "datastore_generic: Faiss",
+          "confidence": 0.55
+        },
+        {
           "location": {
             "path": "guardrails/vectordb/__init__.py",
             "line": 2
-          }
+          },
+          "detail": "datastore_generic: faiss",
+          "confidence": 0.65
+        },
+        {
+          "location": {
+            "path": "guardrails/vectordb/faiss.py",
+            "line": 7
+          },
+          "detail": "datastore_generic: faiss",
+          "confidence": 0.95
         }
       ]
     },
     {
-      "id": "f0ce00a3-5873-45fe-9d9e-9100a61eef91",
-      "name": "postgres",
+      "id": "508715af-8ead-4040-8e90-43ffd8025709",
       "component_type": "DATASTORE",
-      "confidence": 0.6,
+      "name": "index",
       "metadata": {
+        "framework": "llamaindex",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PHI",
+          "PII"
+        ],
+        "classified_tables": [
+          "Contributor",
+          "Director",
+          "Dog",
+          "Fee",
+          "Ingredient",
+          "Medication",
+          "ModelAuth",
+          "ModuleManifest",
+          "PatientInfo",
+          "Person",
+          "Pet",
+          "Symptom"
+        ],
+        "classified_fields": {
+          "Symptom": [
+            "symptom"
+          ],
+          "Medication": [
+            "medication"
+          ],
+          "PatientInfo": [
+            "gender"
+          ],
+          "Dog": [
+            "name"
+          ],
+          "Fee": [
+            "name"
+          ],
+          "Person": [
+            "name"
+          ],
+          "Pet": [
+            "name"
+          ],
+          "Ingredient": [
+            "name"
+          ],
+          "Director": [
+            "name"
+          ],
+          "Contributor": [
+            "email",
+            "name"
+          ],
+          "ModelAuth": [
+            "displayName",
+            "name"
+          ],
+          "ModuleManifest": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "llamaindex_datastore_index",
+          "adapter": "llamaindex",
+          "evidence_count": 2,
+          "build_method": "from_documents",
+          "framework": "llamaindex"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/llamaindex-output-parsing.ipynb",
+            "line": 11
+          },
+          "detail": "llamaindex: from_documents(...)",
+          "confidence": 0.8
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": 14
+          },
+          "detail": "llamaindex: from_documents(...)",
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "d0e4746e-c5de-46c9-9e10-86aff3de5f56",
+      "component_type": "DATASTORE",
+      "name": "postgres",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": [
+          "PHI",
+          "PII"
+        ],
+        "classified_tables": [
+          "Contributor",
+          "Director",
+          "Dog",
+          "Fee",
+          "Ingredient",
+          "Medication",
+          "ModelAuth",
+          "ModuleManifest",
+          "PatientInfo",
+          "Person",
+          "Pet",
+          "Symptom"
+        ],
+        "classified_fields": {
+          "Symptom": [
+            "symptom"
+          ],
+          "Medication": [
+            "medication"
+          ],
+          "PatientInfo": [
+            "gender"
+          ],
+          "Dog": [
+            "name"
+          ],
+          "Fee": [
+            "name"
+          ],
+          "Person": [
+            "name"
+          ],
+          "Pet": [
+            "name"
+          ],
+          "Ingredient": [
+            "name"
+          ],
+          "Director": [
+            "name"
+          ],
+          "Contributor": [
+            "email",
+            "name"
+          ],
+          "ModelAuth": [
+            "displayName",
+            "name"
+          ],
+          "ModuleManifest": [
+            "name"
+          ]
+        },
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
           "canonical_name": "postgres",
-          "adapter": "gt"
+          "adapter": "datastore_generic",
+          "evidence_count": 2,
+          "normalizer": "datastore"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.6,
-          "detail": "DATASTORE: postgres",
           "location": {
-            "path": "docs/dist/examples/data/config.py",
+            "path": "docs/src/examples/data/config.py",
             "line": 6
-          }
+          },
+          "detail": "datastore_generic: postgres",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "guardrails/call_tracing/sqlite_trace_handler.py",
+            "line": 7
+          },
+          "detail": "datastore_generic: Postgres",
+          "confidence": 0.55
         }
       ]
     },
     {
-      "id": "6cf8b586-d0e1-4c3c-863c-468473768920",
-      "name": "generic",
+      "id": "e94f4c68-e8cb-4280-a3fb-e92354b76b2b",
       "component_type": "DEPLOYMENT",
-      "confidence": 0.6,
+      "name": "generic",
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "generic",
-          "adapter": "gt"
+          "canonical_name": "deployment_generic",
+          "adapter": "deployment_generic",
+          "evidence_count": 3,
+          "detected_by_tiers": [
+            "code",
+            "iac"
+          ]
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.6,
-          "detail": "DEPLOYMENT: generic",
           "location": {
             "path": "docs/docusaurus.config.js",
             "line": 28
-          }
+          },
+          "detail": "deployment_generic: deployment",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/examples-toc.json",
+            "line": 472
+          },
+          "detail": "deployment_generic: Deployment",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/package-lock.json",
+            "line": 9538
+          },
+          "detail": "deployment_generic: docker",
+          "confidence": 0.8500000000000001
         }
       ]
     },
     {
-      "id": "a09b0c9f-4cc2-4e00-bc71-1d7640316511",
-      "name": "framework:langchain",
+      "id": "637e3f7d-fec5-408f-b92c-65ab100b7bb6",
       "component_type": "FRAMEWORK",
-      "confidence": 0.95,
+      "name": "framework:langchain",
       "metadata": {
+        "framework": "langchain",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "framework:langchain",
-          "adapter": "gt"
+          "canonical_name": "framework_langchain",
+          "adapter": "langgraph",
+          "evidence_count": 184,
+          "framework": "langchain"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.95,
-          "detail": "FRAMEWORK: framework:langchain",
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": null
+          },
+          "detail": "langgraph: import langchain",
+          "confidence": 0.95
+        },
+        {
           "location": {
             "path": "guardrails/classes/input_type.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "b5217759-735d-4117-8c1c-7043881a7e85",
-      "name": "llamaindex",
-      "component_type": "FRAMEWORK",
-      "confidence": 0.6,
-      "metadata": {
-        "extras": {
-          "canonical_name": "llamaindex",
-          "adapter": "gt"
-        }
-      },
-      "evidence": [
+            "line": null
+          },
+          "detail": "langgraph: import langchain",
+          "confidence": 0.95
+        },
         {
-          "kind": "gt",
-          "confidence": 0.6,
-          "detail": "FRAMEWORK: llamaindex",
+          "location": {
+            "path": "guardrails/guard.py",
+            "line": null
+          },
+          "detail": "langgraph: import langchain",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/langchain/base_runnable.py",
+            "line": null
+          },
+          "detail": "langgraph: import langchain",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": null
+          },
+          "detail": "langgraph: import langchain",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/ml_based_validators.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/bug_free_python_code.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/check_for_pii.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/competitors_check.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/constrained_decoding.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/data/config.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data_cohere.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guard_use.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_server.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/input_validation.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/json_function_calling_tools.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/lite_llm_defaults.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/llamaindex-output-parsing.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/no_secrets_in_generated_text.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/recipe_generation.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/regex_validation.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/response_is_on_topic.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/secrets_detection.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/select_choice_based_on_action.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/summarizer.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/syntax_error_free_sql.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/text_summarization_quality.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/toxic_language.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/translation_to_specific_language.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/translation_with_quality_check.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/valid_chess_moves.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/value_within_distribution.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/custom_validator.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/use_on_fail_actions.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/azure_openai.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/openai_functions.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/telemetry/mlflow-tracing.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/use_cases/text2sql/text2sql.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/defining_guards/pydantic.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/defining_guards/strings.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/getting_started.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/guardrails_ai/getting_started.ipynb",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/actions/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/actions/reask.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/actions/refrain.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/api_client.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/applications/text2sql.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/async_guard.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/call_tracing/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/call_tracing/sqlite_trace_handler.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/call_tracing/trace_handler.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/call_tracing/tracer_mixin.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/execution/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/generic/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/call.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/call_inputs.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/inputs.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/iteration.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/history/outputs.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/llm/prompt_callable.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/rc.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/schema/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/schema/processed_schema.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/validation/validation_result.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/validation/validation_summary.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/validation/validator_logs.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/validation/validator_reference.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/classes/validation_outcome.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/configure.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/create.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/create_validator.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/install.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/list.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/submit.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/template.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/uninstall.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/server/hub_client.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/server/module_manifest.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/start.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/telemetry.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/validate.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/watch.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/datatypes.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/decorators/experimental.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/document_store.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/embedding.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/formatters/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/formatters/base_formatter.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/formatters/json_formatter.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/guard.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/hub/install.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/hub/validator_package_service.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/hub_telemetry/hub_tracing.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/hub_token/token.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/databricks/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/databricks/ml_flow_instrumentor.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/langchain/base_runnable.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/langchain/guard_runnable.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/langchain/validator_runnable.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/guardrails_chat_engine.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/guardrails_query_engine.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/llm_providers.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/logging_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/prompt/base_prompt.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/prompt/instructions.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/prompt/messages.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/prompt/prompt.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/remote_inference/remote_inference.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/async_runner.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/async_stream_runner.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/runner.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/stream_runner.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/run/utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/generator.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/parser.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/primitive_schema.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/pydantic_schema.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/rail_schema.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/schema/validator.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/settings.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/common.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/default_otel_collector_tracer_mod.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/default_otlp_tracer_mod.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/guard_tracing.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/legacy_validator_tracing.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/open_inference.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/runner_tracing.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/validator_tracing.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/types/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/types/inputs.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/types/on_fail.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/types/validator.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/constants.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/docs_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/hub_telemetry_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/misc.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/openai_utils/v1.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/parsing_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/prompt_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/pydantic_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/safe_get.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/serialization_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/structured_data_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/telemetry_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/validator_utils.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/async_validator_service.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/sequential_validator_service.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/validator_service_base.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/validators/__init__.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/vectordb/base.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/vectordb/faiss.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "server_ci/config.py",
+            "line": null
+          },
+          "detail": "guardrails_ai: import guardrails_ai",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/examples-toc.json",
+            "line": 297
+          },
+          "detail": "llamaindex: llamaindex",
+          "confidence": 0.8
+        },
+        {
+          "location": {
+            "path": "docs/sidebars.js",
+            "line": 108
+          },
+          "detail": "llamaindex: llamaindex",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/llamaindex-output-parsing.ipynb",
+            "line": null
+          },
+          "detail": "llamaindex: import llamaindex",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/llamaindex-output-parsing.ipynb",
+            "line": 9
+          },
+          "detail": "llamaindex: llama_index",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": null
+          },
+          "detail": "llamaindex: import llamaindex",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": 7
+          },
+          "detail": "llamaindex: LlamaIndex",
+          "confidence": 0.95
+        },
+        {
           "location": {
             "path": "guardrails/integrations/llama_index/__init__.py",
             "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "f53624bc-52d7-4f82-9c6a-7c27a14a7715",
-      "name": "guard",
-      "component_type": "GUARDRAIL",
-      "confidence": 0.92,
-      "metadata": {
-        "extras": {
-          "canonical_name": "guard",
-          "adapter": "gt"
-        }
-      },
-      "evidence": [
+          },
+          "detail": "llamaindex: llama_index",
+          "confidence": 0.6
+        },
         {
-          "kind": "gt",
-          "confidence": 0.92,
-          "detail": "GUARDRAIL: guard",
           "location": {
-            "path": "tests/integration_tests/test_litellm.py",
-            "line": 61
-          }
+            "path": "guardrails/integrations/llama_index/guardrails_chat_engine.py",
+            "line": null
+          },
+          "detail": "llamaindex: import llamaindex",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/guardrails_chat_engine.py",
+            "line": 7
+          },
+          "detail": "llamaindex: llama_index",
+          "confidence": 0.8
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/guardrails_query_engine.py",
+            "line": null
+          },
+          "detail": "llamaindex: import llamaindex",
+          "confidence": 0.95
+        },
+        {
+          "location": {
+            "path": "guardrails/integrations/llama_index/guardrails_query_engine.py",
+            "line": 8
+          },
+          "detail": "llamaindex: llama_index",
+          "confidence": 0.9
         }
       ]
     },
     {
-      "id": "6a0ea50c-be42-435b-b58a-34b156c5568b",
-      "name": "install",
+      "id": "f8f97669-60af-4d25-8147-d17f7a7601f1",
       "component_type": "GUARDRAIL",
-      "confidence": 0.9,
+      "name": "guard",
       "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "install",
-          "adapter": "gt"
+          "canonical_name": "guardrails_guard",
+          "adapter": "guardrails_ai",
+          "evidence_count": 2,
+          "framework": "guardrails_ai",
+          "guard_type": "Guard"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.9,
-          "detail": "GUARDRAIL: install",
+          "location": {
+            "path": "docs/src/concepts/streaming.ipynb",
+            "line": 31
+          },
+          "detail": "guardrails_ai: Guard(...)",
+          "confidence": 0.92
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": 10
+          },
+          "detail": "guardrails_ai: Guard(...)",
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "f6d12288-bf16-4c20-bf8b-2561deff42ee",
+      "component_type": "GUARDRAIL",
+      "name": "async_trace",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_async_trace",
+          "adapter": "guardrails_ai",
+          "evidence_count": 3,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "async_trace"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/async_guard.py",
+            "line": 35
+          },
+          "detail": "guardrails_ai: from guardrails.hub import async_trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/run/async_runner.py",
+            "line": 16
+          },
+          "detail": "guardrails_ai: from guardrails.hub import async_trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/async_validator_service.py",
+            "line": 12
+          },
+          "detail": "guardrails_ai: from guardrails.hub import async_trace",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "82cd7ea4-ee06-49dd-bb89-e7e80ecf3511",
+      "component_type": "GUARDRAIL",
+      "name": "async_trace_stream",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_async_trace_stream",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "async_trace_stream"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/run/async_stream_runner.py",
+            "line": 24
+          },
+          "detail": "guardrails_ai: from guardrails.hub import async_trace_stream",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "0acdce3e-81e4-4ca2-a907-194713573442",
+      "component_type": "GUARDRAIL",
+      "name": "CompetitorCheck",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_competitorcheck",
+          "adapter": "guardrails_ai",
+          "evidence_count": 12,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "CompetitorCheck"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/concepts/ml_based_validators.ipynb",
+            "line": 18
+          },
+          "detail": "guardrails_ai: from guardrails.hub import CompetitorCheck",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming.ipynb",
+            "line": 6
+          },
+          "detail": "guardrails_ai: from guardrails.hub import CompetitorCheck",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/competitors_check.ipynb",
+            "line": 1
+          },
+          "detail": "guardrails_ai: from guardrails.hub import CompetitorCheck",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import CompetitorCheck",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": 23
+          },
+          "detail": "guardrails_ai: from guardrails.hub import CompetitorCheck",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ToxicLanguage",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ToxicLanguage",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/toxic_language.ipynb",
+            "line": 5
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ToxicLanguage",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/check_for_pii.ipynb",
+            "line": 4
+          },
+          "detail": "guardrails_ai: from guardrails.hub import DetectPII",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/use_on_fail_actions.ipynb",
+            "line": 5
+          },
+          "detail": "guardrails_ai: from guardrails.hub import DetectPII",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/use_on_fail_actions.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import DetectPII",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/integrations/llama_index.ipynb",
+            "line": 23
+          },
+          "detail": "guardrails_ai: from guardrails.hub import DetectPII",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "e1cf63ca-cdc8-4148-b8b0-d2b30ba3823a",
+      "component_type": "GUARDRAIL",
+      "name": "HighQualityTranslation",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_highqualitytranslation",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "HighQualityTranslation"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/translation_with_quality_check.ipynb",
+            "line": 3
+          },
+          "detail": "guardrails_ai: from guardrails.hub import HighQualityTranslation",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "e8e66e4e-98be-4312-a9c5-c66637a7b742",
+      "component_type": "GUARDRAIL",
+      "name": "install",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_install",
+          "adapter": "guardrails_ai",
+          "evidence_count": 2,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "install"
+        }
+      },
+      "evidence": [
+        {
           "location": {
             "path": "guardrails/__init__.py",
             "line": 12
-          }
-        }
-      ]
-    },
-    {
-      "id": "c00564f5-fc15-4001-a09b-9f64de12d653",
-      "name": "RegexMatch",
-      "component_type": "GUARDRAIL",
-      "confidence": 0.9,
-      "metadata": {
-        "extras": {
-          "canonical_name": "RegexMatch",
-          "adapter": "gt"
-        }
-      },
-      "evidence": [
+          },
+          "detail": "guardrails_ai: from guardrails.hub import install",
+          "confidence": 0.9
+        },
         {
-          "kind": "gt",
-          "confidence": 0.9,
-          "detail": "GUARDRAIL: RegexMatch",
           "location": {
-            "path": "docs/dist/examples/data/config.py",
-            "line": 20
-          }
+            "path": "guardrails/cli/create.py",
+            "line": 160
+          },
+          "detail": "guardrails_ai: from guardrails.hub import install",
+          "confidence": 0.9
         }
       ]
     },
     {
-      "id": "7bdb4c79-a69b-4c17-b2a8-1f86329b8057",
-      "name": "trace",
+      "id": "0f714e8d-ea28-43be-82de-c99441fbb0a8",
       "component_type": "GUARDRAIL",
-      "confidence": 0.9,
+      "name": "install_multiple",
       "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "trace",
-          "adapter": "gt"
+          "canonical_name": "guardrails_hub_install_multiple",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "install_multiple"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.9,
-          "detail": "GUARDRAIL: trace",
+          "location": {
+            "path": "guardrails/cli/hub/install.py",
+            "line": 52
+          },
+          "detail": "guardrails_ai: from guardrails.hub import install_multiple",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "7f0bcd47-cbc9-4621-adaa-07041690e8e2",
+      "component_type": "GUARDRAIL",
+      "name": "LowerCase",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_lowercase",
+          "adapter": "guardrails_ai",
+          "evidence_count": 17,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "LowerCase"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import LowerCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 14
+          },
+          "detail": "guardrails_ai: from guardrails.hub import LowerCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 9
+          },
+          "detail": "guardrails_ai: from guardrails.hub import LowerCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": 47
+          },
+          "detail": "guardrails_ai: from guardrails.hub import LowerCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import UpperCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 14
+          },
+          "detail": "guardrails_ai: from guardrails.hub import UpperCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 102
+          },
+          "detail": "guardrails_ai: from guardrails.hub import UpperCase",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import OneLine",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 14
+          },
+          "detail": "guardrails_ai: from guardrails.hub import OneLine",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 102
+          },
+          "detail": "guardrails_ai: from guardrails.hub import OneLine",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 9
+          },
+          "detail": "guardrails_ai: from guardrails.hub import OneLine",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": 47
+          },
+          "detail": "guardrails_ai: from guardrails.hub import OneLine",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 9
+          },
+          "detail": "guardrails_ai: from guardrails.hub import TwoWords",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data.ipynb",
+            "line": 2
+          },
+          "detail": "guardrails_ai: from guardrails.hub import TwoWords",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data_cohere.ipynb",
+            "line": 17
+          },
+          "detail": "guardrails_ai: from guardrails.hub import TwoWords",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": 47
+          },
+          "detail": "guardrails_ai: from guardrails.hub import TwoWords",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/input_validation.ipynb",
+            "line": 32
+          },
+          "detail": "guardrails_ai: from guardrails.hub import TwoWords",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "a6476b58-d78d-4a99-9bfc-fb18cff3feb8",
+      "component_type": "GUARDRAIL",
+      "name": "ProfanityFree",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_profanityfree",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ProfanityFree"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ProfanityFree",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "2c074ee3-0fb8-479a-a943-c895219e1653",
+      "component_type": "GUARDRAIL",
+      "name": "ProvenanceEmbeddings",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_provenanceembeddings",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ProvenanceEmbeddings"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": 200
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ProvenanceEmbeddings",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "3a6abd58-4b99-4f08-b8f5-6a048f895508",
+      "component_type": "GUARDRAIL",
+      "name": "ProvenanceLLM",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_provenancellm",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ProvenanceLLM"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": 245
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ProvenanceLLM",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "efecbaff-92a7-451c-bb61-cc721f44e9c2",
+      "component_type": "GUARDRAIL",
+      "name": "RegexMatch",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_regexmatch",
+          "adapter": "guardrails_ai",
+          "evidence_count": 12,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "RegexMatch"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/concepts/ml_based_validators.ipynb",
+            "line": 3
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/data/config.py",
+            "line": 20
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guard_use.ipynb",
+            "line": 3
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/json_function_calling_tools.ipynb",
+            "line": 22
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/lite_llm_defaults.ipynb",
+            "line": 3
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/regex_validation.ipynb",
+            "line": 4
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/getting_started.ipynb",
+            "line": 2
+          },
+          "detail": "guardrails_ai: from guardrails.hub import RegexMatch",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidRange",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 14
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidRange",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data.ipynb",
+            "line": 2
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidRange",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data_cohere.ipynb",
+            "line": 17
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidRange",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guard_use.ipynb",
+            "line": 3
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidRange",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "af993b19-c30d-411e-82a1-c432eca08aa6",
+      "component_type": "GUARDRAIL",
+      "name": "SecretsPresent",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_secretspresent",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "SecretsPresent"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/secrets_detection.ipynb",
+            "line": 7
+          },
+          "detail": "guardrails_ai: from guardrails.hub import SecretsPresent",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "5fda45a8-f2b7-4737-ba86-d489870394e7",
+      "component_type": "GUARDRAIL",
+      "name": "SimilarToPreviousValues",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_similartopreviousvalues",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "SimilarToPreviousValues"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/value_within_distribution.ipynb",
+            "line": 4
+          },
+          "detail": "guardrails_ai: from guardrails.hub import SimilarToPreviousValues",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "4176db91-d328-4362-90ab-f45b63fd8114",
+      "component_type": "GUARDRAIL",
+      "name": "trace",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_trace",
+          "adapter": "guardrails_ai",
+          "evidence_count": 11,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "trace"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/cli/create.py",
+            "line": 13
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/create_validator.py",
+            "line": 11
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/install.py",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
           "location": {
             "path": "guardrails/cli/hub/list.py",
             "line": 5
-          }
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/submit.py",
+            "line": 11
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/uninstall.py",
+            "line": 13
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/validate.py",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/guard.py",
+            "line": 57
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/run/runner.py",
+            "line": 23
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 29
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_service/validator_service_base.py",
+            "line": 15
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace",
+          "confidence": 0.9
         }
       ]
     },
     {
-      "id": "a89b348b-a6b3-4508-9317-0cbeccd22105",
-      "name": "ValidatorPackageService",
+      "id": "507e3787-904b-4de6-b7b8-d386edbab640",
       "component_type": "GUARDRAIL",
-      "confidence": 0.9,
+      "name": "trace_stream",
       "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "ValidatorPackageService",
-          "adapter": "gt"
+          "canonical_name": "guardrails_hub_trace_stream",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "trace_stream"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.9,
-          "detail": "GUARDRAIL: ValidatorPackageService",
+          "location": {
+            "path": "guardrails/run/stream_runner.py",
+            "line": 11
+          },
+          "detail": "guardrails_ai: from guardrails.hub import trace_stream",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "3aa91ae6-0407-44a0-a2ff-989681b88a96",
+      "component_type": "GUARDRAIL",
+      "name": "VALIDATOR_HUB_SERVICE",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_validator_hub_service",
+          "adapter": "guardrails_ai",
+          "evidence_count": 3,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "VALIDATOR_HUB_SERVICE"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/hub_telemetry/hub_tracing.py",
+            "line": 13
+          },
+          "detail": "guardrails_ai: from guardrails.hub import VALIDATOR_HUB_SERVICE",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 26
+          },
+          "detail": "guardrails_ai: from guardrails.hub import VALIDATOR_HUB_SERVICE",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 26
+          },
+          "detail": "guardrails_ai: from guardrails.hub import get_jwt_token",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "719a4c5f-6614-4103-be8f-6bd3aaf6a5bd",
+      "component_type": "GUARDRAIL",
+      "name": "ValidatorPackageService",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_validatorpackageservice",
+          "adapter": "guardrails_ai",
+          "evidence_count": 6,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ValidatorPackageService"
+        }
+      },
+      "evidence": [
+        {
           "location": {
             "path": "guardrails/cli/hub/list.py",
             "line": 13
-          }
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorPackageService",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/uninstall.py",
+            "line": 32
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorPackageService",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/uninstall.py",
+            "line": 49
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorPackageService",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/cli/hub/uninstall.py",
+            "line": 64
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorPackageService",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/hub/install.py",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorPackageService",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "guardrails/hub/install.py",
+            "line": 8
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidatorModuleType",
+          "confidence": 0.9
         }
       ]
     },
     {
-      "id": "f6acaf8b-ceb5-4981-9369-88d1f8a27bbf",
-      "name": "gpt-3.5-turbo",
-      "component_type": "MODEL",
-      "confidence": 0.65,
+      "id": "b116430c-e58d-4b6b-b88e-c078e9c257af",
+      "component_type": "GUARDRAIL",
+      "name": "ValidChoices",
       "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "gpt-3.5-turbo",
-          "adapter": "gt"
+          "canonical_name": "guardrails_hub_validchoices",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ValidChoices"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.65,
-          "detail": "MODEL: gpt-3.5-turbo",
+          "location": {
+            "path": "docs/src/examples/select_choice_based_on_action.ipynb",
+            "line": 27
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidChoices",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "657e4a18-9423-4c93-9f23-160ed03b7d67",
+      "component_type": "GUARDRAIL",
+      "name": "ValidPython",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_validpython",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ValidPython"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/bug_free_python_code.ipynb",
+            "line": 1
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidPython",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "62cb6dda-a4a7-4603-ad27-09bfc645632d",
+      "component_type": "GUARDRAIL",
+      "name": "ValidSQL",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_hub_validsql",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "hub_import",
+          "validator_class": "ValidSQL"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/syntax_error_free_sql.ipynb",
+            "line": 28
+          },
+          "detail": "guardrails_ai: from guardrails.hub import ValidSQL",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "4d65c444-aeec-4cab-8cb4-a5817197fcea",
+      "component_type": "GUARDRAIL",
+      "name": "name_case",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_name_case",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "guard_type": "Guard"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_server.ipynb",
+            "line": 19
+          },
+          "detail": "guardrails_ai: Guard(...)",
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "3cb75c32-66e1-43b2-a077-1821c2feca43",
+      "component_type": "GUARDRAIL",
+      "name": "validator_139",
+      "metadata": {
+        "framework": "guardrails_ai",
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "guardrails_validator_validator_139",
+          "adapter": "guardrails_ai",
+          "evidence_count": 1,
+          "framework": "guardrails_ai",
+          "source": "register_validator",
+          "decorator": "register_validator"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/hub/install.py",
+            "line": 139
+          },
+          "detail": "guardrails_ai: @register_validator",
+          "confidence": 0.88
+        }
+      ]
+    },
+    {
+      "id": "ca415cc6-7c8e-4626-897a-3b78300a0cdd",
+      "component_type": "MODEL",
+      "name": "gpt-3",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "guardrails/telemetry/open_inference.py",
+            "line": 59
+          },
+          "detail": "model_generic: gpt-3",
+          "confidence": 0.6
+        }
+      ]
+    },
+    {
+      "id": "5c9490d2-fd29-47e0-8e0f-8d27fa4dbcd0",
+      "component_type": "MODEL",
+      "name": "gpt-3.5",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3_5",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/regex_validation.ipynb",
+            "line": 31
+          },
+          "detail": "model_generic: GPT-3.5",
+          "confidence": 0.6
+        }
+      ]
+    },
+    {
+      "id": "77957cb8-dc5b-4644-841b-fbcb84b32008",
+      "component_type": "MODEL",
+      "name": "gpt-3.5-turbo",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_3_5_turbo",
+          "adapter": "model_generic",
+          "evidence_count": 7,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/concepts/ml_based_validators.ipynb",
+            "line": 76
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/remote_validation_inference.ipynb",
+            "line": 99
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 196
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.7
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": 499
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.7
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/response_is_on_topic.ipynb",
+            "line": 42
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.75
+        },
+        {
+          "location": {
+            "path": "docs-graveyard/defining_guards/pydantic.ipynb",
+            "line": 229
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.6
+        },
+        {
           "location": {
             "path": "guardrails/llm_providers.py",
             "line": 150
-          }
+          },
+          "detail": "model_generic: gpt-3.5-turbo",
+          "confidence": 0.75
         }
       ]
     },
     {
-      "id": "5a3bb006-ceae-4b09-861f-cd1137cf79ed",
-      "name": "gpt-4o",
+      "id": "f58296cf-1239-46c7-98ed-b1010be9256c",
       "component_type": "MODEL",
-      "confidence": 0.9,
+      "name": "gpt-3.5-turbo-0613",
       "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
         "extras": {
-          "canonical_name": "gpt-4o",
-          "adapter": "gt"
+          "canonical_name": "gpt_3_5_turbo_0613",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
         }
       },
       "evidence": [
         {
-          "kind": "gt",
-          "confidence": 0.9,
-          "detail": "MODEL: gpt-4o",
           "location": {
-            "path": "tests/integration_tests/test_litellm.py",
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 28
+          },
+          "detail": "model_generic: gpt-3.5-turbo-0613",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "af44969e-4d89-4c64-a50c-cb123c29e7d9",
+      "component_type": "MODEL",
+      "name": "gpt-4",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4",
+          "adapter": "langgraph",
+          "evidence_count": 3,
+          "class_name": "ChatOpenAI",
+          "provider": "openai",
+          "version": "4",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/gpt-4",
+          "model_family": "gpt",
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": 5
+          },
+          "detail": "langgraph: ChatOpenAI(...)",
+          "confidence": 0.9
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb",
+            "line": 96
+          },
+          "detail": "model_generic: gpt-4",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/recipe_generation.ipynb",
+            "line": 299
+          },
+          "detail": "model_generic: gpt-4",
+          "confidence": 0.55
+        }
+      ]
+    },
+    {
+      "id": "9845444d-a8d1-4c0f-9ca0-0b44a976acb6",
+      "component_type": "MODEL",
+      "name": "gpt-4-0613",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4_0613",
+          "adapter": "model_generic",
+          "evidence_count": 1,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/integrations/openai_functions.ipynb",
+            "line": 83
+          },
+          "detail": "model_generic: gpt-4-0613",
+          "confidence": 0.55
+        }
+      ]
+    },
+    {
+      "id": "6bf6d6a2-ca0f-4f3e-a11e-e2d316205f15",
+      "component_type": "MODEL",
+      "name": "gpt-4o",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o",
+          "adapter": "model_generic",
+          "evidence_count": 11,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/concepts/streaming.ipynb",
+            "line": 89
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/bug_free_python_code.ipynb",
+            "line": 127
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": 199
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/generate_structured_data.ipynb",
+            "line": 158
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/guardrails_with_chat_models.ipynb",
+            "line": 438
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/input_validation.ipynb",
+            "line": 103
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/json_function_calling_tools.ipynb",
+            "line": 517
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/lite_llm_defaults.ipynb",
+            "line": 86
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/summarizer.ipynb",
+            "line": 191
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/translation_to_specific_language.ipynb",
+            "line": 291
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/custom_validator.ipynb",
+            "line": 327
+          },
+          "detail": "model_generic: gpt-4o",
+          "confidence": 0.6
+        }
+      ]
+    },
+    {
+      "id": "50b6aaa1-04c7-4fb1-a27e-33f5c4f717aa",
+      "component_type": "MODEL",
+      "name": "gpt-4o-mini",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_4o_mini",
+          "adapter": "model_generic",
+          "evidence_count": 6,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 242
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/no_secrets_in_generated_text.ipynb",
+            "line": 243
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/select_choice_based_on_action.ipynb",
+            "line": 246
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/syntax_error_free_sql.ipynb",
+            "line": 251
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/valid_chess_moves.ipynb",
+            "line": 286
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.6
+        },
+        {
+          "location": {
+            "path": "docs/src/how_to_guides/use_on_fail_actions.ipynb",
+            "line": 103
+          },
+          "detail": "model_generic: gpt-4o-mini",
+          "confidence": 0.6
+        }
+      ]
+    },
+    {
+      "id": "b9658399-d759-431c-a3bd-b32a34565824",
+      "component_type": "MODEL",
+      "name": "gpt-5-nano",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "gpt_5_nano",
+          "adapter": "model_generic",
+          "evidence_count": 2,
+          "normalizer": "model-name"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/text_summarization_quality.ipynb",
+            "line": 311
+          },
+          "detail": "model_generic: gpt-5-nano",
+          "confidence": 0.55
+        },
+        {
+          "location": {
+            "path": "docs/src/examples/translation_with_quality_check.ipynb",
+            "line": 171
+          },
+          "detail": "model_generic: gpt-5-nano",
+          "confidence": 0.65
+        }
+      ]
+    },
+    {
+      "id": "aaa8ff99-a465-4821-a70e-dd3a3e2d197b",
+      "component_type": "MODEL",
+      "name": "text-embedding-ada-002",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "text_embedding_ada_002",
+          "adapter": "llm_clients",
+          "evidence_count": 1,
+          "source": "api_call",
+          "api_method": "create",
+          "provider": "openai",
+          "version": "002",
+          "api_endpoint": "https://api.openai.com/v1",
+          "model_card_url": "https://platform.openai.com/docs/models/text-embedding-ada-002"
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/examples/value_within_distribution.ipynb",
             "line": 42
-          }
+          },
+          "detail": "llm_clients: create(model='text-embedding-ada-002')",
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "a2d1d2ee-f389-4f36-8ee5-1db115e38736",
+      "component_type": "PROMPT",
+      "name": "generic",
+      "metadata": {
+        "framework": null,
+        "model_name": null,
+        "datastore_type": null,
+        "auth_type": null,
+        "privilege_scope": null,
+        "endpoint": null,
+        "method": null,
+        "deployment_target": null,
+        "data_classification": null,
+        "classified_tables": null,
+        "classified_fields": null,
+        "image_name": null,
+        "image_tag": null,
+        "image_digest": null,
+        "registry": null,
+        "base_image": null,
+        "extras": {
+          "canonical_name": "prompt_generic",
+          "adapter": "prompt_generic",
+          "evidence_count": 3
+        }
+      },
+      "evidence": [
+        {
+          "location": {
+            "path": "docs/src/use_cases/text2sql/text2sql.ipynb",
+            "line": 14
+          },
+          "detail": "prompt_generic: few shot",
+          "confidence": 0.7
+        },
+        {
+          "location": {
+            "path": "guardrails/telemetry/open_inference.py",
+            "line": 71
+          },
+          "detail": "prompt_generic: prompt template",
+          "confidence": 0.75
+        },
+        {
+          "location": {
+            "path": "guardrails/utils/docs_utils.py",
+            "line": 55
+          },
+          "detail": "prompt_generic: prompt_template",
+          "confidence": 0.95
         }
       ]
     }
