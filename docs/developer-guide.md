@@ -5,21 +5,10 @@ This guide is for application developers who want to use Xelo as a Python librar
 ## Install
 
 ```bash
-pip install "xelo[all]"
+pip install xelo
 ```
 
-Or install only the extras you need:
-
-```bash
-# Better TypeScript/JavaScript parsing support
-pip install "xelo[ts]"
-
-# Unified CycloneDX generation support
-pip install "xelo[cdx]"
-
-# LLM enrichment support
-pip install "xelo[llm]"
-```
+All features are included by default. Named extras (`xelo[ts]`, `xelo[cdx]`, `xelo[llm]`, `xelo[all]`) are kept for backwards compatibility.
 
 ## Core API
 

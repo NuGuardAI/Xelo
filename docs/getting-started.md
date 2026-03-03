@@ -10,24 +10,11 @@ This guide gets you from install to your first AI-BOM in a few commands.
 
 ## Install
 
-Recommended (all optional features — full-fidelity scans):
-
 ```bash
-pip install "xelo[all]"
+pip install xelo
 ```
 
-Or install only the extras you need:
-
-```bash
-# Better TypeScript/JavaScript parsing
-pip install "xelo[ts]"
-
-# CycloneDX standard SBOM generation support
-pip install "xelo[cdx]"
-
-# LLM enrichment support
-pip install "xelo[llm]"
-```
+All features (TypeScript AST parsing, CycloneDX output, LLM enrichment) are included by default. Named extras (`xelo[ts]`, `xelo[cdx]`, `xelo[llm]`, `xelo[all]`) are kept for backwards compatibility.
 
 ## Quickstart
 

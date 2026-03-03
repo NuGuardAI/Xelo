@@ -21,13 +21,9 @@ Xelo detects components from the following AI/agent frameworks out of the box:
 
 ## Installation
 
-Recommended (all optional features — full-fidelity scans):
-
 ```bash
-pip install "xelo[all]"
+pip install xelo
 ```
-
-Individual extras: `xelo[ts]` (TypeScript AST parsing), `xelo[cdx]` (CycloneDX output), `xelo[llm]` (LLM enrichment).
 
 Install for development:
 

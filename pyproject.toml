@@ -23,30 +23,32 @@ classifiers = [
 dependencies = [
   "pydantic>=2.7.0,<3",
   "structlog>=24.0,<26",
+  # TypeScript/JavaScript AST parsing (tree-sitter)
+  "tree-sitter>=0.23,<1",
+  "tree-sitter-javascript>=0.23,<1",
+  "tree-sitter-typescript>=0.23,<1",
+  # Standard SBOM generation via cyclonedx-py CLI
+  "cyclonedx-bom>=4.4,<8",
+  # LLM-based enrichment (litellm)
+  "litellm>=1.40,<2",
 ]
 
 [project.urls]
 Homepage = "https://nuguard.ai"
 
 [project.optional-dependencies]
-# Accurate TypeScript/JavaScript AST parsing (highly recommended)
-# Without this, Xelo falls back to regex-based TS parsing.
+# Named extras kept for backwards compatibility — all packages are now included by default.
 ts = [
   "tree-sitter>=0.23,<1",
   "tree-sitter-javascript>=0.23,<1",
   "tree-sitter-typescript>=0.23,<1",
 ]
-# Standard SBOM generation via cyclonedx-py CLI (highest fidelity)
 cdx = [
   "cyclonedx-bom>=4.4,<8",
 ]
-# LLM-based enrichment: verification, confidence scoring, asset summaries
-# Supports any provider via litellm model strings (OpenAI, Anthropic, Ollama, etc.)
-# Required when using ExtractionConfig(enable_llm=True) / AISBOM_ENABLE_LLM=true
 llm = [
   "litellm>=1.40,<2",
 ]
-# All optional features (recommended for full-fidelity scans)
 all = [
   "tree-sitter>=0.23,<1",
   "tree-sitter-javascript>=0.23,<1",
