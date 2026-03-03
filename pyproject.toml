@@ -37,7 +37,7 @@ dependencies = [
 Homepage = "https://nuguard.ai"
 
 [project.optional-dependencies]
-# Named extras kept for backwards compatibility — all packages are now included by default.
+# Named extras for targeted installs (all packages are included in the base install).
 ts = [
   "tree-sitter>=0.23,<1",
   "tree-sitter-javascript>=0.23,<1",

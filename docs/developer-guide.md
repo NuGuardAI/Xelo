@@ -8,7 +8,7 @@ This guide is for application developers who want to use Xelo as a Python librar
 pip install xelo
 ```
 
-All features are included by default. Named extras (`xelo[ts]`, `xelo[cdx]`, `xelo[llm]`, `xelo[all]`) are kept for backwards compatibility.
+All features are included.
 
 ## Core API
 

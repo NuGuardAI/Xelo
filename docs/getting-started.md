@@ -14,7 +14,7 @@ This guide gets you from install to your first AI-BOM in a few commands.
 pip install xelo
 ```
 
-All features (TypeScript AST parsing, CycloneDX output, LLM enrichment) are included by default. Named extras (`xelo[ts]`, `xelo[cdx]`, `xelo[llm]`, `xelo[all]`) are kept for backwards compatibility.
+All features (TypeScript AST parsing, CycloneDX output, LLM enrichment) are included.
 
 ## Quickstart
 
