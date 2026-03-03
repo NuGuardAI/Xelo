@@ -20,7 +20,7 @@ This documentation set explains how to install, run, and develop Xelo, an open-s
 
 ## Version and Compatibility
 
-- Package: `xelo` version `0.1.1`
+- Package: `xelo` version `0.1.2`
 - Python: `>=3.11`
 - CLI entry points: `xelo`, `ai-sbom`
 
