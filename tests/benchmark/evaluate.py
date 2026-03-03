@@ -657,16 +657,14 @@ async def run_discovery_pipeline(
     Args:
         files: List of (path, content) tuples
         detected_frameworks: Retained for compatibility; unused by Xelo extractor
-        use_llm: Retained for compatibility; Xelo deterministic extraction ignores LLM flag
+        use_llm: When True, enables LLM enrichment (reads model/key config from env).
     """
     del detected_frameworks
-    if use_llm:
-        logger.info(
-            "  Local mode uses Xelo deterministic extraction; --llm is ignored in this mode."
-        )
-
     from ai_sbom.extractor import SbomExtractor
     from ai_sbom.config import ExtractionConfig
+
+    if use_llm:
+        logger.info("  LLM enrichment enabled for this scan")
 
     temp_dir = tempfile.mkdtemp(prefix="benchmark_pipeline_")
     try:
@@ -676,7 +674,7 @@ async def run_discovery_pipeline(
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(content, encoding="utf-8")
         extractor = SbomExtractor()
-        config = ExtractionConfig(deterministic_only=True)
+        config = ExtractionConfig(deterministic_only=not use_llm)
         doc = extractor.extract_from_path(temp_dir, config, source_ref="benchmark-local")
         return _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local")
     finally:
@@ -837,15 +835,21 @@ def _write_cached_files_to_temp_dir(cached_files_path: Path) -> str:
     return temp_dir
 
 
-def _run_local_folder_discovery(folder_path: str) -> List[DiscoveredAsset]:
+def _run_local_folder_discovery(folder_path: str, use_llm: bool = False) -> List[DiscoveredAsset]:
     """
     Run local folder extraction using the Xelo SbomExtractor.
+
+    Args:
+        folder_path: Path to the folder to scan.
+        use_llm: When True, enables LLM enrichment (reads model/key config from env).
     """
     from ai_sbom.extractor import SbomExtractor
     from ai_sbom.config import ExtractionConfig
 
     extractor = SbomExtractor()
-    config = ExtractionConfig(deterministic_only=True)
+    config = ExtractionConfig(deterministic_only=not use_llm)
+    if use_llm:
+        logger.info("  LLM enrichment enabled for this scan")
     doc = extractor.extract_from_path(folder_path, config, source_ref=folder_path)
     return _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local_folder")
 
@@ -984,7 +988,7 @@ async def evaluate_repo(
                 raise FileNotFoundError(f"Missing cached files for local benchmark: {cache_path}")
             temp_dir = _write_cached_files_to_temp_dir(cache_path)
             try:
-                discovered = _run_local_folder_discovery(temp_dir)
+                discovered = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
         else:
@@ -997,7 +1001,7 @@ async def evaluate_repo(
                 )
             temp_dir = _write_cached_files_to_temp_dir(cache_path)
             try:
-                discovered = _run_local_folder_discovery(temp_dir)
+                discovered = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
     else:

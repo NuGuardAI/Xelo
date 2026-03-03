@@ -472,7 +472,21 @@ class SbomExtractor:
         # Phase 3: LLM enrichment (skipped unless enable_llm=True)
         if config.enable_llm:
             try:
-                doc = asyncio.run(self._llm_enrich(doc, file_contents, config))
+                try:
+                    running_loop = asyncio.get_running_loop()
+                except RuntimeError:
+                    running_loop = None
+
+                if running_loop is not None and running_loop.is_running():
+                    # Already inside an event loop (e.g. evaluate.py's async harness).
+                    # Run the coroutine in a dedicated thread with its own fresh loop.
+                    import concurrent.futures
+
+                    coro = self._llm_enrich(doc, file_contents, config)
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                        doc = pool.submit(asyncio.run, coro).result()
+                else:
+                    doc = asyncio.run(self._llm_enrich(doc, file_contents, config))
             except Exception as exc:  # noqa: BLE001
                 _log.warning("LLM enrichment failed, continuing with deterministic output: %s", exc)
 
