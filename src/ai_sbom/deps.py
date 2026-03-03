@@ -14,6 +14,7 @@ The scanner is intentionally shallow: it reads *declared* dependencies, not the
 full transitive closure.  For a complete lock-file SBOM combine this with
 ``pip-audit`` / ``cyclonedx-python`` (Python) or ``cyclonedx-npm`` (JS).
 """
+
 from __future__ import annotations
 
 import json
@@ -35,15 +36,17 @@ else:
 # Data model
 # ---------------------------------------------------------------------------
 
+
 class PackageDep(BaseModel):
     """A single declared package dependency (Python or JavaScript)."""
+
     model_config = ConfigDict(frozen=True)
 
-    name: str            # normalised name: PEP 503 for Python, original for JS
-    version_spec: str    # raw specifier string, e.g. ">=2.7,<3", "^18.0.0", or ""
-    purl: str            # pkg:pypi/{name}@{ver}, pkg:npm/{name}@{ver}, etc.
-    group: str           # "runtime" | "dev" | "optional:{name}" | "optional:peer"
-    source_file: str     # relative path to the manifest where it was found
+    name: str  # normalised name: PEP 503 for Python, original for JS
+    version_spec: str  # raw specifier string, e.g. ">=2.7,<3", "^18.0.0", or ""
+    purl: str  # pkg:pypi/{name}@{ver}, pkg:npm/{name}@{ver}, etc.
+    group: str  # "runtime" | "dev" | "optional:{name}" | "optional:peer"
+    source_file: str  # relative path to the manifest where it was found
 
     @property
     def version(self) -> str | None:
@@ -130,6 +133,7 @@ def _poetry_spec(ver: object) -> str:
 # Public API
 # ---------------------------------------------------------------------------
 
+
 class DependencyScanner:
     """Scan a project root directory and collect declared Python dependencies.
 
@@ -169,99 +173,188 @@ class DependencyScanner:
     # ------------------------------------------------------------------
 
     def _scan_pyproject(self, root: Path) -> list[PackageDep]:
-        path = root / "pyproject.toml"
-        if not path.exists() or tomllib is None:
-            return []
-        try:
-            data: dict[str, object] = tomllib.loads(path.read_text(encoding="utf-8"))
-        except Exception:
+        """Parse ``pyproject.toml`` files found under *root*.
+
+        Scans the root-level file first; then recursively finds any
+        ``pyproject.toml`` files in sub-packages (skipping common
+        virtual-environment / build directories).
+        """
+        _SKIP_DIRS = {
+            ".venv",
+            "venv",
+            ".env",
+            "env",
+            "node_modules",
+            ".git",
+            "__pycache__",
+            "site-packages",
+            "dist",
+            "build",
+            ".tox",
+        }
+        if tomllib is None:
             return []
 
-        src = "pyproject.toml"
+        candidate_paths: list[Path] = []
+        seen_abs: set[Path] = set()
+
+        def _add(p: Path) -> None:
+            if p in seen_abs or not p.exists():
+                return
+            rel_parts = p.relative_to(root).parts
+            if any(part in _SKIP_DIRS for part in rel_parts[:-1]):
+                return
+            seen_abs.add(p)
+            candidate_paths.append(p)
+
+        # Root first (highest priority for dedup in scan())
+        _add(root / "pyproject.toml")
+        for p in sorted(root.rglob("pyproject.toml")):
+            _add(p)
+
         deps: list[PackageDep] = []
-        project = data.get("project") if isinstance(data.get("project"), dict) else {}
-        tool = data.get("tool") if isinstance(data.get("tool"), dict) else {}
+        for path in candidate_paths:
+            src = str(path.relative_to(root))
+            try:
+                data: dict[str, object] = tomllib.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
 
-        # ── PEP 621 / setuptools / hatch ──────────────────────────────
-        assert isinstance(project, dict)
-        for spec in project.get("dependencies", []):  # type: ignore[union-attr]
-            if isinstance(spec, str):
-                dep = _parse_req_line(spec, src, "runtime")
-                if dep:
-                    deps.append(dep)
+            project = data.get("project") if isinstance(data.get("project"), dict) else {}
+            tool = data.get("tool") if isinstance(data.get("tool"), dict) else {}
 
-        for grp, specs in project.get("optional-dependencies", {}).items():  # type: ignore[union-attr]
-            if isinstance(specs, list):
-                for spec in specs:
-                    if isinstance(spec, str):
-                        dep = _parse_req_line(spec, src, f"optional:{grp}")
-                        if dep:
-                            deps.append(dep)
-
-        # ── Poetry ────────────────────────────────────────────────────
-        assert isinstance(tool, dict)
-        poetry = tool.get("poetry", {})
-        if isinstance(poetry, dict):
-            for pkg, ver in poetry.get("dependencies", {}).items():
-                if _normalise(pkg) == "python":
-                    continue
-                spec = _poetry_spec(ver)
-                norm = _normalise(pkg)
-                deps.append(PackageDep(
-                    name=norm, version_spec=spec,
-                    purl=_to_purl(pkg, spec), group="runtime", source_file=src,
-                ))
-            for pkg, ver in poetry.get("dev-dependencies", {}).items():
-                spec = _poetry_spec(ver)
-                norm = _normalise(pkg)
-                deps.append(PackageDep(
-                    name=norm, version_spec=spec,
-                    purl=_to_purl(pkg, spec), group="dev", source_file=src,
-                ))
-            for grp, grp_data in poetry.get("group", {}).items():
-                if isinstance(grp_data, dict):
-                    for pkg, ver in grp_data.get("dependencies", {}).items():
-                        spec = _poetry_spec(ver)
-                        norm = _normalise(pkg)
-                        deps.append(PackageDep(
-                            name=norm, version_spec=spec,
-                            purl=_to_purl(pkg, spec),
-                            group="dev" if grp in {"dev", "test", "lint"} else f"optional:{grp}",
-                            source_file=src,
-                        ))
-
-        # ── uv dev-dependencies ───────────────────────────────────────
-        uv = tool.get("uv", {})
-        if isinstance(uv, dict):
-            for spec in uv.get("dev-dependencies", []):
+            # ── PEP 621 / setuptools / hatch ──────────────────────────────
+            assert isinstance(project, dict)
+            for spec in project.get("dependencies", []):  # type: ignore[union-attr]
                 if isinstance(spec, str):
-                    dep = _parse_req_line(spec, src, "dev")
+                    dep = _parse_req_line(spec, src, "runtime")
                     if dep:
                         deps.append(dep)
+
+            for grp, specs in project.get("optional-dependencies", {}).items():  # type: ignore[union-attr]
+                if isinstance(specs, list):
+                    for spec in specs:
+                        if isinstance(spec, str):
+                            dep = _parse_req_line(spec, src, f"optional:{grp}")
+                            if dep:
+                                deps.append(dep)
+
+            # ── Poetry ────────────────────────────────────────────────────
+            assert isinstance(tool, dict)
+            poetry = tool.get("poetry", {})
+            if isinstance(poetry, dict):
+                for pkg, ver in poetry.get("dependencies", {}).items():
+                    if _normalise(pkg) == "python":
+                        continue
+                    spec = _poetry_spec(ver)
+                    norm = _normalise(pkg)
+                    deps.append(
+                        PackageDep(
+                            name=norm,
+                            version_spec=spec,
+                            purl=_to_purl(pkg, spec),
+                            group="runtime",
+                            source_file=src,
+                        )
+                    )
+                for pkg, ver in poetry.get("dev-dependencies", {}).items():
+                    spec = _poetry_spec(ver)
+                    norm = _normalise(pkg)
+                    deps.append(
+                        PackageDep(
+                            name=norm,
+                            version_spec=spec,
+                            purl=_to_purl(pkg, spec),
+                            group="dev",
+                            source_file=src,
+                        )
+                    )
+                for grp, grp_data in poetry.get("group", {}).items():
+                    if isinstance(grp_data, dict):
+                        for pkg, ver in grp_data.get("dependencies", {}).items():
+                            spec = _poetry_spec(ver)
+                            norm = _normalise(pkg)
+                            deps.append(
+                                PackageDep(
+                                    name=norm,
+                                    version_spec=spec,
+                                    purl=_to_purl(pkg, spec),
+                                    group="dev"
+                                    if grp in {"dev", "test", "lint"}
+                                    else f"optional:{grp}",
+                                    source_file=src,
+                                )
+                            )
+
+            # ── uv dev-dependencies ───────────────────────────────────────
+            uv = tool.get("uv", {})
+            if isinstance(uv, dict):
+                for spec in uv.get("dev-dependencies", []):
+                    if isinstance(spec, str):
+                        dep = _parse_req_line(spec, src, "dev")
+                        if dep:
+                            deps.append(dep)
 
         return deps
 
     def _scan_requirements(self, root: Path) -> list[PackageDep]:
+        """Return deps from all requirements files found anywhere under *root*.
+
+        Recursively globs for ``requirements*.txt`` (e.g. ``requirements.txt``,
+        ``requirements-dev.txt``, ``python-backend/requirements.txt``) and
+        ``requirements/*.txt`` (e.g. ``requirements/base.txt``).  Common
+        virtual-environment and cache directories are skipped.
+        """
+        _SKIP_DIRS = {
+            ".venv",
+            "venv",
+            ".env",
+            "env",
+            "node_modules",
+            ".git",
+            "__pycache__",
+            "site-packages",
+            "dist",
+            "build",
+            ".tox",
+        }
+
+        # Collect candidate paths (deduplicated, stable sort).
+        seen_abs: set[Path] = set()
+        candidate_paths: list[Path] = []
+
+        def _add(p: Path) -> None:
+            if p in seen_abs:
+                return
+            rel_parts = p.relative_to(root).parts
+            if any(part in _SKIP_DIRS for part in rel_parts):
+                return
+            seen_abs.add(p)
+            candidate_paths.append(p)
+
+        # Pattern 1: requirements*.txt anywhere in tree
+        for p in sorted(root.rglob("requirements*.txt")):
+            _add(p)
+
+        # Pattern 2: requirements/<name>.txt anywhere in tree (base.txt, prod.txt …)
+        for p in sorted(root.rglob("requirements/*.txt")):
+            _add(p)
+
         deps: list[PackageDep] = []
-        # (glob pattern relative to root, dependency group)
-        candidates = [
-            ("requirements.txt",       "runtime"),
-            ("requirements-dev.txt",   "dev"),
-            ("requirements-test.txt",  "dev"),
-            ("requirements-ci.txt",    "dev"),
-            ("requirements/base.txt",  "runtime"),
-            ("requirements/prod.txt",  "runtime"),
-            ("requirements/dev.txt",   "dev"),
-            ("requirements/test.txt",  "dev"),
-        ]
-        for relpath, group in candidates:
-            path = root / relpath
-            if not path.exists():
-                continue
-            for line in path.read_text(encoding="utf-8").splitlines():
-                dep = _parse_req_line(line, relpath, group)
-                if dep:
-                    deps.append(dep)
+        for req_path in candidate_paths:
+            relpath = str(req_path.relative_to(root))
+            path_lower = relpath.lower()
+            if any(kw in path_lower for kw in ("dev", "test", "ci", "lint")):
+                group = "dev"
+            else:
+                group = "runtime"
+            try:
+                for line in req_path.read_text(encoding="utf-8").splitlines():
+                    dep = _parse_req_line(line, relpath, group)
+                    if dep:
+                        deps.append(dep)
+            except OSError:
+                pass
         return deps
 
     def _scan_setup_cfg(self, root: Path) -> list[PackageDep]:
@@ -285,7 +378,7 @@ class DependencyScanner:
         return deps
 
     def _scan_package_json(self, root: Path) -> list[PackageDep]:
-        """Parse ``package.json`` and return npm deps with versions.
+        """Parse ``package.json`` files and return npm deps with versions.
 
         Reads the standard dependency sections:
 
@@ -293,46 +386,72 @@ class DependencyScanner:
         - ``devDependencies``  → group ``"dev"``
         - ``peerDependencies`` → group ``"optional:peer"``
 
+        Recursively finds ``package.json`` files under *root*, skipping
+        ``node_modules`` and other common non-project directories.
+
         Version strings like ``"^18.0.0"`` and ``"~1.2.3"`` are stored
         verbatim in ``version_spec``; a cleaned semver is embedded in the
         PURL when it resolves to ``X.Y.Z`` form.  Workspace references
         (``"workspace:*"``), file links (``"file:.."``) and git URLs are
         skipped as they carry no useful version info for an SBOM.
-
-        Only the root ``package.json`` is scanned.  Workspaces / monorepo
-        sub-packages are not traversed.
         """
-        path = root / "package.json"
-        if not path.exists():
-            return []
-        try:
-            data: dict[str, object] = json.loads(path.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            return []
-
+        _SKIP_DIRS = {
+            "node_modules",
+            ".git",
+            ".venv",
+            "venv",
+            "__pycache__",
+            "dist",
+            "build",
+            ".tox",
+        }
         _SKIP_PREFIXES = ("workspace:", "file:", "git+", "git://", "github:", "link:", "portal:")
         _GROUP_MAP = {
-            "dependencies":    "runtime",
+            "dependencies": "runtime",
             "devDependencies": "dev",
             "peerDependencies": "optional:peer",
         }
 
+        seen_abs: set[Path] = set()
+        candidate_paths: list[Path] = []
+
+        def _add(p: Path) -> None:
+            if p in seen_abs or not p.exists():
+                return
+            rel_parts = p.relative_to(root).parts
+            if any(part in _SKIP_DIRS for part in rel_parts[:-1]):
+                return
+            seen_abs.add(p)
+            candidate_paths.append(p)
+
+        _add(root / "package.json")
+        for p in sorted(root.rglob("package.json")):
+            _add(p)
+
         deps: list[PackageDep] = []
-        for key, group in _GROUP_MAP.items():
-            section = data.get(key)
-            if not isinstance(section, dict):
+        for path in candidate_paths:
+            src = str(path.relative_to(root))
+            try:
+                data: dict[str, object] = json.loads(path.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
                 continue
-            for name, raw_ver in section.items():
-                if not isinstance(name, str) or not name.strip():
+            for key, group in _GROUP_MAP.items():
+                section = data.get(key)
+                if not isinstance(section, dict):
                     continue
-                spec = str(raw_ver).strip() if isinstance(raw_ver, str) else ""
-                if any(spec.startswith(p) for p in _SKIP_PREFIXES):
-                    continue
-                deps.append(PackageDep(
-                    name=name,
-                    version_spec=spec,
-                    purl=_to_npm_purl(name, spec),
-                    group=group,
-                    source_file="package.json",
-                ))
+                for name, raw_ver in section.items():
+                    if not isinstance(name, str) or not name.strip():
+                        continue
+                    spec = str(raw_ver).strip() if isinstance(raw_ver, str) else ""
+                    if any(spec.startswith(p) for p in _SKIP_PREFIXES):
+                        continue
+                    deps.append(
+                        PackageDep(
+                            name=name,
+                            version_spec=spec,
+                            purl=_to_npm_purl(name, spec),
+                            group=group,
+                            source_file=src,
+                        )
+                    )
         return deps

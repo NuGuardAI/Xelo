@@ -7,6 +7,7 @@ optional LLM refinement via an injected LLMClient.
 
 Standalone module: no dependency on backend services.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -26,7 +27,9 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 _ENDPOINT_PATTERNS = [
-    re.compile(r"@(?:app|router)\.(?:get|post|put|patch|delete|options|head)\(\s*[\"']([^\"']+)[\"']"),
+    re.compile(
+        r"@(?:app|router)\.(?:get|post|put|patch|delete|options|head)\(\s*[\"']([^\"']+)[\"']"
+    ),
     re.compile(r"@(?:app|blueprint)\.route\(\s*[\"']([^\"']+)[\"']"),
     re.compile(r"\b(?:app|router)\.(?:get|post|put|patch|delete|use)\(\s*[\"']([^\"']+)[\"']"),
 ]
@@ -55,22 +58,62 @@ _VIDEO_PATTERN = re.compile(r"\b(video|webcam|ffmpeg|hls|rtsp)\b", re.IGNORECASE
 _MODALITY_MATCH_THRESHOLD = 2
 
 _AGENTIC_FRAMEWORKS = {
-    "langgraph", "langchain", "semantic-kernel", "semantic_kernel", "autogen",
-    "crewai", "openai-agents", "openai-agents-sdk", "openai-agents-ts",
-    "google-adk", "bedrock-agents", "llamaindex", "llama-index",
+    "langgraph",
+    "langchain",
+    "semantic-kernel",
+    "semantic_kernel",
+    "autogen",
+    "crewai",
+    "openai-agents",
+    "openai-agents-sdk",
+    "openai-agents-ts",
+    "google-adk",
+    "bedrock-agents",
+    "llamaindex",
+    "llama-index",
+    # Additional adapters (underscore variants handled via normalisation in _is_agentic_framework)
+    "agno",
+    "aws-bedrock",
+    "azure-ai-agents",
+    "azure-ai-agent-service",
+    "bedrock-agentcore",
+    "guardrails-ai",
+    "mcp-server",
+    "langchain-js",
+    "langgraph-js",
 }
 _FRAMEWORK_EXCLUDES = {
-    "inline", "openai", "anthropic", "gemini", "azure", "aws", "gcp",
-    "huggingface", "vercel-ai",
+    "inline",
+    "openai",
+    "anthropic",
+    "gemini",
+    "azure",
+    "aws",
+    "gcp",
+    "huggingface",
+    "vercel-ai",
 }
 _DEPLOYMENT_FILE_HINTS = (
-    ".github/workflows/", "docker", "kubernetes", "/k8s/", "terraform",
-    "infra/", "deployment", "helm", "nginx", "compose", "vercel", "netlify",
+    ".github/workflows/",
+    "docker",
+    "kubernetes",
+    "/k8s/",
+    "terraform",
+    "infra/",
+    "deployment",
+    "helm",
+    "nginx",
+    "compose",
+    "vercel",
+    "netlify",
     "cloudrun",
 )
 _DOC_HOST_BLOCKLIST = {
-    "aka.ms", "docs.github.com", "learn.microsoft.com",
-    "docs.python.org", "readthedocs.io",
+    "aka.ms",
+    "docs.github.com",
+    "learn.microsoft.com",
+    "docs.python.org",
+    "readthedocs.io",
 }
 _DOC_PATH_HINTS = ("/docs/", "/documentation/", "workflowconfig")
 
@@ -111,7 +154,9 @@ def _canonicalize_url(raw: str) -> str | None:
 
 
 def _is_agentic_framework(value: str) -> bool:
-    n = value.strip().lower()
+    n = (
+        value.strip().lower().replace("_", "-")
+    )  # normalise underscore variants (e.g. openai_agents → openai-agents)
     if not n or n in _FRAMEWORK_EXCLUDES:
         return False
     return n in _AGENTIC_FRAMEWORKS or any(
@@ -158,9 +203,12 @@ def extract_deployment_context(files: Sequence[tuple[str, str]]) -> dict[str, li
         if "aws" in lower_path or "bedrock" in text_lower or "eks" in text_lower:
             platforms.append("AWS")
         if (
-            "gcp" in lower_path or "google cloud" in text_lower
-            or "gcloud" in text_lower or "cloud run" in text_lower
-            or "cloudrun" in text_lower or "vertex ai" in text_lower
+            "gcp" in lower_path
+            or "google cloud" in text_lower
+            or "gcloud" in text_lower
+            or "cloud run" in text_lower
+            or "cloudrun" in text_lower
+            or "vertex ai" in text_lower
             or "google_cloud_project" in text_lower
         ):
             platforms.append("GCP")
@@ -172,7 +220,9 @@ def extract_deployment_context(files: Sequence[tuple[str, str]]) -> dict[str, li
         accounts.extend(_AWS_ACCOUNT_PATTERN.findall(text))
         accounts.extend(_AZURE_SUB_PATTERN.findall(text))
         for key in ["project_id", "project", "resource_group", "subscription", "account_id"]:
-            for m in re.findall(rf"{key}\s*[:=]\s*[\"']?([a-zA-Z0-9._-]+)", text, flags=re.IGNORECASE):
+            for m in re.findall(
+                rf"{key}\s*[:=]\s*[\"']?([a-zA-Z0-9._-]+)", text, flags=re.IGNORECASE
+            ):
                 projects.append(m)
         regions.extend(_REGION_PATTERN.findall(text))
         environments.extend(_ENV_PATTERN.findall(text))
@@ -204,7 +254,9 @@ def infer_modalities_support(
         extras = node.metadata.extras
         modality = str(extras.get("modality") or "").lower()
         caps_raw = extras.get("capabilities") or []
-        capabilities = " ".join(str(v).lower() for v in caps_raw) if isinstance(caps_raw, list) else ""
+        capabilities = (
+            " ".join(str(v).lower() for v in caps_raw) if isinstance(caps_raw, list) else ""
+        )
         probe = f"{modality} {capabilities}"
         voice = voice or any(k in probe for k in ("voice", "audio", "speech", "tts", "stt"))
         image = image or any(k in probe for k in ("vision", "ocr", "image_generation"))
@@ -238,7 +290,9 @@ def build_deterministic_use_case_summary(
         "triage": "request triage and routing",
         "support": "customer support assistance",
     }
-    phrases = _uniq(phrase for key, phrase in phrase_map.items() if any(key in n for n in node_names))[:3]
+    phrases = _uniq(
+        phrase for key, phrase in phrase_map.items() if any(key in n for n in node_names)
+    )[:3]
     use_case = ", ".join(phrases) if phrases else "general agentic task orchestration"
 
     return (
@@ -320,7 +374,9 @@ def build_deterministic_asset_summary(
     if isinstance(role, str) and role.strip():
         parts.append(f"role/type: {role}")
 
-    provider = node.metadata.extras.get("provider") or node.metadata.framework or extras.get("namespace")
+    provider = (
+        node.metadata.extras.get("provider") or node.metadata.framework or extras.get("namespace")
+    )
     if isinstance(provider, str) and provider.strip():
         parts.append(f"provider/framework: {provider}")
 
@@ -371,9 +427,11 @@ async def maybe_refine_use_case_summary_with_llm(
                 "type": _node_type_str(n),
                 "name": n.name,
                 "framework": n.metadata.framework,
-                "extras": {k: v for k, v in n.metadata.extras.items() if k in (
-                    "provider", "model_name", "model_family", "version"
-                )},
+                "extras": {
+                    k: v
+                    for k, v in n.metadata.extras.items()
+                    if k in ("provider", "model_name", "model_family", "version")
+                },
             }
             for n in nodes[:30]
         ]
