@@ -10,13 +10,13 @@ This guide gets you from install to your first AI-BOM in a few commands.
 
 ## Install
 
-Install base package:
+Recommended (all optional features — full-fidelity scans):
 
 ```bash
-pip install xelo
+pip install "xelo[all]"
 ```
 
-Install optional extras by use case:
+Or install only the extras you need:
 
 ```bash
 # Better TypeScript/JavaScript parsing

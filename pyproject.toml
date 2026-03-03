@@ -46,6 +46,14 @@ cdx = [
 llm = [
   "litellm>=1.40,<2",
 ]
+# All optional features (recommended for full-fidelity scans)
+all = [
+  "tree-sitter>=0.23,<1",
+  "tree-sitter-javascript>=0.23,<1",
+  "tree-sitter-typescript>=0.23,<1",
+  "cyclonedx-bom>=4.4,<8",
+  "litellm>=1.40,<2",
+]
 dev = [
   "pytest>=8.0.0",
   "pytest-cov>=5.0.0",

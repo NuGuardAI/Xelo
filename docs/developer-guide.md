@@ -5,10 +5,10 @@ This guide is for application developers who want to use Xelo as a Python librar
 ## Install
 
 ```bash
-pip install xelo
+pip install "xelo[all]"
 ```
 
-Optional extras:
+Or install only the extras you need:
 
 ```bash
 # Better TypeScript/JavaScript parsing support
