@@ -1406,7 +1406,9 @@ def main():
         )
 
         mode_str = (
-            "(aibom-api)" if args.mode == "api" else ("(regex+LLM)" if args.enable_llm else "(regex-only)")
+            "(aibom-api)"
+            if args.mode == "api"
+            else ("(regex+LLM)" if args.enable_llm else "(regex-only)")
         )
         print("\n" + "=" * 60)
         print(f"BENCHMARK SUITE RESULTS {mode_str}")
