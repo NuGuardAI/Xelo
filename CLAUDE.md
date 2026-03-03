@@ -50,7 +50,7 @@ xelo schema --output ai_bom.schema.json
 
 2. **Phase 2 — Regex fallbacks**: `RegexAdapter.detect()` runs on all files for non-framework signals (model names, datastores, auth keywords, etc.).
 
-3. **Phase 3 — LLM enrichment** (optional, `ExtractionConfig.deterministic_only=False`): verifies uncertain nodes, re-aggregates confidence scores, refines use-case summary via `litellm`.
+3. **Phase 3 — LLM enrichment** (optional, `ExtractionConfig(enable_llm=True)`): verifies uncertain nodes, re-aggregates confidence scores, refines use-case summary via `litellm`.
 
 Results deduplicate on `(ComponentType, canonical_name)` and assemble into `AiBomDocument`.
 
@@ -82,7 +82,7 @@ The JSON schema is generated directly from `AiBomDocument.model_json_schema()`.
 
 ### Key configuration (`src/ai_sbom/config.py`)
 
-`ExtractionConfig` defaults to `deterministic_only=True` (reads `AISBOM_DETERMINISTIC_ONLY` env var). LLM enrichment requires `--enable-llm` flag or env override. LLM calls go through `litellm` (`llm_client.py`).
+`ExtractionConfig` defaults to `enable_llm=False` (reads `AISBOM_ENABLE_LLM` env var; `AISBOM_DETERMINISTIC_ONLY` is accepted as a legacy alias). LLM enrichment requires `--enable-llm` flag or `AISBOM_ENABLE_LLM=true`. LLM calls go through `litellm` (`llm_client.py`).
 
 ### Test fixtures
 

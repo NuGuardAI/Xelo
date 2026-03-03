@@ -42,7 +42,7 @@ cdx = [
 ]
 # LLM-based enrichment: verification, confidence scoring, asset summaries
 # Supports any provider via litellm model strings (OpenAI, Anthropic, Ollama, etc.)
-# Required when using ExtractionConfig(deterministic_only=False)
+# Required when using ExtractionConfig(enable_llm=True) / AISBOM_ENABLE_LLM=true
 llm = [
   "litellm>=1.40,<2",
 ]

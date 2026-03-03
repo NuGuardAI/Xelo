@@ -61,7 +61,7 @@ python -m benchmark.evaluate --repo langchain-examples
 ```bash
 python -m benchmark.evaluate --all --output results.json  # JSON output
 python -m benchmark.evaluate --all --verbose              # Show FP/FN details
-python -m benchmark.evaluate --repo crewai-examples --mode local --llm  # Legacy local LLM mode
+python -m benchmark.evaluate --repo crewai-examples --mode local --enable-llm  # Enable LLM enrichment
 python -m benchmark.evaluate --repo openai-cs-agents-demo --mode api \
   --data-service-url http://localhost:8000 \
   --asset-service-url http://localhost:8004

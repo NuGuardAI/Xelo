@@ -10,7 +10,7 @@ Usage:
     python -m benchmark.evaluate --all
     python -m benchmark.evaluate --all --output results.json
     python -m benchmark.evaluate --all --verbose
-    python -m benchmark.evaluate --repo crewai-examples --llm  # Enable LLM passes
+    python -m benchmark.evaluate --repo crewai-examples --enable-llm  # Enable LLM enrichment
 
 Exit Codes:
     0 - Success (F1 >= threshold)
@@ -18,7 +18,7 @@ Exit Codes:
     2 - Error (missing ground truth, fetch failed, etc.)
 
 Environment Variables:
-    GEMINI_API_KEY - Required for --llm mode
+    GEMINI_API_KEY - Required when using --enable-llm (or set AISBOM_ENABLE_LLM=true)
     GITHUB_TOKEN - GitHub personal access token (also loaded from .env)
     NUGUARD_PER_TYPE_DISCOVERY - Enable per-type LLM discovery (default: true)
 """
@@ -1238,9 +1238,10 @@ def main():
         help="Disable fuzzy path matching (require exact path match)",
     )
     parser.add_argument(
-        "--llm",
+        "--enable-llm",
+        dest="enable_llm",
         action="store_true",
-        help="Enable LLM passes (Stage 2.5) for deeper discovery. Requires GEMINI_API_KEY.",
+        help="Enable LLM enrichment (mirrors the xelo CLI --enable-llm flag). Requires AISBOM_LLM_MODEL and a matching API key.",
     )
     parser.add_argument(
         "--mode",
@@ -1316,9 +1317,11 @@ def main():
             print(f"Create ground_truth.json in: {REPOS_DIR}/<repo_name>/")
         return 0
 
-    # Check for GEMINI_API_KEY if --llm is enabled in local mode
-    if args.mode == "local" and args.llm and not os.getenv("GEMINI_API_KEY"):
-        print("Error: --llm requires GEMINI_API_KEY environment variable")
+    # Check for GEMINI_API_KEY if --enable-llm is requested and model is Vertex/Gemini
+    llm_model = os.getenv("AISBOM_LLM_MODEL", "")
+    needs_gemini_key = "gemini" in llm_model or "vertex" in llm_model
+    if args.enable_llm and needs_gemini_key and not os.getenv("GEMINI_API_KEY"):
+        print("Error: --enable-llm with a Gemini/Vertex AI model requires GEMINI_API_KEY")
         print("Set it with: export GEMINI_API_KEY=your-api-key")
         return 2
 
@@ -1340,7 +1343,7 @@ def main():
                     verbose=args.verbose,
                     use_cache=not args.no_cache,
                     fuzzy_paths=fuzzy_paths,
-                    use_llm=args.llm,
+                    use_llm=args.enable_llm,
                     mode=args.mode,
                     data_service_url=args.data_service_url,
                     asset_service_url=args.asset_service_url,
@@ -1355,7 +1358,7 @@ def main():
             mode_str = (
                 "(aibom-api)"
                 if args.mode == "api"
-                else ("(regex+LLM)" if args.llm else "(regex-only)")
+                else ("(regex+LLM)" if args.enable_llm else "(regex-only)")
             )
             print(f"\n{mode_str}")
             print(result.to_summary())
@@ -1390,7 +1393,7 @@ def main():
                 verbose=args.verbose,
                 use_cache=not args.no_cache,
                 fuzzy_paths=fuzzy_paths,
-                use_llm=args.llm,
+                use_llm=args.enable_llm,
                 mode=args.mode,
                 data_service_url=args.data_service_url,
                 asset_service_url=args.asset_service_url,
@@ -1403,7 +1406,7 @@ def main():
         )
 
         mode_str = (
-            "(aibom-api)" if args.mode == "api" else ("(regex+LLM)" if args.llm else "(regex-only)")
+            "(aibom-api)" if args.mode == "api" else ("(regex+LLM)" if args.enable_llm else "(regex-only)")
         )
         print("\n" + "=" * 60)
         print(f"BENCHMARK SUITE RESULTS {mode_str}")
