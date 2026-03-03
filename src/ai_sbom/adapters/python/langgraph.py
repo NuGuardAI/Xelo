@@ -9,6 +9,7 @@ Extracts AI assets from LangGraph-based applications:
 - ``create_react_agent`` / factory functions → AGENT nodes
 - ``SystemMessage`` / string literals → PROMPT nodes
 """
+
 from __future__ import annotations
 
 import re
@@ -26,9 +27,16 @@ from ai_sbom.types import ComponentType
 # LangGraph-specific constants
 # ---------------------------------------------------------------------------
 
-_LANGGRAPH_IMPORTS = ["langgraph", "langgraph.graph", "langgraph.prebuilt",
-                       "langchain", "langchain_core", "langchain_openai",
-                       "langchain_anthropic", "langchain_community"]
+_LANGGRAPH_IMPORTS = [
+    "langgraph",
+    "langgraph.graph",
+    "langgraph.prebuilt",
+    "langchain",
+    "langchain_core",
+    "langchain_openai",
+    "langchain_anthropic",
+    "langchain_community",
+]
 
 _STATEGRAPH_CLASSES = {"StateGraph", "MessageGraph", "Graph"}
 
@@ -75,8 +83,7 @@ class LangGraphAdapter(FrameworkAdapter):
         # Determine if langgraph is actually imported (vs just langchain)
         imported_modules = {imp.module or "" for imp in parse_result.imports}
         has_langgraph = any(
-            m == "langgraph" or m.startswith("langgraph.")
-            for m in imported_modules
+            m == "langgraph" or m.startswith("langgraph.") for m in imported_modules
         )
         # Emit the correct framework node
         if has_langgraph:
@@ -84,6 +91,7 @@ class LangGraphAdapter(FrameworkAdapter):
         else:
             # Only langchain imported — emit framework:langchain, not framework:langgraph
             from ai_sbom.types import ComponentType as _CT
+
             framework_det = ComponentDetection(
                 component_type=_CT.FRAMEWORK,
                 canonical_name="framework:langchain",
@@ -115,9 +123,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 if isinstance(first, str) and not first.startswith("$"):
                     node_name = first.strip("'\"")
             if not node_name:
-                node_name = (
-                    _clean(call.args.get("node") or call.args.get("name"))
-                )
+                node_name = _clean(call.args.get("node") or call.args.get("name"))
             if not node_name or node_name in _LANGGRAPH_INTERNAL_NODES:
                 continue
             canon = canonicalize_text(f"langgraph:{node_name}")
@@ -148,13 +154,15 @@ class LangGraphAdapter(FrameworkAdapter):
                     tgt_canon = node_name_map.get(tgt, canonicalize_text(f"langgraph:{tgt}"))
                     # Attach as relationship hints on the first agent node
                     if detected:
-                        detected[-1].relationships.append(RelationshipHint(
-                            source_canonical=src_canon,
-                            source_type=ComponentType.AGENT,
-                            target_canonical=tgt_canon,
-                            target_type=ComponentType.AGENT,
-                            relationship_type="CALLS",
-                        ))
+                        detected[-1].relationships.append(
+                            RelationshipHint(
+                                source_canonical=src_canon,
+                                source_type=ComponentType.AGENT,
+                                target_canonical=tgt_canon,
+                                target_type=ComponentType.AGENT,
+                                relationship_type="CALLS",
+                            )
+                        )
 
         # 4. ToolNode instantiations → TOOL
         for inst in parse_result.instantiations:
@@ -183,21 +191,24 @@ class LangGraphAdapter(FrameworkAdapter):
                 continue
             provider = LANGCHAIN_LLM_CLASS_PROVIDERS[inst.class_name]
             args = inst.args or {}
-            model_name = _clean(
-                args.get("model") or args.get("model_name") or args.get("deployment_name")
-            ) or inst.class_name
+            model_name = (
+                _clean(args.get("model") or args.get("model_name") or args.get("deployment_name"))
+                or inst.class_name
+            )
             details = get_model_details(model_name, provider, args)
             canon = canonicalize_text(model_name.lower())
 
             rels: list[RelationshipHint] = []
             for agent_canon in agent_canonicals:
-                rels.append(RelationshipHint(
-                    source_canonical=agent_canon,
-                    source_type=ComponentType.AGENT,
-                    target_canonical=canon,
-                    target_type=ComponentType.MODEL,
-                    relationship_type="USES",
-                ))
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=agent_canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=canon,
+                        target_type=ComponentType.MODEL,
+                        relationship_type="USES",
+                    )
+                )
 
             det = ComponentDetection(
                 component_type=ComponentType.MODEL,
@@ -233,13 +244,15 @@ class LangGraphAdapter(FrameworkAdapter):
                 llm_ref = call.positional_args[0]
                 if isinstance(llm_ref, str) and not llm_ref.startswith("$"):
                     model_canon = canonicalize_text(f"langchain:{llm_ref}")
-                    factory_rels.append(RelationshipHint(
-                        source_canonical=canon,
-                        source_type=ComponentType.AGENT,
-                        target_canonical=model_canon,
-                        target_type=ComponentType.MODEL,
-                        relationship_type="USES",
-                    ))
+                    factory_rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=model_canon,
+                            target_type=ComponentType.MODEL,
+                            relationship_type="USES",
+                        )
+                    )
 
             # Second positional arg → tools list
             if len(call.positional_args) >= 2:
@@ -248,66 +261,75 @@ class LangGraphAdapter(FrameworkAdapter):
                     for tool_name in tools_ref:
                         if isinstance(tool_name, str) and not tool_name.startswith("$"):
                             tool_canon = canonicalize_text(f"langchain:tool:{tool_name}")
-                            factory_rels.append(RelationshipHint(
-                                source_canonical=canon,
-                                source_type=ComponentType.AGENT,
-                                target_canonical=tool_canon,
-                                target_type=ComponentType.TOOL,
-                                relationship_type="CALLS",
-                            ))
+                            factory_rels.append(
+                                RelationshipHint(
+                                    source_canonical=canon,
+                                    source_type=ComponentType.AGENT,
+                                    target_canonical=tool_canon,
+                                    target_type=ComponentType.TOOL,
+                                    relationship_type="CALLS",
+                                )
+                            )
 
-            detected.append(ComponentDetection(
-                component_type=ComponentType.AGENT,
-                canonical_name=canon,
-                display_name=agent_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.90,
-                metadata={
-                    "factory_function": call.function_name,
-                    "is_agent_graph": True,
-                    "framework": "langchain",
-                },
-                file_path=file_path,
-                line=call.line,
-                snippet=f"{call.function_name}(...)",
-                evidence_kind="ast_call",
-                relationships=factory_rels,
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=canon,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "factory_function": call.function_name,
+                        "is_agent_graph": True,
+                        "framework": "langchain",
+                    },
+                    file_path=file_path,
+                    line=call.line,
+                    snippet=f"{call.function_name}(...)",
+                    evidence_kind="ast_call",
+                    relationships=factory_rels,
+                )
+            )
 
         # 7. Prompt detection (SystemMessage, ChatPromptTemplate, large string literals)
         for inst in parse_result.instantiations:
             if inst.class_name not in _PROMPT_CLASSES:
                 continue
-            content_val = _clean(inst.args.get("content") or (
-                inst.positional_args[0] if inst.positional_args else None
-            ))
+            content_val = _clean(
+                inst.args.get("content")
+                or (inst.positional_args[0] if inst.positional_args else None)
+            )
             if not content_val or len(content_val) < 40:
                 continue
             role = _detect_role(inst.class_name)
             template_vars = _TEMPLATE_VAR_RE.findall(content_val)
-            dname = _prompt_display_name(content_val, inst.assigned_to or inst.class_name, inst.line)
+            dname = _prompt_display_name(
+                content_val, inst.assigned_to or inst.class_name, inst.line
+            )
             canon = canonicalize_text(f"langchain:prompt:{inst.line}")
-            detected.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=canon,
-                display_name=dname,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.80,
-                metadata={
-                    "message_type": inst.class_name,
-                    "role": role,
-                    "content_preview": content_val[:500],
-                    "char_count": len(content_val),
-                    "is_template": bool(template_vars),
-                    "template_variables": template_vars,
-                },
-                file_path=file_path,
-                line=inst.line,
-                snippet=f"{inst.class_name}(content=...)",
-                evidence_kind="ast_instantiation",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=canon,
+                    display_name=dname,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.80,
+                    metadata={
+                        "message_type": inst.class_name,
+                        "role": role,
+                        "content_preview": content_val[:500],
+                        "char_count": len(content_val),
+                        "is_template": bool(template_vars),
+                        "template_variables": template_vars,
+                    },
+                    file_path=file_path,
+                    line=inst.line,
+                    snippet=f"{inst.class_name}(content=...)",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         # Large string literals that look like prompts
         for lit in parse_result.string_literals:
@@ -318,25 +340,27 @@ class LangGraphAdapter(FrameworkAdapter):
             template_vars = _TEMPLATE_VAR_RE.findall(lit.value)
             dname = _prompt_display_name(lit.value, lit.context or "", lit.line)
             canon = canonicalize_text(f"langchain:prompt:str:{lit.line}")
-            detected.append(ComponentDetection(
-                component_type=ComponentType.PROMPT,
-                canonical_name=canon,
-                display_name=dname,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.60,
-                metadata={
-                    "role": _detect_role_from_content(lit.value),
-                    "content_preview": lit.value[:500],
-                    "char_count": len(lit.value),
-                    "is_template": bool(template_vars),
-                    "template_variables": template_vars,
-                },
-                file_path=file_path,
-                line=lit.line,
-                snippet=lit.value[:80] + ("..." if len(lit.value) > 80 else ""),
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.PROMPT,
+                    canonical_name=canon,
+                    display_name=dname,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.60,
+                    metadata={
+                        "role": _detect_role_from_content(lit.value),
+                        "content_preview": lit.value[:500],
+                        "char_count": len(lit.value),
+                        "is_template": bool(template_vars),
+                        "template_variables": template_vars,
+                    },
+                    file_path=file_path,
+                    line=lit.line,
+                    snippet=lit.value[:80] + ("..." if len(lit.value) > 80 else ""),
+                    evidence_kind="ast_call",
+                )
+            )
 
         return detected
 
@@ -344,6 +368,7 @@ class LangGraphAdapter(FrameworkAdapter):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _clean(value: Any) -> str:
     if value is None:
@@ -425,9 +450,18 @@ def _is_prompt_literal(text: str, context: str) -> bool:
         return True
     # Tier 2 — prompt-building context + template variables + length
     prompt_ctx = any(h in ctx for h in ["prompt", "system", "template"])
-    non_prompt_ctx = any(h in ctx for h in [
-        "description", "summary", "readme", "license", "doc", "log", "error",
-    ])
+    non_prompt_ctx = any(
+        h in ctx
+        for h in [
+            "description",
+            "summary",
+            "readme",
+            "license",
+            "doc",
+            "log",
+            "error",
+        ]
+    )
     if non_prompt_ctx:
         return False
     template_vars = _TEMPLATE_VAR_RE.findall(text)

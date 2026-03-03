@@ -7,6 +7,7 @@ Detects direct SDK client instantiations across all major AI providers:
 - Mistral, Cohere, Groq, Ollama, Bedrock
 - API call patterns: ``client.chat.completions.create(model="...")``
 """
+
 from __future__ import annotations
 
 import re
@@ -39,8 +40,16 @@ class LLMClientsAdapter(FrameworkAdapter):
     name = "llm_clients"
     priority = 90
     handles_imports = [
-        "openai", "anthropic", "google.generativeai", "google.genai",
-        "vertexai", "mistralai", "cohere", "groq", "ollama", "boto3",
+        "openai",
+        "anthropic",
+        "google.generativeai",
+        "google.genai",
+        "vertexai",
+        "mistralai",
+        "cohere",
+        "groq",
+        "ollama",
+        "boto3",
     ]
 
     def extract(self, content: str, file_path: str, parse_result: Any) -> list[ComponentDetection]:
@@ -61,8 +70,7 @@ class LLMClientsAdapter(FrameworkAdapter):
         for inst in parse_result.instantiations:
             # Direct SDK classes (OpenAI, Anthropic, etc.)
             if inst.class_name in ALL_LLM_CLASSES:
-                provider = self._resolve_provider(inst.class_name, detected_providers,
-                                                  parse_result)
+                provider = self._resolve_provider(inst.class_name, detected_providers, parse_result)
                 is_azure = "Azure" in inst.class_name
                 args = inst.args or {}
 
@@ -70,7 +78,11 @@ class LLMClientsAdapter(FrameworkAdapter):
                     args.get("model")
                     or args.get("model_name")
                     or args.get("embedding_model")
-                    or (args.get("model_name") if inst.class_name in _MODEL_SPECIFYING_CLASSES else None)
+                    or (
+                        args.get("model_name")
+                        if inst.class_name in _MODEL_SPECIFYING_CLASSES
+                        else None
+                    )
                 )
 
                 # Skip bare client objects without an explicit model
@@ -93,47 +105,56 @@ class LLMClientsAdapter(FrameworkAdapter):
                     if depl:
                         meta["deployment_name"] = depl
 
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=canonicalize_text(display.lower()),
-                    display_name=display,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata=meta,
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=canonicalize_text(display.lower()),
+                        display_name=display,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata=meta,
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{inst.class_name}(...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
             # LangChain wrappers (ChatOpenAI, ChatAnthropic, etc.)
             elif inst.class_name in LANGCHAIN_LLM_CLASS_PROVIDERS:
                 provider = LANGCHAIN_LLM_CLASS_PROVIDERS[inst.class_name]
                 args = inst.args or {}
-                model_name = self._clean_str(
-                    args.get("model") or args.get("model_name")
-                    or args.get("embedding_model") or args.get("deployment_name")
-                ) or inst.class_name
+                model_name = (
+                    self._clean_str(
+                        args.get("model")
+                        or args.get("model_name")
+                        or args.get("embedding_model")
+                        or args.get("deployment_name")
+                    )
+                    or inst.class_name
+                )
                 details = get_model_details(model_name, provider, args)
 
-                detected.append(ComponentDetection(
-                    component_type=ComponentType.MODEL,
-                    canonical_name=canonicalize_text(model_name.lower()),
-                    display_name=model_name,
-                    adapter_name=self.name,
-                    priority=self.priority,
-                    confidence=0.90,
-                    metadata={
-                        "class_name": inst.class_name,
-                        "provider": provider,
-                        **{k: v for k, v in details.items() if v is not None},
-                    },
-                    file_path=file_path,
-                    line=inst.line,
-                    snippet=f"{inst.class_name}(...)",
-                    evidence_kind="ast_instantiation",
-                ))
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=canonicalize_text(model_name.lower()),
+                        display_name=model_name,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={
+                            "class_name": inst.class_name,
+                            "provider": provider,
+                            **{k: v for k, v in details.items() if v is not None},
+                        },
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=f"{inst.class_name}(...)",
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         # Extract API call patterns (client.chat.completions.create(model="gpt-4o"))
         for call in parse_result.function_calls:
@@ -161,7 +182,8 @@ class LLMClientsAdapter(FrameworkAdapter):
                 continue
 
             provider = (
-                "ollama" if (call.receiver or "").lower() == "ollama"
+                "ollama"
+                if (call.receiver or "").lower() == "ollama"
                 else infer_provider(model_name)
             )
             if provider == "unknown" and detected_providers:
@@ -169,24 +191,26 @@ class LLMClientsAdapter(FrameworkAdapter):
 
             details = get_model_details(model_name, provider, {})
 
-            detected.append(ComponentDetection(
-                component_type=ComponentType.MODEL,
-                canonical_name=canonicalize_text(model_name.lower()),
-                display_name=model_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.95,
-                metadata={
-                    "source": "api_call",
-                    "api_method": func,
-                    "provider": provider,
-                    **{k: v for k, v in details.items() if v is not None},
-                },
-                file_path=file_path,
-                line=call.line,
-                snippet=f"{func}(model={model_name!r})",
-                evidence_kind="ast_call",
-            ))
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.MODEL,
+                    canonical_name=canonicalize_text(model_name.lower()),
+                    display_name=model_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.95,
+                    metadata={
+                        "source": "api_call",
+                        "api_method": func,
+                        "provider": provider,
+                        **{k: v for k, v in details.items() if v is not None},
+                    },
+                    file_path=file_path,
+                    line=call.line,
+                    snippet=f"{func}(model={model_name!r})",
+                    evidence_kind="ast_call",
+                )
+            )
 
         return detected
 
@@ -206,6 +230,7 @@ class LLMClientsAdapter(FrameworkAdapter):
     @staticmethod
     def _resolve_provider(class_name: str, detected: set[str], parse_result: Any) -> str:
         from ai_sbom.adapters.models_kb import _CLASS_TO_PROVIDERS
+
         candidates = _CLASS_TO_PROVIDERS.get(class_name, [])
         if not candidates:
             return "unknown"
