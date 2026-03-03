@@ -7,43 +7,12 @@ from pathlib import Path
 
 import pytest
 
-from ai_sbom.cli import _handle_schema
 from ai_sbom.extractor import SbomExtractor
 from ai_sbom.models import AiBomDocument
 from ai_sbom.serializer import SbomSerializer
 from conftest import APPS, PY_ONLY
 
 _SCHEMA_FILE = Path(__file__).parent.parent / "src" / "ai_sbom" / "schemas" / "aibom.schema.json"
-
-
-class _Args:
-    output = ""
-
-
-# ---------------------------------------------------------------------------
-# Schema generation via CLI
-# ---------------------------------------------------------------------------
-
-
-def test_schema_command_writes_schema(tmp_path: Path) -> None:
-    args = _Args()
-    args.output = str(tmp_path / "schema.json")
-    _handle_schema(args)
-    payload = json.loads(Path(args.output).read_text(encoding="utf-8"))
-    assert payload["title"] == "AiBomDocument"
-
-
-def test_schema_has_required_top_level_fields(tmp_path: Path) -> None:
-    args = _Args()
-    args.output = str(tmp_path / "schema.json")
-    _handle_schema(args)
-    schema = json.loads(Path(args.output).read_text(encoding="utf-8"))
-    assert schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema"
-    assert "$id" in schema
-    assert "target" in schema["required"]
-    defs = schema.get("$defs", {})
-    for expected in ("Node", "Edge", "Evidence", "PackageDep", "ScanSummary"):
-        assert expected in defs, f"Missing $def: {expected}"
 
 
 # ---------------------------------------------------------------------------

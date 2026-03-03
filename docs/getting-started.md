@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide gets you from install to a validated AI-BOM in a few commands.
+This guide gets you from install to your first AI-BOM in a few commands.
 
 ## Prerequisites
 
@@ -37,18 +37,6 @@ Run a local scan and write Xelo-native JSON:
 xelo scan path ./my-repo --format json --output sbom.json
 ```
 
-Validate the generated JSON against the `AiBomDocument` schema:
-
-```bash
-xelo validate sbom.json
-```
-
-Export the JSON schema:
-
-```bash
-xelo schema --output ai_bom.schema.json
-```
-
 CLI alias:
 
 ```bash
@@ -69,18 +57,6 @@ The generated JSON document includes:
 - `edges` — directed relationships between components
 - `deps` — package dependencies collected from `requirements.txt`, `pyproject.toml`, and `package.json` files found anywhere in the project tree
 - `summary` — scan-level metadata including `frameworks` (list of detected AI frameworks), `modalities`, and data classification signals
-
-`validate` prints:
-
-```text
-OK — document is valid
-```
-
-`schema` prints:
-
-```text
-schema written → <output-file>
-```
 
 ## Configuration Basics
 

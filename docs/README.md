@@ -6,14 +6,13 @@ This documentation set explains how to install, run, and develop Xelo, an open-s
 
 1. Install Xelo and verify prerequisites in [Getting Started](./getting-started.md).
 2. Run your first local scan.
-3. Validate generated output.
-4. Use [CLI Reference](./cli-reference.md) for all command and flag details.
+3. Use [CLI Reference](./cli-reference.md) for all command and flag details.
 
 ## Guides
 
 | Guide | Audience | What it covers |
 | --- | --- | --- |
-| [Getting Started](./getting-started.md) | End users | Install, first scan, validation, understanding output fields, supported frameworks, env basics |
+| [Getting Started](./getting-started.md) | End users | Install, first scan, understanding output fields, supported frameworks, env basics |
 | [CLI Reference](./cli-reference.md) | End users / operators | Full command and flag matrix for `xelo` and `ai-sbom` |
 | [Developer Guide](./developer-guide.md) | Application developers | Python library API, `SbomExtractor`, `ExtractionConfig`, `doc.deps`, `doc.summary`, provider config examples |
 | [Troubleshooting](./troubleshooting.md) | End users / contributors | Common errors, diagnostics, and remediation steps |

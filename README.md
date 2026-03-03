@@ -41,18 +41,6 @@ Generate an AI-BOM from a local path:
 xelo scan path ./my-repo --format json --output sbom.json
 ```
 
-Validate a generated document:
-
-```bash
-xelo validate sbom.json
-```
-
-Export the JSON schema used by the models:
-
-```bash
-xelo schema --output ai_bom.schema.json
-```
-
 CLI alias: `ai-sbom`.
 
 ## CLI Commands
@@ -61,8 +49,6 @@ CLI alias: `ai-sbom`.
 | --- | --- |
 | `xelo scan path <PATH>` | Scan a local repository path |
 | `xelo scan repo <URL>` | Clone and scan a remote repository |
-| `xelo validate <FILE>` | Validate AI-BOM JSON against schema models |
-| `xelo schema --output <FILE>` | Export schema JSON |
 
 Run `xelo --help` or `xelo <command> --help` for all flags.
 

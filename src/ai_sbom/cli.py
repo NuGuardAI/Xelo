@@ -12,12 +12,6 @@ xelo scan repo <URL>
     Clone a git repository and scan it (requires git on PATH).
     Same --format options as scan path.
 
-xelo validate <FILE>
-    Validate a Xelo-native JSON file against the AiBomDocument schema.
-
-xelo schema --output <FILE>
-    Write the AiBomDocument JSON schema to a file.
-
 Logging
 -------
   --verbose   INFO-level logs to stderr (scan progress, file counts, fallbacks)
@@ -127,23 +121,11 @@ def main() -> None:
     _add_scan_args(scan_sub.add_parser("path", help="Scan a local directory"))
     _add_scan_repo_args(scan_sub.add_parser("repo", help="Clone and scan a git repo"))
 
-    # ── validate ─────────────────────────────────────────────────────────
-    validate_parser = subparsers.add_parser("validate", help="Validate a Xelo JSON file")
-    validate_parser.add_argument("input", help="Path to Xelo-native JSON file")
-
-    # ── schema ────────────────────────────────────────────────────────────
-    schema_parser = subparsers.add_parser("schema", help="Export the AiBomDocument JSON schema")
-    schema_parser.add_argument("--output", required=True, metavar="<file>")
-
     args = parser.parse_args()
     _setup_logging(args.verbose, args.debug)
 
     if args.command == "scan":
         _handle_scan(args)
-    elif args.command == "validate":
-        _handle_validate(args)
-    elif args.command == "schema":
-        _handle_schema(args)
 
 
 def _add_scan_args(p: argparse.ArgumentParser) -> None:  # noqa: D401

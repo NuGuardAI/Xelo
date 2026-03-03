@@ -8,9 +8,6 @@ Use this guide to diagnose and fix common Xelo CLI issues.
 | --- | --- | --- |
 | `error: path not found: ...` | Scan target path does not exist | Verify path and rerun `xelo scan path <existing-dir> ...` |
 | `error: not a directory: ...` | Provided path points to file, not directory | Use a directory path for `scan path` |
-| `error: file not found: ...` (validate) | Input JSON file missing | Confirm output location and filename |
-| `error: not valid JSON: ...` | Corrupted or non-JSON file passed to `validate` | Regenerate output or inspect JSON syntax |
-| `error: validation failed: ...` | JSON doesn\'t match `AiBomDocument` schema | Regenerate with Xelo or fix required fields |
 | `error: cannot write output file: ...` | Missing permissions / invalid output path | Use writable directory and check permissions |
 | `error: I/O error writing ...` | Filesystem or path issue | Check disk/path validity and retry |
 | Unified mode output is shallow | `cyclonedx-py` unavailable so fallback used | Install optional dependency: `pip install "xelo[cdx]"` |
@@ -28,17 +25,10 @@ Examples:
 
 ```bash
 xelo --verbose scan path ./my-repo --output sbom.json
-xelo --debug validate sbom.json
+xelo --debug scan path ./my-repo --output sbom.json
 ```
 
 ## Common Remediation Flows
-
-Regenerate and validate:
-
-```bash
-xelo scan path ./my-repo --format json --output sbom.json
-xelo validate sbom.json
-```
 
 Check command usage:
 
