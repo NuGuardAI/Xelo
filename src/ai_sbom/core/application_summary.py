@@ -159,8 +159,14 @@ def _is_agentic_framework(value: str) -> bool:
     )  # normalise underscore variants (e.g. openai_agents → openai-agents)
     if not n or n in _FRAMEWORK_EXCLUDES:
         return False
-    return n in _AGENTIC_FRAMEWORKS or any(
-        tok in n for tok in ("langgraph", "semantic", "autogen", "crewai", "agents-sdk")
+    # Strip language suffix emitted by TS _fw_node() (e.g. "agno-ts" → "agno",
+    # "langgraph-js" already matches via substring so this mainly helps the
+    # purely-import-detected case where only a FRAMEWORK node is produced).
+    n_base = re.sub(r"-(ts|js)$", "", n)
+    return (
+        n in _AGENTIC_FRAMEWORKS
+        or n_base in _AGENTIC_FRAMEWORKS
+        or any(tok in n for tok in ("langgraph", "semantic", "autogen", "crewai", "agents-sdk"))
     )
 
 
