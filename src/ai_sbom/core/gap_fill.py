@@ -167,11 +167,62 @@ _DISCOVERY_CONFIDENCE_CAP = 0.75
 # Minimum confidence threshold below which a discovery result is ignored
 _MIN_ACCEPTED_CONFIDENCE = 0.40
 
+# Dev / build tools that are NOT AI SBOM components — excluded from TOOL gap-fill
+_TOOL_BLOCKLIST: frozenset[str] = frozenset(
+    {
+        "vite",
+        "eslint",
+        "prettier",
+        "webpack",
+        "babel",
+        "jest",
+        "tsc",
+        "mypy",
+        "ruff",
+        "npm",
+        "yarn",
+        "pip",
+        "docker",
+        "git",
+        "make",
+        "rollup",
+        "parcel",
+        "turbo",
+        "vitest",
+        "mocha",
+        "chai",
+        "pytest",
+        "black",
+        "isort",
+        "flake8",
+        "pylint",
+        "husky",
+        "lint-staged",
+        "typescript",
+        "node",
+        "bun",
+        "pnpm",
+        "sass",
+        "tailwind",
+        "postcss",
+        "nodemon",
+        "ts-node",
+        "pm2",
+    }
+)
+
 # Short category description injected into the LLM prompt
 _CATEGORY_DESCRIPTIONS: dict[ComponentType, str] = {
     ComponentType.MODEL: "AI/ML models (LLM, embedding, speech, vision, etc.)",
-    ComponentType.DATASTORE: "Databases, caches, vector stores, file stores",
-    ComponentType.TOOL: "External tools, APIs, schedulers, browser-automation, social media clients",
+    ComponentType.DATASTORE: "Databases, caches, vector stores, file stores, memory backends",
+    ComponentType.TOOL: (
+        "AI/agent tools ONLY — functions or capabilities registered with an LLM or used by an AI agent: "
+        "external API calls made BY agent code, browser/scraping automation (playwright, selenium), "
+        "social-media clients (praw, twikit, telethon), function-calling tools, "
+        "scheduled tasks driven by agent logic (celery, apscheduler). "
+        "EXCLUDE build/dev tooling (vite, eslint, prettier, webpack, babel, jest, tsc, "
+        "mypy, ruff, npm, yarn, docker, git, etc.) — those are not AI components."
+    ),
     ComponentType.PROMPT: "Prompt templates, system messages, instruction files",
     ComponentType.AUTH: "Authentication, authorisation, credentials, session management",
     ComponentType.DEPLOYMENT: "Deployment targets, reverse proxies, container orchestration",
@@ -242,6 +293,15 @@ async def discover_missing_nodes(
             continue
 
         for item in raw_results:
+            # Block dev/build tools before creating a node
+            if category == ComponentType.TOOL:
+                candidate_name = str(item.get("canonical_name") or item.get("name") or "").lower()
+                if candidate_name in _TOOL_BLOCKLIST or any(
+                    blocked in candidate_name for blocked in _TOOL_BLOCKLIST
+                ):
+                    _log.debug("gap-fill: blocking dev-tool %r", candidate_name)
+                    continue
+
             node = _result_to_node(item, category)
             if node is None:
                 continue

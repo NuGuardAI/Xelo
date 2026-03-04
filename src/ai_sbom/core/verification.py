@@ -10,6 +10,7 @@ Key Features:
 - Caches results for identical code patterns
 - Works with ai_sbom.models.Node (standalone, no backend dependency)
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -44,6 +45,7 @@ MAX_VERIFICATIONS_PER_SCAN = int(os.environ.get("AISBOM_MAX_VERIFICATIONS", "20"
 @dataclass
 class VerificationResult:
     """Result of verifying a single AIBOM node detection."""
+
     node_id: UUID
     original_name: str
     verified: bool
@@ -57,6 +59,7 @@ class VerificationResult:
 @dataclass
 class VerificationStats:
     """Statistics from a verification pass."""
+
     total_candidates: int = 0
     verified_count: int = 0
     rejected_count: int = 0
@@ -294,7 +297,17 @@ def apply_verification_results(
     nodes: list[Node],
     results: list[VerificationResult],
 ) -> list[Node]:
-    """Apply verification results: update confidence, remove rejected nodes."""
+    """Apply verification results: update confidence, soft-reject or drop nodes.
+
+    Rejection policy
+    ----------------
+    - **LLM-discovered** nodes (``source_tier="llm"`` / ``adapter="gap_fill"``)
+      are *fully dropped* when rejected — they have no structural backing.
+    - **Deterministic** nodes (AST / regex) are *soft-rejected*: their confidence
+      is reduced to 0.55 (below the verification floor) so they remain in the SBOM
+      but are flagged.  Dropping a deterministic node on an uncertain LLM verdict
+      trades away recall for no precision gain.
+    """
     by_id = {r.node_id: r for r in results}
     by_name = {r.original_name: r for r in results}
     updated: list[Node] = []
@@ -309,7 +322,28 @@ def apply_verification_results(
                 node.metadata.extras["llm_verification_reason"] = result.reason
                 node.metadata.extras["llm_confidence"] = result.new_confidence
                 updated.append(node)
-            # rejected nodes are dropped
+            else:
+                # Only fully drop nodes that were LLM-discovered (no structural backing)
+                is_llm_discovered = (
+                    node.metadata.extras.get("source_tier") == "llm"
+                    or node.metadata.extras.get("adapter") == "gap_fill"
+                )
+                if is_llm_discovered:
+                    _log.debug(
+                        "apply_verification: dropping llm_discovery node %r (rejected)",
+                        node.name,
+                    )
+                    # Dropped — not appended
+                else:
+                    # Soft-reject: keep but push confidence below verification floor
+                    node.confidence = min(node.confidence, 0.55)
+                    node.metadata.extras["llm_soft_rejected"] = True
+                    node.metadata.extras["llm_verification_reason"] = result.reason
+                    _log.debug(
+                        "apply_verification: soft-reject deterministic node %r → conf=0.55",
+                        node.name,
+                    )
+                    updated.append(node)
         else:
             updated.append(node)
     return updated
@@ -364,7 +398,9 @@ async def verify_uncertain_nodes(
             break
 
         evidence_list = evidence_map.get(node.id, [])
-        file_path = evidence_list[0].location.path if evidence_list and evidence_list[0].location else ""
+        file_path = (
+            evidence_list[0].location.path if evidence_list and evidence_list[0].location else ""
+        )
         file_content = (file_contents or {}).get(file_path)
 
         system_prompt, user_prompt = build_verification_prompt(node, evidence_list, file_content)
