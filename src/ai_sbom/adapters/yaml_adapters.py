@@ -29,7 +29,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from ai_sbom.adapters.base import ComponentDetection
+from ai_sbom.adapters.base import ComponentDetection, RelationshipHint
 from ai_sbom.normalization import canonicalize_text
 from ai_sbom.types import ComponentType
 
@@ -448,6 +448,8 @@ class LLMYAMLConfigAdapter:
             entry_line = _find_key_line(line_cache, entry_key)
 
             if model:
+                _fw_canon = canonicalize_text(f"framework:{provider}")
+                _model_canon = canonicalize_text(model.lower())
                 detections.append(
                     ComponentDetection(
                         component_type=ComponentType.MODEL,
@@ -466,6 +468,15 @@ class LLMYAMLConfigAdapter:
                         line=entry_line,
                         snippet=f"{entry_key}: model={model}",
                         evidence_kind="yaml",
+                        relationships=[
+                            RelationshipHint(
+                                source_canonical=_fw_canon,
+                                source_type=ComponentType.FRAMEWORK,
+                                target_canonical=_model_canon,
+                                target_type=ComponentType.MODEL,
+                                relationship_type="USES",
+                            )
+                        ],
                     )
                 )
                 _log.debug(

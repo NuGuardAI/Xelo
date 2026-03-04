@@ -779,6 +779,58 @@ class SbomExtractor:
                         )
                     )
 
+        # Fallback: connect frameworks to models when no explicit edges exist.
+        # Covers custom-orchestrator apps (no AGENT nodes) where LLM provider
+        # config was detected from YAML / regex without explicit AST hints.
+        frameworks_with_outgoing: set[Any] = {e.source for e in doc.edges}
+        for fw in by_type.get(ComponentType.FRAMEWORK, []):
+            if fw.id in frameworks_with_outgoing:
+                continue
+            for model in sorted(
+                by_type.get(ComponentType.MODEL, []),
+                key=lambda n: -n.confidence,
+            )[:5]:
+                key = (fw.id, model.id, "USES")
+                if key not in seen_edges:
+                    seen_edges.add(key)
+                    doc.edges.append(
+                        Edge(
+                            source=fw.id,
+                            target=model.id,
+                            relationship_type=RelationshipType.USES,
+                        )
+                    )
+
+        # Structural edges: DEPLOYMENT → CONTAINER_IMAGE (DEPLOYS)
+        for dep in by_type.get(ComponentType.DEPLOYMENT, []):
+            for img in by_type.get(ComponentType.CONTAINER_IMAGE, []):
+                key = (dep.id, img.id, "DEPLOYS")
+                if key not in seen_edges:
+                    seen_edges.add(key)
+                    doc.edges.append(
+                        Edge(
+                            source=dep.id,
+                            target=img.id,
+                            relationship_type=RelationshipType.DEPLOYS,
+                        )
+                    )
+
+        # Structural edges: AUTH → API_ENDPOINT (PROTECTS)
+        for auth in by_type.get(ComponentType.AUTH, []):
+            for ep in sorted(by_type.get(ComponentType.API_ENDPOINT, []), key=lambda n: n.name)[
+                :10
+            ]:
+                key = (auth.id, ep.id, "PROTECTS")
+                if key not in seen_edges:
+                    seen_edges.add(key)
+                    doc.edges.append(
+                        Edge(
+                            source=auth.id,
+                            target=ep.id,
+                            relationship_type=RelationshipType.PROTECTS,
+                        )
+                    )
+
     async def _llm_enrich(
         self,
         doc: AiBomDocument,
