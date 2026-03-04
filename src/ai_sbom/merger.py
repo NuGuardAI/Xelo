@@ -194,13 +194,13 @@ class AiBomMerger:
                     id_to_ref[str(node.id)] = existing_ref
             else:
                 # Add as new AI-only component
-                comp: dict[str, Any] = {
+                ai_comp: dict[str, Any] = {
                     "bom-ref": str(node.id),
                     "type": cdx_type,
                     "name": node.name,
                 }
                 if node.metadata.extras.get("version"):
-                    comp["version"] = str(node.metadata.extras["version"])
+                    ai_comp["version"] = str(node.metadata.extras["version"])
                 if cdx_type == "machine-learning-model":
                     ext_refs: list[dict[str, str]] = []
                     if node.metadata.extras.get("model_card_url"):
@@ -220,9 +220,9 @@ class AiBomMerger:
                             }
                         )
                     if ext_refs:
-                        comp["externalReferences"] = ext_refs
-                comp["properties"] = aibom_props
-                ai_only_components.append(comp)
+                        ai_comp["externalReferences"] = ext_refs
+                ai_comp["properties"] = aibom_props
+                ai_only_components.append(ai_comp)
 
         # ── Assemble final component list ────────────────────────────────
         result["components"] = std_components + ai_only_components

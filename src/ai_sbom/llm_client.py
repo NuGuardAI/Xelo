@@ -11,6 +11,7 @@ Wraps litellm to provide a provider-agnostic interface supporting:
 
 Only imported when ExtractionConfig.enable_llm=True.
 """
+
 from __future__ import annotations
 
 import json
@@ -95,8 +96,7 @@ class LLMClient:
     def _check_budget(self) -> None:
         if self._tokens_used >= self._budget:
             raise BudgetExhaustedError(
-                f"Token budget of {self._budget} exhausted "
-                f"(used: {self._tokens_used})"
+                f"Token budget of {self._budget} exhausted (used: {self._tokens_used})"
             )
 
     def _record_usage(self, response: Any) -> int:
@@ -121,7 +121,7 @@ class LLMClient:
         """
         import httpx
 
-        model_name = self._model[len("vertex_ai/"):]
+        model_name = self._model[len("vertex_ai/") :]
         url = f"{_VERTEX_BASE}/{model_name}:generateContent?key={self._google_api_key}"
         body: dict[str, Any] = {
             "contents": [{"role": "user", "parts": [{"text": user}]}],
@@ -130,18 +130,12 @@ class LLMClient:
         }
         _log.debug("_vertex_ai_complete model=%s", model_name)
         async with httpx.AsyncClient(timeout=120.0) as client:
-            resp = await client.post(
-                url, json=body, headers={"Content-Type": "application/json"}
-            )
+            resp = await client.post(url, json=body, headers={"Content-Type": "application/json"})
         if resp.status_code != 200:
-            raise RuntimeError(
-                f"Vertex AI error {resp.status_code}: {resp.text[:300]}"
-            )
+            raise RuntimeError(f"Vertex AI error {resp.status_code}: {resp.text[:300]}")
         data = resp.json()
         candidates = data.get("candidates", [])
-        text: str = (
-            candidates[0]["content"]["parts"][0]["text"] if candidates else ""
-        )
+        text: str = candidates[0]["content"]["parts"][0]["text"] if candidates else ""
         usage = data.get("usageMetadata", {})
         tokens = usage.get("totalTokenCount", 0)
         self._tokens_used += tokens
@@ -189,7 +183,9 @@ class LLMClient:
         if self._api_base:
             kwargs["api_base"] = self._api_base
 
-        _log.debug("complete_text model=%s budget_left=%d", self._model, self._budget - self._tokens_used)
+        _log.debug(
+            "complete_text model=%s budget_left=%d", self._model, self._budget - self._tokens_used
+        )
         response = await litellm.acompletion(**kwargs)
         tokens = self._record_usage(response)
         text: str = response.choices[0].message.content or ""
@@ -236,7 +232,7 @@ class LLMClient:
             if start != -1 and end != -1:
                 raw = raw[start : end + 1]
             try:
-                return json.loads(raw)
+                return dict(json.loads(raw))
             except json.JSONDecodeError as exc:
                 _log.warning("complete_structured (vertex): JSON parse failed: %s", exc)
                 return {}
@@ -266,11 +262,15 @@ class LLMClient:
         if self._api_base:
             kwargs["api_base"] = self._api_base
 
-        _log.debug("complete_structured model=%s schema_keys=%s", self._model, list(response_schema.get("properties", {}).keys()))
+        _log.debug(
+            "complete_structured model=%s schema_keys=%s",
+            self._model,
+            list(response_schema.get("properties", {}).keys()),
+        )
         response = await litellm.acompletion(**kwargs)
         self._record_usage(response)
 
-        raw: str = response.choices[0].message.content or ""
+        raw = response.choices[0].message.content or ""
         # Strip markdown code fences if present
         raw = raw.strip()
         if raw.startswith("```"):
@@ -282,7 +282,7 @@ class LLMClient:
         if start != -1 and end != -1:
             raw = raw[start : end + 1]
         try:
-            return json.loads(raw)
+            return dict(json.loads(raw))
         except json.JSONDecodeError as exc:
             _log.warning("complete_structured: JSON parse failed: %s", exc)
             return {}

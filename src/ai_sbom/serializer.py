@@ -125,7 +125,7 @@ class SbomSerializer:
                     }
                 ]
             if extras.get("api_endpoint"):
-                component.setdefault("externalReferences", []).append(  # type: ignore[union-attr]
+                component.setdefault("externalReferences", []).append(
                     {
                         "type": "website",
                         "url": str(extras["api_endpoint"]),
@@ -140,7 +140,7 @@ class SbomSerializer:
         effective_deps: list[PackageDep] = deps if deps is not None else doc.deps
         dep_components: list[dict[str, Any]] = []
         for dep in effective_deps:
-            dc: dict[str, Any] = {
+            dep_entry: dict[str, Any] = {
                 "bom-ref": dep.purl,
                 "type": "library",
                 "name": dep.name,
@@ -151,10 +151,12 @@ class SbomSerializer:
                 ],
             }
             if dep.version:
-                dc["version"] = dep.version
+                dep_entry["version"] = dep.version
             if dep.version_spec and dep.version_spec != f"=={dep.version}":
-                dc["properties"].append({"name": "xelo:version_spec", "value": dep.version_spec})
-            dep_components.append(dc)
+                dep_entry["properties"].append(
+                    {"name": "xelo:version_spec", "value": dep.version_spec}
+                )
+            dep_components.append(dep_entry)
 
         # ── Edge → dependency refs ────────────────────────────────────
         dependencies: list[dict[str, Any]] = [

@@ -316,7 +316,7 @@ def build_scan_summary(
     files: Sequence[tuple[str, str]],
     source_ref: str | None = None,
     branch: str | None = None,
-    dc_metadata: list[dict] | None = None,
+    dc_metadata: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Build scan-level summary for reporting."""
     node_types: dict[str, int] = {}

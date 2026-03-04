@@ -125,7 +125,7 @@ def _poetry_spec(ver: object) -> str:
     if isinstance(ver, str):
         return ver
     if isinstance(ver, dict):
-        return ver.get("version", "")
+        return str(ver.get("version", ""))
     return ""
 
 
@@ -193,7 +193,7 @@ class DependencyScanner:
             ".tox",
         }
         if tomllib is None:
-            return []
+            return []  # type: ignore[unreachable]
 
         candidate_paths: list[Path] = []
         seen_abs: set[Path] = set()
@@ -225,13 +225,13 @@ class DependencyScanner:
 
             # ── PEP 621 / setuptools / hatch ──────────────────────────────
             assert isinstance(project, dict)
-            for spec in project.get("dependencies", []):  # type: ignore[union-attr]
+            for spec in project.get("dependencies", []):
                 if isinstance(spec, str):
                     dep = _parse_req_line(spec, src, "runtime")
                     if dep:
                         deps.append(dep)
 
-            for grp, specs in project.get("optional-dependencies", {}).items():  # type: ignore[union-attr]
+            for grp, specs in project.get("optional-dependencies", {}).items():
                 if isinstance(specs, list):
                     for spec in specs:
                         if isinstance(spec, str):

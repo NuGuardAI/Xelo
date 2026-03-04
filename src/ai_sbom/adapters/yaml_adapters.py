@@ -6,13 +6,20 @@ Supported patterns
 ------------------
 ``CrewAIYAMLAdapter``:
     Detects agents defined in CrewAI ``config/agents.yaml`` files.
-    Each top-level key with a ``role`` or ``goal`` sub-key is treated as
-    an AGENT component.  Works for both the legacy single-crew layout and
-    the new ``src/<package>/config/agents.yaml`` layout.
 
 ``AutoGenYAMLAdapter``:
-    Detects agent configs from AutoGen-style YAML files (``OAI_CONFIG_LIST``
-    or ``autogen_config`` keys with ``model`` entries).
+    Detects agent configs from AutoGen-style YAML files.
+
+``LLMYAMLConfigAdapter``:
+    Detects models and providers from generic LLM config YAML files.
+    Matches ``llm.yaml``, ``llm_config.yaml``, ``providers.yaml``, etc.
+    Parses a ``providers:`` block to emit MODEL + FRAMEWORK nodes.
+
+``PromptFileAdapter``:
+    Detects prompt template files.  Triggered by file-path pattern
+    (files inside a ``prompts/`` directory with ``.txt`` extension,
+    or files named ``*_prompt.txt`` / ``*_system.txt``).
+    Emits one PROMPT node per file with a content preview.
 """
 
 from __future__ import annotations
@@ -23,6 +30,7 @@ from pathlib import Path
 from typing import Any
 
 from ai_sbom.adapters.base import ComponentDetection
+from ai_sbom.normalization import canonicalize_text
 from ai_sbom.types import ComponentType
 
 _log = logging.getLogger(__name__)
@@ -303,7 +311,7 @@ class AutoGenYAMLAdapter:
 
         return detections
 
-    def _is_autogen_model_config(self, data: dict) -> bool:
+    def _is_autogen_model_config(self, data: dict[str, Any]) -> bool:
         """Check if the YAML looks like an AutoGen model config."""
         provider = str(data.get("provider") or "")
         if _AUTOGEN_PROVIDER_PREFIX in provider:
@@ -335,3 +343,246 @@ def _find_key_line(line_cache: list[str], key: str) -> int:
         if stripped.startswith(prefix) or stripped == key + ":":
             return i
     return 1
+
+
+# ---------------------------------------------------------------------------
+# LLM YAML config adapter
+# ---------------------------------------------------------------------------
+
+_LLM_YAML_PATH_RE = re.compile(
+    r"(?:^|/)(?:llm[_-]?config.*|providers.*|models.*|config/llm)\.ya?ml$",
+    re.IGNORECASE,
+)
+
+# Known base_url substrings → (provider_name, display_name)
+_LLM_YAML_BASE_URL_PROVIDERS: list[tuple[str, str]] = [
+    ("api.groq.com", "groq"),
+    ("generativelanguage.googleapis.com", "google"),
+    ("aiplatform.googleapis.com", "google"),
+    ("localhost:11434", "ollama"),
+    ("127.0.0.1:11434", "ollama"),
+    ("api.anthropic.com", "anthropic"),
+    ("api.mistral.ai", "mistral"),
+    ("api.together.xyz", "togetherai"),
+    ("api.deepseek.com", "deepseek"),
+    ("openrouter.ai", "openrouter"),
+    ("api.openai.com", "openai"),
+]
+
+
+def _provider_from_base_url(base_url: str) -> str | None:
+    url = (base_url or "").lower()
+    for substring, provider in _LLM_YAML_BASE_URL_PROVIDERS:
+        if substring in url:
+            return provider
+    return None
+
+
+class LLMYAMLConfigAdapter:
+    """Detect LLM models and providers from generic YAML config files.
+
+    Matches files whose name matches ``llm[_-]?config*.yaml``,
+    ``providers*.yaml``, ``models*.yaml``, or ``config/llm.yaml``.
+
+    Parses a ``providers:`` mapping block where each key is a provider entry
+    containing ``model`` and optionally ``base_url`` fields::
+
+        providers:
+          groq:
+            model: llama-3.3-70b-versatile
+            base_url: https://api.groq.com/openai/v1
+            enabled: true
+          ollama:
+            model: llama3.2:3b
+            base_url: http://localhost:11434/v1
+
+    Emits one MODEL node per provider entry that has a ``model`` value, and one
+    FRAMEWORK node per resolved provider (via ``base_url`` or key name).
+    """
+
+    name = "llm_yaml_config"
+    priority = 37
+
+    def scan(self, content: str, rel_path: str) -> list[ComponentDetection]:
+        if not _LLM_YAML_PATH_RE.search(rel_path):
+            return []
+
+        data = _try_load_yaml(content)
+        if not isinstance(data, dict):
+            _log.debug("llm_yaml_config: %s is not a YAML mapping — skipping", rel_path)
+            return []
+
+        detections: list[ComponentDetection] = []
+        line_cache = _build_line_index(content)
+
+        # Support top-level ``providers:`` block or inline list at root
+        providers_block = data.get("providers") or data.get("llm_providers") or data.get("models")
+        if not isinstance(providers_block, dict):
+            _log.debug("llm_yaml_config: no recognizable providers block in %s", rel_path)
+            return []
+
+        seen_providers: set[str] = set()
+
+        for entry_key, entry_val in providers_block.items():
+            if not isinstance(entry_val, dict):
+                continue
+
+            # Skip explicitly disabled entries
+            enabled = entry_val.get("enabled")
+            if enabled is False:
+                _log.debug(
+                    "llm_yaml_config: skipping disabled provider %r in %s", entry_key, rel_path
+                )
+                continue
+
+            model = str(entry_val.get("model") or "").strip()
+            base_url = str(entry_val.get("base_url") or entry_val.get("api_base") or "").strip()
+
+            # Resolve provider: try base_url first, then entry key name
+            provider = _provider_from_base_url(base_url) or str(entry_key).lower().strip()
+
+            # Use the provider entry key's line for all detections within this entry.
+            # Model names don't appear as top-level YAML keys so looking them up would
+            # always fall back to line 1, causing location-based dedup to collapse
+            # multiple provider entries into one.
+            entry_line = _find_key_line(line_cache, entry_key)
+
+            if model:
+                detections.append(
+                    ComponentDetection(
+                        component_type=ComponentType.MODEL,
+                        canonical_name=model.lower(),
+                        display_name=model,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.85,
+                        metadata={
+                            "framework": provider,
+                            "provider": provider,
+                            "source": "yaml_config",
+                            "base_url": base_url or None,
+                        },
+                        file_path=rel_path,
+                        line=entry_line,
+                        snippet=f"{entry_key}: model={model}",
+                        evidence_kind="yaml",
+                    )
+                )
+                _log.debug(
+                    "llm_yaml_config: model=%r provider=%r in %s (line=%d)",
+                    model,
+                    provider,
+                    rel_path,
+                    entry_line,
+                )
+
+            # Emit one FRAMEWORK node per unique provider
+            if provider not in seen_providers:
+                seen_providers.add(provider)
+                detections.append(
+                    ComponentDetection(
+                        component_type=ComponentType.FRAMEWORK,
+                        canonical_name=f"framework:{provider}",
+                        display_name=provider,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.80,
+                        metadata={
+                            "framework": provider,
+                            "source": "yaml_config",
+                            "base_url": base_url or None,
+                        },
+                        file_path=rel_path,
+                        line=entry_line,
+                        snippet=f"{entry_key}: base_url={base_url}" if base_url else entry_key,
+                        evidence_kind="yaml",
+                    )
+                )
+
+        _log.info("llm_yaml_config: %d detections in %s", len(detections), rel_path)
+        return detections
+
+
+# ---------------------------------------------------------------------------
+# Prompt file adapter
+# ---------------------------------------------------------------------------
+
+_PROMPT_DIR_RE = re.compile(r"(?:^|[\\/])prompts?[\\/]", re.IGNORECASE)
+_PROMPT_FILENAME_RE = re.compile(
+    r"(?:system[_-]|user[_-]|assistant[_-]|[_-]prompt|[_-]template|[_-]system)"
+    r".*\.txt$",
+    re.IGNORECASE,
+)
+# Detects {placeholder} / {{placeholder}} template variable syntax
+_TEMPLATE_VAR_RE = re.compile(r"\{[\w_]+\}")
+
+
+class PromptFileAdapter:
+    """Detect prompt template files by file-path pattern.
+
+    Triggered for:
+    - Any ``.txt`` file inside a directory named ``prompts/`` or ``prompt/``
+    - Files named ``*_prompt.txt``, ``*_system.txt``, ``system_*.txt``,
+      ``*_template.txt``
+
+    Emits one PROMPT node per file.  The ``content_preview`` field holds the
+    first 160 characters; ``is_template`` is True when ``{variable}``
+    placeholders are found.
+
+    This adapter is called from the extractor *before* the docs-tier skip so
+    that ``.txt`` files in prompt directories are not silently ignored.
+    """
+
+    name = "prompt_file"
+    priority = 45
+
+    def scan(self, content: str, rel_path: str) -> list[ComponentDetection]:
+        """Return a single PROMPT detection if *rel_path* looks like a prompt file."""
+        path_str = rel_path.replace("\\", "/")
+
+        is_in_prompts_dir = bool(_PROMPT_DIR_RE.search(path_str))
+        is_prompt_filename = bool(_PROMPT_FILENAME_RE.search(Path(rel_path).name))
+
+        if not (is_in_prompts_dir or is_prompt_filename):
+            return []
+
+        stripped = content.strip()
+        if not stripped:
+            _log.debug("prompt_file: skipping empty file %s", rel_path)
+            return []
+
+        preview = stripped[:160].replace("\n", " ")
+        is_template = bool(_TEMPLATE_VAR_RE.search(stripped))
+        template_vars = list({m.group(0) for m in _TEMPLATE_VAR_RE.finditer(stripped)})
+
+        # Use the filename stem as the display name (title-case)
+        stem = Path(rel_path).stem.replace("_", " ").replace("-", " ").title()
+
+        _log.debug(
+            "prompt_file: detected prompt %r in %s (is_template=%s)",
+            stem,
+            rel_path,
+            is_template,
+        )
+        return [
+            ComponentDetection(
+                component_type=ComponentType.PROMPT,
+                canonical_name=f"prompt_file:{canonicalize_text(stem)}",
+                display_name=stem,
+                adapter_name=self.name,
+                priority=self.priority,
+                confidence=0.75,
+                metadata={
+                    "source": "prompt_file",
+                    "content_preview": preview,
+                    "is_template": is_template,
+                    "template_variables": template_vars,
+                    "char_count": len(stripped),
+                    "role": "system" if "system" in rel_path.lower() else "user",
+                },
+                file_path=rel_path,
+                line=1,
+                snippet=preview[:80],
+                evidence_kind="prompt_file",
+            )
+        ]

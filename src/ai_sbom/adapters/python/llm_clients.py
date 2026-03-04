@@ -6,10 +6,12 @@ Detects direct SDK client instantiations across all major AI providers:
 - Google: ``GenerativeModel()``, ``vertexai``
 - Mistral, Cohere, Groq, Ollama, Bedrock
 - API call patterns: ``client.chat.completions.create(model="...")``
+- Proxy pattern: ``OpenAI(base_url="https://api.groq.com/...")`` → resolves to Groq
 """
 
 from __future__ import annotations
 
+import logging
 import re
 from typing import Any
 
@@ -24,6 +26,7 @@ from ai_sbom.adapters.models_kb import (
 from ai_sbom.normalization import canonicalize_text
 from ai_sbom.types import ComponentType
 
+_log = logging.getLogger(__name__)
 
 # API call patterns that specify a model
 _MODEL_SPECIFYING_METHODS = re.compile(
@@ -32,6 +35,48 @@ _MODEL_SPECIFYING_METHODS = re.compile(
 
 # Classes that are treated as model-specifying (even without explicit model arg)
 _MODEL_SPECIFYING_CLASSES = {"GenerativeModel", "ChatModel", "TextGenerationModel"}
+
+# ---------------------------------------------------------------------------
+# base_url → provider resolution for OpenAI-compatible proxy pattern
+# ---------------------------------------------------------------------------
+# Many agentic apps use a single OpenAI SDK client with a custom base_url
+# pointing at Groq, Gemini, Ollama, or other compatible providers.  Detecting
+# the base_url allows correct provider attribution even without provider-SDK imports.
+
+_BASE_URL_TO_PROVIDER: list[tuple[str, str]] = [
+    # Matched in order — more specific substrings first
+    ("api.groq.com", "groq"),
+    ("generativelanguage.googleapis.com", "google"),
+    ("aiplatform.googleapis.com", "google"),
+    ("localhost:11434", "ollama"),
+    ("127.0.0.1:11434", "ollama"),
+    ("0.0.0.0:11434", "ollama"),
+    ("api.anthropic.com", "anthropic"),
+    ("api.mistral.ai", "mistral"),
+    ("api.together.xyz", "togetherai"),
+    ("api.deepseek.com", "deepseek"),
+    ("openrouter.ai", "openrouter"),
+    ("api.cohere.ai", "cohere"),
+    ("inference.cerebras.ai", "cerebras"),
+    ("api.fireworks.ai", "fireworks"),
+    ("api.perplexity.ai", "perplexity"),
+]
+
+
+def _resolve_provider_from_base_url(base_url: str) -> str | None:
+    """Resolve a provider string from an OpenAI-compatible ``base_url`` value.
+
+    Returns the provider name (e.g. ``"groq"``) or ``None`` if the URL doesn't
+    match any known provider.
+    """
+    if not base_url:
+        return None
+    url_lower = base_url.lower()
+    for substring, provider in _BASE_URL_TO_PROVIDER:
+        if substring in url_lower:
+            _log.debug("base_url %r → provider %r", base_url, provider)
+            return provider
+    return None
 
 
 class LLMClientsAdapter(FrameworkAdapter):
@@ -74,6 +119,22 @@ class LLMClientsAdapter(FrameworkAdapter):
                 is_azure = "Azure" in inst.class_name
                 args = inst.args or {}
 
+                # Resolve provider from base_url for OpenAI-compatible proxy pattern.
+                # e.g. OpenAI(base_url="https://api.groq.com/openai/v1") → groq
+                base_url_provider: str | None = None
+                if inst.class_name in {"OpenAI", "AsyncOpenAI"}:
+                    raw_url = self._clean_str(args.get("base_url"))
+                    if raw_url:
+                        base_url_provider = _resolve_provider_from_base_url(raw_url)
+                        if base_url_provider:
+                            provider = base_url_provider
+                            _log.debug(
+                                "%s: OpenAI proxy → provider=%r (base_url=%r)",
+                                file_path,
+                                base_url_provider,
+                                raw_url,
+                            )
+
                 model_name = self._clean_str(
                     args.get("model")
                     or args.get("model_name")
@@ -85,8 +146,31 @@ class LLMClientsAdapter(FrameworkAdapter):
                     )
                 )
 
-                # Skip bare client objects without an explicit model
+                # Skip bare client objects without an explicit model,
+                # UNLESS the base_url resolved to a known provider — in that case
+                # emit a FRAMEWORK node so the proxied provider is visible in the SBOM.
                 if not model_name and inst.class_name not in _MODEL_SPECIFYING_CLASSES:
+                    if base_url_provider:
+                        raw_url = self._clean_str(args.get("base_url"))
+                        detected.append(
+                            ComponentDetection(
+                                component_type=ComponentType.FRAMEWORK,
+                                canonical_name=f"framework:{base_url_provider}",
+                                display_name=base_url_provider,
+                                adapter_name=self.name,
+                                priority=self.priority,
+                                confidence=0.88,
+                                metadata={
+                                    "framework": base_url_provider,
+                                    "via_openai_proxy": True,
+                                    "base_url": raw_url,
+                                },
+                                file_path=file_path,
+                                line=inst.line,
+                                snippet=f"{inst.class_name}(base_url={raw_url!r})",
+                                evidence_kind="ast_instantiation",
+                            )
+                        )
                     continue
 
                 display = model_name or f"{provider}_client"

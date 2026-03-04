@@ -6,6 +6,7 @@ uses tree-sitter when available and falls back to regex otherwise.
 This module only defines the shared base class so adapters do not need to
 import from extractor internals.
 """
+
 from __future__ import annotations
 
 import re
@@ -29,7 +30,7 @@ class TSFrameworkAdapter(FrameworkAdapter):
       ``ai_sbom.core.ts_parser`` themselves.
     """
 
-    def can_handle(self, imports_present: set[str]) -> bool:  # type: ignore[override]
+    def can_handle(self, imports_present: set[str]) -> bool:
         for mod in imports_present:
             for pkg in self.handles_imports:
                 if mod == pkg or pkg in mod:

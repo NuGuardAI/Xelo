@@ -78,7 +78,7 @@ def _run_cdx(args: list[str], cwd: Path) -> dict[str, Any] | None:
         )
         if r.returncode == 0 and r.stdout.strip():
             try:
-                bom = json.loads(r.stdout)
+                bom: dict[str, Any] = json.loads(r.stdout)
                 n = len(bom.get("components", []))
                 _log.info("cyclonedx-py produced %d components via: %s", n, " ".join(args))
                 return bom

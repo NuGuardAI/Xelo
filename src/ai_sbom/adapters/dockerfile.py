@@ -35,6 +35,24 @@ _FROM_RE = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 
+# EXPOSE <port> [<port>/<protocol>...]
+_EXPOSE_RE = re.compile(
+    r"^\s*EXPOSE\s+(?P<ports>[\d/\w\s]+)",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+# RUN … playwright install … (covers pip install playwright + npm exec playwright)
+_RUN_PLAYWRIGHT_RE = re.compile(
+    r"^\s*RUN\b.*\bplaywright\b",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+# RUN … pip install <pkg> or apt-get install <pkg> (for nginx / gunicorn / uvicorn)
+_RUN_DEPLOY_TOOLS_RE = re.compile(
+    r"^\s*RUN\b.*(?:nginx|gunicorn|uvicorn|caddy|traefik)",
+    re.IGNORECASE | re.MULTILINE,
+)
+
 # Splits an image reference into registry + name + tag + digest
 # Examples:
 #   python:3.12-slim               → name=python  tag=3.12-slim  digest=None
@@ -139,4 +157,85 @@ class DockerfileAdapter:
             "dockerfile adapter: %d unique image(s) found in %s",
             len(detections), file_path,
         )
+        detections.extend(self._detect_exposed_ports(content, file_path))
+        detections.extend(self._detect_run_tools(content, file_path))
         return detections
+
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
+
+    def _detect_exposed_ports(
+        self, content: str, file_path: str
+    ) -> list[ComponentDetection]:
+        """Emit API_ENDPOINT nodes for each EXPOSE instruction."""
+        results: list[ComponentDetection] = []
+        seen_ports: set[str] = set()
+        for match in _EXPOSE_RE.finditer(content):
+            raw_ports = match.group("ports")
+            line = content[: match.start()].count("\n") + 1
+            for token in raw_ports.split():
+                token = token.strip()
+                if not token:
+                    continue
+                # Normalise port spec: strip trailing /tcp|/udp
+                port_str = token.split("/")[0]
+                if not port_str.isdigit():
+                    continue
+                canonical = f"api_endpoint:port:{port_str}"
+                if canonical in seen_ports:
+                    continue
+                seen_ports.add(canonical)
+                _log.debug(
+                    "%s:%d — detected EXPOSE port %s", file_path, line, port_str
+                )
+                results.append(
+                    ComponentDetection(
+                        component_type=ComponentType.API_ENDPOINT,
+                        canonical_name=canonical,
+                        display_name=f"Port {port_str}",
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.90,
+                        metadata={
+                            "port": int(port_str),
+                            "protocol": token.split("/")[1] if "/" in token else "tcp",
+                            "source": "dockerfile_expose",
+                        },
+                        file_path=file_path,
+                        line=line,
+                        snippet=match.group(0).strip()[:120],
+                        evidence_kind="dockerfile",
+                    )
+                )
+        return results
+
+    def _detect_run_tools(
+        self, content: str, file_path: str
+    ) -> list[ComponentDetection]:
+        """Emit TOOL nodes for ``RUN playwright install`` instructions."""
+        results: list[ComponentDetection] = []
+        seen: set[str] = set()
+        for match in _RUN_PLAYWRIGHT_RE.finditer(content):
+            canonical = "tool:playwright"
+            if canonical in seen:
+                continue
+            seen.add(canonical)
+            line = content[: match.start()].count("\n") + 1
+            _log.debug("%s:%d — detected RUN playwright install", file_path, line)
+            results.append(
+                ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name=canonical,
+                    display_name="Playwright",
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.88,
+                    metadata={"source": "dockerfile_run", "category": "browser_automation"},
+                    file_path=file_path,
+                    line=line,
+                    snippet=match.group(0).strip()[:120],
+                    evidence_kind="dockerfile",
+                )
+            )
+        return results

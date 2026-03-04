@@ -41,7 +41,13 @@ from .adapters.base import (
 from .adapters.data_classification import DataClassificationSQLAdapter
 from .adapters.dockerfile import DockerfileAdapter
 from .adapters.registry import default_framework_adapters, default_registry
-from .adapters.yaml_adapters import AutoGenYAMLAdapter, CrewAIYAMLAdapter
+from .adapters.nginx import NginxAdapter, is_nginx_file
+from .adapters.yaml_adapters import (
+    AutoGenYAMLAdapter,
+    CrewAIYAMLAdapter,
+    LLMYAMLConfigAdapter,
+    PromptFileAdapter,
+)
 from .adapters.typescript._ts_regex import TSFrameworkAdapter
 from .config import ExtractionConfig
 from .core.application_summary import build_scan_summary
@@ -180,6 +186,8 @@ class SbomExtractor:
         sql_adapters: tuple[DataClassificationSQLAdapter, ...] | None = None,
         dockerfile_adapter: DockerfileAdapter | None = None,
         yaml_adapters: tuple[Any, ...] | None = None,
+        nginx_adapter: NginxAdapter | None = None,
+        prompt_file_adapter: PromptFileAdapter | None = None,
     ) -> None:
         self.framework_adapters = (
             framework_adapters if framework_adapters is not None else default_framework_adapters()
@@ -194,7 +202,11 @@ class SbomExtractor:
         self.yaml_adapters = (
             yaml_adapters
             if yaml_adapters is not None
-            else (CrewAIYAMLAdapter(), AutoGenYAMLAdapter())
+            else (CrewAIYAMLAdapter(), AutoGenYAMLAdapter(), LLMYAMLConfigAdapter())
+        )
+        self.nginx_adapter = nginx_adapter if nginx_adapter is not None else NginxAdapter()
+        self.prompt_file_adapter = (
+            prompt_file_adapter if prompt_file_adapter is not None else PromptFileAdapter()
         )
 
     # ------------------------------------------------------------------
@@ -215,7 +227,7 @@ class SbomExtractor:
         doc = AiBomDocument(target=source_ref or str(root))
         node_map: dict[tuple[ComponentType, str], _NodeAccumulator] = {}
         # Classification-only metadata from data_classification adapters (not emitted as nodes)
-        _dc_metadata: list[dict] = []
+        _dc_metadata: list[dict[str, Any]] = []
         # Accumulated for Phase 3 LLM enrichment (rel_path → content)
         file_contents: dict[str, str] = {}
 
@@ -236,6 +248,17 @@ class SbomExtractor:
             is_dockerfile = (
                 suffix in _DOCKERFILE_EXTENSIONS or file_path.name.lower() in _DOCKERFILE_NAMES
             )
+            is_nginx_conf = is_nginx_file(rel_path)
+
+            # Phase 0a: Prompt file detection (before docs-tier skip)
+            # .txt files in prompts/ dirs are normally skipped by the regex pass;
+            # run the prompt adapter first so they are not silently ignored.
+            if suffix == ".txt" and not is_dockerfile:
+                try:
+                    for det in self.prompt_file_adapter.scan(content, rel_path):
+                        self._merge_detection(node_map, det)
+                except Exception as exc:
+                    _log.warning("prompt_file adapter failed on %s: %s", rel_path, exc)
 
             # Phase 1a: Python AST-aware framework adapters
             if is_python or is_notebook:
@@ -326,6 +349,15 @@ class SbomExtractor:
                         self._merge_detection(node_map, det)
                 except Exception as exc:
                     _log.warning("dockerfile adapter failed on %s: %s", rel_path, exc)
+
+            # Phase 1f: Nginx config — deployment and auth extraction
+            if is_nginx_conf:
+                _log.debug("running nginx adapter on %s", rel_path)
+                try:
+                    for det in self.nginx_adapter.scan(content, rel_path):
+                        self._merge_detection(node_map, det)
+                except Exception as exc:
+                    _log.warning("nginx adapter failed on %s: %s", rel_path, exc)
 
             # Phase 1e: YAML-aware framework adapters (e.g. CrewAI agents.yaml)
             if suffix in {".yaml", ".yml"}:
@@ -635,7 +667,7 @@ class SbomExtractor:
     def _enrich_datastores(
         self,
         node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
-        dc_metadata: list[dict],
+        dc_metadata: list[dict[str, Any]],
     ) -> None:
         """Merge PII/PHI classification data from schema adapters into DATASTORE nodes.
 
@@ -763,6 +795,7 @@ class SbomExtractor:
         from .llm_client import LLMClient
         from .core.application_summary import maybe_refine_use_case_summary_with_llm
         from .core.confidence import aggregate_node_confidence
+        from .core.gap_fill import apply_discovery_results, discover_missing_nodes
         from .core.verification import apply_verification_results, verify_uncertain_nodes
 
         client = LLMClient(
@@ -774,6 +807,17 @@ class SbomExtractor:
             vertex_location=config.vertex_location,
         )
         evidence_map = {n.id: n.evidence for n in doc.nodes}
+
+        # Step 0: Gap-fill discovery — find component types absent from deterministic results
+        gap_budget = min(config.llm_budget_tokens // 3, 15_000)
+        try:
+            new_nodes = await discover_missing_nodes(
+                doc, file_contents, client, budget_tokens=gap_budget
+            )
+            doc = apply_discovery_results(doc, new_nodes)
+            _log.info("gap-fill: %d new node(s) discovered", len(new_nodes))
+        except Exception as exc:
+            _log.warning("gap-fill: unexpected error — continuing without: %s", exc)
 
         # Step 1: Verify uncertain detections
         results, v_stats = await verify_uncertain_nodes(

@@ -118,11 +118,17 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 patterns=(
                     re.compile(
                         # Match model name strings, not library names.
-                        # - llama requires a dash+digit prefix to avoid matching llama_index.
-                        # - o-series (o1, o3, o4 …) require a word boundary or letter-only
-                        #   suffix to avoid matching hex strings like o37qlnifitdp.
-                        r"\b(gpt-[\d][\w.-]*|claude-[\d][\w.-]*|gemini-[\d][\w.]*|"
-                        r"llama-[\d][\w.-]*|mistral-[\w.-]+|o\d(?:-[a-z][a-z0-9-]*)?\b)\b",
+                        # - llama-<digit>: canonical dash form (llama-3.3-70b-versatile)
+                        # - llama<digit>:<tag>: Ollama colon-tag format (llama3.2:3b)
+                        # - o-series: require word boundary or letter suffix to avoid hex
+                        # - deepseek/qwen/phi: common open-weight families
+                        # - <name>:<size_tag>: generic Ollama pull format (mistral:7b)
+                        r"\b(gpt-[\d][\w.-]*|claude-[\d][\w.-]*|gemini-[\d][\w.]*"
+                        r"|llama-[\d][\w.-]*|llama[\d][\w.]*:[a-z0-9]+"
+                        r"|mistral-[\w.-]+|o\d(?:-[a-z][a-z0-9-]*)?\b"
+                        r"|deepseek-[\w.-]+|qwen[\d][\w.-]*|phi[\d][\w.-]*"
+                        r"|command-[\w.-]+"
+                        r"|[\w.-]+:(?:7b|13b|70b|3b|8b|14b|32b|mini|latest|instruct|chat)\b)\b",
                         re.IGNORECASE,
                     ),
                 ),
@@ -134,7 +140,9 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 priority=130,
                 patterns=(
                     re.compile(
-                        r"\b(postgres|mysql|mongodb|redis|pinecone|faiss|chroma|weaviate|qdrant|milvus)\b",
+                        r"\b(postgres|mysql|mongodb|redis|pinecone|faiss|chroma|weaviate|qdrant|milvus"
+                        r"|sqlite|aiosqlite|sqlite3|dynamodb|firestore|cosmosdb|supabase|neon"
+                        r"|cassandra|elasticsearch|opensearch|neo4j|tidb|cockroachdb)\b",
                         re.IGNORECASE,
                     ),
                 ),
@@ -151,6 +159,13 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                     re.compile(r"\bauth(?:entication|orization|enticate|orize)\b", re.IGNORECASE),
                     # Compound token forms — avoids bare CI token vars like token=$TOKEN
                     re.compile(r"\b(?:access|refresh|api|auth|id)_token\b", re.IGNORECASE),
+                    # Password hashing and session-based auth patterns
+                    re.compile(
+                        r"\b(bcrypt|passlib|argon2|pbkdf2|scrypt"
+                        r"|session[._]cookie|cookie[._]jar|http[._]only|csrf[._]token"
+                        r"|verify[._]password|hash[._]password)\b",
+                        re.IGNORECASE,
+                    ),
                 ),
                 canonical_name="auth:generic",
             ),
@@ -182,10 +197,41 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 priority=170,
                 patterns=(
                     re.compile(
-                        r"\b(docker|kubernetes|helm|terraform|compose|deployment)\b", re.IGNORECASE
+                        r"\b(docker|kubernetes|helm|terraform|compose|deployment"
+                        r"|nginx|certbot|letsencrypt|gunicorn|uvicorn|caddy|traefik"
+                        r"|reverse[._]proxy|ssl[._]certificate|systemd[._]service)\b",
+                        re.IGNORECASE,
                     ),
                 ),
                 canonical_name="deployment:generic",
+            ),
+            RegexAdapter(
+                name="tool_generic",
+                component_type=ComponentType.TOOL,
+                priority=175,
+                patterns=(
+                    re.compile(
+                        # Web automation and browser control
+                        r"\b(playwright|puppeteer|selenium|beautifulsoup|scrapy)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Social platform SDKs
+                        r"\b(praw|twikit|tweepy|telethon|python.telegram.bot|discord\.py)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Job scheduling and task queues
+                        r"\b(APScheduler|BackgroundScheduler|AsyncIOScheduler|BlockingScheduler"
+                        r"|celery|rq|dramatiq|arq)\b",
+                    ),
+                    re.compile(
+                        # HTTP client detection (import-line level only to avoid floods)
+                        r"^(?:import|from)\s+(requests|httpx|aiohttp|urllib3)\b",
+                        re.MULTILINE,
+                    ),
+                ),
+                canonical_name="tool:generic",
             ),
             RegexAdapter(
                 name="prompt_generic",
