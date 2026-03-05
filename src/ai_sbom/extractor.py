@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import json
 import logging
 import shutil
 import subprocess
@@ -79,6 +80,24 @@ _TIER_IAC = "iac"
 _TIER_DOCS = "docs"
 # Lower rank number = higher precedence during dedup
 _TIER_RANK: dict[str, int] = {_TIER_CODE: 0, _TIER_IAC: 1, _TIER_DOCS: 2}
+
+
+def _strip_notebook_outputs(content: str) -> str:
+    """Return notebook source code only, removing cell outputs to avoid base64 false matches.
+
+    Jupyter notebooks embed base64-encoded images in ``outputs`` — these can
+    contain arbitrary byte patterns that look like model names (e.g. 'o5' or
+    'o7' inside PNG data).  Stripping outputs leaves only the code/markdown
+    that is meaningful for SBOM detection.
+    """
+    try:
+        nb = json.loads(content)
+        for cell in nb.get("cells", []):
+            cell["outputs"] = []
+            cell.pop("execution_count", None)
+        return json.dumps(nb)
+    except Exception:
+        return content
 
 _IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".yaml", ".yml", ".json"}
 _DOCS_EXTENSIONS = {
@@ -373,12 +392,19 @@ class SbomExtractor:
 
             # Phase 2: Regex fallback
             # Skip documentation and shell-script files to eliminate CI/README FP floods.
+            # For .ipynb files, strip cell outputs to avoid base64-encoded image data
+            # producing false-positive model matches (e.g. 'o5'/'o7' in PNG base64).
+            _regex_content = (
+                _strip_notebook_outputs(content)
+                if suffix == ".ipynb"
+                else content
+            )
             for rx_adapter in (
                 self.regex_adapters
                 if suffix not in _DOCS_EXTENSIONS and Path(rel_path).stem.lower() not in _DOCS_STEMS
                 else ()
             ):
-                detection = rx_adapter.detect(content)
+                detection = rx_adapter.detect(_regex_content)
                 if detection is None:
                     continue
                 confidence = min(0.95, 0.50 + 0.05 * len(detection.matches))

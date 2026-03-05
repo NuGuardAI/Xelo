@@ -127,7 +127,7 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         r"|llama-[\d][\w.-]*|llama[\d][\w.]*:[a-z0-9]+"
                         r"|mistral-[\w.-]+|o\d(?:-[a-z][a-z0-9-]*)?\b"
                         r"|deepseek-[\w.-]+|qwen[\d][\w.-]*|phi[\d][\w.-]*"
-                        r"|command-[\w.-]+"
+                        r"|command-(?:r|light|nightly|a\d)[\w.-]*"
                         r"|[\w.-]+:(?:7b|13b|70b|3b|8b|14b|32b|mini|latest|instruct|chat)\b)\b",
                         re.IGNORECASE,
                     ),
@@ -224,11 +224,6 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         # Job scheduling and task queues
                         r"\b(APScheduler|BackgroundScheduler|AsyncIOScheduler|BlockingScheduler"
                         r"|celery|rq|dramatiq|arq)\b",
-                    ),
-                    re.compile(
-                        # HTTP client detection (import-line level only to avoid floods)
-                        r"^(?:import|from)\s+(requests|httpx|aiohttp|urllib3)\b",
-                        re.MULTILINE,
                     ),
                 ),
                 canonical_name="tool:generic",
