@@ -76,7 +76,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             canonical_name="privilege:rbac",
             metadata={"privilege_scope": "rbac"},
         ),
-
         # ------------------------------------------------------------------ #
         # Admin / superuser escalation                                         #
         # ------------------------------------------------------------------ #
@@ -96,7 +95,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             canonical_name="privilege:admin",
             metadata={"privilege_scope": "admin"},
         ),
-
         # ------------------------------------------------------------------ #
         # Filesystem write / modify / delete                                   #
         # ------------------------------------------------------------------ #
@@ -127,11 +125,17 @@ def privilege_adapters() -> list[RegexAdapter]:
                     r"|DirectoryCreateTool|FileDeletionTool|file[_ ]delete[_ ]tool)\b",
                     re.IGNORECASE,
                 ),
+                # Workbook / document / image save-to-file
+                # (openpyxl wb.save, pandas to_excel, ExcelWriter, etc.)
+                re.compile(
+                    r"\bwb\.save\(|\bworkbook\.save\(|\bdf\.to_excel\("
+                    r"|\bwriter\.(?:save|close)\(",
+                    re.IGNORECASE,
+                ),
             ),
             canonical_name="privilege:filesystem_write",
             metadata={"privilege_scope": "filesystem_write"},
         ),
-
         # ------------------------------------------------------------------ #
         # Database write (SQL + ORM)                                           #
         # ------------------------------------------------------------------ #
@@ -140,11 +144,12 @@ def privilege_adapters() -> list[RegexAdapter]:
             component_type=_CT,
             priority=_PRI,
             patterns=(
-                # Raw SQL write statements
+                # Raw SQL write statements — require identifier after keyword to
+                # avoid matching human-readable strings like title="Create Table"
                 re.compile(
-                    r"\b(INSERT\s+INTO|UPDATE\s+\w+\s+SET|DELETE\s+FROM"
-                    r"|CREATE\s+TABLE|DROP\s+TABLE|ALTER\s+TABLE"
-                    r"|TRUNCATE\s+TABLE|REPLACE\s+INTO)\b",
+                    r"\b(INSERT\s+INTO\s+\w+|UPDATE\s+\w+\s+SET|DELETE\s+FROM\s+\w+"
+                    r"|CREATE\s+TABLE\s+\w+|DROP\s+TABLE\s+\w+|ALTER\s+TABLE\s+\w+"
+                    r"|TRUNCATE\s+TABLE\s+\w+|REPLACE\s+INTO\s+\w+)\b",
                     re.IGNORECASE,
                 ),
                 # ORM / ODM write calls
@@ -159,17 +164,19 @@ def privilege_adapters() -> list[RegexAdapter]:
                     r"|graphql_mutation)\b",
                     re.IGNORECASE,
                 ),
-                # ORM save/create/update/delete shorthand — kept separate to avoid
-                # matching .update( in non-DB contexts via the `\b` requirement above
+                # ORM create/update/delete shorthand — kept separate to avoid
+                # matching .update( in non-DB contexts via the `\b` requirement above.
+                # Note: `.save(` is intentionally excluded here; workbook/file saves
+                # (e.g. wb.save()) are handled by the filesystem_write adapter.
+                # Named-model saves (Model.save) are covered above in pattern-2.
                 re.compile(
-                    r"\.(?:save|create|update|delete)\((?!\s*#)",
+                    r"\.(?:create|update|delete)\((?!\s*#)",
                     re.IGNORECASE,
                 ),
             ),
             canonical_name="privilege:db_write",
             metadata={"privilege_scope": "db_write"},
         ),
-
         # ------------------------------------------------------------------ #
         # Outbound email                                                        #
         # ------------------------------------------------------------------ #
@@ -192,7 +199,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             canonical_name="privilege:email_out",
             metadata={"privilege_scope": "email_out"},
         ),
-
         # ------------------------------------------------------------------ #
         # Social media / messaging out                                          #
         # ------------------------------------------------------------------ #
@@ -238,7 +244,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             canonical_name="privilege:social_media_out",
             metadata={"privilege_scope": "social_media_out"},
         ),
-
         # ------------------------------------------------------------------ #
         # Code execution / shell access                                         #
         # ------------------------------------------------------------------ #
@@ -275,7 +280,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             canonical_name="privilege:code_execution",
             metadata={"privilege_scope": "code_execution"},
         ),
-
         # ------------------------------------------------------------------ #
         # Outbound network / HTTP calls with data                              #
         # ------------------------------------------------------------------ #

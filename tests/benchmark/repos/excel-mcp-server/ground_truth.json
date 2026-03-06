@@ -3,7 +3,7 @@
   "generated_at": "2026-03-06T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://excel-mcp-server",
-  "notes": "Updated 2026-03-06: FRAMEWORK name corrected to 'excel-mcp' (real FastMCP server name); added API_ENDPOINT nodes (sse + streamable-http transports, default port 8017 from FASTMCP_HOST/FASTMCP_PORT env vars); added filesystem_write PRIVILEGE (openpyxl Workbook.save() calls); added FRAMEWORK->TOOL CALLS edges and FRAMEWORK->API_ENDPOINT USES edges. Note: db_write is a false positive (wb.save() is a file save, not DB write) and excluded.",
+  "notes": "Updated 2026-03-06: FRAMEWORK name corrected to 'excel-mcp' (real FastMCP server name); added API_ENDPOINT nodes (sse + streamable-http transports, default port 8017 from FASTMCP_HOST/FASTMCP_PORT env vars); added filesystem_write PRIVILEGE (openpyxl wb.save() in calculations.py/workbook.py, os.makedirs in server.py); added FRAMEWORK->TOOL CALLS edges and FRAMEWORK->API_ENDPOINT USES edges. Note: primary GT path is calculations.py (first cache occurrence of wb.save), which is what the extractor reports after dedup.",
   "nodes": [
     {
       "id": "8d342498-d54b-410f-91ed-bf05d1fbc661",
@@ -673,10 +673,10 @@
         {
           "kind": "gt",
           "confidence": 0.9,
-          "detail": "Excel files written/modified via openpyxl Workbook.save() in workbook.py and data.py; privilege_scope=filesystem_write",
+          "detail": "Excel files written/modified via openpyxl wb.save() in calculations.py (and workbook.py); extractor deduplicates to first cache occurrence (calculations.py:45); privilege_scope=filesystem_write",
           "location": {
-            "path": "src/excel_mcp/workbook.py",
-            "line": 25
+            "path": "src/excel_mcp/calculations.py",
+            "line": 45
           }
         }
       ]

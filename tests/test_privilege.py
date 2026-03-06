@@ -5,6 +5,7 @@ One test class per privilege scope, plus:
 - TestNegatives — no false positives on innocent code
 - TestMetadata  — privilege_scope metadata field propagated correctly
 """
+
 from __future__ import annotations
 
 import pytest
@@ -161,7 +162,9 @@ class TestAdmin:
 
 class TestFilesystemWrite:
     def test_open_write_mode(self) -> None:
-        det = _detect("privilege:filesystem_write", 'with open("report.txt", "w") as f: f.write(data)')
+        det = _detect(
+            "privilege:filesystem_write", 'with open("report.txt", "w") as f: f.write(data)'
+        )
         assert det is not None
 
     def test_open_append_mode(self) -> None:
@@ -196,9 +199,27 @@ class TestFilesystemWrite:
         det = _detect("privilege:filesystem_write", "os.makedirs(output_dir, exist_ok=True)")
         assert det is not None
 
+    def test_wb_save(self) -> None:
+        det = _detect("privilege:filesystem_write", "wb.save(filepath)")
+        assert det is not None
+
+    def test_workbook_save(self) -> None:
+        det = _detect("privilege:filesystem_write", "workbook.save(str(path))")
+        assert det is not None
+
+    def test_df_to_excel(self) -> None:
+        det = _detect("privilege:filesystem_write", "df.to_excel('report.xlsx', index=False)")
+        assert det is not None
+
+    def test_writer_save(self) -> None:
+        det = _detect("privilege:filesystem_write", "writer.save()")
+        assert det is not None
+
     def test_open_read_mode_no_match(self) -> None:
         """Read-only open should NOT trigger the adapter."""
-        det = _detect("privilege:filesystem_write", 'with open("data.txt", "r") as f: content = f.read()')
+        det = _detect(
+            "privilege:filesystem_write", 'with open("data.txt", "r") as f: content = f.read()'
+        )
         assert det is None
 
     def test_canonical_name(self) -> None:
@@ -214,7 +235,9 @@ class TestFilesystemWrite:
 
 class TestDbWrite:
     def test_insert_into(self) -> None:
-        det = _detect("privilege:db_write", 'cur.execute("INSERT INTO events VALUES (?, ?)", (name, ts))')
+        det = _detect(
+            "privilege:db_write", 'cur.execute("INSERT INTO events VALUES (?, ?)", (name, ts))'
+        )
         assert det is not None
 
     def test_update_set(self) -> None:
@@ -271,15 +294,22 @@ class TestEmailOut:
         assert det is not None
 
     def test_smtp_sendmail(self) -> None:
-        det = _detect("privilege:email_out", "server = smtplib.SMTP('smtp.gmail.com'); server.sendmail(fr, to, msg)")
+        det = _detect(
+            "privilege:email_out",
+            "server = smtplib.SMTP('smtp.gmail.com'); server.sendmail(fr, to, msg)",
+        )
         assert det is not None
 
     def test_sendgrid(self) -> None:
-        det = _detect("privilege:email_out", "from sendgrid import SendGridAPIClient; sg.send(message)")
+        det = _detect(
+            "privilege:email_out", "from sendgrid import SendGridAPIClient; sg.send(message)"
+        )
         assert det is not None
 
     def test_ses(self) -> None:
-        det = _detect("privilege:email_out", "ses.send_email(Source=FROM, Destination={'ToAddresses': [TO]})")
+        det = _detect(
+            "privilege:email_out", "ses.send_email(Source=FROM, Destination={'ToAddresses': [TO]})"
+        )
         assert det is not None
 
     def test_mailgun(self) -> None:
@@ -287,7 +317,9 @@ class TestEmailOut:
         assert det is not None
 
     def test_resend(self) -> None:
-        det = _detect("privilege:email_out", "import resend; resend.Emails.send({'to': to, 'from': fr})")
+        det = _detect(
+            "privilege:email_out", "import resend; resend.Emails.send({'to': to, 'from': fr})"
+        )
         assert det is not None
 
     def test_yagmail(self) -> None:
@@ -315,7 +347,10 @@ class TestEmailOut:
 
 class TestSocialMediaOut:
     def test_tweepy(self) -> None:
-        det = _detect("privilege:social_media_out", "import tweepy; client = tweepy.Client(bearer_token=TOKEN)")
+        det = _detect(
+            "privilege:social_media_out",
+            "import tweepy; client = tweepy.Client(bearer_token=TOKEN)",
+        )
         assert det is not None
 
     def test_create_tweet(self) -> None:
@@ -323,11 +358,15 @@ class TestSocialMediaOut:
         assert det is not None
 
     def test_praw_reddit(self) -> None:
-        det = _detect("privilege:social_media_out", "import praw; reddit = praw.Reddit(client_id=CID)")
+        det = _detect(
+            "privilege:social_media_out", "import praw; reddit = praw.Reddit(client_id=CID)"
+        )
         assert det is not None
 
     def test_subreddit_submit(self) -> None:
-        det = _detect("privilege:social_media_out", "subreddit.submit(title='Post', selftext='Body')")
+        det = _detect(
+            "privilege:social_media_out", "subreddit.submit(title='Post', selftext='Body')"
+        )
         assert det is not None
 
     def test_discord_send(self) -> None:
@@ -339,15 +378,24 @@ class TestSocialMediaOut:
         assert det is not None
 
     def test_telegram_bot(self) -> None:
-        det = _detect("privilege:social_media_out", "from telegram.ext import Application; bot.send_message(chat_id, text)")
+        det = _detect(
+            "privilege:social_media_out",
+            "from telegram.ext import Application; bot.send_message(chat_id, text)",
+        )
         assert det is not None
 
     def test_slack_post(self) -> None:
-        det = _detect("privilege:social_media_out", "client = WebClient(token=SLACK_TOKEN); client.chat_postMessage(channel='#alerts')")
+        det = _detect(
+            "privilege:social_media_out",
+            "client = WebClient(token=SLACK_TOKEN); client.chat_postMessage(channel='#alerts')",
+        )
         assert det is not None
 
     def test_twilio(self) -> None:
-        det = _detect("privilege:social_media_out", "from twilio.rest import Client; client.messages.create(to=TO, from_=FROM, body=MSG)")
+        det = _detect(
+            "privilege:social_media_out",
+            "from twilio.rest import Client; client.messages.create(to=TO, from_=FROM, body=MSG)",
+        )
         assert det is not None
 
     def test_canonical_name(self) -> None:
@@ -363,7 +411,10 @@ class TestSocialMediaOut:
 
 class TestCodeExecution:
     def test_subprocess_run(self) -> None:
-        det = _detect("privilege:code_execution", "result = subprocess.run(['ls', '-la'], capture_output=True)")
+        det = _detect(
+            "privilege:code_execution",
+            "result = subprocess.run(['ls', '-la'], capture_output=True)",
+        )
         assert det is not None
 
     def test_subprocess_popen(self) -> None:
@@ -411,7 +462,10 @@ class TestCodeExecution:
 
 class TestNetworkOut:
     def test_requests_post(self) -> None:
-        det = _detect("privilege:network_out", "resp = requests.post('https://api.example.com/hook', json=payload)")
+        det = _detect(
+            "privilege:network_out",
+            "resp = requests.post('https://api.example.com/hook', json=payload)",
+        )
         assert det is not None
 
     def test_requests_put(self) -> None:
@@ -445,7 +499,9 @@ class TestNetworkOut:
 
     def test_requests_get_no_match(self) -> None:
         """Read-only GET should NOT trigger the adapter."""
-        det = _detect("privilege:network_out", "resp = requests.get('https://api.example.com/data')")
+        det = _detect(
+            "privilege:network_out", "resp = requests.get('https://api.example.com/data')"
+        )
         assert det is None
 
     def test_canonical_name(self) -> None:
@@ -471,7 +527,7 @@ class TestNegatives:
         assert _detect(canon, 'print("Hello, world!")') is None
 
     def test_rbac_no_match_on_read_sql(self) -> None:
-        assert _detect("privilege:rbac", 'SELECT role FROM users WHERE id=1') is None
+        assert _detect("privilege:rbac", "SELECT role FROM users WHERE id=1") is None
 
     def test_admin_no_match_on_admin_panel_string(self) -> None:
         """The word 'admin' alone in a URL string should not match."""
