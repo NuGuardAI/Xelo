@@ -50,6 +50,20 @@ from ai_sbom.types import ComponentType
 _CT = ComponentType.PRIVILEGE
 _PRI = 150  # same priority bucket as the old generic adapter
 
+# Path components that privilege adapters skip to avoid FPs from test/infra code.
+# Using rel-path parts so only directories inside the scanned repo are filtered,
+# not any host machine path that may happen to contain "tests".
+_PRIV_SKIP_PARTS = frozenset(
+    {
+        "tests",
+        "test",
+        "__tests__",
+        "tests_integ",
+        "integration_tests",
+        "e2e",
+    }
+)
+
 
 def privilege_adapters() -> list[RegexAdapter]:
     """Return one ``RegexAdapter`` per privilege class."""
@@ -75,6 +89,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:rbac",
             metadata={"privilege_scope": "rbac"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Admin / superuser escalation                                         #
@@ -94,6 +110,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:admin",
             metadata={"privilege_scope": "admin"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Filesystem write / modify / delete                                   #
@@ -135,6 +153,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:filesystem_write",
             metadata={"privilege_scope": "filesystem_write"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Database write (SQL + ORM)                                           #
@@ -164,18 +184,15 @@ def privilege_adapters() -> list[RegexAdapter]:
                     r"|graphql_mutation)\b",
                     re.IGNORECASE,
                 ),
-                # ORM create/update/delete shorthand — kept separate to avoid
-                # matching .update( in non-DB contexts via the `\b` requirement above.
-                # Note: `.save(` is intentionally excluded here; workbook/file saves
-                # (e.g. wb.save()) are handled by the filesystem_write adapter.
-                # Named-model saves (Model.save) are covered above in pattern-2.
-                re.compile(
-                    r"\.(?:create|update|delete)\((?!\s*#)",
-                    re.IGNORECASE,
-                ),
+                # NOTE: broad .create()/.update()/.delete() shorthand intentionally
+                # omitted — too noisy (matches LLM API calls like client.completions.create(),
+                # dict.update(), progress_bar.update(), etc.).  Named-model patterns
+                # in pattern-2 above cover the legitimate ORM cases.
             ),
             canonical_name="privilege:db_write",
             metadata={"privilege_scope": "db_write"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Outbound email                                                        #
@@ -198,6 +215,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:email_out",
             metadata={"privilege_scope": "email_out"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Social media / messaging out                                          #
@@ -243,6 +262,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:social_media_out",
             metadata={"privilege_scope": "social_media_out"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Code execution / shell access                                         #
@@ -279,6 +300,8 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:code_execution",
             metadata={"privilege_scope": "code_execution"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
         # ------------------------------------------------------------------ #
         # Outbound network / HTTP calls with data                              #
@@ -313,5 +336,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             ),
             canonical_name="privilege:network_out",
             metadata={"privilege_scope": "network_out"},
+            skip_path_parts=_PRIV_SKIP_PARTS,
+            skip_init_py=True,
         ),
     ]

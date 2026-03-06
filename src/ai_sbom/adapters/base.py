@@ -12,6 +12,7 @@ from ai_sbom.types import ComponentType
 # file scanning)
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class AdapterMatch:
     pattern: str
@@ -47,6 +48,8 @@ class RegexAdapter(DetectionAdapter):
         patterns: tuple[re.Pattern[str], ...],
         canonical_name: str | None = None,
         metadata: dict[str, Any] | None = None,
+        skip_path_parts: frozenset[str] | None = None,
+        skip_init_py: bool = False,
     ) -> None:
         self.name = name
         self.component_type = component_type
@@ -54,6 +57,11 @@ class RegexAdapter(DetectionAdapter):
         self.patterns = patterns
         self.canonical_name = canonical_name
         self.metadata = metadata or {}
+        # Optional path-based scope limiter: if set, this adapter is silently
+        # skipped for files whose relative-path components overlap with this set
+        # (e.g. test dirs) or, if skip_init_py=True, for __init__.py files.
+        self.skip_path_parts = skip_path_parts
+        self.skip_init_py = skip_init_py
 
     def detect(self, content: str) -> AdapterDetection | None:
         all_matches: list[AdapterMatch] = []
@@ -71,10 +79,7 @@ class RegexAdapter(DetectionAdapter):
         if not all_matches:
             return None
 
-        canonical = (
-            self.canonical_name
-            or all_matches[0].snippet.strip().lower().replace(" ", "_")
-        )
+        canonical = self.canonical_name or all_matches[0].snippet.strip().lower().replace(" ", "_")
         return AdapterDetection(
             adapter_name=self.name,
             component_type=self.component_type,
@@ -89,9 +94,11 @@ class RegexAdapter(DetectionAdapter):
 # Rich AST-aware adapter types
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True)
 class RelationshipHint:
     """Deferred relationship between two components, resolved after node creation."""
+
     source_canonical: str
     source_type: ComponentType
     target_canonical: str
@@ -106,9 +113,10 @@ class ComponentDetection:
     Richer than ``AdapterDetection``: carries file/line context,
     evidence kind, and pre-computed metadata from AST analysis.
     """
+
     component_type: ComponentType
-    canonical_name: str         # lowercase, stable identifier used for dedup
-    display_name: str           # human-readable name for the node
+    canonical_name: str  # lowercase, stable identifier used for dedup
+    display_name: str  # human-readable name for the node
     adapter_name: str
     priority: int
     confidence: float
@@ -142,7 +150,7 @@ class FrameworkAdapter:
 
     name: str = "unknown"
     priority: int = 50
-    handles_imports: list[str] = []   # module prefixes that trigger this adapter
+    handles_imports: list[str] = []  # module prefixes that trigger this adapter
 
     def can_handle(self, imports_present: set[str]) -> bool:
         """Return True if any of the file's imported module prefixes match."""
@@ -156,7 +164,7 @@ class FrameworkAdapter:
         self,
         content: str,
         file_path: str,
-        parse_result: Any,   # ai_sbom.ast_parser.ParseResult
+        parse_result: Any,  # ai_sbom.ast_parser.ParseResult
     ) -> list[ComponentDetection]:
         """Extract component detections from *file_path*.
 
@@ -173,6 +181,7 @@ class FrameworkAdapter:
         emitted even if no higher-level components are detected.
         """
         from ai_sbom.types import ComponentType as _CT
+
         return ComponentDetection(
             component_type=_CT.FRAMEWORK,
             canonical_name=f"framework:{self.name}",

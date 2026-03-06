@@ -401,6 +401,17 @@ class SbomExtractor:
                 if suffix not in _DOCS_EXTENSIONS and Path(rel_path).stem.lower() not in _DOCS_STEMS
                 else ()
             ):
+                # Adapters may declare path-scoped exclusions (e.g. privilege
+                # adapters skip test dirs and __init__.py to reduce FPs).
+                if getattr(rx_adapter, "skip_path_parts", None) or getattr(
+                    rx_adapter, "skip_init_py", False
+                ):
+                    _rel = Path(rel_path)
+                    if getattr(rx_adapter, "skip_init_py", False) and _rel.name == "__init__.py":
+                        continue
+                    _skip_parts = getattr(rx_adapter, "skip_path_parts", None)
+                    if _skip_parts and bool(set(_rel.parts) & _skip_parts):
+                        continue
                 detection = rx_adapter.detect(_regex_content)
                 if detection is None:
                     continue
