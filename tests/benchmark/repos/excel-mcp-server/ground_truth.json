@@ -1,28 +1,32 @@
 {
   "schema_version": "1.1.0",
-  "generated_at": "2026-03-02T00:00:00Z",
+  "generated_at": "2026-03-06T00:00:00Z",
   "generator": "github_copilot",
   "target": "local://excel-mcp-server",
+  "notes": "Updated 2026-03-06: FRAMEWORK name corrected to 'excel-mcp' (real FastMCP server name); added API_ENDPOINT nodes (sse + streamable-http transports, default port 8017 from FASTMCP_HOST/FASTMCP_PORT env vars); added filesystem_write PRIVILEGE (openpyxl Workbook.save() calls); added FRAMEWORK->TOOL CALLS edges and FRAMEWORK->API_ENDPOINT USES edges. Note: db_write is a false positive (wb.save() is a file save, not DB write) and excluded.",
   "nodes": [
     {
       "id": "8d342498-d54b-410f-91ed-bf05d1fbc661",
-      "name": "framework:mcp_server",
+      "name": "excel-mcp",
       "component_type": "FRAMEWORK",
       "confidence": 0.95,
       "metadata": {
         "extras": {
-          "canonical_name": "framework:mcp_server",
-          "adapter": "gt"
+          "canonical_name": "excel-mcp",
+          "adapter": "gt",
+          "synonyms": [
+            "framework:mcp_server"
+          ]
         }
       },
       "evidence": [
         {
           "kind": "gt",
           "confidence": 0.95,
-          "detail": "FRAMEWORK: framework:mcp_server",
+          "detail": "MCP server \"excel-mcp\" (FastMCP); 25 tools for Excel file manipulation; transports: sse (port 8017), streamable-http (port 8017)",
           "location": {
             "path": "src/excel_mcp/server.py",
-            "line": 1
+            "line": 68
           }
         }
       ]
@@ -601,7 +605,218 @@
           }
         }
       ]
+    },
+    {
+      "id": "e7f4f43c-cdd6-43f7-a27b-d1a1f5bf4777",
+      "name": "0.0.0.0:8017 (sse)",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.88,
+      "metadata": {
+        "extras": {
+          "canonical_name": "0.0.0.0:8017 (sse)",
+          "adapter": "gt",
+          "synonyms": [
+            "0.0.0.0:8080 (sse)"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.88,
+          "detail": "MCP server SSE transport endpoint; host 0.0.0.0, default port 8017 (FASTMCP_PORT env var)",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 807
+          }
+        }
+      ]
+    },
+    {
+      "id": "97658d9d-fce6-48b6-8977-f42dac1786a1",
+      "name": "0.0.0.0:8017 (streamable-http)",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.88,
+      "metadata": {
+        "extras": {
+          "canonical_name": "0.0.0.0:8017 (streamable-http)",
+          "adapter": "gt",
+          "synonyms": [
+            "0.0.0.0:8000 (streamable-http)"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.88,
+          "detail": "MCP server streamable-HTTP transport endpoint; host 0.0.0.0, default port 8017 (FASTMCP_PORT env var)",
+          "location": {
+            "path": "src/excel_mcp/server.py",
+            "line": 826
+          }
+        }
+      ]
+    },
+    {
+      "id": "342f3468-275c-403a-a9bb-c2c92b9183b8",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "Excel files written/modified via openpyxl Workbook.save() in workbook.py and data.py; privilege_scope=filesystem_write",
+          "location": {
+            "path": "src/excel_mcp/workbook.py",
+            "line": 25
+          }
+        }
+      ]
     }
   ],
-  "edges": []
+  "edges": [
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "7f4848a8-e329-4992-8622-ed5a26c8dc7b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "46d56564-7695-4301-b0d0-46bbfeba169a",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "8c25da55-3066-4a7e-b4e1-78178453e40e",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "876fec62-dea0-4740-bfc6-19a7f4a412e5",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "0bfe70a7-2243-481a-b36f-571a94f623ac",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "8a4caf39-989d-426d-90ab-8f9b0ae63c22",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "2f541ea8-ff90-42bc-982e-9f16c12a67c3",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "d2f15c03-566b-4829-ad68-c28a4ec2f871",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "42671aab-357d-482a-ab71-a08939642e9b",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "b31f32a9-1788-441b-a3a8-cc0c93bbc1c1",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "ea3a4aa0-ce74-4a2d-9efa-d681803dc4bf",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "9cff10b4-9470-4523-8bc4-d507cba988ec",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "04602979-889b-4c31-9c14-0d0acbb0b266",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "1e200c84-4694-403c-bc63-eee3210de195",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "4ff7fb78-1b8d-4edb-b25e-dc11516cead1",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "9a6b91a7-11be-43e0-b668-6bb1f88bfead",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "1b20be33-91c2-40de-98b5-3872b32c847e",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "bfd3846a-8292-472d-afa0-af8b4c46827e",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "e35dfe88-7306-40d9-b4a7-51175569c3a7",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "33b2a3f7-9fe6-46e0-81a1-0fb124ed40bd",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "0d04786d-bb29-4978-b840-5e8035c59b38",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "5beac336-4ccd-4fbe-a233-3d3d5b326878",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "71e503dc-caa3-402f-9e91-7ba1ce0ed2d4",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "7aace6b5-e858-497e-b3d0-1972ed4f8fc4",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "512f8241-f6ba-4ad5-9a59-58a955fc1ff7",
+      "relationship_type": "CALLS"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "e7f4f43c-cdd6-43f7-a27b-d1a1f5bf4777",
+      "relationship_type": "USES"
+    },
+    {
+      "source": "8d342498-d54b-410f-91ed-bf05d1fbc661",
+      "target": "97658d9d-fce6-48b6-8977-f42dac1786a1",
+      "relationship_type": "USES"
+    }
+  ]
 }
