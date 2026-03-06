@@ -683,10 +683,16 @@ class SbomExtractor:
         tier = _classify_source_tier(det.file_path, det.adapter_name, det.evidence_kind)
         tier_rank = _TIER_RANK.get(tier, 2)
 
+        # For PROMPT nodes, embed the full prompt text in the detail field so
+        # readers of the AI SBOM can see the complete prompt without truncation.
+        if det.component_type == ComponentType.PROMPT and det.metadata.get("content"):
+            _detail = f"{det.adapter_name}: {det.metadata['content']}"
+        else:
+            _detail = f"{det.adapter_name}: {det.snippet[:120]}"
         evidence = Evidence(
             kind=det.evidence_kind,
             confidence=det.confidence,
-            detail=f"{det.adapter_name}: {det.snippet[:120]}",
+            detail=_detail,
             location=SourceLocation(path=det.file_path, line=det.line or None),
         )
 

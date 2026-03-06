@@ -164,6 +164,7 @@ class SemanticKernelAdapter(FrameworkAdapter):
                     confidence=0.88,
                     metadata={
                         "content_preview": template[:500] if template else "",
+                        "content": template,
                         "char_count": len(template),
                         "framework": "semantic_kernel",
                     },

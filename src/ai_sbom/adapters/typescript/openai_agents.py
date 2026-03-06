@@ -158,6 +158,7 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                             "prompt_type": "instructions",
                             "role": "system",
                             "content_preview": instructions[:500],
+                            "content": instructions,
                             "language": "typescript",
                         },
                         file_path=file_path,

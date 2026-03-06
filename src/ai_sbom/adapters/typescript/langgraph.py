@@ -217,6 +217,7 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                         "framework": "langchain-js",
                         "prompt_class": inst.class_name,
                         "content_preview": template[:500],
+                        "content": template,
                         "char_count": len(template),
                         "language": "typescript",
                     },

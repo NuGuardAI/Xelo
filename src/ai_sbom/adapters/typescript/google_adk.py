@@ -233,6 +233,7 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                             "prompt_type": "instruction",
                             "role": "system",
                             "content_preview": instruction[:500],
+                            "content": instruction,
                             "language": "typescript",
                         },
                         file_path=file_path,

@@ -204,6 +204,7 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                         metadata={
                             "role": "system",
                             "content_preview": instructions[:500],
+                            "content": instructions,
                             "char_count": len(instructions),
                             "is_template": bool(template_vars),
                             "template_variables": template_vars,

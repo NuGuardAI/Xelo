@@ -586,6 +586,7 @@ class PromptFileAdapter:
                 metadata={
                     "source": "prompt_file",
                     "content_preview": preview,
+                    "content": stripped,
                     "is_template": is_template,
                     "template_variables": template_vars,
                     "char_count": len(stripped),

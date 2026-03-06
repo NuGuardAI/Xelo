@@ -143,6 +143,7 @@ class AutoGenAdapter(FrameworkAdapter):
                         metadata={
                             "role": "system",
                             "content_preview": system_msg[:500],
+                            "content": system_msg,
                             "char_count": len(system_msg),
                         },
                         file_path=file_path,
