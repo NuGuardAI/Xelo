@@ -65,10 +65,10 @@ def privilege_adapters() -> list[RegexAdapter]:
                 re.compile(
                     r"\b(rbac|role[_\-]based[_\-]access"
                     r"|least[_ ]privilege|privilege[_ ]escalation"
-                    r"|access[_ ]control(?:[_ ]list)?"
+                    r"|access[_ ]control(?:[_ ]list)?|AccessControl"
                     r"|assign[_ ]role|check[_ ]permission|has[_ ]permission"
                     r"|require[_ ]permission|permission[_ ]required"
-                    r"|@require_roles?|@roles_required"
+                    r"|require_roles?|roles_required"
                     r"|PermissionRequired|RBACMiddleware)\b",
                     re.IGNORECASE,
                 ),
@@ -153,12 +153,16 @@ def privilege_adapters() -> list[RegexAdapter]:
                     r"|session\.execute.*UPDATE|session\.execute.*INSERT"
                     r"|db\.add|db\.delete|db\.session\.add"
                     r"|Model\.create|Model\.update|Model\.delete|Model\.save"
-                    r"|\.save\(\)|\.create\(|\.update\(|\.delete\("
-                    r"|\.bulk_create\(|\.bulk_update\(|\.bulk_delete\("
-                    r"|collection\.insert|collection\.update_one|collection\.update_many"
-                    r"|collection\.delete_one|collection\.delete_many|collection\.replace_one"
-                    r"|table\.put_item|table\.update_item|table\.delete_item"
-                    r"|client\.mutate\(|graphql_mutation)\b",
+                    r"|bulk_create|bulk_update|bulk_delete"
+                    r"|collection\.(insert|update|delete|replace)(?:_one|_many|_all)?"
+                    r"|table\.(put_item|update_item|delete_item)"
+                    r"|graphql_mutation)\b",
+                    re.IGNORECASE,
+                ),
+                # ORM save/create/update/delete shorthand — kept separate to avoid
+                # matching .update( in non-DB contexts via the `\b` requirement above
+                re.compile(
+                    r"\.(?:save|create|update|delete)\((?!\s*#)",
                     re.IGNORECASE,
                 ),
             ),
@@ -212,18 +216,22 @@ def privilege_adapters() -> list[RegexAdapter]:
                 re.compile(
                     # Discord / Telegram / Slack send
                     r"\b(discord\.py|discord\.Client|bot\.send_message"
-                    r"|channel\.send\(|ctx\.send\(|interaction\.respond"
                     r"|telegram\.Bot|python[_ ]telegram[_ ]bot|TelegramClient"
                     r"|telethon|bot\.send_photo|bot\.send_document"
-                    r"|slack[_ ]sdk|WebClient\.chat_postMessage"
-                    r"|slack[_ ]bolt|SlackClient\.send)\b",
+                    r"|slack[_ ]sdk|chat_postMessage"
+                    r"|slack[_ ]bolt|SlackClient)\b",
                     re.IGNORECASE,
                 ),
                 re.compile(
-                    # Instagram / LinkedIn / WhatsApp / Generic messaging
+                    # channel/ctx send — distinctive enough in agent/bot contexts
+                    r"(?:channel|ctx|bot|interaction)\.send(?:_message)?\s*\(",
+                    re.IGNORECASE,
+                ),
+                re.compile(
+                    # Instagram / LinkedIn / WhatsApp / Twilio / Generic messaging
                     r"\b(instagrapi|instagram[_ ]client|linkedin[_ ]api"
-                    r"|python[_ ]linkedin|whatsapp[_ ]api|twilio\.messages\.create"
-                    r"|TwilioClient|vonage|nexmo|MessageBird)\b",
+                    r"|python[_ ]linkedin|whatsapp[_ ]api"
+                    r"|twilio|TwilioClient|vonage|nexmo|MessageBird)\b",
                     re.IGNORECASE,
                 ),
             ),
