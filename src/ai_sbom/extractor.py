@@ -99,6 +99,7 @@ def _strip_notebook_outputs(content: str) -> str:
     except Exception:
         return content
 
+
 _IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".yaml", ".yml", ".json"}
 _DOCS_EXTENSIONS = {
     ".md",
@@ -394,11 +395,7 @@ class SbomExtractor:
             # Skip documentation and shell-script files to eliminate CI/README FP floods.
             # For .ipynb files, strip cell outputs to avoid base64-encoded image data
             # producing false-positive model matches (e.g. 'o5'/'o7' in PNG base64).
-            _regex_content = (
-                _strip_notebook_outputs(content)
-                if suffix == ".ipynb"
-                else content
-            )
+            _regex_content = _strip_notebook_outputs(content) if suffix == ".ipynb" else content
             for rx_adapter in (
                 self.regex_adapters
                 if suffix not in _DOCS_EXTENSIONS and Path(rel_path).stem.lower() not in _DOCS_STEMS
@@ -550,10 +547,55 @@ class SbomExtractor:
 
         return doc
 
-    def extract_from_repo(self, url: str, ref: str, config: ExtractionConfig) -> AiBomDocument:
-        """Clone a git repository and extract an SBOM from it."""
+    def extract_from_repo(
+        self,
+        url: str,
+        ref: str,
+        config: ExtractionConfig,
+        cache_dir: str | Path | None = None,
+    ) -> AiBomDocument:
+        """Clone a git repository and extract an SBOM from it.
+
+        Args:
+            url: Git repository URL to clone.
+            ref: Branch, tag, or commit to check out.
+            config: Extraction configuration.
+            cache_dir: Optional path where the cloned repository should be
+                preserved after extraction.  When supplied the directory is
+                created (if it does not exist), the repo is cloned inside it
+                as ``repo/<app-name>/`` (where *app-name* is the last path
+                segment of the URL, e.g. ``myapp`` for
+                ``https://github.com/org/myapp``), and the directory is
+                **not** deleted on return — callers own the lifecycle and can
+                use the files for downstream processing.  When *None*
+                (default) a temporary directory is used and cleaned up
+                automatically.
+
+        Returns:
+            The extracted :class:`AiBomDocument`.
+
+        Example::
+
+            extractor = SbomExtractor()
+            cache = Path("/tmp/my_repo_cache")
+            doc = extractor.extract_from_repo(url, ref, config, cache_dir=cache)
+            # For url="https://github.com/org/myapp" the source files are at:
+            #   cache / "repo" / "myapp"
+            app_name = url.rstrip("/").rsplit("/", 1)[-1].removesuffix(".git")
+            for f in (cache / "repo" / app_name).rglob("*.py"):
+                print(f)
+        """
+        app_name = url.rstrip("/").rsplit("/", 1)[-1].removesuffix(".git") or "repo"
+
+        if cache_dir is not None:
+            repo_dir = Path(cache_dir) / "repo" / app_name
+            repo_dir.mkdir(parents=True, exist_ok=True)
+            self._clone_repo(url=url, ref=ref, dest=repo_dir)
+            return self.extract_from_path(repo_dir, config, source_ref=url, branch=ref)
+
         with tempfile.TemporaryDirectory(prefix="ai_sbom_") as temp_dir:
-            repo_dir = Path(temp_dir) / "repo"
+            repo_dir = Path(temp_dir) / "repo" / app_name
+            repo_dir.mkdir(parents=True, exist_ok=True)
             self._clone_repo(url=url, ref=ref, dest=repo_dir)
             return self.extract_from_path(repo_dir, config, source_ref=url, branch=ref)
 

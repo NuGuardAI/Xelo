@@ -131,6 +131,44 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         r"|[\w.-]+:(?:7b|13b|70b|3b|8b|14b|32b|mini|latest|instruct|chat)\b)\b",
                         re.IGNORECASE,
                     ),
+                    re.compile(
+                        # HuggingFace Hub org/model-id format.
+                        # Matches strings like "meta-llama/Llama-3.1-8B-Instruct",
+                        # "mistralai/Mistral-7B-v0.3", "google/gemma-2-27b-it".
+                        # Anchored to known orgs to avoid matching arbitrary file paths.
+                        r"\b(?:meta-llama|mistralai|microsoft|google|HuggingFaceH4|facebook"
+                        r"|EleutherAI|tiiuae|databricks|Qwen|deepseek-ai|THUDM|bigscience"
+                        r"|openchat|NousResearch|teknium|WizardLM|lmsys|stabilityai"
+                        r"|togethercomputer|codellama|sentence-transformers|openai|cohere"
+                        r"|ai21labs|allenai|huggingface)/[\w][\w./:-]*",
+                    ),
+                    re.compile(
+                        # HuggingFace-origin standalone model families not covered above.
+                        # - bert/roberta/t5: encoder/seq2seq classics
+                        # - gpt2/gpt-j/gpt-neo: GPT-2-era models
+                        # - bloom/bloomz: BigScience multilingual LLMs
+                        # - falcon: TII open-weight LLMs
+                        # - starcoder/starcoderbase: code generation
+                        # - codellama: Meta code model
+                        # - zephyr/vicuna/solar/dolly/wizard/orca: RLHF fine-tunes
+                        # - gemma: Google open-weight family (no digit prefix used)
+                        # - nomic-embed/bge/e5: embedding models
+                        r"\b(bert-(?:base|large)[\w.-]*"
+                        r"|roberta-(?:base|large)[\w.-]*"
+                        r"|distilbert[\w.-]*"
+                        r"|t5-(?:small|base|large|xl|xxl)[\w.-]*"
+                        r"|gpt-?2[\w.-]*|gpt-j[\w.-]*|gpt-neo[\w.-]*"
+                        r"|bloom[\d-][\w.-]*|bloomz[\w.-]*"
+                        r"|falcon-\d[\w.-]*"
+                        r"|starcoder[\w.-]*"
+                        r"|codellama[\w.-]*"
+                        r"|zephyr-\d[\w.-]*|vicuna-\d[\w.-]*|solar-\d[\w.-]*"
+                        r"|dolly-[\w.-]+|wizardlm[\w.-]*|wizardcoder[\w.-]*"
+                        r"|orca[\w.-]*"
+                        r"|gemma-\d[\w.-]*"
+                        r"|nomic-embed[\w.-]*|bge-[\w.-]+|e5-[\w.-]+)\b",
+                        re.IGNORECASE,
+                    ),
                 ),
                 metadata={"normalizer": "model-name"},
             ),
@@ -216,8 +254,69 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         re.IGNORECASE,
                     ),
                     re.compile(
+                        # AI-driven browser agents and headless browser tools
+                        r"\b(browser[_-]use|browserbase|stagehand|multion|agentql"
+                        r"|camoufox|nodriver|undetected.chromedriver|mechanize)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Computer-use / GUI automation tools
+                        r"\b(computer[_-]use[_-]?tool|ComputerUseTool|pyautogui|pynput"
+                        r"|pygetwindow|ahk|autohotkey|xdotool|e2b[_-]desktop|screenpipe)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Terminal / sandboxed code-execution tools
+                        r"\b(BashTool|bash[_-]tool|ShellTool|shell[_-]tool|terminal[_-]tool"
+                        r"|CommandLineTool|command[_-]line[_-]tool"
+                        r"|e2b[_-]code[_-]interpreter|E2BSandbox|modal[_-]sandbox"
+                        r"|daytona[_-]sdk|subprocess[_-]tool)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Filesystem read/write tools used by agents
+                        r"\b(FileReadTool|ReadFileTool|FileWriteTool|WriteFileTool"
+                        r"|FileSystemTool|filesystem[_-]tool|file[_-]management[_-]tool"
+                        r"|DirectoryReadTool|DirectoryListTool)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Agent memory / context-window tools
+                        r"\b(mem0|MemoryClient|ZepClient|zep[_-]python|letta[_-]client"
+                        r"|MemGPT|langmem|MemoryTool|memory[_-]tool)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
                         # Social platform SDKs
                         r"\b(praw|twikit|tweepy|telethon|python.telegram.bot|discord\.py)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Git / GitHub / version-control tools used by agents
+                        r"\b(GitTool|git[_-]tool|GithubTool|github[_-]tool|GitHubToolkit"
+                        r"|github[_-]toolkit|pygithub|PyGithub|gitpython|GitPython"
+                        r"|ghapi|github3\.py|GitLabTool|gitlab[_-]tool|python[_-]gitlab)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # Cloud CLI / shell tools used by agents (AWS, GCP, Azure)
+                        r"\b(AWSCloudShellTool|aws[_-](?:tool|cli[_-]tool|shell[_-]tool)"
+                        r"|GcloudTool|gcloud[_-]tool|AzureCLITool|azure[_-]cli[_-]tool"
+                        r"|S3Tool|s3[_-]tool|EC2Tool|ec2[_-]tool|LambdaTool|lambda[_-]tool"
+                        r"|CloudStorageTool|cloud[_-]storage[_-]tool|BigQueryTool|bigquery[_-]tool"
+                        r"|gsutil[_-]tool|awscli|boto3[_-]tool)\b",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # DevOps / CI-CD / IaC / monitoring tools used by agents
+                        r"\b(TerraformTool|terraform[_-]tool|AnsibleTool|ansible[_-]tool"
+                        r"|PulumiTool|pulumi[_-]tool|DockerTool|docker[_-]tool"
+                        r"|KubernetesTool|kubectl[_-]tool|HelmTool|helm[_-]tool"
+                        r"|JiraTool|jira[_-]tool|jira[_-]python|atlassian[_-]python[_-]api"
+                        r"|LinearTool|linear[_-]tool|NotionTool|notion[_-]tool|notion[_-]client"
+                        r"|ConfluenceTool|confluence[_-]tool|SlackTool|slack[_-]tool|slack[_-]sdk"
+                        r"|DatadogTool|datadog[_-]tool|GrafanaTool|grafana[_-]tool"
+                        r"|PagerDutyTool|pagerduty[_-]tool|SentryTool|sentry[_-]tool)\b",
                         re.IGNORECASE,
                     ),
                     re.compile(
