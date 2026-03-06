@@ -59,6 +59,7 @@ _CATEGORY_ORDER: list[ComponentType] = [
     ComponentType.AUTH,
     ComponentType.DEPLOYMENT,
     ComponentType.FRAMEWORK,
+    ComponentType.PRIVILEGE,
 ]
 
 # Per-category keyword sets used to rank files for inclusion in the prompt
@@ -199,6 +200,55 @@ _CATEGORY_KEYWORDS: dict[ComponentType, list[str]] = {
         "anthropic",
         "haystack",
     ],
+    ComponentType.PRIVILEGE: [
+        # RBAC / access control
+        "rbac",
+        "has_permission",
+        "require_permission",
+        "assign_role",
+        "access_control",
+        "least_privilege",
+        # Admin / superuser
+        "sudo",
+        "superuser",
+        "is_superuser",
+        "is_admin",
+        "setuid",
+        "elevate",
+        # Filesystem write
+        "FileWriteTool",
+        "os.remove",
+        "shutil.move",
+        "write_text",
+        # DB write
+        "session.add",
+        "INSERT INTO",
+        "UPDATE.*SET",
+        "DELETE FROM",
+        "bulk_create",
+        # Email out
+        "smtplib",
+        "sendgrid",
+        "ses.send_email",
+        "send_email",
+        # Social media out
+        "tweepy",
+        "praw",
+        "discord",
+        "telegram",
+        "slack_sdk",
+        # Code execution / shell
+        "subprocess",
+        "BashTool",
+        "ShellTool",
+        "E2BSandbox",
+        "shell=True",
+        "os.system",
+        # Network out
+        "requests.post",
+        "httpx.post",
+        "webhook",
+    ],
 }
 
 # Maximum snippet characters sent to LLM per gap-fill category
@@ -273,6 +323,17 @@ _CATEGORY_DESCRIPTIONS: dict[ComponentType, str] = {
         "AI orchestration frameworks or MCP server instances — FastMCP / mcp.server.fastmcp "
         "instantiations, LangChain, LangGraph, CrewAI, AutoGen, LlamaIndex, Semantic Kernel, "
         "or any other AI framework that orchestrates models, tools, or agents."
+    ),
+    ComponentType.PRIVILEGE: (
+        "Privileged capabilities exercised by the AI agent or application — one or more of: "
+        "RBAC / role-based access control and permission checks (rbac, has_permission, assign_role); "
+        "admin/superuser escalation (sudo, is_superuser, setuid, elevate); "
+        "filesystem write/delete operations (open w/a mode, os.remove, shutil.move, FileWriteTool); "
+        "database write operations (INSERT/UPDATE/DELETE, session.add, bulk_create); "
+        "outbound email (smtplib, sendgrid, ses.send_email); "
+        "outbound social-media messaging (tweepy, praw, discord, telegram, slack_sdk); "
+        "shell / code execution (subprocess, os.system, BashTool, ShellTool, E2BSandbox, shell=True); "
+        "outbound HTTP write calls (requests.post, httpx.post, webhook dispatch)."
     ),
 }
 
@@ -521,6 +582,20 @@ async def _call_gap_fill_llm(
             '- Set canonical_name to the snake_case server name prefixed with "mcp:", '
             'e.g. "mcp:my-server".\n'
             'If it is a different framework (LangGraph, CrewAI, etc.) describe it in "detail" likewise.'
+        )
+    elif category == ComponentType.PRIVILEGE:
+        extra_guidance = (
+            "\n\nFor PRIVILEGE nodes use one of these canonical_name values exactly:\n"
+            '  "privilege:rbac"              — RBAC / permission checks / role assignment\n'
+            '  "privilege:admin"             — sudo / superuser / admin escalation\n'
+            '  "privilege:filesystem_write"  — file write, delete, or move operations\n'
+            '  "privilege:db_write"          — database INSERT / UPDATE / DELETE / ORM write calls\n'
+            '  "privilege:email_out"         — outbound email (smtplib, SendGrid, SES, etc.)\n'
+            '  "privilege:social_media_out"  — posts to Twitter/X, Reddit, Discord, Telegram, Slack\n'
+            '  "privilege:code_execution"    — subprocess, os.system, BashTool, E2BSandbox, shell=True\n'
+            '  "privilege:network_out"       — outbound HTTP POST/PUT/PATCH, webhooks\n'
+            'Set "name" to the human-readable privilege class (e.g. "Filesystem Write").\n'
+            'In "detail" reference the specific function/class/pattern you found.'
         )
     user_prompt = (
         f"## Already-detected components\n{existing_summary}\n\n"

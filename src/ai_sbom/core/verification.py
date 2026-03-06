@@ -95,7 +95,7 @@ AIBOM Node Types you may encounter:
 - DATASTORE: Vector database, knowledge base, or memory system
 - GUARDRAIL: Input/output filter or safety mechanism
 - AUTH: Authentication or authorization configuration (including MCP BearerAuthProvider, OAuthProvider, etc.)
-- PRIVILEGE: Access permission or role assignment
+- PRIVILEGE: Privileged capability exercised by the agent — rbac/permission check, admin/superuser escalation, filesystem write/delete, DB write (INSERT/UPDATE/DELETE/ORM .save()/.add()), outbound email (smtplib, sendgrid, SES), social-media post (tweepy, praw, discord, telegram, slack_sdk), code/shell execution (subprocess, BashTool, ShellTool, E2BSandbox, shell=True), or outbound HTTP write (requests.post, httpx.post, webhook)
 - FRAMEWORK: AI orchestration framework or MCP server (e.g., FastMCP, LangChain, CrewAI, AutoGen)
 - API_ENDPOINT: Network endpoint exposed by the application (e.g., MCP .run(transport="sse"), HTTP server)"""
 

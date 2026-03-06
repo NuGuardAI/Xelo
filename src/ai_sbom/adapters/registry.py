@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 from ai_sbom.adapters.base import DetectionAdapter, FrameworkAdapter, RegexAdapter
 from ai_sbom.adapters.frameworks import builtin_framework_specs
+from ai_sbom.adapters.privilege import privilege_adapters
 from ai_sbom.normalization import canonicalize_text
 from ai_sbom.types import ComponentType
 
@@ -207,18 +208,7 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 ),
                 canonical_name="auth:generic",
             ),
-            RegexAdapter(
-                name="privilege_generic",
-                component_type=ComponentType.PRIVILEGE,
-                priority=150,
-                patterns=(
-                    re.compile(
-                        r"\b(rbac|least[_ ]privilege|privilege[_ ]escalation|access[_ ]control|role[_.]based)\b",
-                        re.IGNORECASE,
-                    ),
-                ),
-                canonical_name="privilege:generic",
-            ),
+            *privilege_adapters(),
             RegexAdapter(
                 name="api_endpoint_generic",
                 component_type=ComponentType.API_ENDPOINT,
