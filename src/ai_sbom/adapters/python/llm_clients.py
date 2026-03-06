@@ -30,7 +30,8 @@ _log = logging.getLogger(__name__)
 
 # API call patterns that specify a model
 _MODEL_SPECIFYING_METHODS = re.compile(
-    r"\b(chat\.completions\.create|completions\.create|messages\.create|generate_content)\b"
+    r"\b(chat\.completions\.create|completions\.create|messages\.create|generate_content"
+    r"|invoke_model|invoke_model_with_response_stream|converse|converse_stream)\b"
 )
 
 # Classes that are treated as model-specifying (even without explicit model arg)
@@ -138,6 +139,7 @@ class LLMClientsAdapter(FrameworkAdapter):
                 model_name = self._clean_str(
                     args.get("model")
                     or args.get("model_name")
+                    or args.get("model_id")  # LangChain Bedrock uses model_id=
                     or args.get("embedding_model")
                     or (
                         args.get("model_name")
@@ -254,7 +256,12 @@ class LLMClientsAdapter(FrameworkAdapter):
             if not is_strong_call and not is_weak_call:
                 continue
 
-            model_name = self._clean_str(args.get("model") or args.get("model_name"))
+            model_name = self._clean_str(
+                args.get("model")
+                or args.get("model_name")
+                or args.get("modelId")  # boto3 Bedrock invoke_model uses modelId=
+                or args.get("model_id")  # some SDKs use model_id=
+            )
             if not model_name and is_strong_call:
                 # Only fall back to positional args for well-known LLM API calls
                 # to avoid false positives from unrelated generate_*/create_* functions

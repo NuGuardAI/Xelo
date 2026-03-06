@@ -181,10 +181,26 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                     re.compile(
                         r"\b(postgres|mysql|mongodb|redis|pinecone|faiss|chroma|weaviate|qdrant|milvus"
                         r"|sqlite|aiosqlite|sqlite3|dynamodb|firestore|cosmosdb|supabase|neon"
-                        r"|cassandra|elasticsearch|opensearch|neo4j|tidb|cockroachdb)\b",
+                        r"|cassandra|elasticsearch|opensearch|neo4j|tidb|cockroachdb"
+                        r"|kendra)\b",
                         re.IGNORECASE,
                     ),
                 ),
+                metadata={"normalizer": "datastore"},
+            ),
+            # AWS S3 — require boto3.client/resource context to avoid matching
+            # matching unrelated variable names (s3_client, s3_path, etc.).
+            RegexAdapter(
+                name="datastore_s3",
+                component_type=ComponentType.DATASTORE,
+                priority=130,
+                patterns=(
+                    re.compile(
+                        "boto3\\.(?:client|resource)\\(['\"]s3['\"]",
+                        re.IGNORECASE,
+                    ),
+                ),
+                canonical_name="s3",
                 metadata={"normalizer": "datastore"},
             ),
             RegexAdapter(

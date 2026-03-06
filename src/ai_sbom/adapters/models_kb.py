@@ -192,6 +192,9 @@ LANGCHAIN_LLM_CLASS_PROVIDERS: dict[str, str] = {
     "ChatGroq": "groq",
     "ChatBedrock": "bedrock",
     "BedrockChat": "bedrock",
+    # Legacy LangChain LLM classes (pre-chat API)
+    "Bedrock": "bedrock",
+    "BedrockLLM": "bedrock",
 }
 
 # ---------------------------------------------------------------------------

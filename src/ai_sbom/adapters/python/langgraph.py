@@ -192,7 +192,12 @@ class LangGraphAdapter(FrameworkAdapter):
             provider = LANGCHAIN_LLM_CLASS_PROVIDERS[inst.class_name]
             args = inst.args or {}
             model_name = (
-                _clean(args.get("model") or args.get("model_name") or args.get("deployment_name"))
+                _clean(
+                    args.get("model")
+                    or args.get("model_name")
+                    or args.get("model_id")  # LangChain Bedrock uses model_id=
+                    or args.get("deployment_name")
+                )
                 or inst.class_name
             )
             details = get_model_details(model_name, provider, args)
