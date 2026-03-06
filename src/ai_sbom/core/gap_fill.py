@@ -58,6 +58,7 @@ _CATEGORY_ORDER: list[ComponentType] = [
     ComponentType.PROMPT,
     ComponentType.AUTH,
     ComponentType.DEPLOYMENT,
+    ComponentType.FRAMEWORK,
 ]
 
 # Per-category keyword sets used to rank files for inclusion in the prompt
@@ -114,6 +115,12 @@ _CATEGORY_KEYWORDS: dict[ComponentType, list[str]] = {
         "scheduler",
         "job",
         "task",
+        # MCP tool decorators
+        "@mcp.tool",
+        "@server.tool",
+        "fastmcp",
+        "mcp.server",
+        "mcp.tool",
     ],
     ComponentType.PROMPT: [
         "prompt",
@@ -139,6 +146,16 @@ _CATEGORY_KEYWORDS: dict[ComponentType, list[str]] = {
         "cookie",
         "verify_password",
         "hash_password",
+        # MCP auth providers
+        "BearerAuthProvider",
+        "OAuthProvider",
+        "ClientCredentialsProvider",
+        "OAuth2Bearer",
+        "APIKeyAuth",
+        "TokenAuth",
+        "JWTAuth",
+        "mcp_auth",
+        "bearer_token",
     ],
     ComponentType.DEPLOYMENT: [
         "docker",
@@ -155,6 +172,32 @@ _CATEGORY_KEYWORDS: dict[ComponentType, list[str]] = {
         "server",
         "port",
         "host",
+        # MCP HTTP transports
+        "transport",
+        "streamable-http",
+        "mcp.run",
+        "mcp.serve",
+    ],
+    ComponentType.FRAMEWORK: [
+        # MCP / FastMCP
+        "FastMCP",
+        "fastmcp",
+        "mcp.server",
+        "mcp.server.fastmcp",
+        "Server",
+        "MCPServer",
+        "model_context_protocol",
+        "mcp",
+        # Other AI orchestration frameworks
+        "langgraph",
+        "crewai",
+        "autogen",
+        "llamaindex",
+        "langchain",
+        "semantic_kernel",
+        "openai",
+        "anthropic",
+        "haystack",
     ],
 }
 
@@ -226,6 +269,11 @@ _CATEGORY_DESCRIPTIONS: dict[ComponentType, str] = {
     ComponentType.PROMPT: "Prompt templates, system messages, instruction files",
     ComponentType.AUTH: "Authentication, authorisation, credentials, session management",
     ComponentType.DEPLOYMENT: "Deployment targets, reverse proxies, container orchestration",
+    ComponentType.FRAMEWORK: (
+        "AI orchestration frameworks or MCP server instances — FastMCP / mcp.server.fastmcp "
+        "instantiations, LangChain, LangGraph, CrewAI, AutoGen, LlamaIndex, Semantic Kernel, "
+        "or any other AI framework that orchestrates models, tools, or agents."
+    ),
 }
 
 # ---------------------------------------------------------------------------
@@ -462,10 +510,22 @@ async def _call_gap_fill_llm(
 ) -> list[dict[str, Any]]:
     """Make one focused LLM call and return parsed discovery results."""
     category_desc = _CATEGORY_DESCRIPTIONS.get(category, category.value)
+    extra_guidance = ""
+    if category == ComponentType.FRAMEWORK:
+        extra_guidance = (
+            "\n\nFor MCP server instances (FastMCP / mcp.server.fastmcp):\n"
+            "- Set \"name\" to the server display name passed to FastMCP() or 'mcp-server' if unknown.\n"
+            '- In "detail", write a SHORT description: e.g. '
+            '\'MCP server "my-server" exposing tools: <tool1>, <tool2>; '
+            "transport: streamable-http; auth: BearerAuthProvider'.\n"
+            '- Set canonical_name to the snake_case server name prefixed with "mcp:", '
+            'e.g. "mcp:my-server".\n'
+            'If it is a different framework (LangGraph, CrewAI, etc.) describe it in "detail" likewise.'
+        )
     user_prompt = (
         f"## Already-detected components\n{existing_summary}\n\n"
         f"## Target category: {category.value}\n"
-        f"Description: {category_desc}\n\n"
+        f"Description: {category_desc}{extra_guidance}\n\n"
         f"## Source code snippets\n{snippets}\n\n"
         f"Find any {category.value} components NOT listed above and return JSON."
     )
@@ -541,6 +601,10 @@ def _result_to_node(item: dict[str, Any], category: ComponentType) -> Node | Non
         node.metadata.extras["adapter"] = "gap_fill"
         node.metadata.extras["evidence_files"] = evidence_files
         node.metadata.extras["source_tier"] = "llm"
+        # Persist the LLM-generated one-sentence description for later use
+        # (e.g. asset summary, use-case refinement, serialization).
+        if detail and detail != f"llm_discovery: {name}":
+            node.metadata.extras["description"] = detail
         if category == ComponentType.FRAMEWORK and "framework" not in node.metadata.extras:
             node.metadata.framework = canonical
 

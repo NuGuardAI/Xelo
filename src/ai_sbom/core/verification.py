@@ -90,12 +90,14 @@ Be precise and conservative — only verify assets that are clearly production c
 AIBOM Node Types you may encounter:
 - AGENT: AI agent that can take actions autonomously
 - MODEL: LLM or ML model (e.g., gpt-4, claude-3, text-embedding-3-large)
-- TOOL: Function or capability available to an agent
+- TOOL: Function or capability available to an agent (including MCP @server.tool() decorated functions)
 - PROMPT: Prompt template or system instruction
 - DATASTORE: Vector database, knowledge base, or memory system
 - GUARDRAIL: Input/output filter or safety mechanism
-- AUTH: Authentication or authorization configuration
-- PRIVILEGE: Access permission or role assignment"""
+- AUTH: Authentication or authorization configuration (including MCP BearerAuthProvider, OAuthProvider, etc.)
+- PRIVILEGE: Access permission or role assignment
+- FRAMEWORK: AI orchestration framework or MCP server (e.g., FastMCP, LangChain, CrewAI, AutoGen)
+- API_ENDPOINT: Network endpoint exposed by the application (e.g., MCP .run(transport="sse"), HTTP server)"""
 
 _USER_PROMPT_TEMPLATE = """## AIBOM Node to Verify
 

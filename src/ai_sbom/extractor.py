@@ -908,8 +908,10 @@ class SbomExtractor:
         """Phase 3: LLM-based enrichment of detection results.
 
         Steps:
+        0. Gap-fill discovery — find component types absent from deterministic results
         1. Verify uncertain nodes (confidence 0.60–0.85) via LLM
         2. Re-aggregate confidence scores with LLM input baked in
+        2.5. Annotate MCP FRAMEWORK nodes with a short LLM description
         3. Enrich the scan-level use-case summary
         """
         from .llm_client import LLMClient
@@ -950,6 +952,14 @@ class SbomExtractor:
         doc.nodes, a_stats = aggregate_node_confidence(doc.nodes)
         _log.info("llm confidence aggregation: %s", a_stats.to_dict())
 
+        # Step 2.5: Annotate MCP server FRAMEWORK nodes with a short LLM description.
+        # These nodes have confidence=0.95 and skip verification, so we give the LLM
+        # a dedicated chance to write a one-sentence description for each one.
+        try:
+            doc = await self._annotate_mcp_nodes(doc, file_contents, client)
+        except Exception as exc:
+            _log.warning("mcp-annotate: unexpected error — continuing without: %s", exc)
+
         # Step 3: Refine use-case summary with LLM
         if doc.summary:
             files_sample = list(file_contents.items())[:200]
@@ -963,6 +973,114 @@ class SbomExtractor:
             )
 
         _log.info("llm enrichment complete: tokens_used=%d", client.tokens_used)
+        return doc
+
+    async def _annotate_mcp_nodes(
+        self,
+        doc: AiBomDocument,
+        file_contents: dict[str, str],
+        client: Any,
+    ) -> AiBomDocument:
+        """Step 2.5: Generate short LLM descriptions for MCP FRAMEWORK nodes.
+
+        Deterministic MCP nodes have confidence=0.95 and are skipped by the
+        verification pass.  This step asks the LLM to write a one-sentence
+        description for each MCP server that does not already have one,
+        covering: server name, exposed tools, transport, and auth mechanism.
+        """
+        import json as _json
+
+        mcp_nodes = [
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.FRAMEWORK
+            and "mcp"
+            in str(n.metadata.extras.get("framework", "") or n.metadata.framework or n.name).lower()
+            and not n.metadata.extras.get("description")
+        ]
+        if not mcp_nodes:
+            _log.debug("mcp-annotate: no undescribed MCP nodes — skipping")
+            return doc
+
+        # Collect associated tools / auth / endpoints per server canonical name
+        def _extras_framework(node: Any) -> str:
+            return str(node.metadata.extras.get("framework", "")).lower()
+
+        tool_nodes = [
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.TOOL
+            and _extras_framework(n) in ("mcp-server", "mcp_server")
+        ]
+        auth_nodes = [
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.AUTH
+            and _extras_framework(n) in ("mcp-server", "mcp_server")
+        ]
+        ep_nodes = [
+            n
+            for n in doc.nodes
+            if n.component_type == ComponentType.API_ENDPOINT
+            and _extras_framework(n) in ("mcp-server", "mcp_server")
+        ]
+
+        # Build a compact payload for the LLM
+        servers_payload = []
+        for mcp_node in mcp_nodes:
+            ex = mcp_node.metadata.extras
+            servers_payload.append(
+                {
+                    "server_name": ex.get("server_name") or mcp_node.name,
+                    "tools": [t.name for t in tool_nodes[:12]],
+                    "auth": [a.name for a in auth_nodes[:4]],
+                    "endpoints": [
+                        {
+                            "display": e.name,
+                            "transport": e.metadata.extras.get("transport", ""),
+                            "host": e.metadata.extras.get("host", ""),
+                            "port": e.metadata.extras.get("port", ""),
+                        }
+                        for e in ep_nodes[:4]
+                    ],
+                }
+            )
+
+        system = (
+            "You are an AI asset cataloguer. Given MCP server metadata, "
+            "write a SHORT one-sentence description for each server. "
+            "Include: server name, tool count + names (up to 5), transport, and auth type. "
+            'Return a JSON array: [{"server_name": "...", "description": "..."}]. '
+            "Return ONLY the JSON array, no prose."
+        )
+        user = "Generate descriptions for these MCP servers:\n" + _json.dumps(
+            servers_payload, indent=2
+        )
+
+        try:
+            raw, tokens = await client.complete_text(system, user)
+            _log.debug("mcp-annotate: %d tokens used", tokens)
+            text = raw.strip()
+            if text.startswith("```"):
+                text = "\n".join(ln for ln in text.splitlines() if not ln.startswith("```"))
+            start, end = text.find("["), text.rfind("]")
+            if start != -1 and end > start:
+                results = _json.loads(text[start : end + 1])
+                name_to_desc = {
+                    str(r.get("server_name", "")).lower(): str(r.get("description", ""))
+                    for r in results
+                    if isinstance(r, dict) and r.get("description")
+                }
+                for mcp_node in mcp_nodes:
+                    ex = mcp_node.metadata.extras
+                    key = str(ex.get("server_name") or mcp_node.name).lower()
+                    desc = name_to_desc.get(key) or next(iter(name_to_desc.values()), "")
+                    if desc:
+                        mcp_node.metadata.extras["description"] = desc[:400]
+                        _log.info("mcp-annotate: described %r → %s", mcp_node.name, desc[:80])
+        except Exception as exc:
+            _log.warning("mcp-annotate: LLM call failed: %s", exc)
+
         return doc
 
     @staticmethod

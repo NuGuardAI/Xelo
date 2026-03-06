@@ -436,20 +436,74 @@ async def maybe_refine_use_case_summary_with_llm(
                 "extras": {
                     k: v
                     for k, v in n.metadata.extras.items()
-                    if k in ("provider", "model_name", "model_family", "version")
+                    if k
+                    in (
+                        "provider",
+                        "model_name",
+                        "model_family",
+                        "version",
+                        "description",
+                        "server_name",
+                        "transport",
+                        "auth_type",
+                    )
                 },
             }
             for n in nodes[:30]
         ]
+
+        # Build MCP-specific context when an MCP server is present
+        mcp_context = ""
+        mcp_fw_nodes = [
+            n
+            for n in nodes
+            if _node_type_str(n) == "FRAMEWORK"
+            and "mcp" in str(n.metadata.extras.get("framework", "") or n.name).lower()
+        ]
+        if mcp_fw_nodes:
+            mcp_lines: list[str] = []
+            for mcp_node in mcp_fw_nodes:
+                ex = mcp_node.metadata.extras
+                server_name = ex.get("server_name") or mcp_node.name
+                desc = ex.get("description", "")
+                transport = ex.get("transport", "")
+                tools = [
+                    n.name
+                    for n in nodes
+                    if _node_type_str(n) == "TOOL"
+                    and str(n.metadata.extras.get("framework", "")).lower()
+                    in ("mcp-server", "mcp_server")
+                ]
+                auth_nodes = [
+                    n.name
+                    for n in nodes
+                    if _node_type_str(n) == "AUTH"
+                    and str(n.metadata.extras.get("framework", "")).lower()
+                    in ("mcp-server", "mcp_server")
+                ]
+                line = f"MCP server '{server_name}'"
+                if tools:
+                    line += f" with tools: {', '.join(tools[:8])}"
+                if transport:
+                    line += f"; transport: {transport}"
+                if auth_nodes:
+                    line += f"; auth: {', '.join(auth_nodes[:3])}"
+                if desc:
+                    line += f". Description: {desc}"
+                mcp_lines.append(line)
+            mcp_context = "\nMCP server details: " + " | ".join(mcp_lines)
+
         user_prompt = (
             "Summarize this AI application's practical use cases in 2-3 concise sentences. "
             "Be factual and avoid speculation. Include what the system appears to do, who it serves, "
-            "and notable capabilities. Mention modality support for voice/image/video explicitly.\n\n"
+            "and notable capabilities. Mention modality support for voice/image/video explicitly. "
+            "If an MCP server is present, include a brief description of the server, "
+            "its exposed tools, transport, and auth mechanism.\n\n"
             f"Base summary: {base}\n"
             f"Modality support: {scan_summary.get('modality_support', {})}\n"
             f"Frameworks: {scan_summary.get('frameworks', [])}\n"
             f"Sample nodes (JSON): {top_nodes}\n"
-            f"File sample count: {len(files)}\n\n"
+            f"File sample count: {len(files)}{mcp_context}\n\n"
             'Respond with JSON: {"summary": "..."}'
         )
         system = "You are a technical writer producing concise AI system inventory summaries."
