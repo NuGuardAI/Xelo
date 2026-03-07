@@ -25,3 +25,5 @@ This documentation set covers installing, running, and developing with Xelo — 
 - Python: `>=3.11`
 - CLI entry points: `xelo`, `ai-sbom`
 
+## License
+Apache-2.0.
