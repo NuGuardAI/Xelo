@@ -155,10 +155,10 @@ def query_grype_sbom(
 
     # Build CycloneDX JSON from the SBOM
     try:
-        from ai_sbom.models import AiBomDocument
-        from ai_sbom.serializer import SbomSerializer
-        doc     = AiBomDocument.model_validate(sbom_dict)
-        cdx     = SbomSerializer.to_cyclonedx(doc)
+        from xelo.models import AiSbomDocument
+        from xelo.serializer import AiSbomSerializer
+        doc     = AiSbomDocument.model_validate(sbom_dict)
+        cdx     = AiSbomSerializer.to_cyclonedx(doc)
         cdx_str = json.dumps(cdx)
     except Exception as exc:
         _log.warning("grype: failed to build CycloneDX BOM: %s", exc)

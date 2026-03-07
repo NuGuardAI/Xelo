@@ -135,7 +135,7 @@
             }
           ],
           "default": null,
-          "description": "Agentic framework (e.g. 'langgraph')",
+          "description": "Agentic framework (e.g. 'langgraph', 'crewai', 'mcp-server')",
           "title": "Framework"
         },
         "model_name": {
@@ -148,7 +148,7 @@
             }
           ],
           "default": null,
-          "description": "Model name if applicable",
+          "description": "LLM / embedding model name if applicable",
           "title": "Model Name"
         },
         "datastore_type": {
@@ -161,6 +161,7 @@
             }
           ],
           "default": null,
+          "description": "Datastore technology, e.g. 'redis', 'postgres', 'pinecone'",
           "title": "Datastore Type"
         },
         "auth_type": {
@@ -173,7 +174,21 @@
             }
           ],
           "default": null,
+          "description": "Authentication mechanism, e.g. 'oauth2', 'bearer', 'api_key', 'jwt'",
           "title": "Auth Type"
+        },
+        "auth_class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Auth provider class name, e.g. 'BearerAuthProvider', 'OAuth2ClientCredentialsProvider'",
+          "title": "Auth Class"
         },
         "privilege_scope": {
           "anyOf": [
@@ -185,6 +200,7 @@
             }
           ],
           "default": null,
+          "description": "Privilege or permission scope label, e.g. 'db_write', 'filesystem_read'",
           "title": "Privilege Scope"
         },
         "endpoint": {
@@ -197,6 +213,7 @@
             }
           ],
           "default": null,
+          "description": "API endpoint address, e.g. '0.0.0.0:8080 (sse)' for MCP or '/chat' for REST",
           "title": "Endpoint"
         },
         "method": {
@@ -209,7 +226,34 @@
             }
           ],
           "default": null,
+          "description": "HTTP method, e.g. 'GET', 'POST'",
           "title": "Method"
+        },
+        "transport": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Transport protocol for API/MCP nodes, e.g. 'sse', 'streamable-http', 'stdio'",
+          "title": "Transport"
+        },
+        "server_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Server display name (MCP FastMCP name kwarg, or inferred service name)",
+          "title": "Server Name"
         },
         "deployment_target": {
           "anyOf": [
@@ -221,6 +265,7 @@
             }
           ],
           "default": null,
+          "description": "Cloud or container deployment target, e.g. 'aws', 'gcp', 'kubernetes'",
           "title": "Deployment Target"
         },
         "data_classification": {

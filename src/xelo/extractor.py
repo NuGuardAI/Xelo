@@ -509,6 +509,31 @@ class AiSbomExtractor:
                 node.metadata.extras["model_card_url"] = acc.metadata["model_card_url"]
             if "api_endpoint" in acc.metadata and acc.metadata["api_endpoint"]:
                 node.metadata.extras["api_endpoint"] = acc.metadata["api_endpoint"]
+            # AUTH node typed fields
+            if acc.component_type == ComponentType.AUTH:
+                if acc.metadata.get("auth_type"):
+                    node.metadata.auth_type = str(acc.metadata["auth_type"])
+                if acc.metadata.get("auth_class"):
+                    node.metadata.auth_class = str(acc.metadata["auth_class"])
+                if acc.metadata.get("server_name"):
+                    node.metadata.server_name = str(acc.metadata["server_name"])
+            # API_ENDPOINT node typed fields
+            if acc.component_type == ComponentType.API_ENDPOINT:
+                host = acc.metadata.get("host", "")
+                port = acc.metadata.get("port", "")
+                transport = acc.metadata.get("transport", "")
+                if host or port:
+                    node.metadata.endpoint = f"{host}:{port}" if (host and port) else (host or port)
+                if transport:
+                    node.metadata.transport = str(transport)
+                if acc.metadata.get("server_name"):
+                    node.metadata.server_name = str(acc.metadata["server_name"])
+                if acc.metadata.get("method"):
+                    node.metadata.method = str(acc.metadata["method"])
+            # server_name for all MCP FRAMEWORK/TOOL nodes
+            if acc.metadata.get("framework") == "mcp-server":
+                if acc.metadata.get("server_name"):
+                    node.metadata.server_name = str(acc.metadata["server_name"])
             # Data classification metadata (DATASTORE nodes)
             if acc.component_type == ComponentType.DATASTORE:
                 if acc.metadata.get("data_classification"):

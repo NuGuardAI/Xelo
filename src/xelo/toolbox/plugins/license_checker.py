@@ -25,8 +25,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from xelo_toolbox.models import ToolResult
-from xelo_toolbox.plugin_base import ToolPlugin
+from xelo.toolbox.models import ToolResult
+from xelo.toolbox.plugin_base import ToolPlugin
 
 _log = logging.getLogger("toolbox.plugins.license")
 

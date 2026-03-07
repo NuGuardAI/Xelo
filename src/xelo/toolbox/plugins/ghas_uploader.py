@@ -33,10 +33,10 @@ import json
 import logging
 from typing import Any
 
-from xelo_toolbox.http_utils import post_json
-from xelo_toolbox.integration_contracts import GhasConfig
-from xelo_toolbox.models import ToolResult
-from xelo_toolbox.plugin_base import ToolPlugin
+from xelo.toolbox.http_utils import post_json
+from xelo.toolbox.integration_contracts import GhasConfig
+from xelo.toolbox.models import ToolResult
+from xelo.toolbox.plugin_base import ToolPlugin
 
 _log = logging.getLogger("toolbox.plugins.ghas")
 
@@ -151,7 +151,7 @@ class GhasUploaderPlugin(ToolPlugin):
         config: dict[str, Any],
     ) -> dict[str, Any]:
         """Run the SARIF exporter and return the raw SARIF dict."""
-        from xelo_toolbox.plugins.sarif_exporter import SarifExporterPlugin  # lazy
+        from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin  # lazy
 
         sarif_config: dict[str, Any] = {
             "provider":      provider,

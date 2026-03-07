@@ -34,7 +34,7 @@ import traceback
 from pathlib import Path
 from typing import Any
 
-from xelo_toolbox.core import Toolbox
+from xelo.toolbox.core import Toolbox
 
 _log = logging.getLogger("toolbox")
 
@@ -151,7 +151,7 @@ def _resolve_sbom_path(command: str, action: str, args: argparse.Namespace) -> P
     out = Path(args.scan_output) if getattr(args, "scan_output", "") else _default_scan_output(command, action, args)
     _ensure_dir(out, args)
 
-    scan_cmd = [sys.executable, "-m", "ai_sbom.cli", "scan"]
+    scan_cmd = [sys.executable, "-m", "xelo.cli", "scan"]
     if scan_path:
         scan_cmd.extend(["path", scan_path])
     else:

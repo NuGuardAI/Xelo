@@ -68,9 +68,9 @@ from __future__ import annotations
 import logging
 from typing import Any, cast
 
-from xelo_toolbox.models import ToolResult
-from xelo_toolbox.plugin_base import ToolPlugin
-from xelo_toolbox.plugins._atlas_data import (
+from xelo.toolbox.models import ToolResult
+from xelo.toolbox.plugin_base import ToolPlugin
+from xelo.toolbox.plugins._atlas_data import (
     ATLAS_VERSION,
     MITIGATIONS,
     NATIVE_CHECKS,
@@ -165,7 +165,7 @@ class AtlasAnnotatorPlugin(ToolPlugin):
     def _run_vla_pass(self, sbom: dict[str, Any]) -> list[dict[str, Any]]:
         """Run structural VLA rules then annotate each finding with ATLAS techniques."""
         # Lazy import to avoid circular dependency at module level
-        from xelo_toolbox.plugins.vulnerability import VulnerabilityScannerPlugin  # noqa: PLC0415
+        from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin  # noqa: PLC0415
 
         scanner = VulnerabilityScannerPlugin()
         result = scanner.run(sbom, {"provider": "xelo-rules"})
@@ -271,7 +271,6 @@ class AtlasAnnotatorPlugin(ToolPlugin):
         affected: list[str] = []
 
         agent_model_ids = type_sets.get("AGENT", set()) | type_sets.get("MODEL", set())
-        guardrail_ids = type_sets.get("GUARDRAIL", set())
         datastore_ids = type_sets.get("DATASTORE", set())
 
         if not datastore_ids or not agent_model_ids:

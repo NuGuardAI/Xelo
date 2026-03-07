@@ -40,14 +40,38 @@ class Evidence(BaseModel):
 class NodeMetadata(BaseModel):
     """Typed + open-ended metadata attached to a Node."""
 
-    framework: str | None = Field(default=None, description="Agentic framework (e.g. 'langgraph')")
-    model_name: str | None = Field(default=None, description="Model name if applicable")
-    datastore_type: str | None = Field(default=None)
-    auth_type: str | None = Field(default=None)
-    privilege_scope: str | None = Field(default=None)
-    endpoint: str | None = Field(default=None)
-    method: str | None = Field(default=None)
-    deployment_target: str | None = Field(default=None)
+    framework: str | None = Field(default=None, description="Agentic framework (e.g. 'langgraph', 'crewai', 'mcp-server')")
+    model_name: str | None = Field(default=None, description="LLM / embedding model name if applicable")
+    datastore_type: str | None = Field(default=None, description="Datastore technology, e.g. 'redis', 'postgres', 'pinecone'")
+    auth_type: str | None = Field(
+        default=None,
+        description="Authentication mechanism, e.g. 'oauth2', 'bearer', 'api_key', 'jwt'",
+    )
+    auth_class: str | None = Field(
+        default=None,
+        description="Auth provider class name, e.g. 'BearerAuthProvider', 'OAuth2ClientCredentialsProvider'",
+    )
+    privilege_scope: str | None = Field(
+        default=None,
+        description="Privilege or permission scope label, e.g. 'db_write', 'filesystem_read'",
+    )
+    endpoint: str | None = Field(
+        default=None,
+        description="API endpoint address, e.g. '0.0.0.0:8080 (sse)' for MCP or '/chat' for REST",
+    )
+    method: str | None = Field(default=None, description="HTTP method, e.g. 'GET', 'POST'")
+    transport: str | None = Field(
+        default=None,
+        description="Transport protocol for API/MCP nodes, e.g. 'sse', 'streamable-http', 'stdio'",
+    )
+    server_name: str | None = Field(
+        default=None,
+        description="Server display name (MCP FastMCP name kwarg, or inferred service name)",
+    )
+    deployment_target: str | None = Field(
+        default=None,
+        description="Cloud or container deployment target, e.g. 'aws', 'gcp', 'kubernetes'",
+    )
     # Data classification fields (populated on DATASTORE nodes by the classification adapters)
     data_classification: list[str] | None = Field(
         default=None,

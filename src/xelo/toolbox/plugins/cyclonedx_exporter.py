@@ -13,11 +13,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from ai_sbom.models import AiBomDocument
-from ai_sbom.serializer import SbomSerializer
+from xelo.models import AiSbomDocument
+from xelo.serializer import AiSbomSerializer
 
-from xelo_toolbox.models import ToolResult
-from xelo_toolbox.plugin_base import ToolPlugin
+from xelo.toolbox.models import ToolResult
+from xelo.toolbox.plugin_base import ToolPlugin
 
 _log = logging.getLogger("toolbox.plugins.cyclonedx")
 
@@ -29,8 +29,8 @@ class CycloneDxExporter(ToolPlugin):
         spec = config.get("spec_version", "1.6")
         _log.info("generating CycloneDX %s BOM (%d node(s))",
                   spec, len(sbom.get("nodes") or []))
-        doc     = AiBomDocument.model_validate(sbom)
-        payload = SbomSerializer.to_cyclonedx(doc, spec_version=spec)
+        doc     = AiSbomDocument.model_validate(sbom)
+        payload = AiSbomSerializer.to_cyclonedx(doc, spec_version=spec)
         _log.debug("BOM has %d component(s)", len(payload.get("components", [])))
 
         include_vulns = config.get("include_vulnerabilities", False)
@@ -60,7 +60,7 @@ class CycloneDxExporter(ToolPlugin):
 def _build_vex(deps: list[dict[str, Any]], timeout: float) -> list[dict[str, Any]]:
     """Query OSV and return a CycloneDX-shaped vulnerabilities list."""
     try:
-        from xelo_toolbox.osv_client import query_osv
+        from xelo.toolbox.osv_client import query_osv
     except ImportError:
         return []
 

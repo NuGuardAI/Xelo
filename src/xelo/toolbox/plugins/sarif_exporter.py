@@ -22,8 +22,8 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from xelo_toolbox.models import ToolResult
-from xelo_toolbox.plugin_base import ToolPlugin
+from xelo.toolbox.models import ToolResult
+from xelo.toolbox.plugin_base import ToolPlugin
 
 _log = logging.getLogger("toolbox.plugins.sarif")
 
@@ -97,7 +97,7 @@ class SarifExporterPlugin(ToolPlugin):
     name = "sarif_export"
 
     def run(self, sbom: dict[str, Any], config: dict[str, Any]) -> ToolResult:
-        from xelo_toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
+        from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
 
         artifact_uri = (
             config.get("artifact_uri")
