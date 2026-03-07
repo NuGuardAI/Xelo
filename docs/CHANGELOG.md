@@ -20,7 +20,7 @@ Track user-facing documentation updates here, especially changes to CLI behavior
 - Overall benchmark F1 improved from 85.75% → 87.76%.
 - `bedrock-langchain-agent` benchmark F1 improved from 50% → 85.71%.
 
-## Unreleased
+## v0.3.0 - 2026-03-07
 
 ### Added
 
