@@ -953,9 +953,7 @@ def load_nuguard_policy(path: Path) -> Dict[str, Any]:
         data: Dict[str, Any] = json.load(fh)
     missing = _NUGUARD_REQUIRED_KEYS - set(data.keys())
     if missing:
-        raise ValueError(
-            f"Policy {path.name} missing required keys: {sorted(missing)}"
-        )
+        raise ValueError(f"Policy {path.name} missing required keys: {sorted(missing)}")
     return data
 
 
