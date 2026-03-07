@@ -536,12 +536,18 @@ class AiSbomExtractor:
                     node.metadata.server_name = str(acc.metadata["server_name"])
             # Data classification metadata (DATASTORE nodes)
             if acc.component_type == ComponentType.DATASTORE:
+                if acc.metadata.get("datastore_type"):
+                    node.metadata.datastore_type = str(acc.metadata["datastore_type"])
                 if acc.metadata.get("data_classification"):
                     node.metadata.data_classification = acc.metadata["data_classification"]
                 if acc.metadata.get("classified_tables"):
                     node.metadata.classified_tables = acc.metadata["classified_tables"]
                 if acc.metadata.get("classified_fields"):
                     node.metadata.classified_fields = acc.metadata["classified_fields"]
+            # PRIVILEGE node typed fields
+            if acc.component_type == ComponentType.PRIVILEGE:
+                if acc.metadata.get("privilege_scope"):
+                    node.metadata.privilege_scope = str(acc.metadata["privilege_scope"])
             # Container image metadata
             if acc.component_type == ComponentType.CONTAINER_IMAGE:
                 node.metadata.image_name = acc.metadata.get("image_name")
