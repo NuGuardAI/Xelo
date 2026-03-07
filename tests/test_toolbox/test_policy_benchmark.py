@@ -586,3 +586,196 @@ class TestPathFinding:
         
         # Should not find MODEL as intermediate
         assert _path_has_intermediates(path, ["MODEL"], nodes) is False
+
+
+# ============================================================================
+# NUGUARD STANDARD POLICY TESTS
+# ============================================================================
+
+class TestNuguardPolicies:
+    """Tests for NuGuard Standard policy helpers (llm-runs/*.json)."""
+
+    def test_list_nuguard_policies_returns_three(self):
+        """``list_nuguard_policies`` should find the three bundled policy files."""
+        from .evaluate_policies import list_nuguard_policies
+
+        policies = list_nuguard_policies()
+        assert len(policies) == 3, (
+            f"Expected 3 NuGuard Standard policy files, got {len(policies)}: {policies}"
+        )
+
+    def test_list_nuguard_policies_are_paths(self):
+        """Each entry should be a Path pointing to an existing file."""
+        from pathlib import Path
+        from .evaluate_policies import list_nuguard_policies
+
+        for p in list_nuguard_policies():
+            assert isinstance(p, Path)
+            assert p.exists(), f"Policy file does not exist: {p}"
+            assert p.suffix == ".json"
+
+    def test_nuguard_policy_owasp_structure(self):
+        """OWASP AI Top 10 NuGuard Standard policy should have required fields."""
+        from .evaluate_policies import list_nuguard_policies, load_nuguard_policy
+
+        owasp_policies = [
+            p for p in list_nuguard_policies() if "owasp" in p.stem.lower()
+        ]
+        assert owasp_policies, "owasp*_nuguard_standard.json not found in llm-runs/"
+        policy = load_nuguard_policy(owasp_policies[0])
+
+        assert "nuguard_schema_version" in policy
+        assert "policy_id" in policy
+        assert "framework" in policy
+        assert "controls" in policy
+        assert isinstance(policy["controls"], list)
+        assert len(policy["controls"]) > 0
+
+    def test_nuguard_policy_nist_structure(self):
+        """NIST AI RMF NuGuard Standard policy should have required fields."""
+        from .evaluate_policies import list_nuguard_policies, load_nuguard_policy
+
+        nist_policies = [
+            p for p in list_nuguard_policies() if "nist" in p.stem.lower()
+        ]
+        assert nist_policies, "nist*_nuguard_standard.json not found in llm-runs/"
+        policy = load_nuguard_policy(nist_policies[0])
+
+        assert "nuguard_schema_version" in policy
+        assert "controls" in policy
+        for ctrl in policy["controls"]:
+            assert "control_id" in ctrl
+            # NIST controls use category instead of severity
+            assert "category" in ctrl or "severity" in ctrl
+
+    def test_nuguard_policy_soc2_structure(self):
+        """SOC2 NuGuard Standard policy should have required fields."""
+        from .evaluate_policies import list_nuguard_policies, load_nuguard_policy
+
+        soc2_policies = [
+            p for p in list_nuguard_policies() if "soc2" in p.stem.lower()
+        ]
+        assert soc2_policies, "soc2*_nuguard_standard.json not found in llm-runs/"
+        policy = load_nuguard_policy(soc2_policies[0])
+
+        assert "nuguard_schema_version" in policy
+        assert "controls" in policy
+
+    def test_load_nuguard_policy_invalid_raises(self, tmp_path):
+        """``load_nuguard_policy`` raises ValueError for invalid JSON structure."""
+        from .evaluate_policies import load_nuguard_policy
+
+        bad_file = tmp_path / "bad_policy.json"
+        bad_file.write_text('{"foo": "bar"}', encoding="utf-8")
+
+        with pytest.raises(ValueError, match="missing required keys"):
+            load_nuguard_policy(bad_file)
+
+    def test_evaluate_nuguard_policy_importable(self):
+        """``evaluate_nuguard_policy_against_aibom`` must be importable."""
+        from .evaluate_policies import evaluate_nuguard_policy_against_aibom  # noqa: F401
+
+        assert callable(evaluate_nuguard_policy_against_aibom)
+
+    def test_run_nuguard_policy_benchmark_importable(self):
+        """``run_nuguard_policy_benchmark`` must be importable."""
+        from .evaluate_policies import run_nuguard_policy_benchmark  # noqa: F401
+
+        assert callable(run_nuguard_policy_benchmark)
+
+    def test_run_nuguard_policy_benchmark_no_llm_records_issue(self):
+        """When ``llm_model`` is empty, repos are skipped with a recorded issue."""
+        from .evaluate_policies import list_nuguard_policies, run_nuguard_policy_benchmark
+
+        policies = list_nuguard_policies()
+        if not policies:
+            pytest.skip("No NuGuard Standard policy files found")
+
+        # Run without an LLM model — should enumerate repos but skip assessment
+        result = run_nuguard_policy_benchmark(policies[0], llm_model="")
+
+        assert "policy_id" in result
+        assert "framework" in result
+        assert result["repos_evaluated"] == 0
+        # All repos should have a "no_llm_model" issue
+        for issue in result["issues"]:
+            assert issue["type"] in ("no_llm_model", "no_fixtures_dir", "no_aibom")
+
+
+# ============================================================================
+# BENCHMARK PLUGIN TESTS
+# ============================================================================
+
+class TestBenchmarkPlugins:
+    """Tests for run_bench_plugins and the evaluate.py plugin integration."""
+
+    def test_run_bench_plugins_importable(self):
+        """``run_bench_plugins`` must be importable from evaluate."""
+        from .evaluate import run_bench_plugins  # noqa: F401
+
+        assert callable(run_bench_plugins)
+
+    def test_run_bench_plugins_markdown_only(self, tmp_path):
+        """Markdown plugin runs without LLM when no policy_files are given."""
+        from .evaluate import run_bench_plugins
+
+        minimal_sbom: dict = {
+            "schema_version": "1.1.0",
+            "generated_at": "2026-01-01T00:00:00Z",
+            "generator": "xelo",
+            "target": "pytest-test",
+            "nodes": [],
+            "edges": [],
+            "deps": [],
+            "summary": {"frameworks": [], "node_counts": {}},
+        }
+        report = run_bench_plugins(minimal_sbom, "test-repo", tmp_path, policy_files=[])
+
+        assert report["markdown_saved"] is True
+        md_path = tmp_path / "test-repo" / "report.md"
+        assert md_path.exists()
+        assert md_path.read_text(encoding="utf-8").strip() != ""
+
+    def test_run_bench_plugins_no_policy_without_llm(self, tmp_path):
+        """Policy step is skipped and an issue is recorded when llm_model is empty."""
+        from .evaluate import run_bench_plugins, NUGUARD_POLICIES_DIR
+        from pathlib import Path
+
+        minimal_sbom: dict = {
+            "schema_version": "1.1.0",
+            "generated_at": "2026-01-01T00:00:00Z",
+            "generator": "xelo",
+            "target": "pytest-test",
+            "nodes": [],
+            "edges": [],
+            "deps": [],
+            "summary": {"frameworks": [], "node_counts": {}},
+        }
+        # Pass a non-empty policy_files list but no llm_model
+        dummy_policy = Path("/nonexistent/policy.json")
+        report = run_bench_plugins(
+            minimal_sbom,
+            "test-repo",
+            tmp_path,
+            policy_files=[dummy_policy],
+            plugin_llm_model="",
+        )
+
+        # Markdown still succeeds
+        assert report["markdown_saved"] is True
+        # No policy results because llm_model is absent
+        assert report["policy_results"] == {}
+        # An issue is recorded
+        issue_types = [i["type"] for i in report["issues"]]
+        assert "no_llm_model" in issue_types
+
+    def test_nuguard_policies_dir_constant(self):
+        """NUGUARD_POLICIES_DIR in evaluate.py should point to llm-runs/."""
+        from .evaluate import NUGUARD_POLICIES_DIR
+        from pathlib import Path
+
+        assert isinstance(NUGUARD_POLICIES_DIR, Path)
+        assert NUGUARD_POLICIES_DIR.name == "llm-runs"
+        assert NUGUARD_POLICIES_DIR.exists(), (
+            f"NUGUARD_POLICIES_DIR does not exist: {NUGUARD_POLICIES_DIR}"
+        )

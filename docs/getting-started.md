@@ -140,40 +140,41 @@ xelo schema --output aibom.schema.json
 
 ## Running Toolbox Plugins
 
-Toolbox plugins analyse an existing SBOM and produce findings, reports, and exports. They are invoked from Python — typically right after calling `xelo scan`:
+Toolbox plugins analyse an existing SBOM and produce findings, reports, and exports. Run them with `xelo plugin run`:
 
 ```bash
-xelo scan ./my-repo --output sbom.json
-
-python - sbom.json <<'EOF'
-import json, sys
-from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
-from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
-from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
-from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
-
-sbom = json.loads(open(sys.argv[1]).read())
+# See all available plugins
+xelo plugin list
 
 # Structural vulnerability / VLA rules
-vuln = VulnerabilityScannerPlugin().run(sbom, {})
-print(vuln.status, vuln.message)
+xelo plugin run vulnerability sbom.json
+
+# Write findings to a JSON file
+xelo plugin run vulnerability sbom.json --output findings.json
 
 # MITRE ATLAS annotation
-atlas = AtlasAnnotatorPlugin().run(sbom, {})
-for f in atlas.details["findings"]:
-    print(f["rule_id"], f["severity"])
+xelo plugin run atlas sbom.json --output atlas.json
 
-# Export as SARIF for GitHub Code Scanning
-sarif = SarifExporterPlugin().run(sbom, {})
-open("results.sarif", "w").write(sarif.details["sarif_json"])
+# SARIF export for GitHub Code Scanning
+xelo plugin run sarif sbom.json --output results.sarif
 
-# Markdown report
-md = MarkdownExporterPlugin().run(sbom, {})
-open("report.md", "w").write(md.details["markdown"])
-EOF
+# Human-readable Markdown report
+xelo plugin run markdown sbom.json --output report.md
+
+# CycloneDX export
+xelo plugin run cyclonedx sbom.json --output bom.cdx.json
+
+# Policy assessment (requires LLM)
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp_ai_top10.json \
+  --config llm_model=gpt-4o \
+  --config repo_path=./my-repo \
+  --output policy-report.json
 ```
 
-For the full list of available plugins and their configuration options see the [CLI Reference — Toolbox Plugins](./cli-reference.md) and [Developer Guide](./developer-guide.md).
+Each plugin writes its output to `--output` (default: stdout). When `--output` is a file, xelo prints a one-line summary (`ok: ... → file.json`) to stdout.
+
+For the full list of plugins, config options, and integration targets (GHAS, AWS Security Hub, JFrog Xray) see the [CLI Reference — Toolbox Plugins](./cli-reference.md) and [Developer Guide](./developer-guide.md).
 
 ## Supported Frameworks
 

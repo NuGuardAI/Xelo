@@ -95,23 +95,42 @@ xelo schema
 
 ## Toolbox Plugins
 
-Xelo ships with built-in analysis plugins in `xelo.toolbox.plugins`. Plugins are invoked from Python after producing a scan — they analyse the SBOM dict and return a `ToolResult(status, message, details)`.
+Xelo ships with built-in analysis plugins invoked via `xelo plugin run`:
 
-| Plugin | Module | Network | What it does |
+```bash
+xelo plugin list                                          # list all plugins
+
+xelo plugin run vulnerability sbom.json                   # offline VLA rules
+xelo plugin run atlas sbom.json --output atlas.json       # MITRE ATLAS annotation
+xelo plugin run sarif sbom.json --output results.sarif    # SARIF 2.1.0
+xelo plugin run markdown sbom.json --output report.md     # Markdown report
+xelo plugin run cyclonedx sbom.json --output bom.cdx.json # CycloneDX 1.6
+
+# Policy assessment (LLM required)
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp_ai_top10.json \
+  --config llm_model=gpt-4o \
+  --output policy-report.json
+```
+
+| Plugin | CLI name | Network | What it does |
 | --- | --- | --- | --- |
 | `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, unprotected models, over-privileged agents |
-| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps every finding to MITRE ATLAS v2 techniques and mitigations |
-| `PolicyAssessmentPlugin` | `policy_assessment` | No | Evaluates the AI SBOM against a custom policy file; pass `config={"policy_file": "<path>"}` |
-| `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
+| `AtlasAnnotatorPlugin` | `atlas` | No | Maps every finding to MITRE ATLAS v2 techniques and mitigations |
+| `PolicyAssessmentPlugin` | `policy` | No* | Evaluates the AI SBOM against a custom policy file (OWASP AI Top 10, HIPAA, …) |
+| `LicenseCheckerPlugin` | `license` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness and flags outdated AI packages |
-| `SarifExporterPlugin` | `sarif_exporter` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning / GHAS compatible) |
-| `CycloneDxExporter` | `cyclonedx_exporter` | No | Exports nodes as CycloneDX 1.6 |
-| `MarkdownExporterPlugin` | `markdown_exporter` | No | Human-readable Markdown report |
-| `GhasUploaderPlugin` | `ghas_uploader` | Yes | Uploads SARIF to GitHub Advanced Security; requires `GITHUB_TOKEN` |
-| `AwsSecurityHubPlugin` | `aws_security_hub` | Yes | Pushes findings to AWS Security Hub; requires `boto3` + AWS credentials |
-| `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray; requires URL + credentials |
+| `SarifExporterPlugin` | `sarif` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning / GHAS compatible) |
+| `CycloneDxExporter` | `cyclonedx` | No | Exports nodes as CycloneDX 1.6 |
+| `MarkdownExporterPlugin` | `markdown` | No | Human-readable Markdown report |
+| `GhasUploaderPlugin` | `ghas` | Yes | Uploads SARIF to GitHub Advanced Security |
+| `AwsSecurityHubPlugin` | `aws-security-hub` | Yes | Pushes findings to AWS Security Hub (requires `boto3`) |
+| `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray |
+
+Plugins are also importable as a Python library:
 
 ```python
+import json
 from xelo import AiSbomExtractor, AiSbomConfig
 from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
 from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
@@ -121,20 +140,16 @@ from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
 doc = AiSbomExtractor().extract_from_path("./my-repo", config=AiSbomConfig())
 sbom = doc.model_dump(mode="json")
 
-# Structural VLA rules
 vuln = VulnerabilityScannerPlugin().run(sbom, {})
 print(vuln.status, vuln.message)
 
-# MITRE ATLAS annotation
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for finding in atlas.details["findings"]:
     print(finding["rule_id"], finding["severity"], finding["atlas"]["techniques"])
 
-# SARIF for GitHub Code Scanning
 sarif = SarifExporterPlugin().run(sbom, {})
-open("results.sarif", "w").write(sarif.details["sarif_json"])
+open("results.sarif", "w").write(json.dumps(sarif.details, indent=2))
 
-# Markdown report
 md = MarkdownExporterPlugin().run(sbom, {})
 open("report.md", "w").write(md.details["markdown"])
 ```

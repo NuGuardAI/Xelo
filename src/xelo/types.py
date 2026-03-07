@@ -14,6 +14,7 @@ class ComponentType(str, Enum):
     DEPLOYMENT = "DEPLOYMENT"
     PROMPT = "PROMPT"
     CONTAINER_IMAGE = "CONTAINER_IMAGE"
+    IAM = "IAM"
 
 
 class RelationshipType(str, Enum):

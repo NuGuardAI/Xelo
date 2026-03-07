@@ -49,6 +49,13 @@ from .adapters.yaml_adapters import (
     LLMYAMLConfigAdapter,
     PromptFileAdapter,
 )
+from .adapters.iac import (
+    BicepAdapter,
+    CloudFormationAdapter,
+    GcpDeploymentManagerAdapter,
+    K8sAdapter,
+    TerraformAdapter,
+)
 from .adapters.typescript._ts_regex import TSFrameworkAdapter
 from .config import AiSbomConfig
 from .core.application_summary import build_scan_summary
@@ -100,7 +107,10 @@ def _strip_notebook_outputs(content: str) -> str:
         return content
 
 
-_IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".yaml", ".yml", ".json"}
+_IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".jinja", ".yaml", ".yml", ".json"}
+# Bicep and Jinja IaC-specific extensions (not processed by the generic YAML phase)
+_BICEP_EXTENSIONS = {".bicep"}
+_JINJA_EXTENSIONS = {".jinja"}
 _DOCS_EXTENSIONS = {
     ".md",
     ".rst",
@@ -216,6 +226,7 @@ class AiSbomExtractor:
         yaml_adapters: tuple[Any, ...] | None = None,
         nginx_adapter: NginxAdapter | None = None,
         prompt_file_adapter: PromptFileAdapter | None = None,
+        iac_adapters: tuple[Any, ...] | None = None,
         load_plugins: bool = False,
     ) -> None:
         from .plugins import load_plugins as _load_plugins
@@ -246,6 +257,17 @@ class AiSbomExtractor:
         self.nginx_adapter = nginx_adapter if nginx_adapter is not None else NginxAdapter()
         self.prompt_file_adapter = (
             prompt_file_adapter if prompt_file_adapter is not None else PromptFileAdapter()
+        )
+        self.iac_adapters: tuple[Any, ...] = (
+            iac_adapters
+            if iac_adapters is not None
+            else (
+                K8sAdapter(),
+                TerraformAdapter(),
+                CloudFormationAdapter(),
+                BicepAdapter(),
+                GcpDeploymentManagerAdapter(),
+            )
         )
 
     # ------------------------------------------------------------------
@@ -408,6 +430,38 @@ class AiSbomExtractor:
                     except Exception as exc:
                         _log.warning(
                             "YAML adapter %r failed on %s: %s", yaml_adapter.name, rel_path, exc
+                        )
+
+            # Phase 1g: IaC adapters (K8s, CFN, GCP DM for YAML/JSON;
+            #           Terraform for .tf/.tfvars; Bicep for .bicep; Jinja for .jinja)
+            _is_iac_file = (
+                suffix in {".yaml", ".yml", ".json", ".tf", ".tfvars"}
+                or suffix in _BICEP_EXTENSIONS
+                or suffix in _JINJA_EXTENSIONS
+            )
+            if _is_iac_file:
+                for iac_adapter in self.iac_adapters:
+                    # Gate each adapter to its relevant extensions to avoid
+                    # redundant YAML loading on non-matching files
+                    adapter_handles: bool
+                    if isinstance(iac_adapter, TerraformAdapter):
+                        adapter_handles = suffix in {".tf", ".tfvars"}
+                    elif isinstance(iac_adapter, BicepAdapter):
+                        adapter_handles = suffix in _BICEP_EXTENSIONS
+                    elif isinstance(iac_adapter, GcpDeploymentManagerAdapter):
+                        adapter_handles = suffix in {".yaml", ".yml", ".jinja"}
+                    else:
+                        # K8sAdapter + CloudFormationAdapter handle YAML and JSON
+                        adapter_handles = suffix in {".yaml", ".yml", ".json"}
+                    if not adapter_handles:
+                        continue
+                    _log.debug("running IaC adapter %r on %s", iac_adapter.name, rel_path)
+                    try:
+                        for det in iac_adapter.scan(content, rel_path):
+                            self._merge_detection(node_map, det)
+                    except Exception as exc:
+                        _log.warning(
+                            "IaC adapter %r failed on %s: %s", iac_adapter.name, rel_path, exc
                         )
 
             # Phase 2: Regex fallback
@@ -576,6 +630,61 @@ class AiSbomExtractor:
                 node.metadata.image_digest = acc.metadata.get("image_digest")
                 node.metadata.registry = acc.metadata.get("registry")
                 node.metadata.base_image = acc.metadata.get("base_image")
+                # Security signals annotated by DockerfileAdapter
+                _rar = acc.metadata.get("runs_as_root")
+                if _rar is not None:
+                    node.metadata.runs_as_root = bool(_rar)
+                _hc = acc.metadata.get("has_health_check")
+                if _hc is not None:
+                    node.metadata.has_health_check = bool(_hc)
+            # IaC security / resilience metadata (DEPLOYMENT nodes from IaC adapters)
+            if acc.component_type == ComponentType.DEPLOYMENT:
+                if acc.metadata.get("deployment_target"):
+                    node.metadata.deployment_target = str(acc.metadata["deployment_target"])
+                _cr = acc.metadata.get("cloud_region")
+                if _cr:
+                    node.metadata.cloud_region = str(_cr)
+                _az = acc.metadata.get("availability_zones")
+                if isinstance(_az, list) and _az:
+                    node.metadata.availability_zones = [str(z) for z in _az]
+                _ss = acc.metadata.get("secret_store")
+                if _ss:
+                    node.metadata.secret_store = str(_ss)
+                _enc = acc.metadata.get("encryption_at_rest")
+                if _enc is not None:
+                    node.metadata.encryption_at_rest = bool(_enc)
+                _ekr = acc.metadata.get("encryption_key_ref")
+                if _ekr:
+                    node.metadata.encryption_key_ref = str(_ekr)
+                _ha = acc.metadata.get("ha_mode")
+                if _ha:
+                    node.metadata.ha_mode = str(_ha)
+                _rar2 = acc.metadata.get("runs_as_root")
+                if _rar2 is not None:
+                    node.metadata.runs_as_root = bool(_rar2)
+                _hc2 = acc.metadata.get("has_health_check")
+                if _hc2 is not None:
+                    node.metadata.has_health_check = bool(_hc2)
+                _rl = acc.metadata.get("has_resource_limits")
+                if _rl is not None:
+                    node.metadata.has_resource_limits = bool(_rl)
+            # IAM node typed fields
+            if acc.component_type == ComponentType.IAM:
+                _it = acc.metadata.get("iam_type")
+                if _it:
+                    node.metadata.iam_type = str(_it)
+                _pr = acc.metadata.get("principal")
+                if _pr:
+                    node.metadata.principal = str(_pr)
+                _pm = acc.metadata.get("permissions")
+                if isinstance(_pm, list) and _pm:
+                    node.metadata.permissions = [str(p) for p in _pm[:20]]
+                _is = acc.metadata.get("iam_scope")
+                if _is:
+                    node.metadata.iam_scope = str(_is)
+                _tp = acc.metadata.get("trust_principals")
+                if isinstance(_tp, list) and _tp:
+                    node.metadata.trust_principals = [str(p) for p in _tp[:20]]
 
             node.evidence = list(acc.evidence)
             doc.nodes.append(node)
@@ -963,6 +1072,20 @@ class AiSbomExtractor:
                         )
                     )
 
+        # Structural edges: IAM → DEPLOYMENT (USES) — identity binds to infra
+        for iam_node in by_type.get(ComponentType.IAM, []):
+            for dep in by_type.get(ComponentType.DEPLOYMENT, []):
+                key = (iam_node.id, dep.id, "USES")
+                if key not in seen_edges:
+                    seen_edges.add(key)
+                    doc.edges.append(
+                        Edge(
+                            source=iam_node.id,
+                            target=dep.id,
+                            relationship_type=RelationshipType.USES,
+                        )
+                    )
+
         # Structural edges: AUTH → API_ENDPOINT (PROTECTS)
         for auth in by_type.get(ComponentType.AUTH, []):
             for ep in sorted(by_type.get(ComponentType.API_ENDPOINT, []), key=lambda n: n.name)[
@@ -1232,6 +1355,13 @@ def _make_scan_summary(d: dict[str, Any]) -> ScanSummary:
         node_counts=d.get("node_type_counts") or {},
         data_classification=d.get("data_classification") or [],
         classified_tables=d.get("classified_tables") or [],
+        # IaC security / resilience aggregate fields
+        secret_stores=d.get("secret_stores") or [],
+        availability_zones=d.get("availability_zones") or [],
+        encryption_at_rest_coverage=bool(d.get("encryption_at_rest_coverage")),
+        security_findings=d.get("security_findings") or [],
+        iam_principals=d.get("iam_principals") or [],
+        service_accounts=d.get("service_accounts") or [],
     )
 
 

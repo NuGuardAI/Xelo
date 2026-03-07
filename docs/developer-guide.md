@@ -125,7 +125,23 @@ cdx_dict = AiSbomSerializer.to_cyclonedx(doc)
 
 ## Toolbox Plugins
 
-Xelo ships with analysis plugins in `xelo.toolbox.plugins`. Each plugin takes an SBOM dict and a config dict, and returns a `ToolResult` with `status`, `message`, and `details`.
+Xelo ships with analysis plugins in `xelo.toolbox.plugins`. They can be run from the CLI with `xelo plugin run`, or called directly from Python.
+
+**CLI (recommended for simple use cases):**
+
+```bash
+xelo plugin list                                        # show all plugins
+xelo plugin run vulnerability sbom.json                 # VLA rules to stdout
+xelo plugin run sarif sbom.json --output results.sarif  # SARIF export
+xelo plugin run markdown sbom.json --output report.md   # Markdown report
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp.json \
+  --config llm_model=gpt-4o
+```
+
+**Python API (for pipeline integration or chaining):**
+
+Each plugin takes an SBOM dict and a config dict, and returns a `ToolResult` with `status`, `message`, and `details`.
 
 ```python
 from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
@@ -153,9 +169,10 @@ policy = PolicyAssessmentPlugin().run(sbom, {"policy_file": "owasp_ai_top10.json
 print(policy.status, policy.message)
 
 # SARIF export (for GitHub Code Scanning upload)
+# ToolResult.details IS the SARIF 2.1.0 dict
 sarif = SarifExporterPlugin().run(sbom, {})
 Path("results.sarif").write_text(
-    sarif.details["sarif_json"], encoding="utf-8"
+    json.dumps(sarif.details, indent=2), encoding="utf-8"
 )
 
 # Markdown report
@@ -169,7 +186,7 @@ Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 | --- | --- | --- |
 | `status` | `"ok"` \| `"error"` \| `"warning"` | Outcome of the run |
 | `message` | str | One-line human-readable summary |
-| `details` | dict | Plugin-specific payload (findings list, `sarif_json`, `markdown`, …) |
+| `details` | dict | Plugin-specific payload (findings list, `markdown` string, SARIF dict, …) |
 
 ### Available Plugins
 
