@@ -1272,3 +1272,332 @@ class GcpDeploymentManagerAdapter:
                 )
             )
         return results
+
+
+# ---------------------------------------------------------------------------
+# GitHub Actions adapter
+# ---------------------------------------------------------------------------
+
+# Action refs that imply cloud OIDC / identity federation
+_GHA_OIDC_ACTIONS: list[tuple[re.Pattern[str], str, str]] = [
+    # (pattern, provider, iam_type_hint)
+    (re.compile(r"aws-actions/configure-aws-credentials"), "aws", "role"),
+    (re.compile(r"google-github-actions/auth"), "gcp", "service_account"),
+    (re.compile(r"azure/login"), "azure", "managed_identity"),
+    (re.compile(r"hashicorp/vault-action"), "hashicorp_vault", "role"),
+]
+
+# Cloud login actions that also reveal region/zone info in `with:` inputs
+_GHA_AWS_REGION_RE = re.compile(r"aws-region['\"]?\s*:\s*['\"]?([a-z0-9-]+)", re.IGNORECASE)
+_GHA_GCP_SA_RE = re.compile(
+    r"(?:workload_identity_provider|service_account)['\"]?\s*:\s*['\"]([^'\"]+)['\"]",
+    re.IGNORECASE,
+)
+
+# Secrets reference pattern — any ${{ secrets.XYZ }}
+_GHA_SECRET_REF_RE = re.compile(r"\$\{\{\s*secrets\.[A-Za-z0-9_]+\s*\}\}")
+
+# environment: reference inside a job
+_GHA_ENV_NAME_RE = re.compile(r"^\s+environment\s*:", re.MULTILINE)
+
+
+def _gha_safe_on(data: dict[str, Any]) -> Any:
+    """Return the 'on' trigger value, handling both ``on`` and ``'on'`` keys."""
+    return data.get("on") or data.get(True) or data.get("'on'") or data.get('"on"')
+
+
+def _gha_permissions(perm_obj: Any) -> list[str]:
+    """Flatten a GHA permissions dict into 'scope:access' strings."""
+    if not isinstance(perm_obj, dict):
+        return []
+    result: list[str] = []
+    for scope, access in perm_obj.items():
+        result.append(f"{scope}:{access}")
+    return result
+
+
+def _gha_runners(jobs: dict[str, Any]) -> list[str]:
+    """Collect unique runner labels from all jobs."""
+    runners: list[str] = []
+    seen: set[str] = set()
+    for job in (jobs or {}).values():
+        if not isinstance(job, dict):
+            continue
+        runs_on = job.get("runs-on")
+        if isinstance(runs_on, str) and runs_on not in seen:
+            seen.add(runs_on)
+            runners.append(runs_on)
+        elif isinstance(runs_on, list):
+            for r in runs_on:
+                r_str = str(r)
+                if r_str not in seen:
+                    seen.add(r_str)
+                    runners.append(r_str)
+    return runners
+
+
+def _gha_environments(jobs: dict[str, Any]) -> list[str]:
+    """Collect unique environment names referenced across all jobs."""
+    envs: list[str] = []
+    seen: set[str] = set()
+    for job in (jobs or {}).values():
+        if not isinstance(job, dict):
+            continue
+        env = job.get("environment")
+        if isinstance(env, str) and env not in seen:
+            seen.add(env)
+            envs.append(env)
+        elif isinstance(env, dict):
+            name = env.get("name")
+            if isinstance(name, str) and name not in seen:
+                seen.add(name)
+                envs.append(name)
+    return envs
+
+
+def _gha_triggers(on_val: Any) -> list[str]:
+    """Return a sorted list of trigger names."""
+    if isinstance(on_val, str):
+        return [on_val]
+    if isinstance(on_val, list):
+        return sorted(str(v) for v in on_val)
+    if isinstance(on_val, dict):
+        return sorted(str(k) for k in on_val.keys())
+    return []
+
+
+class GitHubActionsAdapter:
+    """GitHub Actions workflow adapter.
+
+    Triggered on YAML files that contain both ``jobs:`` and ``on:`` keys
+    (the canonical GitHub Actions structure).  Handles files under
+    ``.github/workflows/`` and any root-level workflow YAML.
+
+    Emits:
+    - ``DEPLOYMENT`` node per workflow capturing triggers, runners,
+      environments, permissions, secret-store usage, cloud providers,
+      OIDC usage, and HA mode (matrix strategy).
+    - ``IAM`` nodes for each cloud OIDC trust (AWS role, GCP service
+      account, Azure managed identity) found in workflow steps.
+    """
+
+    name = "github_actions"
+
+    def scan(self, content: str, file_path: str) -> list[ComponentDetection]:
+        # Quick content guard: must look like a GHA workflow
+        if "jobs:" not in content:
+            return []
+        # Must have an 'on:' trigger (literal or YAML boolean key 'true')
+        if not re.search(r"(?m)^on\s*:", content) and "on:" not in content:
+            return []
+
+        data = _try_load_yaml(content)
+        if not isinstance(data, dict):
+            return []
+        jobs = data.get("jobs")
+        if not isinstance(jobs, dict):
+            return []
+        on_val = _gha_safe_on(data)
+        if on_val is None:
+            return []
+
+        results: list[ComponentDetection] = []
+        results.extend(self._deployment(data, content, file_path))
+        results.extend(self._iam_nodes(data, content, file_path))
+        return results
+
+    # ------------------------------------------------------------------
+    # Workflow → DEPLOYMENT
+    # ------------------------------------------------------------------
+
+    def _deployment(
+        self, data: dict[str, Any], content: str, file_path: str
+    ) -> list[ComponentDetection]:
+        import os
+
+        jobs: dict[str, Any] = data.get("jobs") or {}
+        on_val = _gha_safe_on(data)
+        triggers = _gha_triggers(on_val)
+        runners = _gha_runners(jobs)
+        environments = _gha_environments(jobs)
+
+        # Top-level and job-level permissions
+        top_perms = _gha_permissions(data.get("permissions"))
+        uses_oidc = any("id-token" in p for p in top_perms)
+        for job in jobs.values():
+            if not isinstance(job, dict):
+                continue
+            job_perms = _gha_permissions(job.get("permissions"))
+            uses_oidc = uses_oidc or any("id-token" in p for p in job_perms)
+
+        # Aggregate all step actions to detect cloud providers
+        cloud_providers: list[str] = []
+        cloud_region: str | None = None
+        seen_providers: set[str] = set()
+        all_steps: list[dict[str, Any]] = []
+        for job in jobs.values():
+            if isinstance(job, dict):
+                all_steps.extend(s for s in (job.get("steps") or []) if isinstance(s, dict))
+
+        for step in all_steps:
+            uses = str(step.get("uses") or "")
+            step_with = step.get("with") or {}
+            for pat, provider, _ in _GHA_OIDC_ACTIONS:
+                if pat.search(uses) and provider not in seen_providers:
+                    seen_providers.add(provider)
+                    cloud_providers.append(provider)
+                    # Extract region for AWS
+                    if provider == "aws" and isinstance(step_with, dict):
+                        r = step_with.get("aws-region") or _GHA_AWS_REGION_RE.search(
+                            str(step_with)
+                        )
+                        if isinstance(r, str):
+                            cloud_region = r
+                        elif r:
+                            cloud_region = r.group(1)
+
+        # Secret store — GitHub Actions secrets or Vault
+        secret_store: str | None = None
+        if _GHA_SECRET_REF_RE.search(content):
+            secret_store = "github_actions_secret"
+        if "hashicorp_vault" in cloud_providers:
+            secret_store = "hashicorp_vault"
+
+        # HA mode — matrix strategy = multi-target
+        ha_mode: str | None = None
+        for job in jobs.values():
+            if isinstance(job, dict) and job.get("strategy", {}).get("matrix"):
+                ha_mode = "replicated"
+                break
+
+        # Workflow name — prefer explicit `name:` field or derive from filename
+        workflow_name = str(data.get("name") or os.path.basename(file_path))
+        canonical = (
+            f"deployment:github-actions:{workflow_name}".lower()
+            .replace(" ", "-")[:128]
+        )
+
+        meta: dict[str, Any] = {
+            "iac_format": "github_actions",
+            "deployment_target": "github-actions",
+            "workflow_triggers": triggers,
+            "runners": runners,
+            "environments": environments,
+            "cloud_providers": cloud_providers,
+            "cloud_region": cloud_region,
+            "uses_oidc": uses_oidc,
+            "secret_store": secret_store,
+            "ha_mode": ha_mode,
+            # These are not applicable for GHA workflows
+            "runs_as_root": None,
+            "has_health_check": None,
+            "has_resource_limits": None,
+        }
+        if top_perms:
+            meta["permissions"] = _cap20(top_perms)
+
+        return [
+            _make_det(
+                component_type=ComponentType.DEPLOYMENT,
+                canonical_name=canonical,
+                display_name=workflow_name,
+                adapter_name=self.name,
+                confidence=0.95,
+                metadata=meta,
+                file_path=file_path,
+                line=1,
+                snippet=f"GitHub Actions: {workflow_name} triggers={triggers[:3]}",
+            )
+        ]
+
+    # ------------------------------------------------------------------
+    # Cloud OIDC trusts → IAM
+    # ------------------------------------------------------------------
+
+    def _iam_nodes(
+        self, data: dict[str, Any], content: str, file_path: str
+    ) -> list[ComponentDetection]:
+        jobs: dict[str, Any] = data.get("jobs") or {}
+        results: list[ComponentDetection] = []
+        seen_principals: set[str] = set()
+
+        for job_id, job in jobs.items():
+            if not isinstance(job, dict):
+                continue
+            for step in (job.get("steps") or []):
+                if not isinstance(step, dict):
+                    continue
+                uses = str(step.get("uses") or "")
+                step_with = step.get("with") or {}
+
+                for pat, provider, iam_type in _GHA_OIDC_ACTIONS:
+                    if not pat.search(uses):
+                        continue
+
+                    # Extract principal identifier from step inputs
+                    principal: str | None = None
+                    iam_scope: str | None = None
+                    permissions: list[str] | None = None
+                    trust_principals: list[str] = ["github-actions"]
+
+                    if provider == "aws":
+                        if isinstance(step_with, dict):
+                            principal = (
+                                step_with.get("role-to-assume")
+                                or step_with.get("role_arn")
+                            )
+                        iam_scope = "account"
+
+                    elif provider == "gcp":
+                        if isinstance(step_with, dict):
+                            m = _GHA_GCP_SA_RE.search(str(step_with))
+                            principal = m.group(1) if m else step_with.get("service_account")
+                        iam_scope = "project"
+
+                    elif provider == "azure":
+                        if isinstance(step_with, dict):
+                            principal = step_with.get("client-id") or step_with.get("creds")
+                        iam_scope = "subscription"
+
+                    elif provider == "hashicorp_vault":
+                        if isinstance(step_with, dict):
+                            principal = step_with.get("role") or "vault-role"
+                        iam_scope = "namespace"
+
+                    if not principal:
+                        principal = f"{provider}-identity-{job_id}"
+
+                    if principal in seen_principals:
+                        continue
+                    seen_principals.add(principal)
+
+                    # Collect job-level permission grants
+                    job_perms = _gha_permissions(job.get("permissions"))
+                    if job_perms:
+                        permissions = _cap20(job_perms)
+
+                    canonical = f"iam:gha:{provider}:{principal}".lower()[:128]
+                    meta: dict[str, Any] = {
+                        "iac_format": "github_actions",
+                        "iam_type": iam_type,
+                        "principal": principal,
+                        "iam_scope": iam_scope,
+                        "permissions": permissions,
+                        "trust_principals": trust_principals,
+                        "cloud_provider": provider,
+                        "step_action": uses.split("@")[0],
+                    }
+                    results.append(
+                        _make_det(
+                            component_type=ComponentType.IAM,
+                            canonical_name=canonical,
+                            display_name=str(principal),
+                            adapter_name=self.name,
+                            confidence=0.93,
+                            metadata=meta,
+                            file_path=file_path,
+                            line=1,
+                            snippet=f"GHA OIDC {provider}: {principal}",
+                        )
+                    )
+        return results

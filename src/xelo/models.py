@@ -280,6 +280,14 @@ class ScanSummary(BaseModel):
         default_factory=list,
         description="K8s ServiceAccount names and GCP/Azure service account identifiers",
     )
+    iac_security_summary: str | None = Field(
+        default=None,
+        description=(
+            "LLM-generated security briefing for practitioners covering deployment posture, "
+            "IAM configuration, secret management, encryption, HA, and CI/CD risks across "
+            "all detected IaC and GitHub Actions workflows."
+        ),
+    )
     data_classification: list[str] = Field(
         default_factory=list,
         description=(
@@ -306,12 +314,12 @@ class AiSbomDocument(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "https://nuguard.ai/schemas/aibom/1.2.0/aibom.schema.json",
+            "$id": "https://nuguard.ai/schemas/aibom/1.3.0/aibom.schema.json",
         }
     )
 
     schema_version: str = Field(
-        default="1.2.0",
+        default="1.3.0",
         description="AIBOM schema version (semver); bump when format changes",
     )
     generated_at: datetime = Field(

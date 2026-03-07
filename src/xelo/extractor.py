@@ -53,6 +53,7 @@ from .adapters.iac import (
     BicepAdapter,
     CloudFormationAdapter,
     GcpDeploymentManagerAdapter,
+    GitHubActionsAdapter,
     K8sAdapter,
     TerraformAdapter,
 )
@@ -267,6 +268,7 @@ class AiSbomExtractor:
                 CloudFormationAdapter(),
                 BicepAdapter(),
                 GcpDeploymentManagerAdapter(),
+                GitHubActionsAdapter(),
             )
         )
 
@@ -450,6 +452,10 @@ class AiSbomExtractor:
                         adapter_handles = suffix in _BICEP_EXTENSIONS
                     elif isinstance(iac_adapter, GcpDeploymentManagerAdapter):
                         adapter_handles = suffix in {".yaml", ".yml", ".jinja"}
+                    elif isinstance(iac_adapter, GitHubActionsAdapter):
+                        # GitHub Actions workflows are YAML; content guard in adapter
+                        # also handles .github/workflows/**/*.yml naming convention
+                        adapter_handles = suffix in {".yaml", ".yml"}
                     else:
                         # K8sAdapter + CloudFormationAdapter handle YAML and JSON
                         adapter_handles = suffix in {".yaml", ".yml", ".json"}
@@ -1175,7 +1181,129 @@ class AiSbomExtractor:
                 llm_ctx, doc.nodes, files_sample, llm_client=client
             )
 
+        # Step 4: IaC security summary for security practitioners
+        # Only run when IaC/deployment nodes are present and budget remains.
+        try:
+            doc = await self._llm_summarize_iac(doc, client)
+        except Exception as exc:
+            _log.warning("iac-summary: unexpected error — continuing without: %s", exc)
+
         _log.info("llm enrichment complete: tokens_used=%d", client.tokens_used)
+        return doc
+
+    async def _llm_summarize_iac(
+        self,
+        doc: AiSbomDocument,
+        client: Any,
+    ) -> AiSbomDocument:
+        """Step 4: Generate a security-professional IaC summary via LLM.
+
+        Collects all DEPLOYMENT, CONTAINER_IMAGE, and IAM nodes, assembles a
+        structured JSON context, and asks the LLM to produce a concise
+        security briefing covering:
+        - Cloud/runtime deployment posture (providers, regions, availability zones)
+        - HA and resilience configuration
+        - Secret management and encryption posture
+        - IAM / least-privilege assessment
+        - CI/CD pipeline security (GitHub Actions, OIDC, runners)
+        - Container image security (rootless, health-checks, resource limits)
+
+        The result is stored in ``doc.summary.iac_security_summary``.
+        """
+        import json as _json
+
+        if doc.summary is None:
+            return doc
+
+        # Gather IaC-relevant nodes
+        iac_types = {ComponentType.DEPLOYMENT, ComponentType.CONTAINER_IMAGE, ComponentType.IAM}
+        iac_nodes = [n for n in doc.nodes if n.component_type in iac_types]
+        if not iac_nodes:
+            return doc
+
+        # Build a compact representation of each node for the LLM prompt
+        node_summaries: list[dict[str, Any]] = []
+        for n in iac_nodes:
+            meta = n.metadata
+            ns: dict[str, Any] = {
+                "type": n.component_type.value,
+                "name": n.name,
+            }
+            # DEPLOYMENT fields
+            if n.component_type == ComponentType.DEPLOYMENT:
+                for attr in (
+                    "deployment_target", "cloud_region", "availability_zones",
+                    "secret_store", "encryption_at_rest", "encryption_key_ref",
+                    "ha_mode", "has_health_check", "has_resource_limits", "runs_as_root",
+                ):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+                # GHA-specific extras
+                for key in ("workflow_triggers", "runners", "cloud_providers",
+                            "uses_oidc", "environments"):
+                    v = meta.extras.get(key)
+                    if v is not None:
+                        ns[key] = v
+            # CONTAINER_IMAGE fields
+            elif n.component_type == ComponentType.CONTAINER_IMAGE:
+                for attr in ("base_image", "runs_as_root", "has_health_check"):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+            # IAM fields
+            elif n.component_type == ComponentType.IAM:
+                for attr in ("iam_type", "principal", "permissions",
+                             "iam_scope", "trust_principals"):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+                cloud_provider = meta.extras.get("cloud_provider")
+                if cloud_provider:
+                    ns["cloud_provider"] = cloud_provider
+
+            node_summaries.append(ns)
+
+        # Pull top-level security aggregate fields from summary
+        aggregate: dict[str, Any] = {
+            "secret_stores": doc.summary.secret_stores,
+            "availability_zones": doc.summary.availability_zones,
+            "encryption_at_rest_coverage": doc.summary.encryption_at_rest_coverage,
+            "security_findings": doc.summary.security_findings,
+            "iam_principals": doc.summary.iam_principals,
+            "service_accounts": doc.summary.service_accounts,
+        }
+
+        user_prompt = (
+            "You are analysing an AI application's infrastructure configuration.\n\n"
+            "## Detected Infrastructure Nodes\n"
+            f"```json\n{_json.dumps(node_summaries, indent=2)}\n```\n\n"
+            "## Aggregate Security Signals\n"
+            f"```json\n{_json.dumps(aggregate, indent=2)}\n```\n\n"
+            "Write a concise (≤500 words) security briefing for a security engineer / DevSecOps "
+            "practitioner reviewing this AI application. Cover:\n"
+            "1. **Deployment posture** — cloud providers, regions, HA / resilience setup\n"
+            "2. **Secret management** — secret stores in use, any plaintext-secret risks\n"
+            "3. **Encryption** — encryption-at-rest coverage and key management\n"
+            "4. **IAM / least-privilege** — service accounts, OIDC trusts, "
+            "over-permissive policies\n"
+            "5. **CI/CD security** — GitHub Actions runners, OIDC config, "
+            "workflow trigger surface\n"
+            "6. **Container security** — root containers, missing health checks, "
+            "missing resource limits\n"
+            "7. **Key risks and recommendations** — top 3 prioritised actions\n\n"
+            "Respond in plain Markdown. Be specific; avoid generic statements."
+        )
+
+        system_prompt = (
+            "You are a cloud security architect producing IaC security briefings. "
+            "Use precise technical language. Do not hallucinate — only report what "
+            "the provided data shows."
+        )
+
+        raw, tokens = await client.complete_text(system_prompt, user_prompt)
+        _log.info("iac-summary: generated %d chars using %d tokens", len(raw), tokens)
+        doc.summary.iac_security_summary = raw.strip()
         return doc
 
     async def _annotate_mcp_nodes(
