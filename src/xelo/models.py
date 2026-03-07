@@ -33,16 +33,22 @@ class Evidence(BaseModel):
         le=1.0,
         description="Evidence-level confidence [0, 1]",
     )
-    detail: str = Field(description="Short description: '<adapter>: <snippet>'")
+    detail: str = Field(description="Detection description: '<adapter>: <snippet>' (up to 500 chars for most adapters; full content preserved for PROMPT nodes)")
     location: SourceLocation
 
 
 class NodeMetadata(BaseModel):
     """Typed + open-ended metadata attached to a Node."""
 
-    framework: str | None = Field(default=None, description="Agentic framework (e.g. 'langgraph', 'crewai', 'mcp-server')")
-    model_name: str | None = Field(default=None, description="LLM / embedding model name if applicable")
-    datastore_type: str | None = Field(default=None, description="Datastore technology, e.g. 'redis', 'postgres', 'pinecone'")
+    framework: str | None = Field(
+        default=None, description="Agentic framework (e.g. 'langgraph', 'crewai', 'mcp-server')"
+    )
+    model_name: str | None = Field(
+        default=None, description="LLM / embedding model name if applicable"
+    )
+    datastore_type: str | None = Field(
+        default=None, description="Datastore technology, e.g. 'redis', 'postgres', 'pinecone'"
+    )
     auth_type: str | None = Field(
         default=None,
         description="Authentication mechanism, e.g. 'oauth2', 'bearer', 'api_key', 'jwt'",

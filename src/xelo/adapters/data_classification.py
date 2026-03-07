@@ -174,7 +174,7 @@ class DataClassificationSQLAdapter:
                 },
                 file_path=file_path,
                 line=line_num,
-                snippet=table_match.group(0)[:120],
+                snippet=table_match.group(0)[:500],
                 evidence_kind="ast_instantiation",
             ))
 

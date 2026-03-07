@@ -730,7 +730,7 @@ class AiSbomExtractor:
         if det.component_type == ComponentType.PROMPT and det.metadata.get("content"):
             _detail = f"{det.adapter_name}: {det.metadata['content']}"
         else:
-            _detail = f"{det.adapter_name}: {det.snippet[:120]}"
+            _detail = f"{det.adapter_name}: {det.snippet[:500]}"
         evidence = Evidence(
             kind=det.evidence_kind,
             confidence=det.confidence,
@@ -1135,7 +1135,7 @@ class AiSbomExtractor:
                     key = str(ex.get("server_name") or mcp_node.name).lower()
                     desc = name_to_desc.get(key) or next(iter(name_to_desc.values()), "")
                     if desc:
-                        mcp_node.metadata.extras["description"] = desc[:400]
+                        mcp_node.metadata.extras["description"] = desc[:2000]
                         _log.info("mcp-annotate: described %r → %s", mcp_node.name, desc[:80])
         except Exception as exc:
             _log.warning("mcp-annotate: LLM call failed: %s", exc)
