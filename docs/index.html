@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xelo — AI SBOM Generator</title>
+    <meta name="description"
+        content="Xelo is an open-source AI SBOM generator for agentic and LLM-powered applications. Scan source code, produce a machine-readable AI Bill of Materials, and integrate with your security toolchain." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ── Reset & tokens ──────────────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d1117;
+            --bg-surface: #161b22;
+            --bg-card: #1c2128;
+            --bg-card-alt: #21262d;
+            --border: #30363d;
+            --border-mute: #21262d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --text-dim: #6e7681;
+            --accent: #58c4dc;
+            --accent-dim: #1f4f5c;
+            --accent-glow: rgba(88, 196, 220, 0.15);
+            --green: #3fb950;
+            --purple: #bc8cff;
+            --orange: #ffa657;
+            --red: #f85149;
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --font: 'Inter', system-ui, sans-serif;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --max-w: 1160px;
+            --nav-h: 64px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Nav ──────────────────────────────────────────────────────────── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: var(--nav-h);
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .nav-brand .logo-mark {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), #3a8da8);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #0d1117;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--bg-card);
+            text-decoration: none;
+        }
+
+        .nav-cta {
+            background: var(--accent) !important;
+            color: #0d1117 !important;
+            font-weight: 600 !important;
+            padding: 0.4rem 1rem !important;
+        }
+
+        .nav-cta:hover {
+            background: #7dd6e8 !important;
+            color: #0d1117 !important;
+        }
+
+        /* ── Layout utils ─────────────────────────────────────────────────── */
+        .container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 16px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 3vw, 2.4rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ── Hero ─────────────────────────────────────────────────────────── */
+        .hero {
+            padding: 7rem 0 5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 196, 220, 0.12), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(188, 140, 255, 0.06), transparent);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-dim);
+            border: 1px solid rgba(88, 196, 220, 0.3);
+            border-radius: 999px;
+            padding: 0.35rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+            max-width: 820px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero h1 .accent {
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent);
+            color: #0d1117;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--radius);
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background: #7dd6e8;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: transparent;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+            text-decoration: none;
+        }
+
+        .install-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem 1.25rem;
+            font-family: var(--mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .install-block .prompt {
+            color: var(--accent);
+            user-select: none;
+        }
+
+        .install-block .cmd {
+            color: var(--text);
+        }
+
+        .install-block button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-dim);
+            padding: 0.1rem 0.25rem;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+
+        .install-block button:hover {
+            color: var(--accent);
+        }
+
+        /* ── Stats row ────────────────────────────────────────────────────── */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--border-mute);
+            border-bottom: 1px solid var(--border-mute);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        /* ── What is Xelo ─────────────────────────────────────────────────── */
+        .what-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .what-text p {
+            margin-bottom: 1.1rem;
+        }
+
+        .what-text .lead {
+            font-size: 1.15rem;
+            color: var(--text);
+            font-weight: 400;
+        }
+
+        .pipeline-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .pipeline-step {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-mute);
+        }
+
+        .pipeline-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            background: var(--accent-dim);
+            border: 1px solid rgba(88, 196, 220, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 0.1rem;
+        }
+
+        .step-body h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+        }
+
+        .step-body p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Cards grid ───────────────────────────────────────────────────── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 1.6rem;
+            transition: background 0.15s;
+        }
+
+        .card:hover {
+            background: var(--bg-card-alt);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* ── For whom ─────────────────────────────────────────────────────── */
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .persona-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .persona-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-card);
+        }
+
+        .persona-icon {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .persona-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .persona-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .persona-card ul li {
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+        }
+
+        .persona-card ul li::before {
+            content: '›';
+            color: var(--accent);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ── Code block ───────────────────────────────────────────────────── */
+        .code-window {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .code-titlebar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .code-titlebar .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-titlebar .dot-red {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f57;
+        }
+
+        .code-titlebar .dot-yellow {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffbd2e;
+        }
+
+        .code-titlebar .dot-green {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28c841;
+        }
+
+        .code-titlebar .code-label {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-family: var(--mono);
+        }
+
+        pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        .hl-comment {
+            color: var(--text-dim);
+        }
+
+        .hl-cmd {
+            color: var(--text);
+        }
+
+        .hl-flag {
+            color: var(--accent);
+        }
+
+        .hl-string {
+            color: var(--green);
+        }
+
+        .hl-prompt {
+            color: var(--text-dim);
+            user-select: none;
+        }
+
+        .hl-kw {
+            color: var(--purple);
+        }
+
+        .hl-num {
+            color: var(--orange);
+        }
+
+        /* ── Quickstart tabs ──────────────────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.25rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.6rem 1rem;
+            font-family: var(--font);
+            font-size: 0.83rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-muted);
+        }
+
+        .tab-btn.active:hover {
+            color: var(--accent);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* ── Plugins table ────────────────────────────────────────────────── */
+        .plugin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .plugin-chip {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.1rem;
+            transition: border-color 0.15s;
+        }
+
+        .plugin-chip:hover {
+            border-color: var(--accent);
+        }
+
+        .plugin-name {
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .plugin-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.45;
+        }
+
+        .plugin-badge {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            margin-top: 0.2rem;
+            width: fit-content;
+        }
+
+        .badge-offline {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--green);
+        }
+
+        .badge-network {
+            background: rgba(255, 166, 87, 0.15);
+            color: var(--orange);
+        }
+
+        /* ── Frameworks ───────────────────────────────────────────────────── */
+        .fw-section {
+            margin-bottom: 2rem;
+        }
+
+        .fw-section h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.75rem;
+        }
+
+        .fw-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .fw-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.3rem 0.85rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .fw-chip:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        /* ── CTA section ──────────────────────────────────────────────────── */
+        .cta-section {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cta-inner {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .cta-inner h2 {
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-inner p {
+            margin-bottom: 2rem;
+        }
+
+        /* ── Footer ───────────────────────────────────────────────────────── */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .footer-brand .logo-mark {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--accent), #3a8da8);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #0d1117;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            transition: color 0.15s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-copy {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        /* ── Divider ──────────────────────────────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: var(--border-mute);
+        }
+
+        /* ── Responsive ───────────────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 3.5rem 0;
+            }
+
+            .container {
+                padding: 0 1.25rem;
+            }
+
+            .what-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .stats-row {
+                gap: 2rem;
+            }
+
+            .hero {
+                padding: 5rem 0 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Navigation ──────────────────────────────────────────────────────── -->
+    <nav>
+        <a href="#" class="nav-brand" style="text-decoration:none">
+            <span class="logo-mark">X</span>
+            Xelo
+        </a>
+        <ul class="nav-links">
+            <li><a href="#what">What it does</a></li>
+            <li><a href="#for-whom">Who it's for</a></li>
+            <li><a href="#quickstart">Quickstart</a></li>
+            <li><a href="#plugins">Plugins</a></li>
+            <li><a href="#frameworks">Frameworks</a></li>
+            <li><a href="getting-started.md">Docs</a></li>
+            <li><a href="https://github.com/nuguard/xelo" class="nav-cta">GitHub ↗</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── Hero ────────────────────────────────────────────────────────────── -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Open source · Apache-2.0
+            </div>
+
+            <h1>
+                The <span class="accent">AI SBOM</span> generator<br />
+                for AI-native applications
+            </h1>
+
+            <p class="hero-sub">
+                Xelo scans your codebase and produces a machine-readable inventory of every
+                AI component — agents, models, tools, prompts, datastores, guardrails, and
+                more. Deterministic (without LLM) and LLM modes.
+                Wide range of plug-ins supported to integrate with your security toolchain.
+            </p>
+
+            <div class="hero-actions">
+                <a href="getting-started.md" class="btn-primary">
+                    Get started →
+                </a>
+                <a href="https://github.com/nuguard/xelo" class="btn-secondary">
+                    ★ Star on GitHub
+                </a>
+            </div>
+
+            <div class="install-block">
+                <span class="prompt">$</span>
+                <span class="cmd">pip install xelo</span>
+                <button title="Copy" onclick="navigator.clipboard.writeText('pip install xelo')">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M0 6.75A.75.75 0 0 1 .75 6H2V1.75A.75.75 0 0 1 2.75 1h8.5A.75.75 0 0 1 12 1.75V6h1.25a.75.75 0 0 1 0 1.5H12v6.75a.75.75 0 0 1-.75.75h-8.5A.75.75 0 0 1 2 14.25V7.5H.75A.75.75 0 0 1 0 6.75Zm4.5 0V2.5h7V6h-7Zm-1 1.5v6h9v-6h-9Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Stats ───────────────────────────────────────────────────────────── -->
+    <div
+        style="background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-value">20+</div>
+                    <div class="stat-label">Supported frameworks</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">Component types detected</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">21</div>
+                    <div class="stat-label">Structural security rules</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">Toolbox plugins</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">3.11+</div>
+                    <div class="stat-label">Python required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── What is Xelo ─────────────────────────────────────────────────────── -->
+    <section id="what">
+        <div class="container">
+            <div class="what-grid">
+                <div class="what-text">
+                    <div class="section-label">What is Xelo</div>
+                    <h2>A Bill of Materials built for AI</h2>
+                    <p class="lead">
+                        Software Bill of Materials (SBOM) tools were designed for packages and libraries.
+                        AI applications are different — they have agents, models, prompts, tools,
+                        and datastores that package managers cannot see.
+                    </p>
+                    <p>
+                        Xelo fills that gap. It analyses your Python, Jupyter, and JavaScript/TypeScript source code,
+                        infrastructure files, SQL schemas, and Dockerfiles to produce an
+                        <strong style="color: var(--text)">AI SBOM</strong> — a structured graph of
+                        every AI component it can find, complete with evidence, confidence scores,
+                        and relationship edges.
+                    </p>
+                    <p>
+                        The output is a JSON document that you can validate, version-control,
+                        feed into your vulnerability scanner, export to CycloneDX, or query with
+                        your own tooling. It answers questions security teams actually need to ask:
+                        <em style="color: var(--text)">which agents touch PHI? which models are
+                            external providers? which datastores have no guardrail?</em>
+                    </p>
+                </div>
+
+                <div>
+                    <div class="section-label" style="margin-bottom: 1.5rem;">3-phase extraction pipeline</div>
+                    <div class="pipeline-steps">
+                        <div class="pipeline-step">
+                            <div class="step-num">1</div>
+                            <div class="step-body">
+                                <h4>AST-aware adapters</h4>
+                                <p>Language-specific parsers for Python (<code
+                                        style="font-family:var(--mono);font-size:0.8rem;color:var(--accent)">ast</code>)
+                                    and TypeScript (tree-sitter) extract framework-specific components with high
+                                    precision. No generic string matching.</p>
+                            </div>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="step-num">2</div>
+                            <div class="step-body">
+                                <h4>Regex fallbacks</h4>
+                                <p>Model names, auth keywords, secret patterns, datastores, and IaC signals are caught
+                                    across all file types — SQL, YAML, Dockerfiles, Nginx configs, prompt files.</p>
+                            </div>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="step-num">3</div>
+                            <div class="step-body">
+                                <h4>LLM enrichment <span
+                                        style="color:var(--text-dim);font-weight:400;font-size:0.8rem">(optional)</span>
+                                </h4>
+                                <p>An optional pass verifies uncertain detections, enriches node descriptions, generates
+                                    a use-case summary, and produces a security briefing of IaC findings. Token budget
+                                    controlled.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Component types ──────────────────────────────────────────────────── -->
+    <div
+        style="background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container" style="padding-top: 4rem; padding-bottom: 4rem;">
+            <div class="section-label" style="margin-bottom: 0.5rem;">What gets detected</div>
+            <h2 style="margin-bottom: 2.5rem;">Every AI component, fully mapped</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(88,196,220,0.12);">🤖</div>
+                    <h3>Agents</h3>
+                    <p>Agentic orchestrators — LangGraph graphs, CrewAI crews, AutoGen agents, OpenAI Agents SDK, Google
+                        ADK, AWS Bedrock, Azure Semantic Kernel. Captures graph topology and tool wiring.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(188,140,255,0.12);">🧠</div>
+                    <h3>Models</h3>
+                    <p>LLM and embedding model references with provider, version, and whether they are external
+                        services. Flags PHI flowing to third-party APIs.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(63,185,80,0.12);">🔧</div>
+                    <h3>Tools</h3>
+                    <p>Function tools, MCP tools, and decorated callables wired to agents. Includes privilege scope —
+                        <code style="font-family:var(--mono);font-size:0.8rem;color:var(--green)">db_write</code>, <code
+                            style="font-family:var(--mono);font-size:0.8rem;color:var(--green)">code_execution</code>, …
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(255,166,87,0.12);">📝</div>
+                    <h3>Prompts</h3>
+                    <p>System instructions and prompt templates, including full content, injection risk score, and
+                        template variables that could be user-controlled.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(248,81,73,0.12);">🗄️</div>
+                    <h3>Datastores</h3>
+                    <p>Vector stores, databases, and caches. PII / PHI classification from SQL schema analysis and
+                        Python ORM models. Datastore type and transport captured.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(88,196,220,0.12);">🛡️</div>
+                    <h3>Guardrails</h3>
+                    <p>Content filters and safety validators. Used by the vulnerability scanner to identify AI
+                        components operating without any output protection.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(188,140,255,0.12);">🔑</div>
+                    <h3>Auth</h3>
+                    <p>Authentication nodes — OAuth2, API key, Bearer tokens, JWT, MCP auth providers. Surfaces API
+                        surface with insufficient authentication coverage.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: rgba(255,166,87,0.12);">⚡</div>
+                    <h3>Deployment &amp; IaC</h3>
+                    <p>Docker image references, Kubernetes manifests, Terraform, CloudFormation, GitHub Actions
+                        workflows, Nginx configs. Cloud region, HA mode, OIDC, secret stores.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── For whom ─────────────────────────────────────────────────────────── -->
+    <section id="for-whom">
+        <div class="container">
+            <div class="section-label">Who it's for</div>
+            <h2 style="max-width: 520px;">Built for the people securing AI</h2>
+            <p style="max-width: 560px; margin-bottom: 3rem;">
+                Xelo is for anyone who needs to answer "what AI is running in our systems?"
+                from a security or compliance perspective.
+            </p>
+            <div class="personas-grid">
+                <div class="persona-card">
+                    <span class="persona-icon">🔍</span>
+                    <h3>Application Security Engineers</h3>
+                    <ul>
+                        <li>Find unguarded models and over-privileged agents in code review</li>
+                        <li>Run 21 structural VLA security rules with no network access</li>
+                        <li>Export findings as SARIF into GitHub Code Scanning / GHAS</li>
+                        <li>Map detections to MITRE ATLAS techniques automatically</li>
+                    </ul>
+                </div>
+                <div class="persona-card">
+                    <span class="persona-icon">⚙️</span>
+                    <h3>Platform &amp; DevSecOps Engineers</h3>
+                    <ul>
+                        <li>Integrate <code
+                                style="font-family:var(--mono);font-size:0.8rem;color:var(--accent)">xelo scan</code>
+                            into CI — fail on CRITICAL findings</li>
+                        <li>Publish AI SBOMs as pipeline artifacts alongside traditional SBOMs</li>
+                        <li>Push findings to AWS Security Hub, JFrog Xray, or GitHub GHAS</li>
+                        <li>Scan IaC for missing encryption, root containers, single-AZ exposures</li>
+                    </ul>
+                </div>
+                <div class="persona-card">
+                    <span class="persona-icon">📋</span>
+                    <h3>Compliance &amp; Risk Teams</h3>
+                    <ul>
+                        <li>Identify PHI and PII data flows to external LLM providers (HIPAA)</li>
+                        <li>Evaluate AI systems against OWASP AI Top 10 policy files</li>
+                        <li>Produce CycloneDX 1.6 SBOMs for regulatory submissions</li>
+                        <li>Generate human-readable Markdown reports for audit evidence</li>
+                    </ul>
+                </div>
+                <div class="persona-card">
+                    <span class="persona-icon">🧑‍💻</span>
+                    <h3>AI &amp; ML Engineers</h3>
+                    <ul>
+                        <li>Reduce your workload in answering security and compliance questions</li>
+                        <li>Get a use-case summary and architecture graph from a single command</li>
+                        <li>Use the Python SDK to integrate SBOM generation into your toolchain</li>
+                        <li>Extend detection with custom plugin adapters for in-house frameworks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Quickstart ───────────────────────────────────────────────────────── -->
+    <section id="quickstart"
+        style="background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start;">
+                <div>
+                    <div class="section-label">Quickstart</div>
+                    <h2>From install to AI SBOM in 60 seconds</h2>
+                    <p style="margin-bottom: 1.5rem;">
+                        Xelo's first two phases are fully deterministic and require LLM key.
+                        LLM enrichment is optional and token-budgeted.
+                        Xelo can be used in fully offline environments with no loss of core detection capabilities.
+                    </p>
+                    <p style="margin-bottom: 2rem;">
+                        The JSON output can be validated with the bundled schema, exported as
+                        CycloneDX 1.6, or analysed with any of the built-in toolbox plugins.
+                    </p>
+                    <a href="getting-started.md" class="btn-primary" style="display: inline-flex;">
+                        Full guide →
+                    </a>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-titlebar">
+                        <div class="dots">
+                            <span class="dot-red"></span>
+                            <span class="dot-yellow"></span>
+                            <span class="dot-green"></span>
+                        </div>
+                        <div class="tabs" id="qs-tabs" style="border-bottom: none; padding: 0;">
+                            <button class="tab-btn active" data-tab="cli">CLI</button>
+                            <button class="tab-btn" data-tab="python">Python</button>
+                            <button class="tab-btn" data-tab="ci">CI / GitHub Actions</button>
+                        </div>
+                        <span></span>
+                    </div>
+
+                    <div id="tab-cli" class="tab-pane active">
+                        <pre><span class="hl-comment"># Install</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">pip install xelo</span>
+
+<span class="hl-comment"># Scan a local repository</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">xelo scan ./my-ai-app <span class="hl-flag">--output</span> <span class="hl-string">sbom.json</span></span>
+<span class="hl-comment">  14 nodes, 18 edges → sbom.json</span>
+
+<span class="hl-comment"># Scan a remote repository</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">xelo scan https://github.com/org/repo <span class="hl-flag">--ref</span> main</span>
+
+<span class="hl-comment"># Validate the output</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">xelo validate sbom.json</span>
+<span class="hl-comment">  OK — document is valid</span>
+
+<span class="hl-comment"># Run structural security rules</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">xelo plugin run vulnerability sbom.json</span>
+
+<span class="hl-comment"># Export to CycloneDX 1.6</span>
+<span class="hl-prompt">$ </span><span class="hl-cmd">xelo scan ./my-ai-app <span class="hl-flag">--format</span> cyclonedx <span class="hl-flag">--output</span> bom.cdx.json</span></pre>
+                    </div>
+
+                    <div id="tab-python" class="tab-pane">
+                        <pre><span class="hl-kw">from</span> pathlib <span class="hl-kw">import</span> Path
+<span class="hl-kw">from</span> xelo <span class="hl-kw">import</span> AiSbomConfig, AiSbomExtractor, AiSbomSerializer
+<span class="hl-kw">from</span> xelo.toolbox.plugins.vulnerability <span class="hl-kw">import</span> VulnerabilityScannerPlugin
+
+<span class="hl-comment"># Extract</span>
+config = AiSbomConfig()
+doc    = AiSbomExtractor().extract_from_path(
+    path=Path(<span class="hl-string">"./my-ai-app"</span>),
+    config=config,
+)
+<span class="hl-kw">print</span>(<span class="hl-string">f"nodes=<span class="hl-num">{len(doc.nodes)}</span>, edges=<span class="hl-num">{len(doc.edges)}</span>"</span>)
+
+<span class="hl-comment"># Serialize</span>
+json_str = AiSbomSerializer.to_json(doc)
+
+<span class="hl-comment"># Vulnerability scan</span>
+sbom    = doc.model_dump(mode=<span class="hl-string">"json"</span>)
+result  = VulnerabilityScannerPlugin().run(sbom, {})
+<span class="hl-kw">print</span>(result.status, result.message)</pre>
+                    </div>
+
+                    <div id="tab-ci" class="tab-pane">
+                        <pre><span class="hl-comment"># .github/workflows/sbom.yml</span>
+<span class="hl-kw">name</span>: AI SBOM scan
+<span class="hl-kw">on</span>: [push, pull_request]
+
+<span class="hl-kw">jobs</span>:
+  <span class="hl-kw">xelo</span>:
+    <span class="hl-kw">runs-on</span>: ubuntu-latest
+    <span class="hl-kw">steps</span>:
+      - <span class="hl-kw">uses</span>: actions/checkout@v4
+      - <span class="hl-kw">name</span>: Install xelo
+        <span class="hl-kw">run</span>: pip install xelo
+      - <span class="hl-kw">name</span>: Scan
+        <span class="hl-kw">run</span>: xelo scan . <span class="hl-flag">--output</span> sbom.json
+      - <span class="hl-kw">name</span>: Security check
+        <span class="hl-kw">run</span>: |
+          xelo plugin run vulnerability sbom.json \
+            <span class="hl-flag">--output</span> findings.json
+          <span class="hl-comment"># fail if CRITICAL or HIGH findings present</span>
+          python3 -c "
+          import json, sys
+          d = json.load(open('findings.json'))
+          s = d['details']['summary']
+          sys.exit(1 if s['critical']+s['high'] > 0 else 0)
+          "
+      - <span class="hl-kw">name</span>: Upload SARIF
+        <span class="hl-kw">run</span>: |
+          xelo plugin run sarif sbom.json <span class="hl-flag">--output</span> results.sarif
+          xelo plugin run ghas  sbom.json \
+            <span class="hl-flag">--config</span> token=${{ secrets.GITHUB_TOKEN }} \
+            <span class="hl-flag">--config</span> github_repo=${{ github.repository }}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Plugins ──────────────────────────────────────────────────────────── -->
+    <section id="plugins">
+        <div class="container">
+            <div class="section-label">Toolbox plugins</div>
+            <h2>Analyse, export, and integrate</h2>
+            <p style="max-width: 580px; margin-bottom: 2.5rem;">
+                Run any plugin with <code
+                    style="font-family:var(--mono);color:var(--accent)">xelo plugin run &lt;name&gt; sbom.json</code>.
+                All offline plugins work with no network access and no API key.
+            </p>
+            <div class="plugin-grid">
+                <div class="plugin-chip">
+                    <span class="plugin-name">vulnerability</span>
+                    <span class="plugin-desc">21 structural VLA rules — missing guardrails, over-privileged agents, PHI
+                        to external LLMs, IaC security posture. <BR>
+                        These rules extract the relevant controls from OWASP AI Top 10, NIST AI RMF, HIPAA, PCI-DSS and
+                        morph them for AI Applications.
+                        These rules can fire purely on the AI SBOM without a need for manual attestation or LLM
+                        enrichment, making them ideal for CI pipelines and offline environments.
+                    </span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">atlas</span>
+                    <span class="plugin-desc">Maps every VLA finding to MITRE ATLAS v2 techniques and recommended
+                        mitigations.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">sarif</span>
+                    <span class="plugin-desc">Exports all findings as SARIF 2.1.0 — compatible with GitHub Code Scanning
+                        and any SARIF viewer.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">cyclonedx</span>
+                    <span class="plugin-desc">Exports AI nodes as a standards-compliant CycloneDX 1.6 BOM for downstream
+                        supply-chain tooling.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">markdown</span>
+                    <span class="plugin-desc">Human-readable Markdown report covering all detected components, findings,
+                        and remediation guidance.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">license</span>
+                    <span class="plugin-desc">Checks all detected package dependencies against SPDX licence identifiers
+                        for compliance.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">dependency</span>
+                    <span class="plugin-desc">Scores dependency freshness and flags outdated or unmaintained AI packages
+                        in the dependency graph.</span>
+                    <span class="plugin-badge badge-offline">Offline</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">ghas</span>
+                    <span class="plugin-desc">Uploads SARIF findings directly to GitHub Advanced Security — connects to
+                        GitHub API.</span>
+                    <span class="plugin-badge badge-network">Network</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">aws-security-hub</span>
+                    <span class="plugin-desc">Pushes findings to AWS Security Hub as Security Finding Format (ASFF)
+                        records.</span>
+                    <span class="plugin-badge badge-network">Network</span>
+                </div>
+                <div class="plugin-chip">
+                    <span class="plugin-name">xray</span>
+                    <span class="plugin-desc">Submits the SBOM to JFrog Xray for vulnerability enrichment and policy
+                        evaluation.</span>
+                    <span class="plugin-badge badge-network">Network</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Frameworks ───────────────────────────────────────────────────────── -->
+    <section id="frameworks"
+        style="background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <div class="section-label">Supported frameworks</div>
+            <h2 style="margin-bottom: 2.5rem;">Deep support across the AI ecosystem</h2>
+
+            <div class="fw-section">
+                <h3>Python</h3>
+                <div class="fw-chips">
+                    <span class="fw-chip">LangChain</span>
+                    <span class="fw-chip">LangGraph</span>
+                    <span class="fw-chip">OpenAI Agents SDK</span>
+                    <span class="fw-chip">CrewAI (code + YAML)</span>
+                    <span class="fw-chip">AutoGen (code + YAML)</span>
+                    <span class="fw-chip">Google ADK</span>
+                    <span class="fw-chip">LlamaIndex</span>
+                    <span class="fw-chip">Agno</span>
+                    <span class="fw-chip">AWS BedrockAgentCore</span>
+                    <span class="fw-chip">Azure AI Agent Service</span>
+                    <span class="fw-chip">Guardrails AI</span>
+                    <span class="fw-chip">MCP Server (FastMCP)</span>
+                    <span class="fw-chip">MCP Server (low-level)</span>
+                    <span class="fw-chip">Azure Semantic Kernel</span>
+                </div>
+            </div>
+
+            <div class="fw-section">
+                <h3>TypeScript / JavaScript</h3>
+                <div class="fw-chips">
+                    <span class="fw-chip">LangChain.js</span>
+                    <span class="fw-chip">LangGraph.js</span>
+                    <span class="fw-chip">OpenAI Agents (TS)</span>
+                    <span class="fw-chip">Azure AI Agents (TS)</span>
+                    <span class="fw-chip">Agno (TS)</span>
+                    <span class="fw-chip">MCP Server (TS)</span>
+                </div>
+            </div>
+
+            <div class="fw-section">
+                <h3>Infrastructure &amp; Configuration</h3>
+                <div class="fw-chips">
+                    <span class="fw-chip">Terraform</span>
+                    <span class="fw-chip">CloudFormation</span>
+                    <span class="fw-chip">Azure Bicep</span>
+                    <span class="fw-chip">Kubernetes manifests</span>
+                    <span class="fw-chip">GCP Deployment Manager</span>
+                    <span class="fw-chip">GitHub Actions</span>
+                    <span class="fw-chip">Dockerfiles</span>
+                    <span class="fw-chip">Nginx configs</span>
+                </div>
+            </div>
+
+            <div class="fw-section" style="margin-bottom: 0;">
+                <h3>Data &amp; storage</h3>
+                <div class="fw-chips">
+                    <span class="fw-chip">SQL schemas (PHI/PII classification)</span>
+                    <span class="fw-chip">SQLAlchemy models</span>
+                    <span class="fw-chip">Django models</span>
+                    <span class="fw-chip">Pydantic models</span>
+                    <span class="fw-chip">Prompt files (.txt / .md / .jinja)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA ──────────────────────────────────────────────────────────────── -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-inner">
+                <div class="section-label" style="justify-content: center;">Get started</div>
+                <h2>Start scanning your AI applications</h2>
+                <p>
+                    Install Xelo, run your first scan, and get a machine-readable picture of
+                    every AI component in your codebase — in under two minutes.
+                </p>
+                <div class="hero-actions">
+                    <a href="getting-started.md" class="btn-primary">Read the docs →</a>
+                    <a href="cli-reference.md" class="btn-secondary">CLI reference</a>
+                </div>
+                <div class="install-block" style="margin: 0 auto; display: inline-flex;">
+                    <span class="prompt">$</span>
+                    <span class="cmd">pip install xelo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Footer ───────────────────────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo-mark">X</span>
+                Xelo
+            </div>
+
+            <ul class="footer-links">
+                <li><a href="getting-started.md">Getting Started</a></li>
+                <li><a href="cli-reference.md">CLI Reference</a></li>
+                <li><a href="developer-guide.md">Developer Guide</a></li>
+                <li><a href="vulnerability-scanning.md">Vulnerability Scanning</a></li>
+                <li><a href="https://github.com/nuguard/xelo">GitHub</a></li>
+                <li><a href="https://github.com/nuguard/xelo/issues">Issues</a></li>
+            </ul>
+
+            <span class="footer-copy">Apache-2.0 · Built by NuGuard AI</span>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switcher
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + tab).classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
