@@ -858,7 +858,9 @@ def _run_local_folder_discovery(
     if use_llm:
         logger.info("  LLM enrichment enabled for this scan")
     doc = extractor.extract_from_path(folder_path, config, source_ref=folder_path)
-    discovered = _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local_folder")
+    discovered = _convert_xelo_nodes_to_discovered_assets(
+        doc.nodes, evidence_source="xelo_local_folder"
+    )
     sbom_dict: Dict[str, Any] = doc.model_dump(mode="json")
     return discovered, sbom_dict
 
@@ -1018,15 +1020,17 @@ async def evaluate_repo(
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
     else:
-        # Legacy local mode (in-process discovery pipeline)
+        # Local mode: use _run_local_folder_discovery (via temp dir) so sbom_dict is populated.
         cache_path = REPOS_DIR / repo_name / "cached_files.json"
         files: List[Tuple[str, str]] = []
 
         if use_cache and cache_path.exists():
             logger.info("  Using cached files")
-            with open(cache_path, "r", encoding="utf-8") as f:
-                cached = json.load(f)
-                files = [(f["path"], f["content"]) for f in cached["files"]]
+            temp_dir = _write_cached_files_to_temp_dir(cache_path)
+            try:
+                discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+            finally:
+                shutil.rmtree(temp_dir, ignore_errors=True)
         else:
             logger.info(f"  Fetching from GitHub: {gt.repo_url}")
             token = os.getenv("GITHUB_TOKEN")
@@ -1044,7 +1048,14 @@ async def evaluate_repo(
                     json.dump(cache_data, f)
                 logger.info(f"  Cached {len(files)} files to {cache_path.name}")
 
-        discovered = await run_discovery_pipeline(files, gt.frameworks, use_llm=use_llm)
+                # Write live-fetched files to temp dir for unified pipeline
+                temp_dir = _write_cached_files_to_temp_dir(cache_path)
+                try:
+                    discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+                finally:
+                    shutil.rmtree(temp_dir, ignore_errors=True)
+            else:
+                discovered = await run_discovery_pipeline(files, gt.frameworks, use_llm=use_llm)
     logger.info(f"  Discovered: {len(discovered)} assets")
 
     # Debug: Log discovered MODELs for troubleshooting
@@ -1242,6 +1253,7 @@ async def evaluate_all(
 # BENCHMARK PLUGIN RUNNER
 # ============================================================================
 
+
 def run_bench_plugins(
     sbom: Dict[str, Any],
     repo_name: str,
@@ -1288,6 +1300,7 @@ def run_bench_plugins(
         else:
             try:
                 from xelo.toolbox.plugins.policy_assessment import PolicyAssessmentPlugin
+
                 pa_plugin = PolicyAssessmentPlugin()
                 for pf in policy_files:
                     pol_config: Dict[str, Any] = {
@@ -1300,6 +1313,12 @@ def run_bench_plugins(
                         pol_config["llm_api_base"] = plugin_llm_api_base
                     pa_result = pa_plugin.run(sbom, pol_config)
                     policy_results[pf.stem] = pa_result.details
+                    # Write policy results to per-repo output file
+                    pol_out = repo_out / f"policy_{pf.stem}.json"
+                    pol_out.write_text(
+                        json.dumps(pa_result.details, indent=2, default=str),
+                        encoding="utf-8",
+                    )
             except Exception as exc:  # noqa: BLE001
                 issues.append({"type": "policy_error", "detail": str(exc)})
 
