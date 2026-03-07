@@ -117,6 +117,64 @@ xelo scan ./my-repo --format cyclonedx --output sbom.cdx.json
 xelo scan ./my-repo --format unified --output sbom.unified.json
 ```
 
+## Validating and Inspecting the Schema
+
+After scanning, confirm the output is structurally valid:
+
+```bash
+xelo validate sbom.json
+# OK — document is valid
+```
+
+Print the full JSON Schema to stdout (useful for editor integration or CI linting):
+
+```bash
+xelo schema
+```
+
+Write it to a file:
+
+```bash
+xelo schema --output aibom.schema.json
+```
+
+## Running Toolbox Plugins
+
+Toolbox plugins analyse an existing SBOM and produce findings, reports, and exports. They are invoked from Python — typically right after calling `xelo scan`:
+
+```bash
+xelo scan ./my-repo --output sbom.json
+
+python - sbom.json <<'EOF'
+import json, sys
+from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
+from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
+from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
+from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
+
+sbom = json.loads(open(sys.argv[1]).read())
+
+# Structural vulnerability / VLA rules
+vuln = VulnerabilityScannerPlugin().run(sbom, {})
+print(vuln.status, vuln.message)
+
+# MITRE ATLAS annotation
+atlas = AtlasAnnotatorPlugin().run(sbom, {})
+for f in atlas.details["findings"]:
+    print(f["rule_id"], f["severity"])
+
+# Export as SARIF for GitHub Code Scanning
+sarif = SarifExporterPlugin().run(sbom, {})
+open("results.sarif", "w").write(sarif.details["sarif_json"])
+
+# Markdown report
+md = MarkdownExporterPlugin().run(sbom, {})
+open("report.md", "w").write(md.details["markdown"])
+EOF
+```
+
+For the full list of available plugins and their configuration options see the [CLI Reference — Toolbox Plugins](./cli-reference.md) and [Developer Guide](./developer-guide.md).
+
 ## Supported Frameworks
 
 Xelo detects components from the following frameworks without any additional config:

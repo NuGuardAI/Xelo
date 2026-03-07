@@ -11,6 +11,8 @@ Xelo CLI command entry points:
 | --- | --- |
 | `xelo scan <path>` | Scan a local directory and generate SBOM output in the selected format. |
 | `xelo scan <url>` | Clone a git repository, scan it, and generate SBOM output. |
+| `xelo validate <file>` | Validate a Xelo-native JSON document against the bundled schema. |
+| `xelo schema` | Print (or write) the Xelo JSON schema. |
 
 ## Global Flags
 
@@ -54,11 +56,38 @@ xelo scan <url> --output <file> [options]
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
-| `--llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
-| `--llm-model <model>` | string | No | from config/env | LLM model identifier | Used when LLM enrichment is active |
-| `--llm-budget-tokens <n>` | integer | No | from config/env | Token budget for enrichment | Used when LLM enrichment is active |
-| `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
-| `--llm-api-base <url>` | string | No | from config/env/provider defaults | Base URL override | Common for Azure/provider proxies |
+Same LLM flags as `scan path` are also accepted here with identical behavior.
+
+## `validate` Reference
+
+Usage:
+
+```bash
+xelo validate <file>
+```
+
+Validates a Xelo-native JSON document against the bundled `aibom.schema.json`.
+
+| Argument | Type | Required | Behavior |
+| --- | --- | --- | --- |
+| `<file>` | path | Yes | Path to the JSON file to validate. Exits `0` and prints `OK — document is valid` on success; exits `1` and prints `error: validation failed: …` on failure. |
+
+
+## `schema` Reference
+
+Usage:
+
+```bash
+xelo schema [--output <file>]
+```
+
+Emits the Xelo JSON schema (JSON Schema 2020-12, `$id` `https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json`).
+
+| Flag | Type | Required | Default | Behavior |
+| --- | --- | --- | --- | --- |
+| `--output <file>` | path | No | stdout | Write schema to a file instead of printing to stdout. |
+
+---
 
 ## Behavior Notes
 
@@ -67,6 +96,93 @@ xelo scan <url> --output <file> [options]
 - Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
 - If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
 - Dependency manifests (`requirements.txt`, `pyproject.toml`, `package.json`) are discovered recursively at any depth in the project tree; virtual-environment and build directories (`.venv`, `node_modules`, `dist`, etc.) are excluded automatically.
+
+## Toolbox Plugins
+
+Xelo's built-in analysis plugins (`xelo.toolbox.plugins`) are invoked **programmatically** — they are not sub-commands on the `xelo` binary. The typical workflow is:
+
+1. Run `xelo scan` to produce a JSON SBOM.
+2. Load the SBOM in Python and run whichever plugins you need.
+3. Write the results to files (SARIF, Markdown, etc.).
+
+**Quick one-liner (shell):**
+
+```bash
+xelo scan ./my-repo --output sbom.json
+python - sbom.json <<'EOF'
+import json, sys
+from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
+from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
+from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
+from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
+
+sbom = json.loads(open(sys.argv[1]).read())
+
+vuln = VulnerabilityScannerPlugin().run(sbom, {})
+print(vuln.status, vuln.message)
+
+atlas = AtlasAnnotatorPlugin().run(sbom, {})
+for f in atlas.details["findings"]:
+    print(f["rule_id"], f["severity"])
+
+sarif = SarifExporterPlugin().run(sbom, {})
+open("results.sarif", "w").write(sarif.details["sarif_json"])
+
+md = MarkdownExporterPlugin().run(sbom, {})
+open("report.md", "w").write(md.details["markdown"])
+EOF
+```
+
+### Available Plugins
+
+| Class | Module | Network | Notes |
+| --- | --- | --- | --- |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, over-privileged agents |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2 techniques and mitigations |
+| `PolicyAssessmentPlugin` | `policy_assessment` | No | Evaluates SBOM against a custom policy file; `config={"policy_file": "<path>"}` |
+| `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
+| `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |
+| `SarifExporterPlugin` | `sarif_exporter` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning compatible) |
+| `CycloneDxExporter` | `cyclonedx_exporter` | No | Exports nodes as CycloneDX 1.6 |
+| `MarkdownExporterPlugin` | `markdown_exporter` | No | Human-readable Markdown report |
+| `GhasUploaderPlugin` | `ghas_uploader` | Yes | Uploads SARIF to GitHub Advanced Security; requires `GITHUB_TOKEN` |
+| `AwsSecurityHubPlugin` | `aws_security_hub` | Yes | Pushes findings to AWS Security Hub; requires `boto3` + AWS credentials |
+| `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray; requires URL + credentials |
+
+All classes are importable from `xelo.toolbox.plugins.<module>` (e.g. `from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin`).
+
+Each plugin call returns a `ToolResult` with:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | `"ok"` \| `"error"` \| `"warning"` | Outcome of the run |
+| `message` | str | One-line human-readable summary |
+| `details` | dict | Plugin-specific payload (findings list, sarif_json, markdown, …) |
+
+For full Python API examples see the [Developer Guide](./developer-guide.md).
+
+### Third-Party / Custom Plugins
+
+Anyone can ship a custom detection adapter by subclassing `xelo.plugins.PluginAdapter` and registering it under the `xelo.plugins` entry-point group.
+
+```toml
+# pyproject.toml — in a third-party package
+[project.entry-points."xelo.plugins"]
+my_adapter = "my_package.adapter:MyAdapter"
+```
+
+To enable plugin discovery when scanning, pass `--plugins` is not a CLI flag today — use the Python API:
+
+```python
+from xelo import AiSbomExtractor, AiSbomConfig
+
+extractor = AiSbomExtractor(load_plugins=True)
+doc = extractor.extract_from_path("./my-repo", config=AiSbomConfig())
+```
+
+Or call `xelo.plugins.load_plugins()` directly before constructing the extractor.
+
+---
 
 ## Detected Component Types
 
