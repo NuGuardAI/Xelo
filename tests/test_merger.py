@@ -15,18 +15,18 @@ from typing import Any
 
 import pytest
 
-from ai_sbom.cdx_tools import CycloneDxGenerator
-from ai_sbom.config import ExtractionConfig
-from ai_sbom.extractor import SbomExtractor
-from ai_sbom.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prompt_hash
-from ai_sbom.models import AiBomDocument
+from xelo.cdx_tools import CycloneDxGenerator
+from xelo.config import AiSbomConfig
+from xelo.extractor import AiSbomExtractor
+from xelo.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prompt_hash
+from xelo.models import AiSbomDocument
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
-_PY_ONLY = ExtractionConfig(include_extensions={".py"}, enable_llm=False)
+_PY_ONLY = AiSbomConfig(include_extensions={".py"}, enable_llm=False)
 
 
-def _extract(app: str) -> AiBomDocument:
-    return SbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
+def _extract(app: str) -> AiSbomDocument:
+    return AiSbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
 
 
 def _minimal_cdx_bom(components: list[dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -344,7 +344,7 @@ class TestCycloneDxGeneratorFallback:
     def test_fallback_produces_valid_bom(self) -> None:
         gen = CycloneDxGenerator()
         # Temporarily hide cyclonedx-py by monkey-patching
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
 
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
@@ -357,7 +357,7 @@ class TestCycloneDxGeneratorFallback:
         assert method == "dep-scanner"
 
     def test_fallback_includes_deps(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
 
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
@@ -371,7 +371,7 @@ class TestCycloneDxGeneratorFallback:
         assert "pydantic" in names
 
     def test_fallback_has_cdx_note_property(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
 
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
@@ -395,7 +395,7 @@ class TestCycloneDxGeneratorCli:
 
     @pytest.fixture(scope="class")
     def cdx_available(self) -> bool:
-        from ai_sbom.cdx_tools import _cdx_py_available
+        from xelo.cdx_tools import _cdx_py_available
 
         return _cdx_py_available()
 
@@ -438,7 +438,7 @@ class TestFullPipeline:
     """Phase 1 (standard BOM) + Phase 2 (AI extraction) + merge."""
 
     def test_unified_bom_has_both_dep_and_ai_components(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
 
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
@@ -461,7 +461,7 @@ class TestFullPipeline:
         assert ai_comps, "Expected AI components in unified BOM"
 
     def test_unified_bom_json_serializable(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
 
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]

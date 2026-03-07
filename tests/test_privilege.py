@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import pytest
 
-from ai_sbom.adapters.privilege import privilege_adapters
-from ai_sbom.adapters.registry import default_registry
-from ai_sbom.types import ComponentType
+from xelo.adapters.privilege import privilege_adapters
+from xelo.adapters.registry import default_registry
+from xelo.types import ComponentType
 
 
 # ---------------------------------------------------------------------------

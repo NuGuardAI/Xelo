@@ -1,4 +1,4 @@
-"""Tests for CycloneDX 1.6 output from SbomSerializer.
+"""Tests for CycloneDX 1.6 output from AiSbomSerializer.
 
 Validates that the enhanced serializer correctly maps AI components to
 CycloneDX types, emits model card URLs as externalReferences, attaches
@@ -16,23 +16,23 @@ from typing import Any
 
 import pytest
 
-from ai_sbom.config import ExtractionConfig
-from ai_sbom.deps import DependencyScanner, PackageDep
-from ai_sbom.extractor import SbomExtractor
-from ai_sbom.models import AiBomDocument
-from ai_sbom.serializer import SbomSerializer
-from ai_sbom.types import ComponentType
+from xelo.config import AiSbomConfig
+from xelo.deps import DependencyScanner, PackageDep
+from xelo.extractor import AiSbomExtractor
+from xelo.models import AiSbomDocument
+from xelo.serializer import AiSbomSerializer
+from xelo.types import ComponentType
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
-_PY_ONLY = ExtractionConfig(include_extensions={".py"}, enable_llm=False)
+_PY_ONLY = AiSbomConfig(include_extensions={".py"}, enable_llm=False)
 
 
-def _extract(app: str) -> AiBomDocument:
-    return SbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
+def _extract(app: str) -> AiSbomDocument:
+    return AiSbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
 
 
 def _cdx(app: str, deps: list[PackageDep] | None = None) -> dict[str, Any]:
-    return SbomSerializer.to_cyclonedx(_extract(app), deps=deps)
+    return AiSbomSerializer.to_cyclonedx(_extract(app), deps=deps)
 
 
 # ---------------------------------------------------------------------------
@@ -105,15 +105,15 @@ class TestAiComponentTypes:
     """Validate CycloneDX type mapping for AI component types."""
 
     @pytest.fixture(scope="class")
-    def doc(self) -> AiBomDocument:
+    def doc(self) -> AiSbomDocument:
         return _extract("customer_service_bot")
 
     @pytest.fixture(scope="class")
-    def bom(self, doc: AiBomDocument) -> dict[str, Any]:
-        return SbomSerializer.to_cyclonedx(doc)
+    def bom(self, doc: AiSbomDocument) -> dict[str, Any]:
+        return AiSbomSerializer.to_cyclonedx(doc)
 
     def test_model_nodes_map_to_ml_model_type(
-        self, doc: AiBomDocument, bom: dict[str, Any]
+        self, doc: AiSbomDocument, bom: dict[str, Any]
     ) -> None:
         model_names = {n.name for n in doc.nodes if n.component_type == ComponentType.MODEL}
         ml_model_comps = [c for c in bom["components"] if c["type"] == "machine-learning-model"]
@@ -123,21 +123,21 @@ class TestAiComponentTypes:
                 f"MODEL node {name!r} not mapped to machine-learning-model"
             )
 
-    def test_agent_nodes_map_to_application(self, doc: AiBomDocument, bom: dict[str, Any]) -> None:
+    def test_agent_nodes_map_to_application(self, doc: AiSbomDocument, bom: dict[str, Any]) -> None:
         agent_names = {n.name for n in doc.nodes if n.component_type == ComponentType.AGENT}
         app_comps = {c["name"] for c in bom["components"] if c["type"] == "application"}
         for name in agent_names:
             assert name in app_comps, f"AGENT node {name!r} not mapped to application"
 
     def test_framework_nodes_map_to_application(
-        self, doc: AiBomDocument, bom: dict[str, Any]
+        self, doc: AiSbomDocument, bom: dict[str, Any]
     ) -> None:
         fw_names = {n.name for n in doc.nodes if n.component_type == ComponentType.FRAMEWORK}
         app_comps = {c["name"] for c in bom["components"] if c["type"] == "application"}
         for name in fw_names:
             assert name in app_comps, f"FRAMEWORK node {name!r} not mapped to application"
 
-    def test_tool_nodes_map_to_library(self, doc: AiBomDocument, bom: dict[str, Any]) -> None:
+    def test_tool_nodes_map_to_library(self, doc: AiSbomDocument, bom: dict[str, Any]) -> None:
         tool_names = {n.name for n in doc.nodes if n.component_type == ComponentType.TOOL}
         lib_comps = {c["name"] for c in bom["components"] if c["type"] == "library"}
         for name in tool_names:
@@ -283,7 +283,7 @@ class TestDepComponents:
     def bom_with_deps(self, scanner: DependencyScanner) -> dict[str, Any]:
         doc = _extract("customer_service_bot")
         deps = scanner.scan(_APPS / "customer_service_bot")
-        return SbomSerializer.to_cyclonedx(doc, deps=deps)
+        return AiSbomSerializer.to_cyclonedx(doc, deps=deps)
 
     def test_dep_components_present(self, bom_with_deps: dict[str, Any]) -> None:
         lib_comps = [c for c in bom_with_deps["components"] if c["type"] == "library"]
@@ -431,7 +431,7 @@ class TestFullPipeline:
     def test_combined_component_count(self) -> None:
         doc = _extract("rag_pipeline")
         deps = DependencyScanner().scan(_APPS / "rag_pipeline")
-        bom = SbomSerializer.to_cyclonedx(doc, deps=deps)
+        bom = AiSbomSerializer.to_cyclonedx(doc, deps=deps)
         ai_count = len(doc.nodes)
         dep_count = len(deps)
         assert len(bom["components"]) == ai_count + dep_count, (
@@ -444,12 +444,12 @@ class TestFullPipeline:
 
         doc = _extract("customer_service_bot")
         deps = DependencyScanner().scan(_APPS / "customer_service_bot")
-        json_str = SbomSerializer.dump_cyclonedx_json(doc, deps=deps)
+        json_str = AiSbomSerializer.dump_cyclonedx_json(doc, deps=deps)
         # Must be valid JSON
         parsed = json.loads(json_str)
         assert parsed["bomFormat"] == "CycloneDX"
 
     def test_spec_version_override(self) -> None:
         doc = _extract("research_assistant")
-        bom = SbomSerializer.to_cyclonedx(doc, spec_version="1.5")
+        bom = AiSbomSerializer.to_cyclonedx(doc, spec_version="1.5")
         assert bom["specVersion"] == "1.5"

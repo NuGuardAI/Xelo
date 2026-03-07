@@ -9,8 +9,8 @@ Xelo CLI command entry points:
 
 | Command | Purpose |
 | --- | --- |
-| `xelo scan path <path>` | Scan a local directory and generate SBOM output in the selected format. |
-| `xelo scan repo <url>` | Clone a git repository, scan it, and generate SBOM output. |
+| `xelo scan <path>` | Scan a local directory and generate SBOM output in the selected format. |
+| `xelo scan <url>` | Clone a git repository, scan it, and generate SBOM output. |
 
 ## Global Flags
 
@@ -26,7 +26,7 @@ These flags are accepted at the root command level.
 Usage:
 
 ```bash
-xelo scan path <path> --output <file> [options]
+xelo scan <path> --output <file> [options]
 ```
 
 | Argument / Flag | Type | Required | Default | Behavior | Interactions |
@@ -34,9 +34,9 @@ xelo scan path <path> --output <file> [options]
 | `<path>` | path | Yes | none | Local directory to scan | Fails if missing or not a directory |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
-| `--enable-llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
-| `--llm-model <model>` | string | No | from config/env (`AISBOM_LLM_MODEL`, fallback `gpt-4o-mini`) | LLM model identifier | Used when LLM enrichment is active |
-| `--llm-budget-tokens <n>` | integer | No | from config/env (`AISBOM_LLM_BUDGET_TOKENS`, fallback `50000`) | Token budget for enrichment | Used when LLM enrichment is active |
+| `--llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
+| `--llm-model <model>` | string | No | from config/env (`XELO_LLM_MODEL`, fallback `gpt-4o-mini`) | LLM model identifier | Used when LLM enrichment is active |
+| `--llm-budget-tokens <n>` | integer | No | from config/env (`XELO_LLM_BUDGET_TOKENS`, fallback `50000`) | Token budget for enrichment | Used when LLM enrichment is active |
 | `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
 | `--llm-api-base <url>` | string | No | from config/env/provider defaults | Base URL override (for hosted endpoints) | Common for Azure/provider proxies |
 
@@ -45,7 +45,7 @@ xelo scan path <path> --output <file> [options]
 Usage:
 
 ```bash
-xelo scan repo <url> --output <file> [options]
+xelo scan <url> --output <file> [options]
 ```
 
 | Argument / Flag | Type | Required | Default | Behavior | Interactions |
@@ -54,7 +54,7 @@ xelo scan repo <url> --output <file> [options]
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
-| `--enable-llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
+| `--llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
 | `--llm-model <model>` | string | No | from config/env | LLM model identifier | Used when LLM enrichment is active |
 | `--llm-budget-tokens <n>` | integer | No | from config/env | Token budget for enrichment | Used when LLM enrichment is active |
 | `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
@@ -63,7 +63,7 @@ xelo scan repo <url> --output <file> [options]
 ## Behavior Notes
 
 - CLI flags override environment-backed defaults from runtime config.
-- `--enable-llm` is the scan-time switch for enrichment; when omitted, scans run deterministic-only.
+- `--llm` is the scan-time switch for enrichment; when omitted, scans run deterministic-only.
 - Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
 - If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
 - Dependency manifests (`requirements.txt`, `pyproject.toml`, `package.json`) are discovered recursively at any depth in the project tree; virtual-environment and build directories (`.venv`, `node_modules`, `dist`, etc.) are excluded automatically.
@@ -91,7 +91,7 @@ Xelo assigns each detected item one of the following `component_type` values in 
 
 `scan` commands support these LLM-related options:
 
-- `--enable-llm`: enable enrichment for this run.
+- `--llm`: enable enrichment for this run.
 - `--llm-model <model>`: provider/model identifier (litellm-compatible string).
 - `--llm-budget-tokens <n>`: token budget across enrichment calls.
 - `--llm-api-key <key>`: explicit API key override.
@@ -99,11 +99,11 @@ Xelo assigns each detected item one of the following `component_type` values in 
 
 Environment variables consumed by Xelo directly:
 
-- `AISBOM_ENABLE_LLM=true|false`
-- `AISBOM_LLM_MODEL=<model-string>`
-- `AISBOM_LLM_BUDGET_TOKENS=<int>`
-- `AISBOM_LLM_API_KEY=<key>`
-- `AISBOM_LLM_API_BASE=<url>`
+- `XELO_LLM=true|false`
+- `XELO_LLM_MODEL=<model-string>`
+- `XELO_LLM_BUDGET_TOKENS=<int>`
+- `XELO_LLM_API_KEY=<key>`
+- `XELO_LLM_API_BASE=<url>`
 - `GEMINI_API_KEY` or `GOOGLE_CLOUD_API_KEY` (for direct Vertex AI mode when using `vertex_ai/*` models)
 - `VERTEXAI_LOCATION` (reserved for Vertex location metadata)
 
@@ -114,59 +114,59 @@ Provider-native variables are also supported through litellm, depending on provi
 OpenAI:
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=gpt-4o-mini
+export XELO_LLM=true
+export XELO_LLM_MODEL=gpt-4o-mini
 export OPENAI_API_KEY=your_openai_key
-xelo scan path ./my-repo --format json --output sbom.json --enable-llm
+xelo scan ./my-repo --format json --output sbom.json --llm
 ```
 
 Gemini (via litellm):
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=gemini/gemini-2.0-flash
+export XELO_LLM=true
+export XELO_LLM_MODEL=gemini/gemini-2.0-flash
 export GOOGLE_API_KEY=your_google_ai_studio_key
-xelo scan path ./my-repo --output sbom.json --enable-llm
+xelo scan ./my-repo --output sbom.json --llm
 ```
 
 Anthropic:
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=anthropic/claude-3-5-sonnet-latest
+export XELO_LLM=true
+export XELO_LLM_MODEL=anthropic/claude-3-5-sonnet-latest
 export ANTHROPIC_API_KEY=your_anthropic_key
-xelo scan path ./my-repo --output sbom.json --enable-llm
+xelo scan ./my-repo --output sbom.json --llm
 ```
 
 Azure OpenAI:
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=azure/gpt-4o-mini
+export XELO_LLM=true
+export XELO_LLM_MODEL=azure/gpt-4o-mini
 export AZURE_API_KEY=your_azure_openai_key
 export AZURE_API_BASE=https://<resource>.openai.azure.com/
 export AZURE_API_VERSION=2024-10-21
-xelo scan path ./my-repo --output sbom.json --enable-llm
+xelo scan ./my-repo --output sbom.json --llm
 ```
 
 Vertex AI Gemini (direct Vertex path in Xelo):
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=vertex_ai/gemini-2.5-flash
+export XELO_LLM=true
+export XELO_LLM_MODEL=vertex_ai/gemini-2.5-flash
 export GEMINI_API_KEY=your_vertex_key
-xelo scan path ./my-repo --output sbom.json --enable-llm
+xelo scan ./my-repo --output sbom.json --llm
 ```
 
 Bedrock Claude:
 
 ```bash
-export AISBOM_ENABLE_LLM=true
-export AISBOM_LLM_MODEL=bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+export XELO_LLM=true
+export XELO_LLM_MODEL=bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
 export AWS_REGION=us-east-1
 export AWS_ACCESS_KEY_ID=your_access_key
 export AWS_SECRET_ACCESS_KEY=your_secret_key
-xelo scan path ./my-repo --output sbom.json --enable-llm
+xelo scan ./my-repo --output sbom.json --llm
 ```
 
 ## Exit and Error Conventions
@@ -180,19 +180,19 @@ xelo scan path ./my-repo --output sbom.json --enable-llm
 Local scan:
 
 ```bash
-xelo scan path ./my-repo --format json --output sbom.json
+xelo scan ./my-repo --format json --output sbom.json
 ```
 
 Remote repo scan:
 
 ```bash
-xelo scan repo https://github.com/example/project.git --ref main --format json --output sbom.json
+xelo scan https://github.com/example/project.git --ref main --format json --output sbom.json
 ```
 
 Unified output (auto-generates standard CycloneDX BOM):
 
 ```bash
-xelo scan path ./my-repo --format unified --output unified-bom.json
+xelo scan ./my-repo --format unified --output unified-bom.json
 ```
 
 ## Constraints

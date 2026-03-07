@@ -9,10 +9,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ai_sbom.config import ExtractionConfig
-from ai_sbom.extractor import SbomExtractor
-from ai_sbom.models import AiBomDocument
-from ai_sbom.types import ComponentType
+from xelo.config import AiSbomConfig
+from xelo.extractor import AiSbomExtractor
+from xelo.models import AiSbomDocument
+from xelo.types import ComponentType
 
 # ---------------------------------------------------------------------------
 # Canonical fixture roots
@@ -25,7 +25,7 @@ APPS: Path = Path(__file__).parent / "fixtures" / "apps"
 FIXTURES: Path = Path(__file__).parent / "fixtures"
 
 #: Default config: Python-only, deterministic
-PY_ONLY: ExtractionConfig = ExtractionConfig(
+PY_ONLY: AiSbomConfig = AiSbomConfig(
     include_extensions={".py"},
     enable_llm=False,
 )
@@ -36,21 +36,21 @@ PY_ONLY: ExtractionConfig = ExtractionConfig(
 # ---------------------------------------------------------------------------
 
 
-def extract(path: Path, config: ExtractionConfig | None = None) -> AiBomDocument:
-    """Run SbomExtractor on *path* using *config* (default: PY_ONLY)."""
-    return SbomExtractor().extract_from_path(path, config or PY_ONLY)
+def extract(path: Path, config: AiSbomConfig | None = None) -> AiSbomDocument:
+    """Run AiSbomExtractor on *path* using *config* (default: PY_ONLY)."""
+    return AiSbomExtractor().extract_from_path(path, config or PY_ONLY)
 
 
-def nodes(doc: AiBomDocument, typ: ComponentType) -> list:
+def nodes(doc: AiSbomDocument, typ: ComponentType) -> list:
     """Return all nodes in *doc* with the given component type."""
     return [n for n in doc.nodes if n.component_type == typ]
 
 
-def names(doc: AiBomDocument, ctype: ComponentType) -> set[str]:
+def names(doc: AiSbomDocument, ctype: ComponentType) -> set[str]:
     """Return lowercase node names filtered by component type."""
     return {n.name.lower() for n in doc.nodes if n.component_type == ctype}
 
 
-def adapters(doc: AiBomDocument) -> set[str]:
+def adapters(doc: AiSbomDocument) -> set[str]:
     """Return the set of adapter names present anywhere in *doc*."""
     return {n.metadata.extras.get("adapter", "") for n in doc.nodes}
