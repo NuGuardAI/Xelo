@@ -1,4 +1,4 @@
-<img src="xelo-logo.svg" alt="Xelo" height="40" />
+<img src="xelo-logo.png" alt="Xelo" height="40" />
 
 # CLI Reference
 
