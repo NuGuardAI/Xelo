@@ -126,6 +126,14 @@ _DOCS_STEMS = {
     "roadmap",
     "security",
     "support",
+    # Dependency lock files — auto-generated, not meaningful for AI component detection
+    "pnpm-lock",
+    "package-lock",
+    "yarn",          # yarn.lock
+    "composer",      # composer.lock (PHP)
+    "gemfile-lock",  # Gemfile.lock (Ruby)
+    # Pre-commit / tooling configs — not AI application code
+    ".pre-commit-config",
 }
 
 
@@ -414,14 +422,19 @@ class AiSbomExtractor:
             ):
                 # Adapters may declare path-scoped exclusions (e.g. privilege
                 # adapters skip test dirs and __init__.py to reduce FPs).
-                if getattr(rx_adapter, "skip_path_parts", None) or getattr(
-                    rx_adapter, "skip_init_py", False
+                if (
+                    getattr(rx_adapter, "skip_path_parts", None)
+                    or getattr(rx_adapter, "skip_init_py", False)
+                    or getattr(rx_adapter, "skip_extensions", None)
                 ):
                     _rel = Path(rel_path)
                     if getattr(rx_adapter, "skip_init_py", False) and _rel.name == "__init__.py":
                         continue
                     _skip_parts = getattr(rx_adapter, "skip_path_parts", None)
                     if _skip_parts and bool(set(_rel.parts) & _skip_parts):
+                        continue
+                    _skip_exts = getattr(rx_adapter, "skip_extensions", None)
+                    if _skip_exts and suffix in _skip_exts:
                         continue
                 detection = rx_adapter.detect(_regex_content)
                 if detection is None:
@@ -459,6 +472,14 @@ class AiSbomExtractor:
         # file — e.g. regex matches "gemini-2.0" while AST extracts the full
         # "gemini-2.0-flash" from an adjacent line of the same call.
         _dedup_by_name_prefix(node_map)
+
+        # For MODEL and DATASTORE, suppress nodes whose only evidence comes from
+        # docs-tier files (lock files, README mentions, shell scripts).  Lock
+        # files like pnpm-lock.yaml and semantic changelogs are classified as
+        # DOCS tier and produce noisy nodes when package names happen to look
+        # like model or datastore names.  IaC-tier detections (YAML/JSON config,
+        # Dockerfiles) are kept because they legitimately describe components.
+        _suppress_non_code_model_datastore(node_map)
 
         # Build nodes + edges
         for key in sorted(node_map.keys(), key=lambda v: (v[0].value, v[1])):
@@ -1309,6 +1330,37 @@ def _dedup_by_location(
 
     for k in keys_to_remove:
         del node_map[k]
+
+
+def _suppress_non_code_model_datastore(
+    node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+) -> None:
+    """Drop MODEL and DATASTORE nodes whose only evidence is from DOCS tier.
+
+    Detections from lock files (``pnpm-lock.yaml``, ``package-lock.json``),
+    README mentions, shell scripts, and plain-text files frequently produce
+    spurious MODEL/DATASTORE nodes.  These files are classified as DOCS tier;
+    IaC-tier detections (YAML configs, JSON configs, Dockerfiles) are kept
+    because they legitimately describe datastores and models in environment
+    definitions.
+
+    Only DOCS-tier-only nodes are dropped.  This does not affect AGENT, TOOL,
+    PROMPT, etc. which are typically harder to detect and worth surfacing from
+    any tier.
+    """
+    _suppressed_types = {ComponentType.MODEL, ComponentType.DATASTORE}
+    keys_to_drop = [
+        key
+        for key, acc in node_map.items()
+        if key[0] in _suppressed_types and acc.best_tier_rank >= _TIER_RANK[_TIER_DOCS]
+    ]
+    for key in keys_to_drop:
+        _log.debug(
+            "suppress_docs_only: dropped %s (best_tier_rank=%d)",
+            key,
+            node_map[key].best_tier_rank,
+        )
+        del node_map[key]
 
 
 def stable_id(value: str) -> str:

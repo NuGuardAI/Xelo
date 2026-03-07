@@ -118,7 +118,56 @@
           }
         }
       ]
+    },
+    {
+      "id": "b02b35f2-195c-4ebb-b75a-a49a93a96f65",
+      "name": "email_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.88,
+      "metadata": {
+        "privilege_scope": "email_out",
+        "extras": {
+          "canonical_name": "privilege:email_out",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.88,
+          "detail": "PRIVILEGE: email_out \u2014 send_email() tool that POSTs to Azure Logic App to dispatch outbound email to user-specified address",
+          "location": {
+            "path": "enterprise_functions.py",
+            "line": 252
+          }
+        }
+      ]
+    },
+    {
+      "id": "063c96a8-0d7f-4674-9e83-783491d8797d",
+      "name": "network_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "privilege_scope": "network_out",
+        "extras": {
+          "canonical_name": "privilege:network_out",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: network_out \u2014 requests.post() in send_email() and requests.get() calls to OpenWeatherMap API",
+          "location": {
+            "path": "enterprise_functions.py",
+            "line": 277
+          }
+        }
+      ]
     }
   ],
-  "edges": []
+  "edges": [],
+  "notes": "Updated 2026-03-07: added email_out and network_out PRIVILEGE nodes (enterprise_functions.py \u2014 send_email tool and weather API calls)."
 }

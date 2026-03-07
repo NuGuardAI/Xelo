@@ -670,7 +670,32 @@
           }
         }
       ]
+    },
+    {
+      "id": "c56c0056-a189-4ee3-9fcf-b40219a7114d",
+      "name": "email_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "privilege_scope": "email_out",
+        "extras": {
+          "canonical_name": "privilege:email_out",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: email_out \u2014 send_email() tool in customer_service_streaming example; represents agent capability to dispatch outbound email",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/tools/send_email/handler.py",
+            "line": 1
+          }
+        }
+      ]
     }
   ],
-  "edges": []
+  "edges": [],
+  "notes": "Updated 2026-03-07: added email_out PRIVILEGE node (send_email handler in customer_service_streaming tools)."
 }
