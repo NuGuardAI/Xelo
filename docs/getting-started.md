@@ -1,3 +1,5 @@
+<img src="xelo-logo.svg" alt="Xelo" height="40" />
+
 # Getting Started
 
 This guide gets you from install to your first AI SBOM in a few commands.

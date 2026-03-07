@@ -1,3 +1,5 @@
+<img src="xelo-logo.svg" alt="Xelo" height="40" />
+
 # Developer Guide
 
 This guide covers using Xelo as a Python library: extracting AI SBOM data, inspecting results, running toolbox plugins, and serialising output.
