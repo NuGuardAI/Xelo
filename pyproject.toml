@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xelo"
-version = "0.1.5"
+version = "0.2.0"
 description = "AI SBOM generator with portable schema"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -37,24 +37,17 @@ dependencies = [
 Homepage = "https://nuguard.ai"
 
 [project.optional-dependencies]
-# Named extras for targeted installs (all packages are included in the base install).
-ts = [
-  "tree-sitter>=0.23,<1",
-  "tree-sitter-javascript>=0.23,<1",
-  "tree-sitter-typescript>=0.23,<1",
-]
-cdx = [
-  "cyclonedx-bom>=4.4,<8",
-]
 llm = [
   "litellm>=1.40,<2",
 ]
+toolbox = [
+  "python-dotenv>=1.0",
+  "httpx>=0.27",
+]
 all = [
-  "tree-sitter>=0.23,<1",
-  "tree-sitter-javascript>=0.23,<1",
-  "tree-sitter-typescript>=0.23,<1",
-  "cyclonedx-bom>=4.4,<8",
   "litellm>=1.40,<2",
+  "python-dotenv>=1.0",
+  "httpx>=0.27",
 ]
 dev = [
   "pytest>=8.0.0",
@@ -66,17 +59,21 @@ dev = [
   "tree-sitter-javascript>=0.23,<1",
   "tree-sitter-typescript>=0.23,<1",
   "litellm>=1.40,<2",
+  "python-dotenv>=1.0",
+  "httpx>=0.27",
 ]
 
 [project.scripts]
-xelo = "ai_sbom.cli:main"
-ai-sbom = "ai_sbom.cli:main"
+xelo = "xelo.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"ai_sbom" = ["py.typed", "schemas/*.json"]
+"xelo" = [
+  "py.typed",
+  "schemas/*.json",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

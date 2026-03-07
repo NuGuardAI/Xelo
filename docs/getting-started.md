@@ -5,7 +5,7 @@ This guide gets you from install to your first AI-BOM in a few commands.
 ## Prerequisites
 
 - Python `3.11` or newer
-- Optional: `git` on `PATH` (required for `xelo scan repo <url>`)
+- Optional: `git` on `PATH` (required for `xelo scan <url>`)
 - Optional: `cyclonedx-py` CLI for highest-fidelity standard dependency SBOM generation in unified mode
 
 ## Install
@@ -21,7 +21,7 @@ All features (TypeScript AST parsing, CycloneDX output, LLM enrichment) are incl
 Run a local scan and write Xelo-native JSON:
 
 ```bash
-xelo scan path ./my-repo --format json --output sbom.json
+xelo scan ./my-repo --format json --output sbom.json
 ```
 
 CLI alias:
@@ -51,16 +51,16 @@ The generated JSON document includes:
 
 Common environment variables:
 
-- `AISBOM_ENABLE_LLM=true|false`
-- `AISBOM_LLM_MODEL=<litellm-model-string>`
-- `AISBOM_LLM_BUDGET_TOKENS=<int>`
-- `AISBOM_LLM_API_KEY=<api-key>`
-- `AISBOM_LLM_API_BASE=<base-url>`
+- `XELO_LLM=true|false`
+- `XELO_LLM_MODEL=<litellm-model-string>`
+- `XELO_LLM_BUDGET_TOKENS=<int>`
+- `XELO_LLM_API_KEY=<api-key>`
+- `XELO_LLM_API_BASE=<base-url>`
 
 Example enabling LLM enrichment:
 
 ```bash
-xelo scan path ./my-repo --enable-llm --llm-model gpt-4o-mini --output sbom.json
+xelo scan ./my-repo --llm --llm-model gpt-4o-mini --output sbom.json
 ```
 
 ## Supported Frameworks

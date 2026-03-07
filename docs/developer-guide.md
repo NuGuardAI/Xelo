@@ -15,24 +15,24 @@ All features are included.
 Import the public library surface:
 
 ```python
-from xelo import ExtractionConfig, SbomExtractor, SbomSerializer
+from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
 ```
 
 Main types:
 
-- `SbomExtractor`: runs extraction on local paths or git repositories.
-- `ExtractionConfig`: controls scan scope and enrichment behavior.
-- `SbomSerializer`: converts extracted documents to JSON or CycloneDX.
+- `AiSbomExtractor`: runs extraction on local paths or git repositories.
+- `AiSbomConfig`: controls scan scope and enrichment behavior.
+- `AiSbomSerializer`: converts extracted documents to JSON or CycloneDX.
 
 ## Extract From a Git Repository
 
 `extract_from_repo` is the direct library API for remote repositories.
 
 ```python
-from xelo import ExtractionConfig, SbomExtractor, SbomSerializer
+from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
 
-extractor = SbomExtractor()
-config = ExtractionConfig()  # deterministic by default
+extractor = AiSbomExtractor()
+config = AiSbomConfig()  # deterministic by default
 
 doc = extractor.extract_from_repo(
     url="https://github.com/example/project.git",
@@ -40,7 +40,7 @@ doc = extractor.extract_from_repo(
     config=config,
 )
 
-json_text = SbomSerializer.to_json(doc)
+json_text = AiSbomSerializer.to_json(doc)
 print(f"nodes={len(doc.nodes)} edges={len(doc.edges)}")
 ```
 
@@ -50,12 +50,12 @@ If you already have a checked-out repo:
 
 ```python
 from pathlib import Path
-from xelo import ExtractionConfig, SbomExtractor
+from xelo import AiSbomConfig, AiSbomExtractor
 
-extractor = SbomExtractor()
+extractor = AiSbomExtractor()
 doc = extractor.extract_from_path(
     path=Path("/path/to/repo"),
-    config=ExtractionConfig(),
+    config=AiSbomConfig(),
     source_ref="https://github.com/example/project.git",
     branch="main",
 )
@@ -67,9 +67,9 @@ LLM enrichment is off by default in library usage (`enable_llm=False`).
 Enable it explicitly in code:
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="gpt-4o-mini",
     llm_budget_tokens=50_000,
@@ -78,11 +78,11 @@ config = ExtractionConfig(
 
 Useful environment variables:
 
-- `AISBOM_ENABLE_LLM`
-- `AISBOM_LLM_MODEL`
-- `AISBOM_LLM_BUDGET_TOKENS`
-- `AISBOM_LLM_API_KEY`
-- `AISBOM_LLM_API_BASE`
+- `XELO_LLM`
+- `XELO_LLM_MODEL`
+- `XELO_LLM_BUDGET_TOKENS`
+- `XELO_LLM_API_KEY`
+- `XELO_LLM_API_BASE`
 
 Additional provider-native variables can also be used through litellm (for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, Azure OpenAI variables, or AWS credentials for Bedrock).
 
@@ -91,9 +91,9 @@ Additional provider-native variables can also be used through litellm (for examp
 OpenAI:
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="gpt-4o-mini",
 )
@@ -103,9 +103,9 @@ config = ExtractionConfig(
 Gemini (via litellm):
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="gemini/gemini-2.0-flash",
 )
@@ -115,9 +115,9 @@ config = ExtractionConfig(
 Anthropic:
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="anthropic/claude-3-5-sonnet-latest",
 )
@@ -127,9 +127,9 @@ config = ExtractionConfig(
 Azure OpenAI:
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="azure/gpt-4o-mini",
     llm_api_key="your_azure_openai_key",
@@ -141,9 +141,9 @@ config = ExtractionConfig(
 Vertex AI Gemini (direct Vertex path in Xelo):
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="vertex_ai/gemini-2.5-flash",
 )
@@ -153,9 +153,9 @@ config = ExtractionConfig(
 Bedrock Claude:
 
 ```python
-from xelo import ExtractionConfig
+from xelo import AiSbomConfig
 
-config = ExtractionConfig(
+config = AiSbomConfig(
     enable_llm=True,
     llm_model="bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0",
 )
@@ -164,7 +164,7 @@ config = ExtractionConfig(
 
 ## Inspect Extracted Data
 
-Useful fields on the returned `AiBomDocument`:
+Useful fields on the returned `AiSbomDocument`:
 
 ```python
 # Detected AI components
@@ -198,35 +198,35 @@ Xelo detects components from the following frameworks without additional config:
 Xelo-native JSON:
 
 ```python
-from xelo import SbomSerializer
+from xelo import AiSbomSerializer
 
-json_text = SbomSerializer.to_json(doc)
+json_text = AiSbomSerializer.to_json(doc)
 ```
 
 CycloneDX JSON:
 
 ```python
-from xelo import SbomSerializer
+from xelo import AiSbomSerializer
 
-cyclonedx_dict = SbomSerializer.to_cyclonedx(doc)
+cyclonedx_dict = AiSbomSerializer.to_cyclonedx(doc)
 ```
 
 CycloneDX JSON string:
 
 ```python
-from xelo import SbomSerializer
+from xelo import AiSbomSerializer
 
-cyclonedx_text = SbomSerializer.dump_cyclonedx_json(doc)
+cyclonedx_text = AiSbomSerializer.dump_cyclonedx_json(doc)
 ```
 
 ## Minimal End-to-End Example
 
 ```python
 from pathlib import Path
-from xelo import ExtractionConfig, SbomExtractor, SbomSerializer
+from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
 
-extractor = SbomExtractor()
-config = ExtractionConfig()
+extractor = AiSbomExtractor()
+config = AiSbomConfig()
 
 doc = extractor.extract_from_repo(
     url="https://github.com/example/project.git",
@@ -234,9 +234,9 @@ doc = extractor.extract_from_repo(
     config=config,
 )
 
-Path("ai-sbom.json").write_text(SbomSerializer.to_json(doc), encoding="utf-8")
+Path("ai-sbom.json").write_text(AiSbomSerializer.to_json(doc), encoding="utf-8")
 Path("ai-sbom.cdx.json").write_text(
-    SbomSerializer.dump_cyclonedx_json(doc),
+    AiSbomSerializer.dump_cyclonedx_json(doc),
     encoding="utf-8",
 )
 ```

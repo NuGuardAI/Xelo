@@ -14,7 +14,7 @@ This documentation set explains how to install, run, and develop Xelo, an open-s
 | --- | --- | --- |
 | [Getting Started](./getting-started.md) | End users | Install, first scan, understanding output fields, supported frameworks, env basics |
 | [CLI Reference](./cli-reference.md) | End users / operators | Full command and flag matrix for `xelo` and `ai-sbom` |
-| [Developer Guide](./developer-guide.md) | Application developers | Python library API, `SbomExtractor`, `ExtractionConfig`, `doc.deps`, `doc.summary`, provider config examples |
+| [Developer Guide](./developer-guide.md) | Application developers | Python library API, `AiSbomExtractor`, `AiSbomConfig`, `doc.deps`, `doc.summary`, provider config examples |
 | [Troubleshooting](./troubleshooting.md) | End users / contributors | Common errors, diagnostics, and remediation steps |
 | [Documentation Changelog](./CHANGELOG.md) | Maintainers / contributors | Track user-facing docs changes per release |
 

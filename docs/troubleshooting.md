@@ -6,7 +6,7 @@ Use this guide to diagnose and fix common Xelo CLI issues.
 
 | Symptom | Likely Cause | Fix |
 | --- | --- | --- |
-| `error: path not found: ...` | Scan target path does not exist | Verify path and rerun `xelo scan path <existing-dir> ...` |
+| `error: path not found: ...` | Scan target path does not exist | Verify path and rerun `xelo scan <existing-dir> ...` |
 | `error: not a directory: ...` | Provided path points to file, not directory | Use a directory path for `scan path` |
 | `error: cannot write output file: ...` | Missing permissions / invalid output path | Use writable directory and check permissions |
 | `error: I/O error writing ...` | Filesystem or path issue | Check disk/path validity and retry |
@@ -35,13 +35,13 @@ Check command usage:
 ```bash
 xelo --help
 xelo scan --help
-xelo scan path --help
+xelo scan --help
 ```
 
 Retry unified scan:
 
 ```bash
-xelo scan path ./my-repo --format unified --output unified-bom.json
+xelo scan ./my-repo --format unified --output unified-bom.json
 ```
 
 ## Safe Support Bundle
@@ -56,7 +56,7 @@ When reporting an issue, include:
 
 Before sharing logs or `.env` snippets:
 
-- Remove `AISBOM_LLM_API_KEY` and any provider API keys
+- Remove `XELO_LLM_API_KEY` and any provider API keys
 - Remove internal URLs/tokens/secrets
 
 ## Escalation

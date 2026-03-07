@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from xelo import AiBomDocument, ExtractionConfig, SbomExtractor, SbomSerializer
+from xelo import AiSbomDocument, AiSbomConfig, AiSbomExtractor, AiSbomSerializer
 
 
 def test_xelo_public_api_exports() -> None:
-    assert AiBomDocument is not None
-    assert ExtractionConfig is not None
-    assert SbomExtractor is not None
-    assert SbomSerializer is not None
+    assert AiSbomDocument is not None
+    assert AiSbomConfig is not None
+    assert AiSbomExtractor is not None
+    assert AiSbomSerializer is not None

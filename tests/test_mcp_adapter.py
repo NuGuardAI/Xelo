@@ -19,10 +19,10 @@ from typing import Any
 
 import pytest
 
-from ai_sbom.adapters.base import RelationshipHint
-from ai_sbom.adapters.python.mcp_server import MCPServerAdapter, _auth_kind, _clean
-from ai_sbom.ast_parser import parse
-from ai_sbom.types import ComponentType
+from xelo.adapters.base import RelationshipHint
+from xelo.adapters.python.mcp_server import MCPServerAdapter, _auth_kind, _clean
+from xelo.ast_parser import parse
+from xelo.types import ComponentType
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -675,7 +675,7 @@ class TestCombined:
         assert len(calls) == n
 
     def test_output_types_are_component_detections(self) -> None:
-        from ai_sbom.adapters.base import ComponentDetection
+        from xelo.adapters.base import ComponentDetection
 
         code = (
             "from fastmcp import FastMCP\nmcp = FastMCP('type-check')\n@mcp.tool()\ndef fn(): ...\n"
