@@ -22,6 +22,7 @@ Both adapters populate the following node metadata keys:
 ``source``
     ``"sql_schema"`` or ``"python_model"`` — indicates detection origin.
 """
+
 from __future__ import annotations
 
 import ast
@@ -40,25 +41,49 @@ from xelo.types import ComponentType
 
 _FIELD_PATTERNS: list[tuple[re.Pattern[str], list[str]]] = [
     # ── Identity ────────────────────────────────────────────────────────────
-    (re.compile(r"\b(?:full_?name|first_?name|last_?name|display_?name|(?<![a-z])name(?![a-z]))\b"), ["PII"]),
+    (
+        re.compile(
+            r"\b(?:full_?name|first_?name|last_?name|display_?name|(?<![a-z])name(?![a-z]))\b"
+        ),
+        ["PII"],
+    ),
     (re.compile(r"\bemail(?:_address)?\b"), ["PII"]),
     (re.compile(r"\b(?:phone(?:_number)?|contact_?number|mobile|telephone|fax)\b"), ["PII"]),
-    (re.compile(r"\b(?:address|street(?:_address)?|postal_?code|zip(?:_code)?|postcode)\b"), ["PII"]),
+    (
+        re.compile(r"\b(?:address|street(?:_address)?|postal_?code|zip(?:_code)?|postcode)\b"),
+        ["PII"],
+    ),
     (re.compile(r"\b(?:date_?of_?birth|dob|birth_?date|birthdate)\b"), ["PII"]),
     (re.compile(r"\b(?:gender|sex)\b"), ["PII"]),
     (re.compile(r"\bmarital_?status\b"), ["PII"]),
     (re.compile(r"\b(?:nationality|ethnicity|race)\b"), ["PII"]),
     # ── Government / health IDs ──────────────────────────────────────────────
-    (re.compile(r"\b(?:ssn|social_?security|national_?id|passport|driver_?licen[sc]e|licen[sc]e_?number|tax_?id|npi)\b"), ["PII"]),
-    (re.compile(r"\b(?:medical_?record_?number|mrn|record_?number|patient_?id|health_?id)\b"), ["PHI", "PII"]),
+    (
+        re.compile(
+            r"\b(?:ssn|social_?security|national_?id|passport|driver_?licen[sc]e|licen[sc]e_?number|tax_?id|npi)\b"
+        ),
+        ["PII"],
+    ),
+    (
+        re.compile(r"\b(?:medical_?record_?number|mrn|record_?number|patient_?id|health_?id)\b"),
+        ["PHI", "PII"],
+    ),
     # ── Financial ───────────────────────────────────────────────────────────
-    (re.compile(r"\b(?:credit_?card|card_?number|cvv|expiry|bank_?account|account_?number|routing_?number|iban|swift)\b"), ["PII"]),
+    (
+        re.compile(
+            r"\b(?:credit_?card|card_?number|cvv|expiry|bank_?account|account_?number|routing_?number|iban|swift)\b"
+        ),
+        ["PII"],
+    ),
     (re.compile(r"\b(?:income|salary|wage)\b"), ["PII"]),
     # ── Technical / auth PII ────────────────────────────────────────────────
     (re.compile(r"\b(?:ip_?address|mac_?address|device_?id|cookie)\b"), ["PII"]),
     (re.compile(r"\b(?:password|passwd|secret(?:_key)?|private_?key|credential)\b"), ["PII"]),
     # ── HIPAA PHI (clinical) ─────────────────────────────────────────────────
-    (re.compile(r"\b(?:diagnosis|diagnoses|past_?diagnos\w*|medical_?condition|condition)\b"), ["PHI"]),
+    (
+        re.compile(r"\b(?:diagnosis|diagnoses|past_?diagnos\w*|medical_?condition|condition)\b"),
+        ["PHI"],
+    ),
     (re.compile(r"\b(?:prescription|medication|drug|treatment|procedure|therapy)\b"), ["PHI"]),
     (re.compile(r"\b(?:surger(?:y|ies|i\w*)|operation)\b"), ["PHI"]),
     (re.compile(r"\b(?:hospital_?admissions?|admissions?|discharge)\b"), ["PHI"]),
@@ -103,7 +128,7 @@ _CREATE_TABLE_RE = re.compile(
     re.IGNORECASE,
 )
 _COLUMN_LINE_RE = re.compile(r'^\s*"?(\w+)"?\s+\w')
-_CONSTRAINT_RE  = re.compile(
+_CONSTRAINT_RE = re.compile(
     r"^\s*(?:PRIMARY|FOREIGN|UNIQUE|CHECK|INDEX|KEY|CONSTRAINT)\b",
     re.IGNORECASE,
 )
@@ -117,15 +142,15 @@ class DataClassificationSQLAdapter:
     directly for ``.sql`` files.
     """
 
-    name     = "data_classification_sql"
-    priority = 5   # higher priority than AI framework adapters
+    name = "data_classification_sql"
+    priority = 5  # higher priority than AI framework adapters
 
     def scan(self, content: str, file_path: str) -> list[ComponentDetection]:
         detections: list[ComponentDetection] = []
 
         for table_match in _CREATE_TABLE_RE.finditer(content):
             table_name = table_match.group(1)
-            start      = table_match.end()
+            start = table_match.end()
 
             # Walk forward to find the matching closing parenthesis
             depth, pos = 1, start
@@ -155,28 +180,30 @@ class DataClassificationSQLAdapter:
                 continue
 
             all_labels = sorted({lbl for lbls in classified.values() for lbl in lbls})
-            line_num   = content[: table_match.start()].count("\n") + 1
+            line_num = content[: table_match.start()].count("\n") + 1
 
-            detections.append(ComponentDetection(
-                component_type=ComponentType.DATASTORE,
-                canonical_name=f"datastore:sql:{table_name.lower()}",
-                display_name=table_name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.95,
-                metadata={
-                    "adapter":            self.name,
-                    "table_name":         table_name,
-                    "source":             "sql_schema",
-                    "data_classification": all_labels,
-                    "classified_fields":  classified,
-                    "all_columns":        col_names,
-                },
-                file_path=file_path,
-                line=line_num,
-                snippet=table_match.group(0)[:500],
-                evidence_kind="ast_instantiation",
-            ))
+            detections.append(
+                ComponentDetection(
+                    component_type=ComponentType.DATASTORE,
+                    canonical_name=f"datastore:sql:{table_name.lower()}",
+                    display_name=table_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.95,
+                    metadata={
+                        "adapter": self.name,
+                        "table_name": table_name,
+                        "source": "sql_schema",
+                        "data_classification": all_labels,
+                        "classified_fields": classified,
+                        "all_columns": col_names,
+                    },
+                    file_path=file_path,
+                    line=line_num,
+                    snippet=table_match.group(0)[:500],
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         return detections
 
@@ -185,19 +212,26 @@ class DataClassificationSQLAdapter:
 # Python model adapter (Pydantic / SQLAlchemy / dataclasses)
 # ---------------------------------------------------------------------------
 
-_PYDANTIC_BASES    = {"BaseModel", "SQLModel"}
-_SQLALCHEMY_BASES  = {"Base", "DeclarativeBase", "DeclarativeMeta", "Model", "db.Model"}
-_DATACLASS_DECS    = {"dataclass"}
-_MODEL_IMPORTS     = ["pydantic", "sqlalchemy", "sqlmodel", "dataclasses", "flask_sqlalchemy",
-                      "peewee", "tortoise"]
+_PYDANTIC_BASES = {"BaseModel", "SQLModel"}
+_SQLALCHEMY_BASES = {"Base", "DeclarativeBase", "DeclarativeMeta", "Model", "db.Model"}
+_DATACLASS_DECS = {"dataclass"}
+_MODEL_IMPORTS = [
+    "pydantic",
+    "sqlalchemy",
+    "sqlmodel",
+    "dataclasses",
+    "flask_sqlalchemy",
+    "peewee",
+    "tortoise",
+]
 
 
 class DataClassificationPythonAdapter(FrameworkAdapter):
     """Detects PII/PHI fields in Pydantic, SQLAlchemy ORM, and ``@dataclass`` models."""
 
-    name             = "data_classification_py"
-    priority         = 5
-    handles_imports  = _MODEL_IMPORTS
+    name = "data_classification_py"
+    priority = 5
+    handles_imports = _MODEL_IMPORTS
 
     def extract(
         self,
@@ -252,24 +286,26 @@ class DataClassificationPythonAdapter(FrameworkAdapter):
 
             all_labels = sorted({lbl for lbls in classified.values() for lbl in lbls})
 
-            detections.append(ComponentDetection(
-                component_type=ComponentType.DATASTORE,
-                canonical_name=f"datastore:model:{node.name.lower()}",
-                display_name=node.name,
-                adapter_name=self.name,
-                priority=self.priority,
-                confidence=0.95,
-                metadata={
-                    "adapter":             self.name,
-                    "model_name":          node.name,
-                    "source":              "python_model",
-                    "data_classification": all_labels,
-                    "classified_fields":   classified,
-                },
-                file_path=file_path,
-                line=node.lineno,
-                snippet=f"class {node.name}",
-                evidence_kind="ast_instantiation",
-            ))
+            detections.append(
+                ComponentDetection(
+                    component_type=ComponentType.DATASTORE,
+                    canonical_name=f"datastore:model:{node.name.lower()}",
+                    display_name=node.name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.95,
+                    metadata={
+                        "adapter": self.name,
+                        "model_name": node.name,
+                        "source": "python_model",
+                        "data_classification": all_labels,
+                        "classified_fields": classified,
+                    },
+                    file_path=file_path,
+                    line=node.lineno,
+                    snippet=f"class {node.name}",
+                    evidence_kind="ast_instantiation",
+                )
+            )
 
         return detections

@@ -63,6 +63,7 @@ Output ``details`` schema::
       ]
     }
 """
+
 from __future__ import annotations
 
 import logging
@@ -148,13 +149,13 @@ class AtlasAnnotatorPlugin(ToolPlugin):
             tool=self.name,
             message=message,
             details={
-                "atlas_version":        ATLAS_VERSION,
-                "basis":                "static",
-                "total_findings":       len(all_findings),
+                "atlas_version": ATLAS_VERSION,
+                "basis": "static",
+                "total_findings": len(all_findings),
                 "techniques_identified": technique_ids,
-                "tactics_covered":      tactic_names,
+                "tactics_covered": tactic_names,
                 "confidence_breakdown": confidence_breakdown,
-                "findings":             all_findings,
+                "findings": all_findings,
             },
         )
 
@@ -180,7 +181,8 @@ class AtlasAnnotatorPlugin(ToolPlugin):
                 finding["atlas"] = _build_atlas_block(technique_tuples)
                 _log.debug(
                     "annotated %s → %d ATLAS technique(s)",
-                    rule_id, len(technique_tuples),
+                    rule_id,
+                    len(technique_tuples),
                 )
             else:
                 # finding has no mapping; include without an atlas block
@@ -203,8 +205,7 @@ class AtlasAnnotatorPlugin(ToolPlugin):
         # Build fast lookup structures
         nodes_by_id = {n.get("id", ""): n for n in nodes}
         node_types_by_id: dict[str, str] = {
-            n.get("id", ""): (n.get("component_type") or "").upper()
-            for n in nodes
+            n.get("id", ""): (n.get("component_type") or "").upper() for n in nodes
         }
         # adjacency: source → set of target ids (directed)
         adjacency: dict[str, set[str]] = {}
@@ -218,18 +219,12 @@ class AtlasAnnotatorPlugin(ToolPlugin):
         for nid, ntype in node_types_by_id.items():
             type_sets.setdefault(ntype, set()).add(nid)
 
-        findings += self._check_nc001_external_model_no_hash(
-            nodes, type_sets
-        )
-        findings += self._check_nc002_unguarded_datastore(
-            type_sets, adjacency, node_types_by_id
-        )
+        findings += self._check_nc001_external_model_no_hash(nodes, type_sets)
+        findings += self._check_nc002_unguarded_datastore(type_sets, adjacency, node_types_by_id)
         findings += self._check_nc003_model_deployment_no_auth(
             type_sets, adjacency, node_types_by_id, nodes_by_id
         )
-        findings += self._check_nc004_outbound_agent_tool(
-            nodes, type_sets
-        )
+        findings += self._check_nc004_outbound_agent_tool(nodes, type_sets)
 
         return findings
 
@@ -246,7 +241,9 @@ class AtlasAnnotatorPlugin(ToolPlugin):
         for nid in type_sets.get("MODEL", set()):
             node = next((n for n in nodes if n.get("id") == nid), {})
             name = node.get("name", nid)
-            provider = (node.get("provider") or node.get("metadata", {}).get("provider") or "").lower()
+            provider = (
+                node.get("provider") or node.get("metadata", {}).get("provider") or ""
+            ).lower()
             extras = (node.get("metadata") or {}).get("extras") or {}
             has_external = any(p in provider for p in EXTERNAL_PROVIDERS)
             has_hash = bool(extras.get("integrity_hash"))
@@ -302,7 +299,8 @@ class AtlasAnnotatorPlugin(ToolPlugin):
                 affected.extend(reached_ds)
                 _log.debug(
                     "NC-002: %s can reach datastore(s) %s without guardrail",
-                    src, reached_ds,
+                    src,
+                    reached_ds,
                 )
 
         affected = list(dict.fromkeys(affected))  # deduplicate, preserve order
@@ -397,6 +395,7 @@ class AtlasAnnotatorPlugin(ToolPlugin):
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _build_atlas_block(
     technique_tuples: list[tuple[str, str]],
 ) -> dict[str, Any]:
@@ -414,16 +413,18 @@ def _build_atlas_block(
             for mid in cast(list[str], tech.get("mitigation_ids") or [])
             if mid in MITIGATIONS
         ]
-        techniques.append({
-            "technique_id":   tid,
-            "technique_name": tech["technique_name"],
-            "tactic_id":      tactic_id,
-            "tactic_name":    tactic.get("tactic_name", ""),
-            "atlas_url":      tech["technique_url"],
-            "confidence":     confidence,
-            "basis":          "static",
-            "mitigations":    mitigation_list,
-        })
+        techniques.append(
+            {
+                "technique_id": tid,
+                "technique_name": tech["technique_name"],
+                "tactic_id": tactic_id,
+                "tactic_name": tactic.get("tactic_name", ""),
+                "atlas_url": tech["technique_url"],
+                "confidence": confidence,
+                "basis": "static",
+                "mitigations": mitigation_list,
+            }
+        )
     return {"atlas_version": ATLAS_VERSION, "techniques": techniques}
 
 
@@ -433,18 +434,17 @@ def _native_finding(
 ) -> dict[str, Any]:
     """Build an annotated finding dict for a native ATLAS check."""
     technique_tuples: list[tuple[str, str]] = [
-        (tid, conf)
-        for tid, conf in cast(list[tuple[str, str]], check.get("techniques") or [])
+        (tid, conf) for tid, conf in cast(list[tuple[str, str]], check.get("techniques") or [])
     ]
     return {
-        "rule_id":     check["check_id"],
-        "severity":    _max_severity(technique_tuples),
-        "title":       check["title"],
+        "rule_id": check["check_id"],
+        "severity": _max_severity(technique_tuples),
+        "title": check["title"],
         "description": check["description"],
-        "affected":    affected,
+        "affected": affected,
         "remediation": check["remediation"],
-        "source":      "atlas-native",
-        "atlas":       _build_atlas_block(technique_tuples),
+        "source": "atlas-native",
+        "atlas": _build_atlas_block(technique_tuples),
     }
 
 

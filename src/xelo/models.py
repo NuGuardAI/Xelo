@@ -33,7 +33,9 @@ class Evidence(BaseModel):
         le=1.0,
         description="Evidence-level confidence [0, 1]",
     )
-    detail: str = Field(description="Detection description: '<adapter>: <snippet>' (up to 500 chars for most adapters; full content preserved for PROMPT nodes)")
+    detail: str = Field(
+        description="Detection description: '<adapter>: <snippet>' (up to 500 chars for most adapters; full content preserved for PROMPT nodes)"
+    )
     location: SourceLocation
 
 
