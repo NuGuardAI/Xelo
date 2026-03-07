@@ -1,0 +1,229 @@
+{
+  "policy_name": "NIST AI RMF",
+  "version": "1.0",
+  "description": "NIST Artificial Intelligence Risk Management Framework - Core Functions and Categories",
+  "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+  "controls": [
+    {
+      "control_id": "NIST-GOVERN-1",
+      "name": "Governance Framework",
+      "description": "Policies, processes, and procedures for AI risk management are established and communicated.",
+      "category": "GOVERN",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No AI-specific governance policies",
+        "Missing accountability structure",
+        "No documented risk management procedures"
+      ],
+      "typical_mitigations": [
+        "Establish AI governance committee",
+        "Document AI policies",
+        "Define accountability chain"
+      ]
+    },
+    {
+      "control_id": "NIST-GOVERN-2",
+      "name": "Risk Management Culture",
+      "description": "Organizational culture promotes AI risk management practices and awareness.",
+      "category": "GOVERN",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No training on AI risks",
+        "Siloed risk management",
+        "Missing stakeholder engagement"
+      ],
+      "typical_mitigations": [
+        "AI risk awareness training",
+        "Cross-functional risk reviews",
+        "Stakeholder communication"
+      ]
+    },
+    {
+      "control_id": "NIST-GOVERN-3",
+      "name": "Workforce Competency",
+      "description": "Personnel have the knowledge, skills, and abilities to manage AI risks.",
+      "category": "GOVERN",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Insufficient AI expertise",
+        "No AI-specific training programs",
+        "Missing role definitions"
+      ],
+      "typical_mitigations": [
+        "AI skills training",
+        "Hiring AI specialists",
+        "Role-based competency frameworks"
+      ]
+    },
+    {
+      "control_id": "NIST-MAP-1",
+      "name": "Context Establishment",
+      "description": "AI system context including purpose, stakeholders, and requirements is documented.",
+      "category": "MAP",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Undefined AI system purpose",
+        "Missing stakeholder analysis",
+        "No requirements documentation"
+      ],
+      "typical_mitigations": [
+        "System purpose documentation",
+        "Stakeholder mapping",
+        "Requirements specification"
+      ]
+    },
+    {
+      "control_id": "NIST-MAP-2",
+      "name": "Impact Assessment",
+      "description": "Potential positive and negative impacts of AI system are categorized and assessed.",
+      "category": "MAP",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No impact assessment conducted",
+        "Missing harm analysis",
+        "Undocumented benefits vs risks"
+      ],
+      "typical_mitigations": [
+        "Impact assessment documentation",
+        "Harm taxonomy analysis",
+        "Risk-benefit analysis"
+      ]
+    },
+    {
+      "control_id": "NIST-MAP-3",
+      "name": "Stakeholder Engagement",
+      "description": "Internal and external stakeholders are engaged in AI risk management throughout lifecycle.",
+      "category": "MAP",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No user feedback mechanisms",
+        "Missing community input",
+        "Siloed development"
+      ],
+      "typical_mitigations": [
+        "User feedback loops",
+        "Community engagement",
+        "Cross-team collaboration"
+      ]
+    },
+    {
+      "control_id": "NIST-MEASURE-1",
+      "name": "Risk Identification",
+      "description": "AI risks and impacts are identified and documented based on assessments.",
+      "category": "MEASURE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No systematic risk identification",
+        "Missing threat modeling",
+        "Undocumented vulnerabilities"
+      ],
+      "typical_mitigations": [
+        "Risk assessment process",
+        "Threat modeling",
+        "Vulnerability documentation"
+      ]
+    },
+    {
+      "control_id": "NIST-MEASURE-2",
+      "name": "Performance Metrics",
+      "description": "Metrics, methods, and tools for measuring AI system trustworthiness are identified and applied.",
+      "category": "MEASURE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No accuracy metrics",
+        "Missing fairness evaluation",
+        "No reliability testing"
+      ],
+      "typical_mitigations": [
+        "Performance dashboards",
+        "Fairness metrics",
+        "Reliability testing"
+      ]
+    },
+    {
+      "control_id": "NIST-MEASURE-3",
+      "name": "Testing and Validation",
+      "description": "AI systems are tested and validated for trustworthiness characteristics.",
+      "category": "MEASURE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "Insufficient testing",
+        "No adversarial testing",
+        "Missing validation procedures"
+      ],
+      "typical_mitigations": [
+        "Comprehensive testing",
+        "Red teaming",
+        "Validation protocols"
+      ]
+    },
+    {
+      "control_id": "NIST-MANAGE-1",
+      "name": "Risk Prioritization",
+      "description": "AI risks are prioritized based on impact and likelihood assessments.",
+      "category": "MANAGE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No risk prioritization",
+        "Missing risk ranking",
+        "Unclear risk ownership"
+      ],
+      "typical_mitigations": [
+        "Risk prioritization matrix",
+        "Risk scoring",
+        "Ownership assignment"
+      ]
+    },
+    {
+      "control_id": "NIST-MANAGE-2",
+      "name": "Risk Treatment",
+      "description": "Strategies to address AI risks are developed, planned, and implemented.",
+      "category": "MANAGE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No mitigation plans",
+        "Missing risk response strategies",
+        "Undocumented controls"
+      ],
+      "typical_mitigations": [
+        "Mitigation planning",
+        "Control implementation",
+        "Response procedures"
+      ]
+    },
+    {
+      "control_id": "NIST-MANAGE-3",
+      "name": "Continuous Monitoring",
+      "description": "AI system is monitored for risks over time with feedback integration.",
+      "category": "MANAGE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No runtime monitoring",
+        "Missing alert systems",
+        "No feedback loops"
+      ],
+      "typical_mitigations": [
+        "Monitoring dashboards",
+        "Alerting systems",
+        "Feedback integration"
+      ]
+    },
+    {
+      "control_id": "NIST-MANAGE-4",
+      "name": "Incident Response",
+      "description": "Processes for responding to AI system incidents and failures are established.",
+      "category": "MANAGE",
+      "ai_applicable": true,
+      "typical_gaps": [
+        "No incident response plan",
+        "Missing escalation procedures",
+        "No post-incident review"
+      ],
+      "typical_mitigations": [
+        "Incident response plan",
+        "Escalation procedures",
+        "Post-incident analysis"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Xelo Dev",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": "false",
+      "upgradePackages": "true",
+      "username": "root",
+      "packages": "git,curl"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "overrideCommand": true,
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
+        "python.linting.enabled": false,
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && python -m pip install --upgrade pip && python -m pip install -e '.[dev]' && npm install -g @anthropic-ai/claude-code",
+  "remoteUser": "root"
+}

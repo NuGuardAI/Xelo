@@ -1,4 +1,4 @@
--- Patient Portal schema — used as a Velo data-classification test fixture.
+-- Patient Portal schema — used as a Xelo data-classification test fixture.
 
 CREATE TABLE IF NOT EXISTS users (
     id           SERIAL PRIMARY KEY,

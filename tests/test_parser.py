@@ -1,13 +1,12 @@
-"""Unit tests for ai_sbom.ast_parser.
+"""Unit tests for xelo.ast_parser.
 
 Tests validate that the stdlib-ast-based parser correctly extracts imports,
 class instantiations, function calls, and string literals from Python source.
 """
 from __future__ import annotations
 
-import pytest
 
-from ai_sbom.ast_parser import ParseResult, parse
+from xelo.ast_parser import ParseResult, parse
 
 
 class TestImports:
@@ -148,7 +147,7 @@ def my_agent():
     prompt = "You are an expert research assistant with deep knowledge of AI systems."
 '''
         result = parse(src)
-        lit = next(l for l in result.string_literals if "research assistant" in l.value)
+        lit = next(s for s in result.string_literals if "research assistant" in s.value)
         assert lit.context == "my_agent"
 
 

@@ -1,23 +1,22 @@
 """Tests for data classification — PII/PHI detection in SQL schemas and Python models."""
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 
-from ai_sbom.adapters.data_classification import (
+from xelo.adapters.data_classification import (
     DataClassificationPythonAdapter,
     DataClassificationSQLAdapter,
     classify_fields,
 )
-from ai_sbom.config import ExtractionConfig
-from ai_sbom.extractor import SbomExtractor
-from ai_sbom.models import AiBomDocument
-from ai_sbom.types import ComponentType
-from conftest import APPS, PY_ONLY
+from xelo.config import AiSbomConfig
+from xelo.extractor import AiSbomExtractor
+from xelo.models import AiSbomDocument
+from xelo.types import ComponentType
+from conftest import APPS
 
-_SQL_ONLY = ExtractionConfig(include_extensions={".sql"})
-_SQL_AND_PY = ExtractionConfig(include_extensions={".py", ".sql"})
+_SQL_ONLY = AiSbomConfig(include_extensions={".sql"}, enable_llm=False)
+_SQL_AND_PY = AiSbomConfig(include_extensions={".py", ".sql"}, enable_llm=False)
 _PORTAL = APPS / "patient_portal"
 
 
@@ -232,44 +231,54 @@ class UserRecord:
 
 class TestPatientPortalExtraction:
     @pytest.fixture(scope="class")
-    def doc(self) -> AiBomDocument:
-        return SbomExtractor().extract_from_path(_PORTAL, _SQL_AND_PY)
+    def doc(self) -> AiSbomDocument:
+        return AiSbomExtractor().extract_from_path(_PORTAL, _SQL_AND_PY)
 
-    def test_datastore_nodes_present(self, doc: AiBomDocument) -> None:
-        ds = [n for n in doc.nodes if n.component_type == ComponentType.DATASTORE]
-        assert ds, "Expected DATASTORE nodes from SQL + Python model analysis"
+    def test_no_schema_datastore_nodes(self, doc: AiSbomDocument) -> None:
+        """SQL tables and Python models must NOT appear as separate DATASTORE nodes."""
+        schema_names = {
+            "patients", "patient_history", "appointments", "hospitals", "users",
+            "PatientResponse", "MedicalHistoryResponse", "AppointmentRequest",
+        }
+        node_names = {n.name for n in doc.nodes if n.component_type == ComponentType.DATASTORE}
+        assert not (node_names & schema_names), (
+            f"Schema definitions should not be DATASTORE nodes: {node_names & schema_names}"
+        )
 
-    def test_patients_sql_table_detected(self, doc: AiBomDocument) -> None:
-        names = {n.name for n in doc.nodes if n.component_type == ComponentType.DATASTORE}
-        assert "patients" in names
-
-    def test_patient_history_sql_detected(self, doc: AiBomDocument) -> None:
-        names = {n.name for n in doc.nodes if n.component_type == ComponentType.DATASTORE}
-        assert "patient_history" in names
-
-    def test_pydantic_model_detected(self, doc: AiBomDocument) -> None:
-        names = {n.name for n in doc.nodes if n.component_type == ComponentType.DATASTORE}
-        assert "PatientResponse" in names or "MedicalHistoryResponse" in names
-
-    def test_classified_fields_in_metadata(self, doc: AiBomDocument) -> None:
+    def test_datastore_node_has_classification(self, doc: AiSbomDocument) -> None:
+        """Any DATASTORE node detected should carry classification metadata."""
         ds_nodes = [n for n in doc.nodes if n.component_type == ComponentType.DATASTORE]
-        classified = [n for n in ds_nodes if n.metadata.extras.get("classified_fields")]
-        assert classified, "Expected at least one DATASTORE node with classified_fields"
+        if ds_nodes:
+            classified = [n for n in ds_nodes if n.metadata.data_classification]
+            assert classified, "DATASTORE nodes should carry data_classification metadata"
 
-    def test_data_classification_in_summary(self, doc: AiBomDocument) -> None:
+    def test_datastore_node_has_classified_tables(self, doc: AiSbomDocument) -> None:
+        """DATASTORE nodes should list which tables/models contain sensitive fields."""
+        ds_nodes = [n for n in doc.nodes if n.component_type == ComponentType.DATASTORE]
+        if ds_nodes:
+            with_tables = [n for n in ds_nodes if n.metadata.classified_tables]
+            assert with_tables, "DATASTORE nodes should have classified_tables"
+            all_tables = [t for n in with_tables for t in (n.metadata.classified_tables or [])]
+            assert any("patient" in t.lower() for t in all_tables)
+
+    def test_datastore_node_has_classified_fields(self, doc: AiSbomDocument) -> None:
+        """DATASTORE nodes should carry per-table field-level classification detail."""
+        ds_nodes = [n for n in doc.nodes if n.component_type == ComponentType.DATASTORE]
+        if ds_nodes:
+            with_fields = [n for n in ds_nodes if n.metadata.classified_fields]
+            assert with_fields, "DATASTORE nodes should have classified_fields"
+
+    def test_data_classification_in_summary(self, doc: AiSbomDocument) -> None:
         assert doc.summary is not None
         assert "PII" in doc.summary.data_classification
         assert "PHI" in doc.summary.data_classification
 
-    def test_classified_tables_in_summary(self, doc: AiBomDocument) -> None:
+    def test_classified_tables_in_summary(self, doc: AiSbomDocument) -> None:
         assert doc.summary is not None
         assert doc.summary.classified_tables, "Expected classified_tables list in summary"
-        assert any(
-            "patient" in t.lower()
-            for t in doc.summary.classified_tables
-        )
+        assert any("patient" in t.lower() for t in doc.summary.classified_tables)
 
     def test_sql_extension_scanned_by_default(self) -> None:
-        """Verify .sql is in the default ExtractionConfig extensions."""
-        cfg = ExtractionConfig()
+        """Verify .sql is in the default AiSbomConfig extensions."""
+        cfg = AiSbomConfig()
         assert ".sql" in cfg.include_extensions

@@ -1,0 +1,6 @@
+* text=auto eol=lf
+
+# Windows-native scripts keep CRLF for compatibility.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+

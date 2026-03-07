@@ -1,0 +1,3106 @@
+{
+  "total_repos": 21,
+  "overall_precision": 0.0,
+  "overall_recall": 0.0,
+  "overall_f1": 0.0,
+  "total_true_positives": 0,
+  "total_false_positives": 0,
+  "total_false_negatives": 147,
+  "by_repo": {
+    "Healthcare-voice-agent": {
+      "repo_name": "Healthcare-voice-agent",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 11,
+      "by_type": {
+        "PROMPT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "normalize_agent",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 207,
+          "line_end": 207,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "langgraph: add_node('normalize_agent', normalize_agent)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "prognosis_search_agent",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 208,
+          "line_end": 208,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "langgraph: add_node('prognosis_search_agent', prognosis_search_agent)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "specialist_lookup_agent",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 209,
+          "line_end": 209,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "langgraph: add_node('specialist_lookup_agent', specialist_lookup_agent)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "recommend_specialists_agent",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 210,
+          "line_end": 210,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "langgraph: add_node('recommend_specialists_agent', recommend_specialists_agent)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "fetch_doctor_details_agent",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 211,
+          "line_end": 211,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "langgraph: add_node('fetch_doctor_details_agent', fetch_doctor_details_agent)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 31,
+          "line_end": 31,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ChatOpenAI(model='gpt-4', temperature=0.2, openai_api_key=...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-2.0-flash",
+          "file_path": "src/gemini.js",
+          "line_start": 14,
+          "line_end": 14,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ai.models.generateContent({model: 'gemini-2.0-flash', ...})"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "Medical Triage System Instruction",
+          "file_path": "src/gemini.js",
+          "line_start": 20,
+          "line_end": 20,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "systemInstruction: 'You are a helpful AI Medical Triage Assistant. Your goal is to gather a clear list of symptoms...'"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "Normalize Agent Instruction",
+          "file_path": "backend/langgraph_llm_agents.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "HumanMessage: 'You are a medical assistant. Normalize the following patient symptom phrases into a list of clinical symptom terms...'"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "postgres",
+          "file_path": "docker-compose.yml",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "docker-compose.yml: image: postgres:15-alpine"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "src/gemini.js",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY })",
+            "ChatOpenAI(openai_api_key=os.getenv('OPENAI_API_KEY'))",
+            "@app.post('/login') with email+password credentials"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 145,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "IT-Service-Desk-Agent": {
+      "repo_name": "IT-Service-Desk-Agent",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 6,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "enterprise_agent",
+          "file_path": "infra/azure-deployment/main.py",
+          "line_start": 58,
+          "line_end": 58,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "Agent loaded from Azure Foundry by AGENT_NAME env var"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "README.md",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o hosted on Azure AI Foundry (per README)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "BingGroundingTool",
+          "file_path": "infra/azure-deployment/main.py",
+          "line_start": 31,
+          "line_end": 31,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "from azure.ai.projects.models import BingGroundingTool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "fetch_weather",
+          "file_path": "enterprise_functions.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "enterprise_fns includes fetch_weather"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "send_email",
+          "file_path": "enterprise_functions.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "enterprise_fns includes send_email"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "infra/azure-deployment/main.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "credential = DefaultAzureCredential()"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 64,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "OpenBB-finance": {
+      "repo_name": "OpenBB-finance",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 2,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4.1",
+          "file_path": "assets/scripts/generate_extension_data.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4.1 referenced in OpenBB platform AI component"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "cli/openbb_cli/argparse_translator/argparse_argument.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "API keys for financial data providers (OPENBB_API_KEY etc)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 5019,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "autogen-basic": {
+      "repo_name": "autogen-basic",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 8,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "writer_agent",
+          "file_path": "python/samples/core_distributed-group-chat/config.yaml",
+          "line_start": 8,
+          "line_end": 8,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "writer_agent: Writer for creating text content in distributed group chat"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "editor_agent",
+          "file_path": "python/samples/core_distributed-group-chat/config.yaml",
+          "line_start": 14,
+          "line_end": 14,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "editor_agent: Editor for planning and reviewing content in distributed group chat"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "assistant_agent",
+          "file_path": "python/packages/agbench/benchmarks/HumanEval/config.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "AssistantAgent commonly used in autogen samples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "user_proxy_agent",
+          "file_path": "python/packages/agbench/benchmarks/HumanEval/config.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "UserProxyAgent used as human-in-the-loop in autogen samples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "python/samples/agentchat_chainlit/model_config.yaml",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "model: gpt-4o used in agentchat_chainlit and distributed-group-chat config"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o-mini",
+          "file_path": "python/packages/autogen-studio/autogenstudio/web/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o-mini referenced in autogen sample configs"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4.1",
+          "file_path": "python/packages/autogen-studio/autogenstudio/web/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4.1 referenced in autogen sample configs"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "python/samples/agentchat_chainlit/model_config.yaml",
+          "line_start": 4,
+          "line_end": 4,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "api_key: REPLACE_WITH_YOUR_API_KEY in model_config.yaml"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 445,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "autogen-graphrag": {
+      "repo_name": "autogen-graphrag",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "Retriever",
+          "file_path": "appUI.py",
+          "line_start": 41,
+          "line_end": 41,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "retriever = AssistantAgent(name=Retriever, ...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "User_Proxy",
+          "file_path": "appUI.py",
+          "line_start": 54,
+          "line_end": 54,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "user_proxy = ChainlitUserProxyAgent(name=User_Proxy, ...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "nomic-embed-text",
+          "file_path": "utils/openai_embeddings_llm.py",
+          "line_start": 30,
+          "line_end": 30,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ollama.embeddings(model=nomic-embed-text, ...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "appUI.py",
+          "line_start": 12,
+          "line_end": 12,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "llm_config with api_key: ollama (local endpoint)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 34,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "bedrock-agentcore-sdk": {
+      "repo_name": "bedrock-agentcore-sdk",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "by_type": {
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "src/bedrock_agentcore/runtime/models.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ACCESS_TOKEN_HEADER and AUTHORIZATION_HEADER constants for Bearer token auth"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "aws_iam",
+          "file_path": "src/bedrock_agentcore/identity/auth.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "IAM-based auth for Bedrock AgentCore identity module"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "oauth2_tool",
+          "file_path": "src/bedrock_agentcore/tools/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OAuth2 token handling in tools/config.py"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "memory",
+          "file_path": "src/bedrock_agentcore/memory/README.md",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "AgentCoreMemorySessionManager for persistent conversation storage"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 432,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "bedrock-langchain-agent": {
+      "repo_name": "bedrock-langchain-agent",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 5,
+      "by_type": {
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "FSIAgent",
+          "file_path": "agent/lambda/agent-handler/fsi_agent.py",
+          "line_start": 12,
+          "line_end": 12,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "class FSIAgent with ConversationalAgent.from_llm_and_tools(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "anthropic.claude-3-sonnet-20240229-v1:0",
+          "file_path": "agent/lambda/agent-handler/tools.py",
+          "line_start": 104,
+          "line_end": 104,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "modelId=anthropic.claude-3-sonnet-20240229-v1:0 in invokeLLM"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "AnyCompany",
+          "file_path": "agent/lambda/agent-handler/tools.py",
+          "line_start": 15,
+          "line_end": 15,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "Tool(name=AnyCompany, func=self.kendra_search, ...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "dynamodb",
+          "file_path": "agent/lambda/agent-handler/chat.py",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "dynamodb = boto3.client(dynamodb) for conversation memory + user accounts"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "agent/lambda/agent-handler/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "AWS_REGION env var, IAM role auth for Bedrock and DynamoDB"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 56,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "crewai-examples": {
+      "repo_name": "crewai-examples",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 11,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "meta_quest_expert",
+          "file_path": "crews/meta_quest_knowledge/src/meta_quest_knowledge/config/agents.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "meta_quest_expert: Meta Quest Expert agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "shakespearean_bard",
+          "file_path": "flows/self_evaluation_loop_flow/src/self_evaluation_loop_flow/crews/shakespeare_crew/config/agents.yaml",
+          "line_start": 8,
+          "line_end": 8,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "shakespearean_bard: Shakespearean Bard agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "x_post_verifier",
+          "file_path": "flows/self_evaluation_loop_flow/src/self_evaluation_loop_flow/crews/x_post_review_crew/config/agents.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "x_post_verifier: X Post Verifier agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "blog_researcher",
+          "file_path": "crews/blog_posts/src/blog_posts/config/agents.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "blog_researcher agent in blog_posts crew"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "blog_writer",
+          "file_path": "crews/blog_posts/src/blog_posts/config/agents.yaml",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "blog_writer agent in blog_posts crew"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "lead_scorer",
+          "file_path": "flows/lead-score-flow/src/lead_score_flow/crews/lead_score_crew/config/agents.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "lead_scorer agent in lead-score-flow crew"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "email_filter_agent",
+          "file_path": "flows/email_auto_responder_flow/src/email_auto_responder_flow/crews/email_filter_crew/config/agents.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "email_filter_agent in email_auto_responder_flow"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "crews/blog_posts/src/blog_posts/crew.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o model in crew configurations"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o-mini",
+          "file_path": "flows/lead-score-flow/src/lead_score_flow/crews/lead_score_crew/crew.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o-mini used in some crew configs"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-3.5-turbo",
+          "file_path": "crews/blog_posts/src/blog_posts/crew.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-3.5-turbo referenced in some crew configs"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "crews/blog_posts/.env.example",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY env var required for crewai crews"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 278,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "deer-flow": {
+      "repo_name": "deer-flow",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 12,
+      "by_type": {
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 6,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "coordinator",
+          "file_path": "src/config/agents.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "coordinator: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "planner",
+          "file_path": "src/config/agents.py",
+          "line_start": 11,
+          "line_end": 11,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "planner: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "researcher",
+          "file_path": "src/config/agents.py",
+          "line_start": 12,
+          "line_end": 12,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "researcher: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "analyst",
+          "file_path": "src/config/agents.py",
+          "line_start": 13,
+          "line_end": 13,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "analyst: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "coder",
+          "file_path": "src/config/agents.py",
+          "line_start": 14,
+          "line_end": 14,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "coder: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "reporter",
+          "file_path": "src/config/agents.py",
+          "line_start": 15,
+          "line_end": 15,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "reporter: basic LLM type in AGENT_LLM_MAP"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "postgres",
+          "file_path": "src/config/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "postgres as RAG provider option"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "qdrant",
+          "file_path": "src/config/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "qdrant as RAG provider option"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "redis",
+          "file_path": "src/config/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "redis as RAG provider option"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "mongodb",
+          "file_path": "src/config/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "mongodb as RAG provider option"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "milvus",
+          "file_path": "src/config/tools.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "milvus as RAG provider option"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "src/config/tools.py",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "SEARCH_API, RAG_PROVIDER and LLM API key env vars"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 217,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "excel-mcp-server": {
+      "repo_name": "excel-mcp-server",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 6,
+      "by_type": {
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 6,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "TOOL",
+          "name": "create_chart",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 20,
+          "line_end": 20,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "create_chart_in_sheet imported and registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "create_pivot_table",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 25,
+          "line_end": 25,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "create_pivot_table_impl registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "write_data",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 22,
+          "line_end": 22,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "write_data from excel_mcp.data registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "get_workbook_info",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 21,
+          "line_end": 21,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "get_workbook_info from excel_mcp.workbook registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "create_excel_table",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 26,
+          "line_end": 26,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "create_table_impl from excel_mcp.tables registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "copy_sheet",
+          "file_path": "src/excel_mcp/server.py",
+          "line_start": 28,
+          "line_end": 28,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "copy_sheet from excel_mcp.sheet registered as MCP tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 102,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "gcp-agent-starter-pack": {
+      "repo_name": "gcp-agent-starter-pack",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 7,
+      "by_type": {
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "root_agent",
+          "file_path": "agent_starter_pack/agents/adk/app/agent.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "root_agent = Agent(name=root_agent, model=Gemini(...))"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-2.5-flash",
+          "file_path": "agent_starter_pack/agents/adk/.template/templateconfig.yaml",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gemini-2.5-flash configured via MODEL env var"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-live-2.5-flash-native-audio",
+          "file_path": "agent_starter_pack/agents/adk_live/app/agent.py",
+          "line_start": 32,
+          "line_end": 32,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "model=gemini-live-2.5-flash-native-audio in adk_live agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "text-embedding-005",
+          "file_path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
+          "line_start": 35,
+          "line_end": 35,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "EMBEDDING_MODEL = text-embedding-005"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "get_weather",
+          "file_path": "agent_starter_pack/agents/adk/app/agent.py",
+          "line_start": 25,
+          "line_end": 25,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "def get_weather(query: str) -> str: weather simulation tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "agent_starter_pack/agents/agentic_rag/app/agent.py",
+          "line_start": 30,
+          "line_end": 30,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "google.auth.default() for Application Default Credentials"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "postgres",
+          "file_path": "agent_starter_pack/agents/agentic_rag/tests/eval/eval_config.json",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "postgres as optional RAG backend in agentic_rag template"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 351,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "google-adk-walkthrough": {
+      "repo_name": "google-adk-walkthrough",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 8,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "PROMPT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "agent_math",
+          "file_path": "agent_maths/agent.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "agent_math = Agent(model=MODEL, ...) for math calculations"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "agent_grammar",
+          "file_path": "agent_grammar/agent.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "agent_grammar = Agent(model=MODEL_AGENT, ...) for grammar checking"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "agent_summary",
+          "file_path": "agent_summary/agent.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "agent_summary = Agent for student feedback"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "sequential_agent",
+          "file_path": "chapter3_main_multi_agent.py",
+          "line_start": 6,
+          "line_end": 6,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "from google.adk.agents import SequentialAgent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-2.0-flash-001",
+          "file_path": "agent_maths/agent.py",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "MODEL = \"gemini-2.0-flash-001\""
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-2.0-flash",
+          "file_path": "chapter2_main_single_agent.py",
+          "line_start": 14,
+          "line_end": 14,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "MODEL = os.getenv(\"MODEL\", \"gemini-2.0-flash\")"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "summary_instruction_prompt",
+          "file_path": "agent_summary/agent.py",
+          "line_start": 4,
+          "line_end": 4,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "summary_instruction_prompt multi-paragraph system message"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "agent_grammar/agent.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "GOOGLE_CLOUD_PROJECT, GOOGLE_CLOUD_LOCATION env vars"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 34,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "guardrails-ai": {
+      "repo_name": "guardrails-ai",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 6,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "GUARDRAIL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "GUARDRAIL",
+          "name": "guard",
+          "file_path": "docs/src/examples/data/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "Guard.from_rail() or Guard.from_string() in guardrails library examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "GUARDRAIL",
+          "name": "ArbitraryType",
+          "file_path": "guardrails/schema/validator.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ArbitraryType validator in guardrails"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-3.5-turbo",
+          "file_path": "docs/dist/examples/data/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-3.5-turbo used in guardrails guards for output validation"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "server_ci/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o referenced in guardrails examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "faiss",
+          "file_path": "docs/src/examples/data/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "faiss used for vector similarity in guardrails docs examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "guardrails/cli/configure.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY and guardrails token in ~/.guardrailsrc"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 209,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "langchain-quickstart": {
+      "repo_name": "langchain-quickstart",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 9,
+      "by_type": {
+        "PROMPT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 4,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o used in langchain examples and tests"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o-mini",
+          "file_path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4o-mini used in langchain examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-3.5-turbo",
+          "file_path": "libs/langchain/langchain_classic/smith/evaluation/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-3.5-turbo referenced in langchain examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "claude-3-haiku-20240307",
+          "file_path": "libs/langchain/langchain_classic/schema/runnable/configurable.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "claude-3-haiku-20240307 referenced in langchain multi-model examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "chroma",
+          "file_path": "libs/langchain/langchain_classic/schema/prompt.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "chromadb integration for vector store in langchain"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "faiss",
+          "file_path": "libs/langchain/langchain_classic/schema/prompt.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "faiss vector store integration in langchain"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "postgres",
+          "file_path": "libs/langchain/langchain_classic/schema/runnable/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "postgres integration for langchain memory/history"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "chat_prompt_template",
+          "file_path": "libs/langchain/langchain_classic/schema/prompt.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ChatPromptTemplate.from_messages() in langchain examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "libs/langchain/langchain_classic/schema/runnable/config.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY and ANTHROPIC_API_KEY env vars required"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 477,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "langextract": {
+      "repo_name": "langextract",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 3,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "MODEL",
+          "name": "gemini-2.5-flash",
+          "file_path": "benchmarks/config.py",
+          "line_start": 15,
+          "line_end": 15,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "default_model: str = gemini-2.5-flash in ModelConfig"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4",
+          "file_path": "langextract/inference/openai.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4 referenced in OpenAI provider examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "benchmarks/benchmark.py",
+          "line_start": 42,
+          "line_end": 42,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "GEMINI_API_KEY or LANGEXTRACT_API_KEY environment variables"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 474,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "llama-rags": {
+      "repo_name": "llama-rags",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "PROMPT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "RAGAgentBuilder",
+          "file_path": "core/agent_builder/loader.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "class RAGAgentBuilder meta-agent that builds RAG agents"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4-1106-preview",
+          "file_path": "core/builder_config.py",
+          "line_start": 8,
+          "line_end": 8,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "BUILDER_LLM = OpenAI(model=gpt-4-1106-preview)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "RAG_BUILDER_SYS_STR",
+          "file_path": "core/agent_builder/loader.py",
+          "line_start": 42,
+          "line_end": 42,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "RAG_BUILDER_SYS_STR system prompt for meta agent builder"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "core/builder_config.py",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "openai_key from st.secrets Streamlit secrets configuration"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 70,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "openai-cs-agents-demo": {
+      "repo_name": "openai-cs-agents-demo",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 13,
+      "by_type": {
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "GUARDRAIL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "triage_agent",
+          "file_path": "python-backend/main.py",
+          "line_start": 120,
+          "line_end": 120,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "triage_agent = Agent(...) entry point that routes to specialist agents"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "faq_agent",
+          "file_path": "python-backend/main.py",
+          "line_start": 80,
+          "line_end": 80,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "faq_agent = Agent(name='FAQ Agent', tools=[faq_lookup_tool])"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "seat_booking_agent",
+          "file_path": "python-backend/main.py",
+          "line_start": 90,
+          "line_end": 90,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "seat_booking_agent = Agent(name='Seat Booking Agent', tools=[update_seat])"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "flight_status_agent",
+          "file_path": "python-backend/main.py",
+          "line_start": 100,
+          "line_end": 100,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "flight_status_agent = Agent(name='Flight Status Agent', tools=[flight_status_tool])"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "cancellation_agent",
+          "file_path": "python-backend/main.py",
+          "line_start": 110,
+          "line_end": 110,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "cancellation_agent = Agent(name='Cancellation Agent')"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4.1",
+          "file_path": "python-backend/main.py",
+          "line_start": 75,
+          "line_end": 75,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4.1 model used for airline customer service agents"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4.1-mini",
+          "file_path": "python-backend/main.py",
+          "line_start": 170,
+          "line_end": 170,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4.1-mini model used for guardrail agents"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "faq_lookup_tool",
+          "file_path": "python-backend/main.py",
+          "line_start": 43,
+          "line_end": 43,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@function_tool(name_override='faq_lookup_tool') FAQ lookup tool definition"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "update_seat",
+          "file_path": "python-backend/main.py",
+          "line_start": 57,
+          "line_end": 57,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@function_tool async def update_seat(confirmation_number, new_seat)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "flight_status_tool",
+          "file_path": "python-backend/main.py",
+          "line_start": 66,
+          "line_end": 66,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@function_tool(name_override='flight_status_tool')"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "GUARDRAIL",
+          "name": "relevance_guardrail",
+          "file_path": "python-backend/main.py",
+          "line_start": 165,
+          "line_end": 165,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@input_guardrail relevance_guardrail checks if query is about airline topics"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "GUARDRAIL",
+          "name": "jailbreak_guardrail",
+          "file_path": "python-backend/main.py",
+          "line_start": 180,
+          "line_end": 180,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@input_guardrail jailbreak_guardrail checks for prompt injection attempts"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "python-backend/main.py",
+          "line_start": 17,
+          "line_end": 17,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY env var from dotenv load_dotenv()"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 97,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "openai-swarm": {
+      "repo_name": "openai-swarm",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 14,
+      "by_type": {
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 7,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "triage_agent",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "triage_agent = Agent(...) routes to specialized agents"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "sales_agent",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "sales_agent = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "refunds_agent",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "refunds_agent = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "help_center_agent",
+          "file_path": "examples/customer_service_streaming/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "help_center_agent = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "flight_change",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "flight_change = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "flight_cancel",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "flight_cancel = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "lost_baggage",
+          "file_path": "examples/airline/main.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "lost_baggage = Agent(...)"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4-0125-preview",
+          "file_path": "examples/basic/agent_handoff.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "gpt-4-0125-preview used in swarm examples"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "text-embedding-3-large",
+          "file_path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+          "line_start": 14,
+          "line_end": 14,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "EMBEDDING_MODEL = text-embedding-3-large for qdrant embeddings"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "submit_ticket",
+          "file_path": "examples/customer_service_streaming/configs/tools/submit_ticket/handler.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "def submit_ticket(description) tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "send_email",
+          "file_path": "examples/customer_service_streaming/configs/tools/send_email/handler.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "def send_email(email_address, message) tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "query_docs",
+          "file_path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "def query_docs(query) qdrant search tool"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "qdrant",
+          "file_path": "examples/customer_service_streaming/configs/tools/query_docs/handler.py",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "import qdrant_client for knowledge base vector search"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "examples/basic/agent_handoff.py",
+          "line_start": 1,
+          "line_end": 1,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY required for OpenAI Swarm API"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 181,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "real-estate-agent": {
+      "repo_name": "real-estate-agent",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 6,
+      "by_type": {
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "property_search_agent",
+          "file_path": "agent.py",
+          "line_start": 10,
+          "line_end": 10,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "DirectFirecrawlAgent class - property search specialist"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "market_analysis_agent",
+          "file_path": "agent.py",
+          "line_start": 30,
+          "line_end": 30,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "Market analysis specialist agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AGENT",
+          "name": "property_valuation_agent",
+          "file_path": "agent.py",
+          "line_start": 50,
+          "line_end": 50,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "Property valuation specialist agent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4o",
+          "file_path": "agent.py",
+          "line_start": 12,
+          "line_end": 12,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "model_id: str = 'gpt-4o' default in DirectFirecrawlAgent"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "FirecrawlApp",
+          "file_path": "agent.py",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "from firecrawl import FirecrawlApp"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "agent.py",
+          "line_start": 6,
+          "line_end": 6,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY and FIRECRAWL_API_KEY environment variables"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 45,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "synthetic-simple": {
+      "repo_name": "synthetic-simple",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 8,
+      "by_type": {
+        "PROMPT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "TOOL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "MODEL": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "DATASTORE": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AGENT": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        },
+        "AUTH": {
+          "true_positives": 0,
+          "false_positives": 0,
+          "false_negatives": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1_score": 0.0
+        }
+      },
+      "false_positive_details": [],
+      "false_negative_details": [
+        {
+          "asset_type": "AGENT",
+          "name": "support_agent",
+          "file_path": "src/agents/support.py",
+          "line_start": 16,
+          "line_end": 16,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "support_agent = create_react_agent(llm=llm, tools=[...])"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "gpt-4",
+          "file_path": "src/agents/support.py",
+          "line_start": 11,
+          "line_end": 11,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "ChatOpenAI(model=\"gpt-4\")"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "MODEL",
+          "name": "text-embedding-3-small",
+          "file_path": "src/vectorstore/index.py",
+          "line_start": 8,
+          "line_end": 8,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OpenAIEmbeddings(model=\"text-embedding-3-small\")"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "search_knowledge_base",
+          "file_path": "src/tools/search.py",
+          "line_start": 4,
+          "line_end": 4,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@tool def search_knowledge_base(query: str) -> str"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "TOOL",
+          "name": "create_ticket",
+          "file_path": "src/tools/ticketing.py",
+          "line_start": 4,
+          "line_end": 4,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "@tool def create_ticket(title, description, priority='medium')"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "DATASTORE",
+          "name": "pinecone",
+          "file_path": "src/vectorstore/index.py",
+          "line_start": 3,
+          "line_end": 3,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "from langchain_pinecone import Pinecone"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "PROMPT",
+          "name": "support_system_prompt",
+          "file_path": "src/prompts/system.py",
+          "line_start": 4,
+          "line_end": 4,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "SystemMessagePromptTemplate with support agent instructions"
+          ],
+          "synonyms": [],
+          "relationships": null
+        },
+        {
+          "asset_type": "AUTH",
+          "name": "generic",
+          "file_path": "src/vectorstore/index.py",
+          "line_start": 5,
+          "line_end": 5,
+          "description": "",
+          "framework": null,
+          "evidence": [
+            "OPENAI_API_KEY, PINECONE_API_KEY environment variables"
+          ],
+          "synonyms": [],
+          "relationships": null
+        }
+      ],
+      "discovered_assets": [],
+      "processing_time_ms": 7,
+      "skipped": false,
+      "skip_reason": null
+    },
+    "voicelive-api-salescoach-demo": {
+      "repo_name": "voicelive-api-salescoach-demo",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "by_type": {},
+      "false_positive_details": [],
+      "false_negative_details": [],
+      "discovered_assets": [],
+      "processing_time_ms": 1,
+      "skipped": false,
+      "skip_reason": null
+    }
+  },
+  "by_type_aggregate": {
+    "PROMPT": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 6,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "TOOL": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 21,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "MODEL": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 33,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "DATASTORE": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 15,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "AGENT": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 48,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "GUARDRAIL": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    },
+    "AUTH": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 20,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0
+    }
+  },
+  "evaluated_at": "2026-03-02T20:22:43.120268"
+}

@@ -1,0 +1,292 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-03-02T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://OpenBB-finance",
+  "nodes": [
+    {
+      "id": "6a81f271-5ffa-452a-9ab3-bf709458a0f3",
+      "name": "/coverage/command_model",
+      "component_type": "API_ENDPOINT",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "/coverage/command_model",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.8,
+          "detail": "API_ENDPOINT: GET /coverage/command_model — FastAPI router returns command-to-provider model mapping",
+          "location": {
+            "path": "openbb_platform/core/openbb_core/api/router/coverage.py",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "d0aa5360-e9a0-4bf5-b65d-6e453ea62a33",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.98,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.98,
+          "detail": "AUTH: api_key credential — provider template defines credentials=[\"api_key\"] for third-party data provider authentication",
+          "location": {
+            "path": "cookiecutter/openbb_cookiecutter/template/{{cookiecutter.project_tag}}/{{cookiecutter.package_name}}/providers/{{cookiecutter.provider_name}}/__init__.py",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "a93ffc42-6f6c-40e7-8ccb-aae061b3e8a4",
+      "name": "framework:langgraph",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:langgraph",
+          "adapter": "gt"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:langgraph",
+          "location": {
+            "path": "examples/openbb_vs_langchain.ipynb",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "8b517fe8-d649-469d-818f-0ba916b3b13a",
+      "name": "gpt-4.1",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4.1",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "MODEL: gpt-4.1 — used in LangChain/LangGraph agent notebook",
+          "location": {
+            "path": "examples/openbb_vs_langchain.ipynb",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "0ab50ad4-bacd-4016-b4fc-476d032bd857",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "PROMPT: ChatPromptTemplate with MessagesPlaceholder (chat_history); chain-of-thought user query finds best-performing industry, extracts valuation metrics (P/E, P/B, EV/EBITDA), and fetches analyst consensus",
+          "location": {
+            "path": "examples/openbb_vs_langchain.ipynb",
+            "line": 223
+          }
+        }
+      ]
+    },
+    {
+      "id": "ff60a3c8-aab2-4e3c-9c70-11bf4d04c6e7",
+      "name": "activate_tools",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "activate_tools",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: activate_tools — MCP tool that enables named OpenBB tools for use in the session",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 535
+          }
+        }
+      ]
+    },
+    {
+      "id": "11b97e8b-5e84-4af9-b22f-00d5d20cd4d6",
+      "name": "available_categories",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "available_categories",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: available_categories — MCP tool that lists available OpenBB data categories",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 468
+          }
+        }
+      ]
+    },
+    {
+      "id": "de90e45d-42e8-4ffa-a302-70d296cb8cdc",
+      "name": "available_tools",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "available_tools",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: available_tools — MCP tool that lists available OpenBB tools by category",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 483
+          }
+        }
+      ]
+    },
+    {
+      "id": "cca989f4-4060-4932-b053-37dde1da67a2",
+      "name": "deactivate_tools",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "deactivate_tools",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: deactivate_tools — MCP tool that disables named OpenBB tools from the session",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 544
+          }
+        }
+      ]
+    },
+    {
+      "id": "ed914bf3-2fc8-44d3-b7e6-4638e4303a2f",
+      "name": "execute_prompt",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "execute_prompt",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: execute_prompt — MCP tool that executes a named OpenBB prompt by name with arguments",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 565
+          }
+        }
+      ]
+    },
+    {
+      "id": "f52eebca-f863-4a20-b873-46432d761b48",
+      "name": "list_prompts",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "list_prompts",
+          "adapter": "gt"
+        },
+        "framework": "mcp-server"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: list_prompts — MCP tool that lists all available OpenBB prompts with their arguments",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 555
+          }
+        }
+      ]
+    },
+    {
+      "id": "c6d780ed-1649-44c7-8881-506ad18e9d26",
+      "name": "fastmcp",
+      "component_type": "TOOL",
+      "confidence": 0.92,
+      "metadata": {
+        "extras": {
+          "canonical_name": "fastmcp",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.92,
+          "detail": "TOOL: FastMCP — Python library for building MCP (Model Context Protocol) servers; registers and exposes OpenBB financial data tools to AI assistants",
+          "location": {
+            "path": "openbb_platform/extensions/mcp_server/openbb_mcp_server/app/app.py",
+            "line": 1
+          }
+        }
+      ]
+    }
+  ],
+  "edges": []
+}

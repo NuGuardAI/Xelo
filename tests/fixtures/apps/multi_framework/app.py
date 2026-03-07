@@ -3,11 +3,6 @@
 Used to verify that LangGraph, AutoGen, CrewAI, LlamaIndex, and
 Semantic Kernel detections all coexist correctly.
 """
-from langgraph import StateGraph
-from autogen import AssistantAgent
-from crewai import Agent as CrewAgent
-from llama_index import VectorStoreIndex
-from semantic_kernel import Kernel
 
 # openai agents integration enabled
 # system prompt
@@ -17,8 +12,8 @@ API_TOKEN = "example-token"
 DATABASE = "postgres://localhost:5432/demo"
 DEPLOYMENT = "docker compose"
 
-@app.get('/chat')
+@app.get('/chat')  # noqa: F821
 def chat() -> str:
-    role = "admin"
-    model = "gpt-4o"
+    role = "admin"  # noqa: F841
+    model = "gpt-4o"  # noqa: F841
     return "ok"

@@ -1,0 +1,88 @@
+{
+  "policy_id": "owasp_ai_top_10",
+  "policy_name": "OWASP AI Top 10",
+  "version": "2025.1",
+  "category": "security",
+  "description": "OWASP Top 10 for Large Language Model Applications - CCD Format",
+  "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+  
+  "controls": [
+    {
+      "control_id": "OWASP-A01",
+      "title": "Prompt Injection",
+      "ccd_file": "A01_prompt_injection.json",
+      "severity": "CRITICAL"
+    },
+    {
+      "control_id": "OWASP-A02",
+      "title": "Insecure Output Handling",
+      "ccd_file": "A02_insecure_output.json",
+      "severity": "HIGH"
+    },
+    {
+      "control_id": "OWASP-A03",
+      "title": "Training Data Poisoning",
+      "ccd_file": "A03_training_data.json",
+      "severity": "HIGH"
+    },
+    {
+      "control_id": "OWASP-A04",
+      "title": "Model Denial of Service",
+      "ccd_file": "A04_model_dos.json",
+      "severity": "MEDIUM"
+    },
+    {
+      "control_id": "OWASP-A05",
+      "title": "Supply Chain Vulnerabilities",
+      "ccd_file": "A05_supply_chain.json",
+      "severity": "MEDIUM"
+    },
+    {
+      "control_id": "OWASP-A06",
+      "title": "Sensitive Information Disclosure",
+      "ccd_file": "A06_sensitive_info.json",
+      "severity": "HIGH"
+    },
+    {
+      "control_id": "OWASP-A07",
+      "title": "Insecure Plugin Design",
+      "ccd_file": "A07_insecure_plugin.json",
+      "severity": "MEDIUM"
+    },
+    {
+      "control_id": "OWASP-A08",
+      "title": "Excessive Agency",
+      "ccd_file": "A08_excessive_agency.json",
+      "severity": "HIGH"
+    },
+    {
+      "control_id": "OWASP-A09",
+      "title": "Overreliance",
+      "ccd_file": "A09_overreliance.json",
+      "severity": "MEDIUM"
+    },
+    {
+      "control_id": "OWASP-A10",
+      "title": "Model Theft",
+      "ccd_file": "A10_model_theft.json",
+      "severity": "MEDIUM"
+    }
+  ],
+
+  "scoring": {
+    "method": "weighted_average",
+    "pass_threshold": 0.70,
+    "control_weights": {
+      "CRITICAL": 2.0,
+      "HIGH": 1.5,
+      "MEDIUM": 1.0,
+      "LOW": 0.5
+    }
+  },
+  
+  "metadata": {
+    "created_at": "2025-02-07",
+    "updated_at": "2025-02-07",
+    "maintainer": "NuGuard Team"
+  }
+}

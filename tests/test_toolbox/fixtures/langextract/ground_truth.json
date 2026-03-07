@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-03-02T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://langextract",
+  "nodes": [
+    {
+      "id": "43ceb116-3d9d-4acd-bb6f-1fb985a1dc6b",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "benchmarks/benchmark.py",
+            "line": 202
+          }
+        }
+      ]
+    },
+    {
+      "id": "b560aed5-a55f-432e-931d-fd34bd1d4879",
+      "name": "python:3.10-slim",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
+      "metadata": {
+        "extras": {
+          "canonical_name": "python:3.10-slim",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.99,
+          "detail": "CONTAINER_IMAGE: python:3.10-slim",
+          "location": {
+            "path": "Dockerfile",
+            "line": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "208888eb-6566-4bd5-8124-689f1e7591bb",
+      "name": "python:3.11-slim-bookworm",
+      "component_type": "CONTAINER_IMAGE",
+      "confidence": 0.99,
+      "metadata": {
+        "extras": {
+          "canonical_name": "python:3.11-slim-bookworm",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.99,
+          "detail": "CONTAINER_IMAGE: python:3.11-slim-bookworm",
+          "location": {
+            "path": "examples/ollama/Dockerfile",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "f894158d-6243-474a-86bc-8a1ed8b35413",
+      "name": "generic",
+      "component_type": "DEPLOYMENT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DEPLOYMENT: generic",
+          "location": {
+            "path": "examples/ollama/demo_ollama.py",
+            "line": 499
+          }
+        }
+      ]
+    },
+    {
+      "id": "6f0d74e8-22f7-4f90-a3b4-701edb0f9906",
+      "name": "framework:llm_clients",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:llm_clients",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:llm_clients",
+          "location": {
+            "path": "langextract/providers/openai.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "dcdcbbb9-a6c9-43fb-87a8-5720e4290279",
+      "name": "gemini-1.5",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini-1.5",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: gemini-1.5",
+          "location": {
+            "path": "langextract/progress.py",
+            "line": 88
+          }
+        }
+      ]
+    },
+    {
+      "id": "6467ac09-e7a3-4f79-b43d-0ff14a6bd999",
+      "name": "gemini-2.5",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini-2.5",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "MODEL: gemini-2.5",
+          "location": {
+            "path": "benchmarks/benchmark.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc5f2053-d1a3-4fae-914b-d66879513166",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-4",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "165a1042-0dfe-4465-8a5b-714a041d5d5c",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4o-mini",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4o-mini",
+          "location": {
+            "path": "langextract/providers/openai.py",
+            "line": 41
+          }
+        }
+      ]
+    },
+    {
+      "id": "9db8344c-164e-4fe2-95c6-cd33faf05b24",
+      "name": "llama-3.2-1b-instruct",
+      "component_type": "MODEL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "llama-3.2-1b-instruct",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "MODEL: llama-3.2-1b-instruct",
+          "location": {
+            "path": "langextract/providers/ollama.py",
+            "line": 75
+          }
+        }
+      ]
+    },
+    {
+      "id": "beef782a-b5ff-4c9e-8042-eec50fd930da",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.8,
+          "detail": "PROMPT: generic",
+          "location": {
+            "path": "langextract/annotation.py",
+            "line": 22
+          }
+        }
+      ]
+    }
+  ],
+  "edges": []
+}

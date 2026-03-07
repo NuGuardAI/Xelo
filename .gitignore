@@ -24,3 +24,9 @@ htmlcov/
 .idea/
 .vscode/
 *.swp
+
+# tmp files
+output/
+tmp/
+# Generated eval run outputs
+tests/test-results/

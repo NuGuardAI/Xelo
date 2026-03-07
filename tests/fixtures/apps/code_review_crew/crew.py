@@ -91,7 +91,7 @@ review_crew = Crew(
 
 # ── AutoGen layer (execution sandbox) ────────────────────────────────────────
 
-from autogen import AssistantAgent, UserProxyAgent
+from autogen import AssistantAgent, UserProxyAgent  # noqa: E402
 
 _gpt4_cfg = {"config_list": [{"model": "gpt-4o", "api_key": "..."}]}
 

@@ -1,4 +1,4 @@
-"""Tests for ai_sbom.deps — DependencyScanner.
+"""Tests for xelo.deps — DependencyScanner.
 
 Validates parsing of the four manifest formats present in the real-world
 fixture apps created for test_scenarios.py:
@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from ai_sbom.deps import DependencyScanner, PackageDep, _normalise, _to_npm_purl, _to_purl
+from xelo.deps import DependencyScanner, PackageDep, _normalise, _to_npm_purl, _to_purl
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
 

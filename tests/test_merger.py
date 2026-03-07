@@ -3,9 +3,10 @@
 Validates the full two-phase pipeline from the reference architecture:
 
   Phase 1 — Standard SBOM: cyclonedx-py CLI (or dep-scanner fallback)
-  Phase 2 — AI-BOM:        Velo AST extractors
+  Phase 2 — AI-BOM:        Xelo AST extractors
   Merge   — Normalization: unified CycloneDX 1.6 BOM with aibom:* enrichment
 """
+
 from __future__ import annotations
 
 import json
@@ -14,34 +15,33 @@ from typing import Any
 
 import pytest
 
-from ai_sbom.cdx_tools import CycloneDxGenerator
-from ai_sbom.config import ExtractionConfig
-from ai_sbom.extractor import SbomExtractor
-from ai_sbom.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prompt_hash
-from ai_sbom.models import AiBomDocument
-from ai_sbom.types import ComponentType
+from xelo.cdx_tools import CycloneDxGenerator
+from xelo.config import AiSbomConfig
+from xelo.extractor import AiSbomExtractor
+from xelo.merger import AiBomMerger, _infer_tool_risk, _normalise_name, _prompt_hash
+from xelo.models import AiSbomDocument
 
 _APPS = Path(__file__).parent / "fixtures" / "apps"
-_PY_ONLY = ExtractionConfig(include_extensions={".py"})
+_PY_ONLY = AiSbomConfig(include_extensions={".py"}, enable_llm=False)
 
 
-def _extract(app: str) -> AiBomDocument:
-    return SbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
+def _extract(app: str) -> AiSbomDocument:
+    return AiSbomExtractor().extract_from_path(_APPS / app, _PY_ONLY)
 
 
 def _minimal_cdx_bom(components: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     """Build a minimal CycloneDX BOM dict for testing."""
     return {
-        "bomFormat":   "CycloneDX",
+        "bomFormat": "CycloneDX",
         "specVersion": "1.6",
-        "version":     1,
+        "version": 1,
         "serialNumber": "urn:uuid:test-0000",
         "metadata": {
             "timestamp": "2026-01-01T00:00:00Z",
             "tools": [{"vendor": "Syft", "name": "syft", "version": "1.0.0"}],
             "component": {"type": "application", "name": "test-app"},
         },
-        "components":   components or [],
+        "components": components or [],
         "dependencies": [],
     }
 
@@ -49,6 +49,7 @@ def _minimal_cdx_bom(components: list[dict[str, Any]] | None = None) -> dict[str
 # ---------------------------------------------------------------------------
 # Helper utilities
 # ---------------------------------------------------------------------------
+
 
 class TestHelpers:
     def test_normalise_name_hyphen_collapse(self) -> None:
@@ -76,6 +77,7 @@ class TestHelpers:
 # Merger: basic structure
 # ---------------------------------------------------------------------------
 
+
 class TestMergerStructure:
     @pytest.fixture(scope="class")
     def merged(self) -> dict[str, Any]:
@@ -94,7 +96,7 @@ class TestMergerStructure:
 
     def test_vela_tool_added(self, merged: dict[str, Any]) -> None:
         tools = merged["metadata"]["tools"]
-        assert any(t.get("name") == "vela" for t in tools)
+        assert any(t.get("name") == "xelo" for t in tools)
 
     def test_original_tool_preserved(self, merged: dict[str, Any]) -> None:
         tools = merged["metadata"]["tools"]
@@ -130,6 +132,7 @@ class TestMergerStructure:
 # Merger: aibom:* properties on AI components
 # ---------------------------------------------------------------------------
 
+
 class TestAibomProperties:
     @pytest.fixture(scope="class")
     def merged(self) -> dict[str, Any]:
@@ -148,7 +151,8 @@ class TestAibomProperties:
     def test_model_components_have_provider_prop(self, merged: dict[str, Any]) -> None:
         ml_comps = [c for c in merged["components"] if c["type"] == "machine-learning-model"]
         enriched = [
-            c for c in ml_comps
+            c
+            for c in ml_comps
             if any(p["name"] == "aibom:provider" for p in c.get("properties", []))
         ]
         assert enriched, "Expected at least one ML model with aibom:provider"
@@ -156,7 +160,8 @@ class TestAibomProperties:
     def test_model_card_url_in_properties(self, merged: dict[str, Any]) -> None:
         ml_comps = [c for c in merged["components"] if c["type"] == "machine-learning-model"]
         url_props = [
-            c for c in ml_comps
+            c
+            for c in ml_comps
             if any(p["name"] == "aibom:modelCardUrl" for p in c.get("properties", []))
         ]
         assert url_props, "Expected at least one ML model with aibom:modelCardUrl"
@@ -164,7 +169,8 @@ class TestAibomProperties:
     def test_model_family_in_properties(self, merged: dict[str, Any]) -> None:
         ml_comps = [c for c in merged["components"] if c["type"] == "machine-learning-model"]
         family_props = [
-            c for c in ml_comps
+            c
+            for c in ml_comps
             if any(p["name"] == "aibom:modelFamily" for p in c.get("properties", []))
         ]
         assert family_props, "Expected at least one ML model with aibom:modelFamily"
@@ -172,7 +178,8 @@ class TestAibomProperties:
     def test_agent_framework_prop_on_agents(self, merged: dict[str, Any]) -> None:
         app_comps = [c for c in merged["components"] if c["type"] == "application"]
         fw_props = [
-            c for c in app_comps
+            c
+            for c in app_comps
             if any(p["name"] == "aibom:agentFramework" for p in c.get("properties", []))
         ]
         assert fw_props, "Expected agents/frameworks with aibom:agentFramework property"
@@ -180,9 +187,12 @@ class TestAibomProperties:
     def test_tool_risk_category_on_tools(self, merged: dict[str, Any]) -> None:
         lib_comps = [c for c in merged["components"] if c["type"] == "library"]
         tool_comps = [
-            c for c in lib_comps
-            if any(p["name"] == "aibom:componentType" and p["value"] == "TOOL"
-                   for p in c.get("properties", []))
+            c
+            for c in lib_comps
+            if any(
+                p["name"] == "aibom:componentType" and p["value"] == "TOOL"
+                for p in c.get("properties", [])
+            )
         ]
         for comp in tool_comps:
             prop_names = {p["name"] for p in comp.get("properties", [])}
@@ -195,9 +205,12 @@ class TestAibomProperties:
         std = _minimal_cdx_bom()
         merged = AiBomMerger().merge(std, doc)
         prompt_comps = [
-            c for c in merged["components"]
-            if any(p["name"] == "aibom:componentType" and p["value"] == "PROMPT"
-                   for p in c.get("properties", []))
+            c
+            for c in merged["components"]
+            if any(
+                p["name"] == "aibom:componentType" and p["value"] == "PROMPT"
+                for p in c.get("properties", [])
+            )
             and any(p["name"] == "aibom:promptHash" for p in c.get("properties", []))
         ]
         assert prompt_comps, "Expected enriched PROMPT with aibom:promptHash"
@@ -207,20 +220,23 @@ class TestAibomProperties:
 # Merger: deduplication (dep component enrichment)
 # ---------------------------------------------------------------------------
 
+
 class TestDeduplication:
     def test_existing_dep_enriched_not_duplicated(self) -> None:
         """langgraph as both a dep component and a FRAMEWORK node → one component."""
         doc = _extract("customer_service_bot")
-        std = _minimal_cdx_bom([
-            {
-                "bom-ref": "pkg:pypi/langgraph",
-                "type":    "library",
-                "name":    "langgraph",
-                "purl":    "pkg:pypi/langgraph",
-                "version": "0.2.0",
-                "properties": [],
-            }
-        ])
+        std = _minimal_cdx_bom(
+            [
+                {
+                    "bom-ref": "pkg:pypi/langgraph",
+                    "type": "library",
+                    "name": "langgraph",
+                    "purl": "pkg:pypi/langgraph",
+                    "version": "0.2.0",
+                    "properties": [],
+                }
+            ]
+        )
         merged = AiBomMerger().merge(std, doc)
         # Only one langgraph component
         langgraph_comps = [c for c in merged["components"] if c["name"] == "langgraph"]
@@ -231,29 +247,39 @@ class TestDeduplication:
     def test_enriched_dep_has_aibom_properties(self) -> None:
         """The enriched dep gets aibom:* properties from the AI adapter."""
         doc = _extract("customer_service_bot")
-        std = _minimal_cdx_bom([
-            {
-                "bom-ref": "pkg:pypi/langgraph",
-                "type":    "library",
-                "name":    "langgraph",
-                "purl":    "pkg:pypi/langgraph",
-                "properties": [],
-            }
-        ])
+        std = _minimal_cdx_bom(
+            [
+                {
+                    "bom-ref": "pkg:pypi/langgraph",
+                    "type": "library",
+                    "name": "langgraph",
+                    "purl": "pkg:pypi/langgraph",
+                    "properties": [],
+                }
+            ]
+        )
         merged = AiBomMerger().merge(std, doc)
         langgraph = next(c for c in merged["components"] if c["name"] == "langgraph")
-        aibom_props = {p["name"] for p in langgraph.get("properties", [])
-                       if p["name"].startswith("aibom:")}
+        aibom_props = {
+            p["name"] for p in langgraph.get("properties", []) if p["name"].startswith("aibom:")
+        }
         assert aibom_props, "Expected aibom:* properties on enriched langgraph component"
 
     def test_enriched_type_upgraded_to_application(self) -> None:
         """A library dep that is also a FRAMEWORK gets upgraded to 'application'."""
         doc = _extract("customer_service_bot")
         # Make langgraph a plain library initially
-        std = _minimal_cdx_bom([
-            {"bom-ref": "pkg:pypi/langgraph", "type": "library",
-             "name": "langgraph", "purl": "pkg:pypi/langgraph", "properties": []}
-        ])
+        std = _minimal_cdx_bom(
+            [
+                {
+                    "bom-ref": "pkg:pypi/langgraph",
+                    "type": "library",
+                    "name": "langgraph",
+                    "purl": "pkg:pypi/langgraph",
+                    "properties": [],
+                }
+            ]
+        )
         merged = AiBomMerger().merge(std, doc)
         langgraph = next(c for c in merged["components"] if c["name"] == "langgraph")
         assert langgraph["type"] == "application", (
@@ -285,6 +311,7 @@ class TestDeduplication:
 # Merger: relationship edges
 # ---------------------------------------------------------------------------
 
+
 class TestMergedEdges:
     @pytest.fixture(scope="class")
     def merged(self) -> dict[str, Any]:
@@ -310,13 +337,15 @@ class TestMergedEdges:
 # CycloneDxGenerator: fallback
 # ---------------------------------------------------------------------------
 
+
 class TestCycloneDxGeneratorFallback:
     """Test the dep-scanner fallback (always available, no CLI needed)."""
 
     def test_fallback_produces_valid_bom(self) -> None:
         gen = CycloneDxGenerator()
         # Temporarily hide cyclonedx-py by monkey-patching
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
+
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
         try:
@@ -328,7 +357,8 @@ class TestCycloneDxGeneratorFallback:
         assert method == "dep-scanner"
 
     def test_fallback_includes_deps(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
+
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
         try:
@@ -341,7 +371,8 @@ class TestCycloneDxGeneratorFallback:
         assert "pydantic" in names
 
     def test_fallback_has_cdx_note_property(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
+
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
         try:
@@ -351,19 +382,21 @@ class TestCycloneDxGeneratorFallback:
 
         props = bom.get("metadata", {}).get("properties", [])
         generators = [p["value"] for p in props if p["name"] == "cdx:generator"]
-        assert "vela-dep-scanner" in generators
+        assert "xelo-dep-scanner" in generators
 
 
 # ---------------------------------------------------------------------------
 # CycloneDxGenerator: cyclonedx-py CLI (if available)
 # ---------------------------------------------------------------------------
 
+
 class TestCycloneDxGeneratorCli:
     """Tests that exercise the cyclonedx-py CLI path (skipped if not installed)."""
 
     @pytest.fixture(scope="class")
     def cdx_available(self) -> bool:
-        from ai_sbom.cdx_tools import _cdx_py_available
+        from xelo.cdx_tools import _cdx_py_available
+
         return _cdx_py_available()
 
     def test_cli_generates_valid_bom_for_requirements(self, cdx_available: bool) -> None:
@@ -400,11 +433,13 @@ class TestCycloneDxGeneratorCli:
 # Full end-to-end pipeline
 # ---------------------------------------------------------------------------
 
+
 class TestFullPipeline:
     """Phase 1 (standard BOM) + Phase 2 (AI extraction) + merge."""
 
     def test_unified_bom_has_both_dep_and_ai_components(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
+
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
         try:
@@ -417,14 +452,17 @@ class TestFullPipeline:
         unified = AiBomMerger().merge(bom, doc, generator_method=method)
 
         dep_comps = [c for c in unified["components"] if c.get("purl", "").startswith("pkg:pypi/")]
-        ai_comps  = [c for c in unified["components"]
-                     if any(p["name"] == "aibom:componentType"
-                            for p in c.get("properties", []))]
+        ai_comps = [
+            c
+            for c in unified["components"]
+            if any(p["name"] == "aibom:componentType" for p in c.get("properties", []))
+        ]
         assert dep_comps, "Expected dep components in unified BOM"
-        assert ai_comps,  "Expected AI components in unified BOM"
+        assert ai_comps, "Expected AI components in unified BOM"
 
     def test_unified_bom_json_serializable(self) -> None:
-        import ai_sbom.cdx_tools as cdx_mod
+        import xelo.cdx_tools as cdx_mod
+
         orig = cdx_mod._cdx_py_available
         cdx_mod._cdx_py_available = lambda: False  # type: ignore[attr-defined]
         try:
@@ -450,8 +488,7 @@ class TestFullPipeline:
         for app in ("customer_service_bot", "research_assistant", "rag_pipeline"):
             doc = _extract(app)
             unified = AiBomMerger().merge(_minimal_cdx_bom(), doc)
-            props = {p["name"]: p["value"]
-                     for p in unified["metadata"].get("properties", [])}
+            props = {p["name"]: p["value"] for p in unified["metadata"].get("properties", [])}
             assert props.get("aibom:qualityGate") == "pass", (
                 f"Quality gate failed for {app}: {props}"
             )

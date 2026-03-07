@@ -1,0 +1,114 @@
+{
+  "control_id": "OWASP-A05",
+  "check_id": "A05-supply-chain",
+  "title": "Supply Chain Vulnerabilities - Model Provenance",
+  "description": "Verify that AI models have documented provenance and version information",
+  "severity": "MEDIUM",
+  "category": "Supply Chain",
+  
+  "applies_if": {
+    "aibom_has_nodes": ["MODEL"]
+  },
+  
+  "queries": [
+    {
+      "id": "find_models",
+      "type": "find_nodes",
+      "description": "Find all models in the AIBOM",
+      "filter": {
+        "type": "MODEL"
+      }
+    },
+    {
+      "id": "find_models_with_provenance",
+      "type": "find_nodes",
+      "description": "Find models with documented provenance",
+      "filter": {
+        "type": "MODEL",
+        "properties": {
+          "has_any": ["model_version", "model_provider", "model_source"]
+        }
+      }
+    }
+  ],
+  
+  "assertions": [
+    {
+      "id": "models_have_version",
+      "type": "property_constraint",
+      "severity": "MEDIUM",
+      "description": "Models should have version information",
+      "weight": 1.0,
+      "node_filter": {"type": "MODEL"},
+      "property_path": "model_version",
+      "operator": "exists",
+      "expected_value": true
+    },
+    {
+      "id": "models_have_provider",
+      "type": "property_constraint",
+      "severity": "MEDIUM",
+      "description": "Models should have provider information",
+      "weight": 0.8,
+      "node_filter": {"type": "MODEL"},
+      "property_path": "model_provider",
+      "operator": "exists",
+      "expected_value": true
+    },
+    {
+      "id": "no_deprecated_models",
+      "type": "must_not_exist",
+      "severity": "HIGH",
+      "description": "No deprecated or EOL models should be used",
+      "weight": 1.0,
+      "query": {
+        "type": "MODEL",
+        "properties": {
+          "model_name": ["gpt-3", "text-davinci-001", "text-davinci-002", "code-davinci-001"]
+        }
+      }
+    }
+  ],
+  
+  "required_evidence": [
+    "model_configuration",
+    "dependency_manifest"
+  ],
+  
+  "scoring": {
+    "method": "graded",
+    "pass_threshold": 0.70,
+    "fail_threshold": 0.30,
+    "weighted": true
+  },
+  
+  "gap_diagnosis": {
+    "no_version": "Model version is not documented",
+    "no_provider": "Model provider/source is not documented",
+    "deprecated_model": "Using deprecated or end-of-life model"
+  },
+  
+  "fix_guidance": [
+    {
+      "id": "document_provenance",
+      "action": "Document model version and provider in configuration",
+      "target_type": "config",
+      "priority": 2,
+      "verification": "Check model configuration files"
+    },
+    {
+      "id": "update_deprecated",
+      "action": "Update deprecated models to current versions",
+      "target_type": "code",
+      "priority": 1,
+      "verification": "Run compatibility tests after update"
+    }
+  ],
+  
+  "verification_steps": [
+    "1. List all models used in the application",
+    "2. Verify each model has version and provider documented",
+    "3. Check for deprecated or EOL models",
+    "4. Review dependency manifests for model dependencies"
+  ]
+}

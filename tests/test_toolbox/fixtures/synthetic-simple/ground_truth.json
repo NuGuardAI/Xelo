@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-03-02T00:00:00Z",
+  "generator": "github_copilot",
+  "target": "local://synthetic-simple",
+  "nodes": [
+    {
+      "id": "07d8f899-177e-402a-bbb9-d1d8dc26ec6a",
+      "name": "support_agent",
+      "component_type": "AGENT",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "support_agent",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "AGENT: support_agent",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "0df2ac72-d2fb-4d7c-8d8e-2960a09f1c9e",
+      "name": "pinecone",
+      "component_type": "DATASTORE",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "pinecone",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "DATASTORE: pinecone",
+          "location": {
+            "path": "src/vectorstore/index.py",
+            "line": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "9398195c-e7c4-471b-8e73-d6be8cd91e0b",
+      "name": "framework:langchain",
+      "component_type": "FRAMEWORK",
+      "confidence": 0.95,
+      "metadata": {
+        "extras": {
+          "canonical_name": "framework:langchain",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.95,
+          "detail": "FRAMEWORK: framework:langchain",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "6829e0f0-7edf-497f-a293-fce02b72e7a7",
+      "name": "gpt-4",
+      "component_type": "MODEL",
+      "confidence": 0.9,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt-4",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.9,
+          "detail": "MODEL: gpt-4",
+          "location": {
+            "path": "src/agents/support.py",
+            "line": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "d945e9fe-8625-4571-a2d2-b3c012233384",
+      "name": "System Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "System Prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: System Prompt",
+          "location": {
+            "path": "src/prompts/system.py",
+            "line": 5
+          }
+        }
+      ]
+    }
+  ],
+  "edges": []
+}
