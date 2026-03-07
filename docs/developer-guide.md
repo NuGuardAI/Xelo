@@ -1,6 +1,6 @@
 # Developer Guide
 
-This guide is for application developers who want to use Xelo as a Python library to extract AI SBOM data from repositories.
+This guide covers using Xelo as a Python library: extracting AI SBOM data, inspecting results, running toolbox plugins, and serialising output.
 
 ## Install
 
@@ -8,242 +8,203 @@ This guide is for application developers who want to use Xelo as a Python librar
 pip install xelo
 ```
 
-All features are included.
-
 ## Core API
 
-Import the public library surface:
-
 ```python
 from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
 ```
 
-Main types:
-
-- `AiSbomExtractor`: runs extraction on local paths or git repositories.
-- `AiSbomConfig`: controls scan scope and enrichment behavior.
-- `AiSbomSerializer`: converts extracted documents to JSON or CycloneDX.
-
-## Extract From a Git Repository
-
-`extract_from_repo` is the direct library API for remote repositories.
-
-```python
-from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
-
-extractor = AiSbomExtractor()
-config = AiSbomConfig()  # deterministic by default
-
-doc = extractor.extract_from_repo(
-    url="https://github.com/example/project.git",
-    ref="main",
-    config=config,
-)
-
-json_text = AiSbomSerializer.to_json(doc)
-print(f"nodes={len(doc.nodes)} edges={len(doc.edges)}")
-```
+- `AiSbomExtractor` — runs the extraction pipeline on a local path or git repository
+- `AiSbomConfig` — controls scan scope and enrichment; deterministic by default
+- `AiSbomSerializer` — converts an `AiSbomDocument` to Xelo JSON or CycloneDX
 
 ## Extract From a Local Path
-
-If you already have a checked-out repo:
 
 ```python
 from pathlib import Path
 from xelo import AiSbomConfig, AiSbomExtractor
 
-extractor = AiSbomExtractor()
-doc = extractor.extract_from_path(
-    path=Path("/path/to/repo"),
+doc = AiSbomExtractor().extract_from_path(
+    path=Path("./my-repo"),
     config=AiSbomConfig(),
-    source_ref="https://github.com/example/project.git",
-    branch="main",
 )
+print(f"nodes={len(doc.nodes)}  edges={len(doc.edges)}")
 ```
+
+## Extract From a Remote Repository
+
+```python
+from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
+
+doc = AiSbomExtractor().extract_from_repo(
+    url="https://github.com/example/project.git",
+    ref="main",
+    config=AiSbomConfig(),
+)
+Path("sbom.json").write_text(AiSbomSerializer.to_json(doc), encoding="utf-8")
+```
+
+`extract_from_repo` requires `git` on `PATH`.
 
 ## Enable LLM Enrichment
 
-LLM enrichment is off by default in library usage (`enable_llm=False`).
-Enable it explicitly in code:
-
 ```python
 from xelo import AiSbomConfig
 
 config = AiSbomConfig(
     enable_llm=True,
-    llm_model="gpt-4o-mini",
-    llm_budget_tokens=50_000,
+    llm_model="gpt-4o-mini",        # any litellm model string
+    llm_budget_tokens=50_000,       # hard token cap
 )
 ```
 
-Useful environment variables:
+Set the API key in the environment (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, etc.) or pass `llm_api_key="..."` to `AiSbomConfig`.
 
-- `XELO_LLM`
-- `XELO_LLM_MODEL`
-- `XELO_LLM_BUDGET_TOKENS`
-- `XELO_LLM_API_KEY`
-- `XELO_LLM_API_BASE`
-
-Additional provider-native variables can also be used through litellm (for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY`, Azure OpenAI variables, or AWS credentials for Bedrock).
-
-## Provider Config Examples (Python Library)
-
-OpenAI:
+**Provider examples:**
 
 ```python
-from xelo import AiSbomConfig
+# Anthropic
+AiSbomConfig(enable_llm=True, llm_model="anthropic/claude-3-5-sonnet-latest")
 
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="gpt-4o-mini",
-)
-# Set OPENAI_API_KEY in env, or pass llm_api_key="..."
+# Google Gemini
+AiSbomConfig(enable_llm=True, llm_model="gemini/gemini-2.0-flash")
+
+# AWS Bedrock
+AiSbomConfig(enable_llm=True, llm_model="bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0")
+
+# Azure OpenAI
+AiSbomConfig(enable_llm=True, llm_model="azure/gpt-4o-mini",
+             llm_api_key="...", llm_api_base="https://<resource>.openai.azure.com/")
 ```
 
-Gemini (via litellm):
+## Inspect the Document
 
 ```python
-from xelo import AiSbomConfig
-
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="gemini/gemini-2.0-flash",
-)
-# Set GOOGLE_API_KEY in env, or pass llm_api_key="..."
-```
-
-Anthropic:
-
-```python
-from xelo import AiSbomConfig
-
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="anthropic/claude-3-5-sonnet-latest",
-)
-# Set ANTHROPIC_API_KEY in env, or pass llm_api_key="..."
-```
-
-Azure OpenAI:
-
-```python
-from xelo import AiSbomConfig
-
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="azure/gpt-4o-mini",
-    llm_api_key="your_azure_openai_key",
-    llm_api_base="https://<resource>.openai.azure.com/",
-)
-# You may also need AZURE_API_VERSION in env.
-```
-
-Vertex AI Gemini (direct Vertex path in Xelo):
-
-```python
-from xelo import AiSbomConfig
-
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="vertex_ai/gemini-2.5-flash",
-)
-# Set GEMINI_API_KEY or GOOGLE_CLOUD_API_KEY in env.
-```
-
-Bedrock Claude:
-
-```python
-from xelo import AiSbomConfig
-
-config = AiSbomConfig(
-    enable_llm=True,
-    llm_model="bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0",
-)
-# Set AWS_REGION and AWS credentials in env (or IAM role).
-```
-
-## Inspect Extracted Data
-
-Useful fields on the returned `AiSbomDocument`:
-
-```python
-# Detected AI components
+# Component nodes
 for node in doc.nodes:
-    print(node.component_type, node.name, node.metadata)
+    print(node.component_type, node.name, node.confidence)
+    # Typed metadata fields
+    if node.metadata.model_name:
+        print("  model:", node.metadata.model_name)
+    if node.metadata.datastore_type:
+        print("  datastore:", node.metadata.datastore_type)
+    if node.metadata.classified_tables:
+        print("  pii/phi tables:", node.metadata.classified_tables)
+    if node.metadata.privilege_scope:
+        print("  privilege:", node.metadata.privilege_scope)
 
-# Directed relationships between components
+# Relationships
 for edge in doc.edges:
-    print(edge.source, edge.relationship_type, edge.target)
+    print(edge.source, "→", edge.relationship_type, "→", edge.target)
 
-# Package dependencies (from requirements.txt / pyproject.toml / package.json)
-# Scanned recursively at any depth in the repo tree
+# Package dependencies (scanned recursively at any depth)
 for dep in doc.deps:
-    print(dep.name, dep.version_spec, dep.purl, dep.source_file)
+    print(dep.name, dep.version_spec, dep.purl)
 
-# Scan-level summary: frameworks, modalities, data classification
-print(doc.summary.frameworks)   # e.g. ['langgraph', 'openai_agents']
-print(doc.summary.modalities)   # e.g. ['text', 'audio']
+# Scan summary
+print(doc.summary.use_case)
+print(doc.summary.frameworks)
+print(doc.summary.data_classification)  # e.g. ['PHI', 'PII']
+print(doc.summary.classified_tables)    # tables carrying PII/PHI
 ```
 
-## Supported Frameworks
-
-Xelo detects components from the following frameworks without additional config:
-
-**Python:** LangChain, LangGraph, OpenAI Agents SDK, CrewAI (code + YAML configs), AutoGen (code + YAML configs), Google ADK, LlamaIndex, Agno, AWS BedrockAgentCore, Azure AI Agent Service, Guardrails AI, MCP Server, Semantic Kernel
-
-**TypeScript / JavaScript:** LangChain.js, LangGraph.js, OpenAI Agents (TS), Azure AI Agents (TS), Agno (TS), MCP Server (TS)
-
-## Serialize Output
-
-Xelo-native JSON:
+## Serialise Output
 
 ```python
 from xelo import AiSbomSerializer
 
+# Xelo-native JSON (schema v1.1.0)
 json_text = AiSbomSerializer.to_json(doc)
+
+# CycloneDX 1.6 JSON string
+cdx_text = AiSbomSerializer.dump_cyclonedx_json(doc)
+
+# CycloneDX as a Python dict
+cdx_dict = AiSbomSerializer.to_cyclonedx(doc)
 ```
 
-CycloneDX JSON:
+## Toolbox Plugins
+
+Xelo ships with analysis plugins in `xelo.toolbox.plugins`. Each plugin takes an SBOM dict and a config dict, and returns a `ToolResult` with `status`, `message`, and `details`.
 
 ```python
-from xelo import AiSbomSerializer
+from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
+from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
+from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
+from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
 
-cyclonedx_dict = AiSbomSerializer.to_cyclonedx(doc)
+sbom = doc.model_dump(mode="json")
+
+# Structural vulnerability rules
+vuln = VulnerabilityScannerPlugin().run(sbom, {})
+print(vuln.status, vuln.message)
+for f in vuln.details["findings"]:
+    print(f["rule_id"], f["severity"], f["title"])
+
+# MITRE ATLAS annotation
+atlas = AtlasAnnotatorPlugin().run(sbom, {})
+for f in atlas.details["findings"]:
+    for t in f["atlas"]["techniques"]:
+        print(t["technique_id"], t["tactic_name"], t["confidence"])
+
+# SARIF export (for GitHub Code Scanning upload)
+sarif = SarifExporterPlugin().run(sbom, {})
+Path("results.sarif").write_text(
+    sarif.details["sarif_json"], encoding="utf-8"
+)
+
+# Markdown report
+md = MarkdownExporterPlugin().run(sbom, {})
+Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 ```
 
-CycloneDX JSON string:
+### Available Plugins
 
-```python
-from xelo import AiSbomSerializer
+| Class | Module | Notes |
+| --- | --- | --- |
+| `VulnerabilityScannerPlugin` | `vulnerability` | Offline, no network |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | Offline; runs VLA pass + native graph checks |
+| `PolicyAssessmentPlugin` | `policy_assessment` | Requires `policy_file` in config |
+| `LicenseCheckerPlugin` | `license_checker` | Offline |
+| `DependencyAnalyzerPlugin` | `dependency` | Offline |
+| `SarifExporterPlugin` | `sarif_exporter` | Offline |
+| `CycloneDxExporter` | `cyclonedx_exporter` | Offline |
+| `MarkdownExporterPlugin` | `markdown_exporter` | Offline |
+| `GhasUploaderPlugin` | `ghas_uploader` | Requires GitHub token |
+| `AwsSecurityHubPlugin` | `aws_security_hub` | Requires `boto3` + AWS credentials |
+| `XrayPlugin` | `xray` | Requires JFrog Xray URL + credentials |
 
-cyclonedx_text = AiSbomSerializer.dump_cyclonedx_json(doc)
-```
+All plugin classes are importable from `xelo.toolbox.plugins.<module>`.
 
-## Minimal End-to-End Example
+## End-to-End Example
 
 ```python
 from pathlib import Path
 from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
+from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
+from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
 
-extractor = AiSbomExtractor()
-config = AiSbomConfig()
-
-doc = extractor.extract_from_repo(
+# 1. Extract
+doc = AiSbomExtractor().extract_from_repo(
     url="https://github.com/example/project.git",
     ref="main",
-    config=config,
+    config=AiSbomConfig(enable_llm=True, llm_model="gpt-4o-mini"),
 )
 
+# 2. Save SBOM
 Path("ai-sbom.json").write_text(AiSbomSerializer.to_json(doc), encoding="utf-8")
-Path("ai-sbom.cdx.json").write_text(
-    AiSbomSerializer.dump_cyclonedx_json(doc),
-    encoding="utf-8",
-)
+
+# 3. Analyse
+sbom = doc.model_dump(mode="json")
+vuln = VulnerabilityScannerPlugin().run(sbom, {})
+atlas = AtlasAnnotatorPlugin().run(sbom, {})
+print(f"{vuln.message}  |  {atlas.message}")
 ```
 
-## Operational Notes
+## Notes
 
-- `extract_from_repo` requires `git` available on `PATH`.
-- Very large repositories may need config tuning (`max_files`, `max_file_size_bytes`).
-- If LLM enrichment fails, extraction still returns deterministic output.
-- For command-line usage, see [CLI Reference](./cli-reference.md).
+- Extraction is thread-safe; you can run multiple `AiSbomExtractor` instances concurrently.
+- If LLM enrichment fails, extraction still returns the full deterministic result.
+- Very large repositories: tune `max_files` and `max_file_size_bytes` in `AiSbomConfig`.
+- For CLI usage see [CLI Reference](./cli-reference.md).
+- For the schema spec see [AI SBOM Schema](./aibom-schema.md).

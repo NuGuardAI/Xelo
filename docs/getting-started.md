@@ -1,12 +1,12 @@
 # Getting Started
 
-This guide gets you from install to your first AI-BOM in a few commands.
+This guide gets you from install to your first AI SBOM in a few commands.
 
 ## Prerequisites
 
 - Python `3.11` or newer
-- Optional: `git` on `PATH` (required for `xelo scan <url>`)
-- Optional: `cyclonedx-py` CLI for highest-fidelity standard dependency SBOM generation in unified mode
+- Optional: `git` on `PATH` (required for scanning remote repositories)
+- Optional: an LLM API key for enriched output (OpenAI, Anthropic, Gemini, Bedrock, etc.)
 
 ## Install
 
@@ -14,65 +14,120 @@ This guide gets you from install to your first AI-BOM in a few commands.
 pip install xelo
 ```
 
-All features (TypeScript AST parsing, CycloneDX output, LLM enrichment) are included.
+## Your First Scan
 
-## Quickstart
-
-Run a local scan and write Xelo-native JSON:
+Run a local scan and write the AI SBOM to a file:
 
 ```bash
-xelo scan ./my-repo --format json --output sbom.json
+xelo scan ./my-repo --output sbom.json
 ```
 
-CLI alias:
+Scan a remote GitHub repository directly:
 
 ```bash
-ai-sbom scan path ./my-repo --format json --output sbom.json
+xelo scan https://github.com/org/repo --ref main --output sbom.json
 ```
 
-## Understanding Scan Output
-
-A successful `scan` prints a summary to stdout:
+A successful scan prints:
 
 ```text
-<nodes> nodes, <edges> edges → <output-file>
+14 nodes, 18 edges → sbom.json
 ```
 
-The generated JSON document includes:
+Run `xelo validate sbom.json` to confirm the output is valid.
 
-- `nodes` — detected AI components (agents, models, tools, prompts, datastores, guardrails, auth, deployment, framework)
-- `edges` — directed relationships between components
-- `deps` — package dependencies collected from `requirements.txt`, `pyproject.toml`, and `package.json` files found anywhere in the project tree
-- `summary` — scan-level metadata including `frameworks` (list of detected AI frameworks), `modalities`, and data classification signals
+## Understanding the Output
 
-## Configuration Basics
+The JSON document contains five top-level fields:
 
-`xelo scan` can be configured with environment variables and CLI flags. CLI flags override env values.
+```json
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-03-07T08:00:00Z",
+  "target": "./my-repo",
+  "nodes": [...],
+  "edges": [...],
+  "deps":  [...],
+  "summary": {...}
+}
+```
 
-Common environment variables:
+- **`nodes`** — every detected AI component. Each node has a `component_type` (AGENT, MODEL, TOOL, PROMPT, DATASTORE, GUARDRAIL, AUTH, PRIVILEGE, DEPLOYMENT, FRAMEWORK, API_ENDPOINT), a `name`, a `confidence` score, and a `metadata` object with typed fields like `model_name`, `datastore_type`, `privilege_scope`, `transport`, etc.
+- **`edges`** — directed relationships between nodes (USES, CALLS, ACCESSES, PROTECTS, DEPLOYS). Use these to understand which agents call which tools and models.
+- **`deps`** — package dependencies scanned from `requirements.txt`, `pyproject.toml`, and `package.json` files at any depth.
+- **`summary`** — scan-level roll-up: detected frameworks, I/O modalities, API endpoints, deployment platforms, data classification labels, and a natural-language use-case description.
 
-- `XELO_LLM=true|false`
-- `XELO_LLM_MODEL=<litellm-model-string>`
-- `XELO_LLM_BUDGET_TOKENS=<int>`
-- `XELO_LLM_API_KEY=<api-key>`
-- `XELO_LLM_API_BASE=<base-url>`
+For a full description of every field, see [AI SBOM Schema](./aibom-schema.md).
 
-Example enabling LLM enrichment:
+## LLM Enrichment — Why and When to Use It
+
+By default Xelo uses only AST parsing and regex patterns. This is fast, deterministic, and requires no API key. It catches the vast majority of components for known frameworks.
+
+**Enable LLM enrichment when you need:**
+
+1. **A better use-case summary.** Without LLM, the `summary.use_case` field is a rule-based sentence assembled from component counts. With LLM it becomes a concise natural-language description of what the application actually does — useful in security reviews, compliance reports, and vendor assessments.
+
+2. **Node descriptions for MCP servers.** Xelo can describe each MCP server it finds (tools offered, transport, auth type) in a single readable sentence — something regex cannot produce without seeing the full context.
+
+3. **Higher confidence on ambiguous detections.** The LLM verification pass re-evaluates nodes that the AST/regex phases marked as uncertain. This can promote borderline detections and suppress false positives in complex codebases.
+
+4. **Richer output for downstream consumers.** Tools like the vulnerability scanner and ATLAS annotator produce better results when node metadata is more complete. LLM enrichment fills gaps (e.g. model family, provider context) that affect which VLA rules fire.
+
+**Cost is controlled.** Token usage is capped by `XELO_LLM_BUDGET_TOKENS` (default 50 000). A typical medium-size repo uses 5 000–15 000 tokens — a few cents with GPT-4o-mini or free with Gemini Flash.
+
+### Enabling LLM Enrichment
+
+Via CLI:
 
 ```bash
+export OPENAI_API_KEY=sk-...
 xelo scan ./my-repo --llm --llm-model gpt-4o-mini --output sbom.json
+```
+
+Via environment variables:
+
+```bash
+export XELO_LLM=true
+export XELO_LLM_MODEL=gpt-4o-mini
+export OPENAI_API_KEY=sk-...
+xelo scan ./my-repo --output sbom.json
+```
+
+Other providers work through [litellm](https://docs.litellm.ai/docs/providers) — just change `--llm-model`:
+
+| Provider | Model string |
+| --- | --- |
+| OpenAI | `gpt-4o-mini`, `gpt-4o` |
+| Anthropic | `anthropic/claude-3-5-sonnet-latest` |
+| Google Gemini | `gemini/gemini-2.0-flash` |
+| AWS Bedrock | `bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0` |
+| Azure OpenAI | `azure/gpt-4o-mini` + `XELO_LLM_API_BASE` |
+| Any OpenAI-compatible | `openai/<model>` + `XELO_LLM_API_BASE` |
+
+## Output Formats
+
+```bash
+# Default: Xelo-native AI SBOM JSON
+xelo scan ./my-repo --output sbom.json
+
+# CycloneDX 1.6 (AI components only)
+xelo scan ./my-repo --format cyclonedx --output sbom.cdx.json
+
+# Unified: AI SBOM merged with standard dependency BOM
+xelo scan ./my-repo --format unified --output sbom.unified.json
 ```
 
 ## Supported Frameworks
 
 Xelo detects components from the following frameworks without any additional config:
 
-**Python:** LangChain, LangGraph, OpenAI Agents SDK, CrewAI (code + YAML configs), AutoGen (code + YAML configs), Google ADK, LlamaIndex, Agno, AWS BedrockAgentCore, Azure AI Agent Service, Guardrails AI, MCP Server, Semantic Kernel
+**Python:** LangChain, LangGraph, OpenAI Agents SDK, CrewAI (code + YAML configs), AutoGen (code + YAML configs), Google ADK, LlamaIndex, Agno, AWS BedrockAgentCore, Azure AI Agent Service, Guardrails AI, MCP Server (FastMCP / low-level), Semantic Kernel
 
 **TypeScript / JavaScript:** LangChain.js, LangGraph.js, OpenAI Agents (TS), Azure AI Agents (TS), Agno (TS), MCP Server (TS)
 
 ## Next Steps
 
-- For complete command details, see [CLI Reference](./cli-reference.md)
-- If a command fails, see [Troubleshooting](./troubleshooting.md)
-- To use Xelo as a Python library, see [Developer Guide](./developer-guide.md)
+- Full command and flag reference: [CLI Reference](./cli-reference.md)
+- Understand every field in the output: [AI SBOM Schema](./aibom-schema.md)
+- Use Xelo as a Python library or run toolbox plugins: [Developer Guide](./developer-guide.md)
+- Something not working: [Troubleshooting](./troubleshooting.md)
