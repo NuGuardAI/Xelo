@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import json
 import logging
+from pathlib import Path
 from typing import Any
 
 from xelo.models import AiSbomDocument, Evidence, Node, NodeMetadata
@@ -255,8 +256,125 @@ _MAX_SNIPPET_CHARS = 12_000
 _MAX_LINES_PER_FILE = 300
 # Confidence cap for LLM-discovered nodes (no structural backing)
 _DISCOVERY_CONFIDENCE_CAP = 0.75
-# Minimum confidence threshold below which a discovery result is ignored
-_MIN_ACCEPTED_CONFIDENCE = 0.40
+# Minimum confidence threshold below which a discovery result is ignored.
+# Raised from 0.40 → 0.60 to reduce speculative false positives (P3).
+_MIN_ACCEPTED_CONFIDENCE = 0.60
+
+# ---------------------------------------------------------------------------
+# Gap-fill source-file filter (P1)
+# ---------------------------------------------------------------------------
+# Documentation, test, and deploy-guide files consistently produce false
+# positives because the LLM reads *descriptive* mentions of tools/services
+# as actual component detections.  Only code files are sent as context.
+
+_GAP_FILL_SKIP_EXTENSIONS: frozenset[str] = frozenset(
+    {
+        ".md",
+        ".rst",
+        ".txt",
+        ".adoc",
+        ".html",
+        ".htm",
+    }
+)
+
+_GAP_FILL_SKIP_STEMS: frozenset[str] = frozenset(
+    {
+        "readme",
+        "changelog",
+        "license",
+        "contributing",
+        "roadmap",
+        "deployment-guide",
+        "deployment_guide",
+        "install",
+        "setup",
+        "getting-started",
+        "getting_started",
+        "deploy",
+        # Prompt/template source files — contain string variables whose names
+        # look like tool/capability names but are not registered AI tools (P6)
+        "prompts",
+        "system_prompts",
+        "prompt_templates",
+        "instructions",
+        "instruction_templates",
+        "templates",
+        "message_templates",
+    }
+)
+
+_GAP_FILL_SKIP_PATH_PARTS: frozenset[str] = frozenset(
+    {
+        "test",
+        "tests",
+        "__tests__",
+        "tests_integ",
+        "test_toolbox",
+        "docs",
+        "doc",
+        "documentation",
+        "notebooks",
+        "examples",
+        "samples",
+        "benchmark",
+        "benchmarks",
+        "evals",
+    }
+)
+
+
+def _is_gap_fill_source_file(path: str) -> bool:
+    """Return True only if *path* is a code file suitable for gap-fill context.
+
+    Excludes documentation (\.md, \*.rst …), test directories, example
+    directories, and deployment-guide files whose descriptive prose consistently
+    causes the LLM to hallucinate components that are only *mentioned*, not
+    *used*, in the codebase.
+    """
+    p = Path(path)
+    stem = p.stem.lower()
+    suffix = p.suffix.lower()
+    parts = {part.lower() for part in p.parts}
+
+    if suffix in _GAP_FILL_SKIP_EXTENSIONS:
+        return False
+    # Match README-like stems and anything with deploy/install in the name
+    if stem in _GAP_FILL_SKIP_STEMS:
+        return False
+    if "readme" in stem or "deploy" in stem or "install" in stem:
+        return False
+    if parts & _GAP_FILL_SKIP_PATH_PARTS:
+        return False
+    return True
+
+
+# ---------------------------------------------------------------------------
+# Per-type gap-fill gating (P2)
+# ---------------------------------------------------------------------------
+# Categories that are NEVER gap-filled:
+#   AGENT     — 97% recall without LLM; gap-fill adds 0 TPs, 0 FPs historically
+#   GUARDRAIL — 100% recall without LLM; gap-fill has no benefit
+#   PRIVILEGE — 16% precision without LLM already; gap-fill adds ~10 FPs per run
+_GAP_FILL_NEVER: frozenset[ComponentType] = frozenset(
+    {
+        ComponentType.AGENT,
+        ComponentType.GUARDRAIL,
+        ComponentType.PRIVILEGE,
+    }
+)
+
+# Categories gap-filled only when truly absent (zero nodes of that type).
+# If the regex/AST pass already found ≥1 node, skip gap-fill — these types
+# have ≥94% recall from deterministic extraction alone and gap-fill only
+# introduces false positives from description files.
+_GAP_FILL_ONLY_IF_ABSENT: frozenset[ComponentType] = frozenset(
+    {
+        ComponentType.AUTH,  # 100% recall without LLM
+        ComponentType.TOOL,  # 94% recall without LLM; LLM was adding +20 FPs
+        ComponentType.PROMPT,  # 96% recall without LLM; LLM was adding +5 FPs
+    }
+)
 
 # Dev / build tools that are NOT AI SBOM components — excluded from TOOL gap-fill
 _TOOL_BLOCKLIST: frozenset[str] = frozenset(
@@ -464,15 +582,34 @@ def apply_discovery_results(
 
 
 def _identify_absent_categories(doc: AiSbomDocument) -> list[ComponentType]:
-    """Return priority categories whose nodes are absent or all below 0.65."""
+    """Return priority categories where gap-fill should run.
+
+    Applies three gating rules (see P2 in accuracy improvement plan):
+
+    1. *Never* gap-fill AGENT, GUARDRAIL, PRIVILEGE — these have either
+       ≥97% deterministic recall or pre-existing precision problems.
+    2. *Skip* AUTH, TOOL, PROMPT if the deterministic pass found ≥1 node —
+       those types have ≥94% recall; gap-fill only adds FPs.
+    3. For all other categories: gap-fill when no node exceeds 0.65 confidence
+       (original behaviour).
+    """
     present_types: dict[ComponentType, float] = {}
+    type_counts: dict[ComponentType, int] = {}
     for node in doc.nodes:
         ct = node.component_type
+        type_counts[ct] = type_counts.get(ct, 0) + 1
         if ct not in present_types or node.confidence > present_types[ct]:
             present_types[ct] = node.confidence
 
     absent: list[ComponentType] = []
     for category in _CATEGORY_ORDER:
+        # Rule 1: never gap-fill these types
+        if category in _GAP_FILL_NEVER:
+            continue
+        # Rule 2: skip high-recall types if already found
+        if category in _GAP_FILL_ONLY_IF_ABSENT and type_counts.get(category, 0) > 0:
+            continue
+        # Rule 3: original threshold
         max_conf = present_types.get(category, 0.0)
         if max_conf < 0.65:
             absent.append(category)
@@ -512,9 +649,11 @@ def _build_file_snippets(
     if not keywords:
         return ""
 
-    # Score and rank files
+    # Score and rank files — only consider code files (P1: exclude docs/tests)
     scored: list[tuple[int, str, str]] = []
     for path, content in file_contents.items():
+        if not _is_gap_fill_source_file(path):
+            continue
         score = _score_file_for_category(content, keywords, path)
         if score > 0:
             scored.append((score, path, content))
