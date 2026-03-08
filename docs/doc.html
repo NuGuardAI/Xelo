@@ -33,8 +33,6 @@
         .doc-sidebar-inner {
             position: sticky;
             top: calc(var(--nav-h) + 1.5rem);
-            max-height: calc(100vh - var(--nav-h) - 3rem);
-            overflow-y: auto;
         }
 
         .sidebar-back {
@@ -46,7 +44,10 @@
             margin-bottom: 1.5rem;
         }
 
-        .sidebar-back:hover { color: var(--text); text-decoration: none; }
+        .sidebar-back:hover {
+            color: var(--text);
+            text-decoration: none;
+        }
 
         .sidebar-section-title {
             font-size: .7rem;
@@ -63,7 +64,9 @@
             margin: 0;
         }
 
-        .sidebar-nav li + li { margin-top: .1rem; }
+        .sidebar-nav li+li {
+            margin-top: .1rem;
+        }
 
         .sidebar-nav a {
             display: block;
@@ -109,7 +112,11 @@
             animation: spin .7s linear infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         /* ── Markdown rendered content ────────────────────────────────── */
         .doc-content {
@@ -153,10 +160,17 @@
             color: var(--text-muted);
         }
 
-        .doc-content p { margin-bottom: 1rem; }
+        .doc-content p {
+            margin-bottom: 1rem;
+        }
 
-        .doc-content a { color: var(--accent); }
-        .doc-content a:hover { text-decoration: underline; }
+        .doc-content a {
+            color: var(--accent);
+        }
+
+        .doc-content a:hover {
+            text-decoration: underline;
+        }
 
         .doc-content ul,
         .doc-content ol {
@@ -164,9 +178,15 @@
             margin-bottom: 1rem;
         }
 
-        .doc-content li { margin-bottom: .3rem; }
-        .doc-content li > ul,
-        .doc-content li > ol { margin-top: .3rem; margin-bottom: 0; }
+        .doc-content li {
+            margin-bottom: .3rem;
+        }
+
+        .doc-content li>ul,
+        .doc-content li>ol {
+            margin-top: .3rem;
+            margin-bottom: 0;
+        }
 
         .doc-content code {
             font-family: var(--mono);
@@ -205,7 +225,9 @@
             color: var(--text-muted);
         }
 
-        .doc-content blockquote p { margin-bottom: 0; }
+        .doc-content blockquote p {
+            margin-bottom: 0;
+        }
 
         .doc-content table {
             width: 100%;
@@ -227,8 +249,13 @@
             color: var(--text);
         }
 
-        .doc-content td { background: var(--bg-card); }
-        .doc-content tr:nth-child(even) td { background: var(--bg-card-alt); }
+        .doc-content td {
+            background: var(--bg-card);
+        }
+
+        .doc-content tr:nth-child(even) td {
+            background: var(--bg-card-alt);
+        }
 
         .doc-content hr {
             border: none;
@@ -242,13 +269,25 @@
         }
 
         /* ── highlight.js override ─────────────────────────────────────── */
-        .hljs { background: transparent !important; }
+        .hljs {
+            background: transparent !important;
+        }
 
         /* ── Responsive ────────────────────────────────────────────────── */
         @media (max-width: 768px) {
-            .doc-layout { flex-direction: column; padding-top: calc(var(--nav-h) + 1rem); }
-            .doc-sidebar { width: 100%; }
-            .doc-sidebar-inner { position: static; max-height: none; }
+            .doc-layout {
+                flex-direction: column;
+                padding-top: calc(var(--nav-h) + 1rem);
+            }
+
+            .doc-sidebar {
+                width: 100%;
+            }
+
+            .doc-sidebar-inner {
+                position: static;
+                max-height: none;
+            }
         }
     </style>
 </head>
@@ -284,7 +323,8 @@
                         <li><a href="doc.html?page=aibom-schema" data-page="aibom-schema">AI SBOM Schema</a></li>
                         <li><a href="doc.html?page=cli-reference" data-page="cli-reference">CLI Reference</a></li>
                         <li><a href="doc.html?page=developer-guide" data-page="developer-guide">Developer Guide</a></li>
-                        <li><a href="doc.html?page=vulnerability-scanning" data-page="vulnerability-scanning">Vulnerability Scanning</a></li>
+                        <li><a href="doc.html?page=vulnerability-scanning"
+                                data-page="vulnerability-scanning">Vulnerability Scanning</a></li>
                         <li><a href="doc.html?page=troubleshooting" data-page="troubleshooting">Troubleshooting</a></li>
                     </ul>
                 </nav>
@@ -328,14 +368,14 @@
         (function () {
             // Page name → title map
             const PAGE_TITLES = {
-                'getting-started':      'Getting Started',
-                'aibom-schema':         'AI SBOM Schema',
-                'cli-reference':        'CLI Reference',
-                'developer-guide':      'Developer Guide',
+                'getting-started': 'Getting Started',
+                'aibom-schema': 'AI SBOM Schema',
+                'cli-reference': 'CLI Reference',
+                'developer-guide': 'Developer Guide',
                 'vulnerability-scanning': 'Vulnerability Scanning',
-                'troubleshooting':      'Troubleshooting',
-                'CHANGELOG':            'Documentation Changelog',
-                'README':               'Documentation Index',
+                'troubleshooting': 'Troubleshooting',
+                'CHANGELOG': 'Documentation Changelog',
+                'README': 'Documentation Index',
             };
 
             // Resolve page from ?page= param, default to getting-started
@@ -407,4 +447,5 @@
     </script>
 
 </body>
+
 </html>
