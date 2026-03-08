@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Xelo – redirecting…</title>
+  <script>
+    // GitHub Pages doesn't redirect /Xelo → /Xelo/ automatically in all cases.
+    // This 404 page catches that and sends visitors to the right place.
+    var path = window.location.pathname;
+    if (path === '/Xelo' || path === '/Xelo/') {
+      window.location.replace('/Xelo/docs/');
+    } else {
+      window.location.replace('/Xelo/docs/');
+    }
+  </script>
+  <meta http-equiv="refresh" content="0; url=/Xelo/docs/">
+</head>
+<body>
+  <p>Page not found. Redirecting to <a href="/Xelo/docs/">Xelo docs</a>…</p>
+</body>
+</html>
