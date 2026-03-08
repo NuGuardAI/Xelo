@@ -84,11 +84,11 @@
       "evidence": [
         {
           "location": {
-            "path": "docs/package-lock.json",
-            "line": 12623
+            "path": "docs/src/examples/provenance.ipynb",
+            "line": 295
           },
-          "detail": "auth_generic: oauth",
-          "confidence": 0.6
+          "detail": "auth_generic: api_key",
+          "confidence": 0.8500000000000001
         },
         {
           "location": {
@@ -121,14 +121,6 @@
           },
           "detail": "auth_generic: Bearer",
           "confidence": 0.95
-        },
-        {
-          "location": {
-            "path": "docs/src/examples/provenance.ipynb",
-            "line": 295
-          },
-          "detail": "auth_generic: api_key",
-          "confidence": 0.8500000000000001
         },
         {
           "location": {
@@ -642,14 +634,6 @@
           },
           "detail": "deployment_generic: Deployment",
           "confidence": 0.6
-        },
-        {
-          "location": {
-            "path": "docs/package-lock.json",
-            "line": 9538
-          },
-          "detail": "deployment_generic: docker",
-          "confidence": 0.8500000000000001
         }
       ]
     },
@@ -4217,5 +4201,6 @@
       ]
     }
   ],
-  "edges": []
+  "edges": [],
+  "notes": "Updated 2026-03-07: removed lockfile (docs/package-lock.json) evidence entries \u2014 lock files are now classified as docs tier and skipped."
 }

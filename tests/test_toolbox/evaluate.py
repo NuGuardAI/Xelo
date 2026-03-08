@@ -57,6 +57,8 @@ logger = logging.getLogger(__name__)
 BENCHMARK_DIR = Path(__file__).parent
 REPOS_DIR = BENCHMARK_DIR / "fixtures"
 TEST_RESULTS_DIR = BENCHMARK_DIR.parent / "test-results"
+# NuGuard Standard policy files live in llm-runs/ at the workspace root
+NUGUARD_POLICIES_DIR = BENCHMARK_DIR.parent.parent / "llm-runs"
 
 # Default threshold for CI
 DEFAULT_F1_THRESHOLD = 0.80
@@ -835,13 +837,18 @@ def _write_cached_files_to_temp_dir(cached_files_path: Path) -> str:
     return temp_dir
 
 
-def _run_local_folder_discovery(folder_path: str, use_llm: bool = False) -> List[DiscoveredAsset]:
+def _run_local_folder_discovery(
+    folder_path: str, use_llm: bool = False
+) -> Tuple[List[DiscoveredAsset], Dict[str, Any]]:
     """
     Run local folder extraction using the Xelo AiSbomExtractor.
 
     Args:
         folder_path: Path to the folder to scan.
         use_llm: When True, enables LLM enrichment (reads model/key config from env).
+
+    Returns:
+        Tuple of (discovered assets, full SBOM dict for toolbox plugins).
     """
     from xelo.extractor import AiSbomExtractor
     from xelo.config import AiSbomConfig
@@ -851,7 +858,11 @@ def _run_local_folder_discovery(folder_path: str, use_llm: bool = False) -> List
     if use_llm:
         logger.info("  LLM enrichment enabled for this scan")
     doc = extractor.extract_from_path(folder_path, config, source_ref=folder_path)
-    return _convert_xelo_nodes_to_discovered_assets(doc.nodes, evidence_source="xelo_local_folder")
+    discovered = _convert_xelo_nodes_to_discovered_assets(
+        doc.nodes, evidence_source="xelo_local_folder"
+    )
+    sbom_dict: Dict[str, Any] = doc.model_dump(mode="json")
+    return discovered, sbom_dict
 
 
 def _convert_xelo_nodes_to_discovered_assets(
@@ -935,6 +946,9 @@ async def evaluate_repo(
     auth_password: Optional[str] = None,
     github_token: Optional[str] = None,
     timeout_seconds: float = 300.0,
+    plugin_llm_model: str = "",
+    plugin_llm_api_key: Optional[str] = None,
+    plugin_llm_api_base: Optional[str] = None,
 ) -> ScanEvaluationResult:
     """
     Evaluate a single benchmark repository.
@@ -979,6 +993,7 @@ async def evaluate_repo(
     logger.info(f"  Ground truth: {len(gt.assets)} assets, frameworks: {gt.frameworks}")
 
     discovered: List[DiscoveredAsset] = []
+    sbom_dict: Dict[str, Any] = {}
 
     if mode_normalized == "api":
         if gt.repo_url.startswith("local://"):
@@ -988,7 +1003,7 @@ async def evaluate_repo(
                 raise FileNotFoundError(f"Missing cached files for local benchmark: {cache_path}")
             temp_dir = _write_cached_files_to_temp_dir(cache_path)
             try:
-                discovered = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+                discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
         else:
@@ -1001,19 +1016,21 @@ async def evaluate_repo(
                 )
             temp_dir = _write_cached_files_to_temp_dir(cache_path)
             try:
-                discovered = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+                discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
     else:
-        # Legacy local mode (in-process discovery pipeline)
+        # Local mode: use _run_local_folder_discovery (via temp dir) so sbom_dict is populated.
         cache_path = REPOS_DIR / repo_name / "cached_files.json"
         files: List[Tuple[str, str]] = []
 
         if use_cache and cache_path.exists():
             logger.info("  Using cached files")
-            with open(cache_path, "r", encoding="utf-8") as f:
-                cached = json.load(f)
-                files = [(f["path"], f["content"]) for f in cached["files"]]
+            temp_dir = _write_cached_files_to_temp_dir(cache_path)
+            try:
+                discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+            finally:
+                shutil.rmtree(temp_dir, ignore_errors=True)
         else:
             logger.info(f"  Fetching from GitHub: {gt.repo_url}")
             token = os.getenv("GITHUB_TOKEN")
@@ -1031,7 +1048,14 @@ async def evaluate_repo(
                     json.dump(cache_data, f)
                 logger.info(f"  Cached {len(files)} files to {cache_path.name}")
 
-        discovered = await run_discovery_pipeline(files, gt.frameworks, use_llm=use_llm)
+                # Write live-fetched files to temp dir for unified pipeline
+                temp_dir = _write_cached_files_to_temp_dir(cache_path)
+                try:
+                    discovered, sbom_dict = _run_local_folder_discovery(temp_dir, use_llm=use_llm)
+                finally:
+                    shutil.rmtree(temp_dir, ignore_errors=True)
+            else:
+                discovered = await run_discovery_pipeline(files, gt.frameworks, use_llm=use_llm)
     logger.info(f"  Discovered: {len(discovered)} assets")
 
     # Debug: Log discovered MODELs for troubleshooting
@@ -1046,6 +1070,19 @@ async def evaluate_repo(
     evaluation_result = evaluate_discovery(gt, discovered, fuzzy_paths=fuzzy_paths)
     evaluation_result.discovered_assets = discovered  # Store all discovered assets for CSV export
     evaluation_result.processing_time_ms = int((time.time() - start_time) * 1000)
+
+    # Always run toolbox plugins (Markdown always; policy when llm model provided)
+    if sbom_dict:
+        _pol_files = list(NUGUARD_POLICIES_DIR.glob("*_nuguard_standard.json"))
+        run_bench_plugins(
+            sbom_dict,
+            repo_name,
+            TEST_RESULTS_DIR,
+            policy_files=_pol_files,
+            plugin_llm_model=plugin_llm_model,
+            plugin_llm_api_key=plugin_llm_api_key,
+            plugin_llm_api_base=plugin_llm_api_base,
+        )
 
     # Log results
     logger.info(f"  Precision: {evaluation_result.precision:.2%}")
@@ -1079,6 +1116,9 @@ async def evaluate_all(
     auth_password: Optional[str] = None,
     github_token: Optional[str] = None,
     timeout_seconds: float = 300.0,
+    plugin_llm_model: str = "",
+    plugin_llm_api_key: Optional[str] = None,
+    plugin_llm_api_base: Optional[str] = None,
 ) -> BenchmarkSuiteResult:
     """
     Evaluate all available benchmark repositories.
@@ -1132,6 +1172,9 @@ async def evaluate_all(
                 auth_password=auth_password,
                 github_token=github_token,
                 timeout_seconds=timeout_seconds,
+                plugin_llm_model=plugin_llm_model,
+                plugin_llm_api_key=plugin_llm_api_key,
+                plugin_llm_api_base=plugin_llm_api_base,
             )
             results[repo_name] = result
             if result.skipped:
@@ -1204,6 +1247,86 @@ async def evaluate_all(
         by_type_aggregate=by_type_aggregate,
         evaluated_at=datetime.now().isoformat(),
     )
+
+
+# ============================================================================
+# BENCHMARK PLUGIN RUNNER
+# ============================================================================
+
+
+def run_bench_plugins(
+    sbom: Dict[str, Any],
+    repo_name: str,
+    output_dir: Path,
+    *,
+    policy_files: Optional[List[Path]] = None,
+    plugin_llm_model: str = "",
+    plugin_llm_api_key: Optional[str] = None,
+    plugin_llm_api_base: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Run toolbox plugins against *sbom* and write artefacts to *output_dir*.
+
+    Always runs the Markdown exporter.  Policy assessment is attempted only
+    when *policy_files* is non-empty **and** *plugin_llm_model* is set; if
+    the model is absent an issue of type ``no_llm_model`` is recorded instead.
+
+    Returns a dict with keys:
+      - ``markdown_saved``  (bool)
+      - ``policy_results``  (dict mapping policy stem → result dict)
+      - ``issues``          (list of issue dicts)
+    """
+    from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
+
+    if policy_files is None:
+        policy_files = []
+
+    issues: List[Dict[str, Any]] = []
+    policy_results: Dict[str, Any] = {}
+
+    # ── Markdown report ──────────────────────────────────────────────────────
+    repo_out = output_dir / repo_name
+    repo_out.mkdir(parents=True, exist_ok=True)
+    md_plugin = MarkdownExporterPlugin()
+    md_result = md_plugin.run(sbom, {})
+    markdown_text: str = md_result.details.get("markdown", "")
+    md_path = repo_out / "report.md"
+    md_path.write_text(markdown_text, encoding="utf-8")
+    markdown_saved = md_path.exists()
+
+    # ── Policy assessment ────────────────────────────────────────────────────
+    if policy_files:
+        if not plugin_llm_model:
+            issues.append({"type": "no_llm_model"})
+        else:
+            try:
+                from xelo.toolbox.plugins.policy_assessment import PolicyAssessmentPlugin
+
+                pa_plugin = PolicyAssessmentPlugin()
+                for pf in policy_files:
+                    pol_config: Dict[str, Any] = {
+                        "policy_file": str(pf),
+                        "llm_model": plugin_llm_model,
+                    }
+                    if plugin_llm_api_key:
+                        pol_config["llm_api_key"] = plugin_llm_api_key
+                    if plugin_llm_api_base:
+                        pol_config["llm_api_base"] = plugin_llm_api_base
+                    pa_result = pa_plugin.run(sbom, pol_config)
+                    policy_results[pf.stem] = pa_result.details
+                    # Write policy results to per-repo output file
+                    pol_out = repo_out / f"policy_{pf.stem}.json"
+                    pol_out.write_text(
+                        json.dumps(pa_result.details, indent=2, default=str),
+                        encoding="utf-8",
+                    )
+            except Exception as exc:  # noqa: BLE001
+                issues.append({"type": "policy_error", "detail": str(exc)})
+
+    return {
+        "markdown_saved": markdown_saved,
+        "policy_results": policy_results,
+        "issues": issues,
+    }
 
 
 def main():
@@ -1288,6 +1411,28 @@ def main():
     parser.add_argument(
         "--token", "-t", type=str, help="GitHub token for API access (or set GITHUB_TOKEN in .env)"
     )
+    parser.add_argument(
+        "--plugin-llm-model",
+        type=str,
+        default=os.getenv("XELO_LLM_MODEL", ""),
+        help=(
+            "litellm model string for PolicyAssessmentPlugin (e.g. gpt-4o-mini). "
+            "When set, policy assessment runs automatically for each NuGuard Standard "
+            "policy in llm-runs/. Markdown reports are always generated."
+        ),
+    )
+    parser.add_argument(
+        "--plugin-llm-api-key",
+        type=str,
+        default=os.getenv("XELO_LLM_API_KEY") or None,
+        help="API key for the LLM provider used by policy assessment.",
+    )
+    parser.add_argument(
+        "--plugin-llm-api-base",
+        type=str,
+        default=os.getenv("XELO_LLM_API_BASE") or None,
+        help="Base URL override for the LLM provider used by policy assessment.",
+    )
 
     args = parser.parse_args()
 
@@ -1352,6 +1497,9 @@ def main():
                     auth_password=args.auth_password,
                     github_token=os.getenv("GITHUB_TOKEN"),
                     timeout_seconds=args.timeout_seconds,
+                    plugin_llm_model=args.plugin_llm_model or "",
+                    plugin_llm_api_key=args.plugin_llm_api_key,
+                    plugin_llm_api_base=args.plugin_llm_api_base,
                 )
             )
 
@@ -1402,6 +1550,9 @@ def main():
                 auth_password=args.auth_password,
                 github_token=os.getenv("GITHUB_TOKEN"),
                 timeout_seconds=args.timeout_seconds,
+                plugin_llm_model=args.plugin_llm_model or "",
+                plugin_llm_api_key=args.plugin_llm_api_key,
+                plugin_llm_api_base=args.plugin_llm_api_base,
             )
         )
 

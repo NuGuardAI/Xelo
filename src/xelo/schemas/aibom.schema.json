@@ -13,7 +13,8 @@
         "API_ENDPOINT",
         "DEPLOYMENT",
         "PROMPT",
-        "CONTAINER_IMAGE"
+        "CONTAINER_IMAGE",
+        "IAM"
       ],
       "title": "ComponentType",
       "type": "string"
@@ -384,6 +385,197 @@
           "description": "Full base image reference, e.g. 'python:3.12-slim'",
           "title": "Base Image"
         },
+        "cloud_region": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Cloud region, e.g. 'us-east-1', 'eastus', 'us-central1'",
+          "title": "Cloud Region"
+        },
+        "availability_zones": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Availability zones configured, e.g. ['us-east-1a', 'us-east-1b']",
+          "title": "Availability Zones"
+        },
+        "secret_store": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Secret management service in use, e.g. 'aws_secrets_manager', 'azure_key_vault', 'gcp_secret_manager', 'hashicorp_vault', 'k8s_secret'",
+          "title": "Secret Store"
+        },
+        "encryption_at_rest": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "True when encryption-at-rest is explicitly configured in IaC",
+          "title": "Encryption At Rest"
+        },
+        "encryption_key_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "KMS key ARN, Key Vault URI, or CMEK resource reference",
+          "title": "Encryption Key Ref"
+        },
+        "runs_as_root": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "True when the container is configured to run as root (UID 0); False = non-root",
+          "title": "Runs As Root"
+        },
+        "has_health_check": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "True when a HEALTHCHECK instruction (Dockerfile) or liveness/readiness probe (K8s) is present",
+          "title": "Has Health Check"
+        },
+        "has_resource_limits": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "True when Kubernetes resource limits are defined for the workload container",
+          "title": "Has Resource Limits"
+        },
+        "ha_mode": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "High-availability topology: 'multi-az', 'replicated', or 'single'",
+          "title": "Ha Mode"
+        },
+        "iam_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "IAM entity kind: 'role', 'policy', 'service_account', 'managed_identity', 'role_binding'",
+          "title": "Iam Type"
+        },
+        "principal": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ARN, email, or object ID of the IAM principal",
+          "title": "Principal"
+        },
+        "permissions": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Actions or scopes granted by this IAM entity (up to 20 entries)",
+          "title": "Permissions"
+        },
+        "iam_scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Scope of the IAM binding: 'project', 'subscription', 'cluster', 'namespace', 'resource'",
+          "title": "Iam Scope"
+        },
+        "trust_principals": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Principals trusted to assume this role (AWS trust policy subjects, K8s binding subjects)",
+          "title": "Trust Principals"
+        },
         "extras": {
           "additionalProperties": true,
           "description": "Adapter-specific key/value pairs (provider, model_family, version, \u2026)",
@@ -528,6 +720,65 @@
           "title": "Node Counts",
           "type": "object"
         },
+        "secret_stores": {
+          "description": "Deduped secret management services referenced across all IaC files",
+          "items": {
+            "type": "string"
+          },
+          "title": "Secret Stores",
+          "type": "array"
+        },
+        "availability_zones": {
+          "description": "All cloud availability zones referenced in IaC files",
+          "items": {
+            "type": "string"
+          },
+          "title": "Availability Zones",
+          "type": "array"
+        },
+        "encryption_at_rest_coverage": {
+          "default": false,
+          "description": "True when at least one IaC resource has encryption-at-rest configured",
+          "title": "Encryption At Rest Coverage",
+          "type": "boolean"
+        },
+        "security_findings": {
+          "description": "Notable security / resilience findings across IaC and container config, e.g. ['container_runs_as_root', 'missing_health_check', 'no_resource_limits', 'secrets_in_env_vars', 'overly_permissive_iam']",
+          "items": {
+            "type": "string"
+          },
+          "title": "Security Findings",
+          "type": "array"
+        },
+        "iam_principals": {
+          "description": "IAM role ARNs, GCP service account emails, and Azure managed identity names",
+          "items": {
+            "type": "string"
+          },
+          "title": "Iam Principals",
+          "type": "array"
+        },
+        "service_accounts": {
+          "description": "K8s ServiceAccount names and GCP/Azure service account identifiers",
+          "items": {
+            "type": "string"
+          },
+          "title": "Service Accounts",
+          "type": "array"
+        },
+        "iac_security_summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "LLM-generated security briefing for practitioners covering deployment posture, IAM configuration, secret management, encryption, HA, and CI/CD risks across all detected IaC and GitHub Actions workflows.",
+          "title": "Iac Security Summary"
+        },
         "data_classification": {
           "description": "Union of all data classification labels detected across the repository, e.g. ['PHI', 'PII'].  Empty list when no classified fields are found.",
           "items": {
@@ -577,12 +828,12 @@
       "type": "object"
     }
   },
-  "$id": "https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json",
+  "$id": "https://nuguard.ai/schemas/aibom/1.3.0/aibom.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "AI Bill of Materials document produced by Xelo.\n\nThis is the canonical output format.  Use ``AiSbomSerializer.to_json()``\nto serialise and ``AiSbomDocument.model_validate()`` to parse and validate.",
   "properties": {
     "schema_version": {
-      "default": "1.1.0",
+      "default": "1.3.0",
       "description": "AIBOM schema version (semver); bump when format changes",
       "title": "Schema Version",
       "type": "string"

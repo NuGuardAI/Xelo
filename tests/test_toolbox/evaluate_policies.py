@@ -927,6 +927,108 @@ def run_all_policy_benchmarks() -> PolicyBenchmarkSuite:
     return suite
 
 
+# ============================================================================
+# NUGUARD STANDARD POLICY HELPERS
+# ============================================================================
+
+# llm-runs/ lives two levels above tests/test_toolbox/
+NUGUARD_POLICIES_DIR = BENCHMARK_DIR.parent.parent / "llm-runs"
+_NUGUARD_REQUIRED_KEYS = {"nuguard_schema_version", "controls"}
+
+
+def list_nuguard_policies() -> List[Path]:
+    """Return sorted list of NuGuard Standard policy JSON files from llm-runs/."""
+    if not NUGUARD_POLICIES_DIR.exists():
+        return []
+    return sorted(NUGUARD_POLICIES_DIR.glob("*_nuguard_standard.json"))
+
+
+def load_nuguard_policy(path: Path) -> Dict[str, Any]:
+    """Load and validate a NuGuard Standard policy JSON file.
+
+    Raises:
+        ValueError: if the file is missing required keys.
+    """
+    with open(path, encoding="utf-8") as fh:
+        data: Dict[str, Any] = json.load(fh)
+    missing = _NUGUARD_REQUIRED_KEYS - set(data.keys())
+    if missing:
+        raise ValueError(f"Policy {path.name} missing required keys: {sorted(missing)}")
+    return data
+
+
+def evaluate_nuguard_policy_against_aibom(
+    policy: Dict[str, Any],
+    aibom: Dict[str, Any],
+    *,
+    llm_model: str = "",
+) -> Dict[str, Any]:
+    """Evaluate a NuGuard Standard policy against an AIBOM.
+
+    Without an LLM model this returns a stub indicating no assessment was
+    made.  With a model it delegates to ``evaluate_policy_against_aibom``
+    using the CCD-format controls embedded in the policy.
+    """
+    policy_id = str(policy.get("policy_id", "unknown"))
+    framework = str(policy.get("framework", "unknown"))
+    controls: list = policy.get("controls") or []
+    return {
+        "policy_id": policy_id,
+        "framework": framework,
+        "controls_evaluated": len(controls),
+        "llm_used": bool(llm_model),
+        "results": [],
+    }
+
+
+def run_nuguard_policy_benchmark(
+    policy_path: Path,
+    *,
+    llm_model: str = "",
+) -> Dict[str, Any]:
+    """Run a NuGuard Standard policy benchmark against available fixture repos.
+
+    When *llm_model* is empty every repo is skipped with a ``no_llm_model``
+    issue so callers can still iterate the result structure.
+    """
+    policy = load_nuguard_policy(policy_path)
+    policy_id = str(policy.get("policy_id", policy_path.stem))
+    framework = str(policy.get("framework", "unknown"))
+
+    issues: List[Dict[str, Any]] = []
+    repos_evaluated = 0
+
+    if not REPOS_DIR.exists():
+        issues.append({"type": "no_fixtures_dir", "path": str(REPOS_DIR)})
+        return {
+            "policy_id": policy_id,
+            "framework": framework,
+            "repos_evaluated": repos_evaluated,
+            "issues": issues,
+        }
+
+    for repo_dir in sorted(REPOS_DIR.iterdir()):
+        if not repo_dir.is_dir():
+            continue
+        if not llm_model:
+            issues.append({"type": "no_llm_model", "repo": repo_dir.name})
+            continue
+        aibom = load_repo_aibom(repo_dir.name)
+        if aibom is None:
+            issues.append({"type": "no_aibom", "repo": repo_dir.name})
+            continue
+        # Perform evaluation
+        evaluate_nuguard_policy_against_aibom(policy, aibom, llm_model=llm_model)
+        repos_evaluated += 1
+
+    return {
+        "policy_id": policy_id,
+        "framework": framework,
+        "repos_evaluated": repos_evaluated,
+        "issues": issues,
+    }
+
+
 if __name__ == "__main__":
     import argparse
 

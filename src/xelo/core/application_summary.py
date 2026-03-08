@@ -311,6 +311,105 @@ def build_deterministic_use_case_summary(
     )
 
 
+def extract_iac_security_context(nodes: Sequence[Node]) -> dict[str, Any]:
+    """Aggregate security and resilience metadata from IaC/Dockerfile node metadata.
+
+    Scans DEPLOYMENT, CONTAINER_IMAGE, and IAM nodes for typed fields
+    (``secret_store``, ``encryption_at_rest``, ``runs_as_root``, etc.) and
+    returns a dict suitable for merging into the scan summary.
+    """
+    secret_stores: list[str] = []
+    azones: list[str] = []
+    encryption_at_rest_coverage = False
+    security_findings: list[str] = []
+    iam_principals: list[str] = []
+    service_accounts: list[str] = []
+
+    _findings_set: set[str] = set()
+
+    for node in nodes:
+        nt = _node_type_str(node)
+        meta = node.metadata
+
+        if nt in ("DEPLOYMENT", "CONTAINER_IMAGE"):
+            # Secret stores
+            store = meta.secret_store or meta.extras.get("secret_store")
+            if store and isinstance(store, str):
+                secret_stores.append(store)
+
+            # AZs
+            az = meta.availability_zones or meta.extras.get("availability_zones")
+            if isinstance(az, list):
+                azones.extend(str(z) for z in az)
+
+            # Encryption at rest
+            enc = meta.encryption_at_rest
+            if enc is None:
+                enc = meta.extras.get("encryption_at_rest")
+            if enc is True:
+                encryption_at_rest_coverage = True
+
+        if nt == "CONTAINER_IMAGE":
+            rar = meta.extras.get("runs_as_root")
+            if rar is None:
+                rar = meta.runs_as_root
+            if rar is True and "container_runs_as_root" not in _findings_set:
+                _findings_set.add("container_runs_as_root")
+                security_findings.append("container_runs_as_root")
+
+            hc = meta.extras.get("has_health_check")
+            if hc is None:
+                hc = meta.has_health_check
+            if hc is False and "missing_health_check" not in _findings_set:
+                _findings_set.add("missing_health_check")
+                security_findings.append("missing_health_check")
+
+            findings = meta.extras.get("security_findings") or []
+            for f in findings:
+                if f not in _findings_set:
+                    _findings_set.add(f)
+                    security_findings.append(f)
+
+        if nt == "DEPLOYMENT":
+            rl = meta.has_resource_limits
+            if rl is None:
+                rl = meta.extras.get("has_resource_limits")
+            if rl is False and "no_resource_limits" not in _findings_set:
+                _findings_set.add("no_resource_limits")
+                security_findings.append("no_resource_limits")
+
+            rar = meta.runs_as_root
+            if rar is None:
+                rar = meta.extras.get("runs_as_root")
+            if rar is True and "container_runs_as_root" not in _findings_set:
+                _findings_set.add("container_runs_as_root")
+                security_findings.append("container_runs_as_root")
+
+        if nt == "IAM":
+            principal = meta.principal or meta.extras.get("principal")
+            iam_type = meta.iam_type or meta.extras.get("iam_type")
+            if principal and isinstance(principal, str):
+                iam_principals.append(principal)
+            if iam_type in ("service_account", "managed_identity"):
+                if principal and isinstance(principal, str):
+                    service_accounts.append(principal)
+            # Flag overly-permissive IAM (wildcard permissions)
+            perms = meta.permissions or meta.extras.get("permissions") or []
+            if isinstance(perms, list) and any("*" in str(p) for p in perms):
+                if "overly_permissive_iam" not in _findings_set:
+                    _findings_set.add("overly_permissive_iam")
+                    security_findings.append("overly_permissive_iam")
+
+    return {
+        "secret_stores": _uniq(secret_stores),
+        "availability_zones": _uniq(azones),
+        "encryption_at_rest_coverage": encryption_at_rest_coverage,
+        "security_findings": security_findings,
+        "iam_principals": _uniq(iam_principals),
+        "service_accounts": _uniq(service_accounts),
+    }
+
+
 def build_scan_summary(
     nodes: Sequence[Node],
     files: Sequence[tuple[str, str]],
@@ -352,6 +451,8 @@ def build_scan_summary(
             if table:
                 classified_tables.append(table)
 
+    iac_security = extract_iac_security_context(nodes)
+
     return {
         "source_ref": source_ref,
         "branch": branch,
@@ -364,6 +465,7 @@ def build_scan_summary(
         "data_classification": sorted(all_labels),
         "classified_tables": sorted(classified_tables),
         **deployment,
+        **iac_security,
     }
 
 

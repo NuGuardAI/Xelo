@@ -111,6 +111,67 @@ class NodeMetadata(BaseModel):
     base_image: str | None = Field(
         default=None, description="Full base image reference, e.g. 'python:3.12-slim'"
     )
+    # IaC security / resilience fields (populated by IaC adapters)
+    cloud_region: str | None = Field(
+        default=None,
+        description="Cloud region, e.g. 'us-east-1', 'eastus', 'us-central1'",
+    )
+    availability_zones: list[str] | None = Field(
+        default=None,
+        description="Availability zones configured, e.g. ['us-east-1a', 'us-east-1b']",
+    )
+    secret_store: str | None = Field(
+        default=None,
+        description=(
+            "Secret management service in use, e.g. 'aws_secrets_manager', "
+            "'azure_key_vault', 'gcp_secret_manager', 'hashicorp_vault', 'k8s_secret'"
+        ),
+    )
+    encryption_at_rest: bool | None = Field(
+        default=None,
+        description="True when encryption-at-rest is explicitly configured in IaC",
+    )
+    encryption_key_ref: str | None = Field(
+        default=None,
+        description="KMS key ARN, Key Vault URI, or CMEK resource reference",
+    )
+    runs_as_root: bool | None = Field(
+        default=None,
+        description="True when the container is configured to run as root (UID 0); False = non-root",
+    )
+    has_health_check: bool | None = Field(
+        default=None,
+        description="True when a HEALTHCHECK instruction (Dockerfile) or liveness/readiness probe (K8s) is present",
+    )
+    has_resource_limits: bool | None = Field(
+        default=None,
+        description="True when Kubernetes resource limits are defined for the workload container",
+    )
+    ha_mode: str | None = Field(
+        default=None,
+        description="High-availability topology: 'multi-az', 'replicated', or 'single'",
+    )
+    # IAM / identity fields (populated by IaC adapters for IAM nodes)
+    iam_type: str | None = Field(
+        default=None,
+        description="IAM entity kind: 'role', 'policy', 'service_account', 'managed_identity', 'role_binding'",
+    )
+    principal: str | None = Field(
+        default=None,
+        description="ARN, email, or object ID of the IAM principal",
+    )
+    permissions: list[str] | None = Field(
+        default=None,
+        description="Actions or scopes granted by this IAM entity (up to 20 entries)",
+    )
+    iam_scope: str | None = Field(
+        default=None,
+        description="Scope of the IAM binding: 'project', 'subscription', 'cluster', 'namespace', 'resource'",
+    )
+    trust_principals: list[str] | None = Field(
+        default=None,
+        description="Principals trusted to assume this role (AWS trust policy subjects, K8s binding subjects)",
+    )
     extras: dict[str, Any] = Field(
         default_factory=dict,
         description="Adapter-specific key/value pairs (provider, model_family, version, …)",
@@ -190,6 +251,43 @@ class ScanSummary(BaseModel):
         default_factory=dict,
         description="Count of nodes per ComponentType, e.g. {'AGENT': 3, 'MODEL': 2}",
     )
+    # Security & resilience aggregate fields (populated from IaC/Dockerfile adapter output)
+    secret_stores: list[str] = Field(
+        default_factory=list,
+        description="Deduped secret management services referenced across all IaC files",
+    )
+    availability_zones: list[str] = Field(
+        default_factory=list,
+        description="All cloud availability zones referenced in IaC files",
+    )
+    encryption_at_rest_coverage: bool = Field(
+        default=False,
+        description="True when at least one IaC resource has encryption-at-rest configured",
+    )
+    security_findings: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Notable security / resilience findings across IaC and container config, e.g. "
+            "['container_runs_as_root', 'missing_health_check', 'no_resource_limits', "
+            "'secrets_in_env_vars', 'overly_permissive_iam']"
+        ),
+    )
+    iam_principals: list[str] = Field(
+        default_factory=list,
+        description="IAM role ARNs, GCP service account emails, and Azure managed identity names",
+    )
+    service_accounts: list[str] = Field(
+        default_factory=list,
+        description="K8s ServiceAccount names and GCP/Azure service account identifiers",
+    )
+    iac_security_summary: str | None = Field(
+        default=None,
+        description=(
+            "LLM-generated security briefing for practitioners covering deployment posture, "
+            "IAM configuration, secret management, encryption, HA, and CI/CD risks across "
+            "all detected IaC and GitHub Actions workflows."
+        ),
+    )
     data_classification: list[str] = Field(
         default_factory=list,
         description=(
@@ -216,12 +314,12 @@ class AiSbomDocument(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json",
+            "$id": "https://nuguard.ai/schemas/aibom/1.3.0/aibom.schema.json",
         }
     )
 
     schema_version: str = Field(
-        default="1.1.0",
+        default="1.3.0",
         description="AIBOM schema version (semver); bump when format changes",
     )
     generated_at: datetime = Field(

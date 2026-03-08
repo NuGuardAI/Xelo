@@ -1,3 +1,5 @@
+<img src="xelo-logo.png" alt="Xelo" height="20" />
+
 # Getting Started
 
 This guide gets you from install to your first AI SBOM in a few commands.
@@ -116,6 +118,65 @@ xelo scan ./my-repo --format cyclonedx --output sbom.cdx.json
 # Unified: AI SBOM merged with standard dependency BOM
 xelo scan ./my-repo --format unified --output sbom.unified.json
 ```
+
+## Validating and Inspecting the Schema
+
+After scanning, confirm the output is structurally valid:
+
+```bash
+xelo validate sbom.json
+# OK — document is valid
+```
+
+Print the full JSON Schema to stdout (useful for editor integration or CI linting):
+
+```bash
+xelo schema
+```
+
+Write it to a file:
+
+```bash
+xelo schema --output aibom.schema.json
+```
+
+## Running Toolbox Plugins
+
+Toolbox plugins analyse an existing SBOM and produce findings, reports, and exports. Run them with `xelo plugin run`:
+
+```bash
+# See all available plugins
+xelo plugin list
+
+# Structural vulnerability / VLA rules
+xelo plugin run vulnerability sbom.json
+
+# Write findings to a JSON file
+xelo plugin run vulnerability sbom.json --output findings.json
+
+# MITRE ATLAS annotation
+xelo plugin run atlas sbom.json --output atlas.json
+
+# SARIF export for GitHub Code Scanning
+xelo plugin run sarif sbom.json --output results.sarif
+
+# Human-readable Markdown report
+xelo plugin run markdown sbom.json --output report.md
+
+# CycloneDX export
+xelo plugin run cyclonedx sbom.json --output bom.cdx.json
+
+# Policy assessment (requires LLM)
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp_ai_top10.json \
+  --config llm_model=gpt-4o \
+  --config repo_path=./my-repo \
+  --output policy-report.json
+```
+
+Each plugin writes its output to `--output` (default: stdout). When `--output` is a file, xelo prints a one-line summary (`ok: ... → file.json`) to stdout.
+
+For the full list of plugins, config options, and integration targets (GHAS, AWS Security Hub, JFrog Xray) see the [CLI Reference — Toolbox Plugins](./cli-reference.md) and [Developer Guide](./developer-guide.md).
 
 ## Supported Frameworks
 

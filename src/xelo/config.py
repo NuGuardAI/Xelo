@@ -102,6 +102,9 @@ class AiSbomConfig(BaseModel):
             ".yaml",
             ".yml",
             ".tf",
+            ".tfvars",
+            ".bicep",
+            ".jinja",
             ".md",
         }
     )

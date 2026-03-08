@@ -53,6 +53,26 @@ _RUN_DEPLOY_TOOLS_RE = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 
+# USER instruction — detect root user
+# USER root | USER 0 | USER 0:0 → runs as root
+_USER_RE = re.compile(
+    r"^\s*USER\s+(?P<user>\S+)",
+    re.IGNORECASE | re.MULTILINE,
+)
+_ROOT_USERS = frozenset({"root", "0", "0:0", "0:root", "root:0", "root:root"})
+
+# HEALTHCHECK instruction
+_HEALTHCHECK_RE = re.compile(
+    r"^\s*HEALTHCHECK\b(?P<rest>[^\n]*)",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+# ARG / ENV instructions with secret-sounding names
+_SECRET_ARG_ENV_RE = re.compile(
+    r"^\s*(?:ARG|ENV)\s+(?P<name>[A-Z0-9_]+(?:_KEY|_SECRET|_TOKEN|_PASSWORD|_PASS|_CREDENTIAL|_APIKEY|_API_KEY|_ACCESS_KEY|_PRIVATE_KEY))",
+    re.IGNORECASE | re.MULTILINE,
+)
+
 # Splits an image reference into registry + name + tag + digest
 # Examples:
 #   python:3.12-slim               → name=python  tag=3.12-slim  digest=None
@@ -153,6 +173,9 @@ class DockerfileAdapter:
                 )
             )
 
+        # Annotate the first image node with security signals (or all if none shared)
+        self._annotate_security_signals(detections, content, file_path)
+
         _log.info(
             "dockerfile adapter: %d unique image(s) found in %s",
             len(detections), file_path,
@@ -160,6 +183,60 @@ class DockerfileAdapter:
         detections.extend(self._detect_exposed_ports(content, file_path))
         detections.extend(self._detect_run_tools(content, file_path))
         return detections
+
+    def _annotate_security_signals(
+        self, detections: list[ComponentDetection], content: str, file_path: str
+    ) -> None:
+        """Inject security metadata into existing CONTAINER_IMAGE detections.
+
+        Populates ``runs_as_root``, ``has_health_check``, and
+        ``security_findings`` on the metadata dict of every image node.
+        """
+        if not detections:
+            return
+
+        # Count FROM statements to detect multi-stage builds
+        from_count = len(_FROM_RE.findall(content))
+        multi_stage = from_count > 1
+
+        # USER instruction: scan all USER lines; last one wins for final stage
+        runs_as_root: bool | None = None
+        for m in _USER_RE.finditer(content):
+            user_val = m.group("user").strip().lower()
+            if user_val in _ROOT_USERS:
+                runs_as_root = True
+            else:
+                runs_as_root = False  # non-root user explicitly set
+
+        # HEALTHCHECK instruction
+        has_health_check: bool | None = None
+        hc_m = _HEALTHCHECK_RE.search(content)
+        if hc_m:
+            rest = hc_m.group("rest").strip().upper()
+            has_health_check = rest != "NONE"
+
+        # Secret-like ARG / ENV names
+        security_findings: list[str] = []
+        if _SECRET_ARG_ENV_RE.search(content):
+            security_findings.append("secrets_in_build_args")
+
+        # Write signals into every CONTAINER_IMAGE detection in this file
+        for det in detections:
+            if det.component_type != ComponentType.CONTAINER_IMAGE:
+                continue
+            det.metadata["runs_as_root"] = runs_as_root
+            det.metadata["has_health_check"] = has_health_check
+            det.metadata["multi_stage_build"] = multi_stage
+            if security_findings:
+                det.metadata["security_findings"] = security_findings
+        _log.debug(
+            "%s: security signals — runs_as_root=%s healthcheck=%s multi_stage=%s findings=%s",
+            file_path,
+            runs_as_root,
+            has_health_check,
+            multi_stage,
+            security_findings,
+        )
 
     # ------------------------------------------------------------------
     # Internal helpers

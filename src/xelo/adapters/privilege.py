@@ -55,12 +55,45 @@ _PRI = 150  # same priority bucket as the old generic adapter
 # not any host machine path that may happen to contain "tests".
 _PRIV_SKIP_PARTS = frozenset(
     {
+        # Test directories
         "tests",
         "test",
         "__tests__",
         "tests_integ",
         "integration_tests",
         "e2e",
+        "evals",  # benchmark/evaluation scripts
+        # Build / tooling directories
+        "scripts",  # build, deploy, version-bump scripts
+        # Library code (not user application code)
+        "libs",  # library source trees (e.g. langchain/libs/core/...)
+        # Frontend / UI code — privilege patterns here are UI state, not agent caps
+        "desktop",  # Electron / desktop UI code
+        # Documentation directories — prose mentions of file I/O / subprocess
+        # are not agent capability grants.  Intentionally NOT skipping examples/,
+        # samples/, demo/ — those often contain runnable agent code.
+        "docs",
+        "doc",
+        "documentation",
+        "notebooks",
+    }
+)
+
+# File extensions that privilege adapters skip entirely.
+# .tsx / .jsx are React UI components — privilege patterns found there are
+# almost never AI-agent capability grants.
+# .md / .rst / .txt / .html are documentation files whose prose mentions of
+# file I/O, subprocess, etc. are NOT agent capability declarations.
+_PRIV_SKIP_EXTENSIONS = frozenset(
+    {
+        ".tsx",
+        ".jsx",
+        ".md",
+        ".rst",
+        ".txt",
+        ".html",
+        ".htm",
+        ".adoc",
     }
 )
 
@@ -91,6 +124,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "rbac"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Admin / superuser escalation                                         #
@@ -112,6 +146,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "admin"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Filesystem write / modify / delete                                   #
@@ -155,6 +190,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "filesystem_write"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Database write (SQL + ORM)                                           #
@@ -193,6 +229,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "db_write"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Outbound email                                                        #
@@ -217,6 +254,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "email_out"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Social media / messaging out                                          #
@@ -264,6 +302,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "social_media_out"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Code execution / shell access                                         #
@@ -302,6 +341,7 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "code_execution"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
         # ------------------------------------------------------------------ #
         # Outbound network / HTTP calls with data                              #
@@ -338,5 +378,6 @@ def privilege_adapters() -> list[RegexAdapter]:
             metadata={"privilege_scope": "network_out"},
             skip_path_parts=_PRIV_SKIP_PARTS,
             skip_init_py=True,
+            skip_extensions=_PRIV_SKIP_EXTENSIONS,
         ),
     ]

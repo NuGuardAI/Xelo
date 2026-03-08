@@ -1,3 +1,5 @@
+<img src="xelo-logo.png" alt="Xelo" height="20" />
+
 # Developer Guide
 
 This guide covers using Xelo as a Python library: extracting AI SBOM data, inspecting results, running toolbox plugins, and serialising output.
@@ -125,32 +127,54 @@ cdx_dict = AiSbomSerializer.to_cyclonedx(doc)
 
 ## Toolbox Plugins
 
-Xelo ships with analysis plugins in `xelo.toolbox.plugins`. Each plugin takes an SBOM dict and a config dict, and returns a `ToolResult` with `status`, `message`, and `details`.
+Xelo ships with analysis plugins in `xelo.toolbox.plugins`. They can be run from the CLI with `xelo plugin run`, or called directly from Python.
+
+**CLI (recommended for simple use cases):**
+
+```bash
+xelo plugin list                                        # show all plugins
+xelo plugin run vulnerability sbom.json                 # VLA rules to stdout
+xelo plugin run sarif sbom.json --output results.sarif  # SARIF export
+xelo plugin run markdown sbom.json --output report.md   # Markdown report
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp.json \
+  --config llm_model=gpt-4o
+```
+
+**Python API (for pipeline integration or chaining):**
+
+Each plugin takes an SBOM dict and a config dict, and returns a `ToolResult` with `status`, `message`, and `details`.
 
 ```python
 from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
 from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
 from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
 from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
+from xelo.toolbox.plugins.policy_assessment import PolicyAssessmentPlugin
 
 sbom = doc.model_dump(mode="json")
 
-# Structural vulnerability rules
+# Structural vulnerability rules (offline)
 vuln = VulnerabilityScannerPlugin().run(sbom, {})
 print(vuln.status, vuln.message)
 for f in vuln.details["findings"]:
     print(f["rule_id"], f["severity"], f["title"])
 
-# MITRE ATLAS annotation
+# MITRE ATLAS annotation (offline)
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for f in atlas.details["findings"]:
     for t in f["atlas"]["techniques"]:
         print(t["technique_id"], t["tactic_name"], t["confidence"])
 
+# Policy assessment against a custom policy file
+policy = PolicyAssessmentPlugin().run(sbom, {"policy_file": "owasp_ai_top10.json"})
+print(policy.status, policy.message)
+
 # SARIF export (for GitHub Code Scanning upload)
+# ToolResult.details IS the SARIF 2.1.0 dict
 sarif = SarifExporterPlugin().run(sbom, {})
 Path("results.sarif").write_text(
-    sarif.details["sarif_json"], encoding="utf-8"
+    json.dumps(sarif.details, indent=2), encoding="utf-8"
 )
 
 # Markdown report
@@ -158,23 +182,61 @@ md = MarkdownExporterPlugin().run(sbom, {})
 Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 ```
 
+`ToolResult` fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `status` | `"ok"` \| `"error"` \| `"warning"` | Outcome of the run |
+| `message` | str | One-line human-readable summary |
+| `details` | dict | Plugin-specific payload (findings list, `markdown` string, SARIF dict, …) |
+
 ### Available Plugins
 
-| Class | Module | Notes |
-| --- | --- | --- |
-| `VulnerabilityScannerPlugin` | `vulnerability` | Offline, no network |
-| `AtlasAnnotatorPlugin` | `atlas_annotator` | Offline; runs VLA pass + native graph checks |
-| `PolicyAssessmentPlugin` | `policy_assessment` | Requires `policy_file` in config |
-| `LicenseCheckerPlugin` | `license_checker` | Offline |
-| `DependencyAnalyzerPlugin` | `dependency` | Offline |
-| `SarifExporterPlugin` | `sarif_exporter` | Offline |
-| `CycloneDxExporter` | `cyclonedx_exporter` | Offline |
-| `MarkdownExporterPlugin` | `markdown_exporter` | Offline |
-| `GhasUploaderPlugin` | `ghas_uploader` | Requires GitHub token |
-| `AwsSecurityHubPlugin` | `aws_security_hub` | Requires `boto3` + AWS credentials |
-| `XrayPlugin` | `xray` | Requires JFrog Xray URL + credentials |
+| Class | Module | Network | Notes |
+| --- | --- | --- | --- |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Offline, no network |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; runs VLA pass + native graph checks |
+| `PolicyAssessmentPlugin` | `policy_assessment` | No | Requires `policy_file` in config |
+| `LicenseCheckerPlugin` | `license_checker` | No | Offline |
+| `DependencyAnalyzerPlugin` | `dependency` | No | Offline |
+| `SarifExporterPlugin` | `sarif_exporter` | No | Offline |
+| `CycloneDxExporter` | `cyclonedx_exporter` | No | Offline |
+| `MarkdownExporterPlugin` | `markdown_exporter` | No | Offline |
+| `GhasUploaderPlugin` | `ghas_uploader` | Yes | Requires `GITHUB_TOKEN` env var |
+| `AwsSecurityHubPlugin` | `aws_security_hub` | Yes | Requires `boto3` + AWS credentials |
+| `XrayPlugin` | `xray` | Yes | Requires JFrog Xray URL + credentials |
 
 All plugin classes are importable from `xelo.toolbox.plugins.<module>`.
+
+### Third-Party Detection Adapters (xelo.plugins)
+
+To extend *detection* (adding support for a new framework), subclass `xelo.plugins.PluginAdapter` and register it under the `xelo.plugins` entry-point group:
+
+```toml
+# pyproject.toml — in your third-party package
+[project.entry-points."xelo.plugins"]
+my_adapter = "my_package.adapter:MyAdapter"
+```
+
+Enable discovery at extraction time:
+
+```python
+from xelo import AiSbomExtractor, AiSbomConfig
+
+# Discovers all installed entry-point plugins + xelo.plugins sub-modules
+extractor = AiSbomExtractor(load_plugins=True)
+doc = extractor.extract_from_path("./my-repo", config=AiSbomConfig())
+```
+
+Or load plugins manually before constructing the extractor:
+
+```python
+from xelo.plugins import load_plugins
+load_plugins()  # imports all plugin adapters, registering subclasses
+
+from xelo import AiSbomExtractor
+extractor = AiSbomExtractor(load_plugins=True)
+```
 
 ## End-to-End Example
 

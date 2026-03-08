@@ -50,6 +50,7 @@ class RegexAdapter(DetectionAdapter):
         metadata: dict[str, Any] | None = None,
         skip_path_parts: frozenset[str] | None = None,
         skip_init_py: bool = False,
+        skip_extensions: frozenset[str] | None = None,
     ) -> None:
         self.name = name
         self.component_type = component_type
@@ -62,6 +63,9 @@ class RegexAdapter(DetectionAdapter):
         # (e.g. test dirs) or, if skip_init_py=True, for __init__.py files.
         self.skip_path_parts = skip_path_parts
         self.skip_init_py = skip_init_py
+        # Optional extension filter: if set, skip files whose suffix is in this set.
+        # Useful for privilege adapters that should not fire on .tsx / .jsx UI files.
+        self.skip_extensions = skip_extensions
 
     def detect(self, content: str) -> AdapterDetection | None:
         all_matches: list[AdapterMatch] = []

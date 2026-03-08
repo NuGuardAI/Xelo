@@ -57,6 +57,20 @@ export OPENAI_API_KEY=sk-...
 xelo scan ./my-repo --llm --llm-model gpt-4o-mini --output sbom.json
 ```
 
+Validate a produced SBOM against the bundled schema:
+
+```bash
+xelo validate sbom.json
+# OK — document is valid
+```
+
+Print or save the JSON Schema:
+
+```bash
+xelo schema                            # print to stdout
+xelo schema --output aibom.schema.json # write to file
+```
+
 CLI alias: `ai-sbom`. Run `xelo --help` for all flags.
 
 ## Output Formats
@@ -81,37 +95,66 @@ xelo schema
 
 ## Toolbox Plugins
 
-Xelo ships with built-in analysis plugins in `xelo.toolbox.plugins`:
+Xelo ships with built-in analysis plugins invoked via `xelo plugin run`:
 
-| Plugin | What it does |
-| --- | --- |
-| `VulnerabilityScannerPlugin` | Structural VLA rules — flags missing guardrails, unprotected models, over-privileged agents |
-| `AtlasAnnotatorPlugin` | Maps every finding to MITRE ATLAS v2 techniques and mitigations |
-| `PolicyAssessmentPlugin` | Evaluates the AI SBOM against a custom policy file (OWASP AI Top 10, HIPAA, …) |
-| `LicenseCheckerPlugin` | Checks dependency licence compliance |
-| `DependencyAnalyzerPlugin` | Scores dependency freshness and flags outdated AI packages |
-| `SarifExporterPlugin` | Exports findings as SARIF 2.1.0 (GitHub Code Scanning / GHAS compatible) |
-| `CycloneDxExporter` | Exports as CycloneDX |
-| `MarkdownExporterPlugin` | Human-readable Markdown report |
-| `GhasUploaderPlugin` | Uploads SARIF to GitHub Advanced Security |
-| `AwsSecurityHubPlugin` | Pushes findings to AWS Security Hub (requires `boto3`) |
-| `XrayPlugin` | Pushes findings to JFrog Xray |
+```bash
+xelo plugin list                                          # list all plugins
+
+xelo plugin run vulnerability sbom.json                   # offline VLA rules
+xelo plugin run atlas sbom.json --output atlas.json       # MITRE ATLAS annotation
+xelo plugin run sarif sbom.json --output results.sarif    # SARIF 2.1.0
+xelo plugin run markdown sbom.json --output report.md     # Markdown report
+xelo plugin run cyclonedx sbom.json --output bom.cdx.json # CycloneDX 1.6
+
+# Policy assessment (LLM required)
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp_ai_top10.json \
+  --config llm_model=gpt-4o \
+  --output policy-report.json
+```
+
+| Plugin | CLI name | Network | What it does |
+| --- | --- | --- | --- |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, unprotected models, over-privileged agents |
+| `AtlasAnnotatorPlugin` | `atlas` | No | Maps every finding to MITRE ATLAS v2 techniques and mitigations |
+| `PolicyAssessmentPlugin` | `policy` | No* | Evaluates the AI SBOM against a custom policy file (OWASP AI Top 10, HIPAA, …) |
+| `LicenseCheckerPlugin` | `license` | No | Checks dependency licence compliance |
+| `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness and flags outdated AI packages |
+| `SarifExporterPlugin` | `sarif` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning / GHAS compatible) |
+| `CycloneDxExporter` | `cyclonedx` | No | Exports nodes as CycloneDX 1.6 |
+| `MarkdownExporterPlugin` | `markdown` | No | Human-readable Markdown report |
+| `GhasUploaderPlugin` | `ghas` | Yes | Uploads SARIF to GitHub Advanced Security |
+| `AwsSecurityHubPlugin` | `aws-security-hub` | Yes | Pushes findings to AWS Security Hub (requires `boto3`) |
+| `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray |
+
+Plugins are also importable as a Python library:
 
 ```python
+import json
 from xelo import AiSbomExtractor, AiSbomConfig
 from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
 from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
+from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
+from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
 
 doc = AiSbomExtractor().extract_from_path("./my-repo", config=AiSbomConfig())
 sbom = doc.model_dump(mode="json")
 
-result = VulnerabilityScannerPlugin().run(sbom, {})
-print(result.status, result.message)
+vuln = VulnerabilityScannerPlugin().run(sbom, {})
+print(vuln.status, vuln.message)
 
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for finding in atlas.details["findings"]:
     print(finding["rule_id"], finding["severity"], finding["atlas"]["techniques"])
+
+sarif = SarifExporterPlugin().run(sbom, {})
+open("results.sarif", "w").write(json.dumps(sarif.details, indent=2))
+
+md = MarkdownExporterPlugin().run(sbom, {})
+open("report.md", "w").write(md.details["markdown"])
 ```
+
+To add **custom detection adapters** (extending framework coverage), subclass `xelo.plugins.PluginAdapter` and register under the `xelo.plugins` entry-point group. Enable at scan time with `AiSbomExtractor(load_plugins=True)`. See the [Developer Guide](./docs/developer-guide.md) for details.
 
 ## Configuration
 

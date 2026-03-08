@@ -1,3 +1,5 @@
+<img src="xelo-logo.png" alt="Xelo" height="20" />
+
 # CLI Reference
 
 Xelo CLI command entry points:
@@ -11,6 +13,10 @@ Xelo CLI command entry points:
 | --- | --- |
 | `xelo scan <path>` | Scan a local directory and generate SBOM output in the selected format. |
 | `xelo scan <url>` | Clone a git repository, scan it, and generate SBOM output. |
+| `xelo validate <file>` | Validate a Xelo-native JSON document against the bundled schema. |
+| `xelo schema` | Print (or write) the Xelo JSON schema. |
+| `xelo plugin list` | List all available toolbox plugins with descriptions. |
+| `xelo plugin run <plugin> <sbom>` | Run a named toolbox plugin against an existing SBOM JSON file. |
 
 ## Global Flags
 
@@ -54,11 +60,39 @@ xelo scan <url> --output <file> [options]
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
-| `--llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
-| `--llm-model <model>` | string | No | from config/env | LLM model identifier | Used when LLM enrichment is active |
-| `--llm-budget-tokens <n>` | integer | No | from config/env | Token budget for enrichment | Used when LLM enrichment is active |
-| `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
-| `--llm-api-base <url>` | string | No | from config/env/provider defaults | Base URL override | Common for Azure/provider proxies |
+
+Same LLM flags as `scan path` are also accepted here with identical behavior.
+
+## `validate` Reference
+
+Usage:
+
+```bash
+xelo validate <file>
+```
+
+Validates a Xelo-native JSON document against the bundled `aibom.schema.json`.
+
+| Argument | Type | Required | Behavior |
+| --- | --- | --- | --- |
+| `<file>` | path | Yes | Path to the JSON file to validate. Exits `0` and prints `OK — document is valid` on success; exits `1` and prints `error: validation failed: …` on failure. |
+
+
+## `schema` Reference
+
+Usage:
+
+```bash
+xelo schema [--output <file>]
+```
+
+Emits the Xelo JSON schema (JSON Schema 2020-12, `$id` `https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json`).
+
+| Flag | Type | Required | Default | Behavior |
+| --- | --- | --- | --- | --- |
+| `--output <file>` | path | No | stdout | Write schema to a file instead of printing to stdout. |
+
+---
 
 ## Behavior Notes
 
@@ -67,6 +101,124 @@ xelo scan <url> --output <file> [options]
 - Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
 - If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
 - Dependency manifests (`requirements.txt`, `pyproject.toml`, `package.json`) are discovered recursively at any depth in the project tree; virtual-environment and build directories (`.venv`, `node_modules`, `dist`, etc.) are excluded automatically.
+
+## Toolbox Plugins
+
+Xelo's built-in analysis plugins are invoked via `xelo plugin run`. The typical workflow is:
+
+1. Run `xelo scan` to produce a JSON SBOM.
+2. Pass the SBOM through one or more plugins.
+3. Write the results to files (SARIF, Markdown, CycloneDX, etc.).
+
+### `xelo plugin list`
+
+Prints all available plugins with their network requirements and descriptions.
+
+```bash
+xelo plugin list
+```
+
+### `xelo plugin run` Reference
+
+Usage:
+
+```bash
+xelo plugin run <plugin> <sbom> [--output <file>] [--config key=value ...] [--config-file <json>]
+```
+
+| Argument / Flag | Type | Required | Default | Behavior |
+| --- | --- | --- | --- | --- |
+| `<plugin>` | string | Yes | — | Plugin name — see `xelo plugin list` |
+| `<sbom>` | path | Yes | — | Path to a Xelo-native JSON SBOM file |
+| `--output <file>` | path | No | stdout | Write plugin output to file |
+| `--config key=value` | string | No | — | Plugin config entry (repeatable) |
+| `--config-file <json>` | path | No | — | JSON config file (merged with `--config`; `--config` takes precedence) |
+
+**Output format by plugin:**
+
+| Plugin | `--output` content |
+| --- | --- |
+| `sarif` | SARIF 2.1.0 JSON document |
+| `cyclonedx` | CycloneDX 1.6 BOM JSON |
+| `markdown` | Markdown text |
+| All others | Full `ToolResult` JSON (`{status, tool, message, details}`) |
+
+**Examples:**
+
+```bash
+# Structural vulnerability scan (findings to stdout)
+xelo plugin run vulnerability sbom.json
+
+# Write vulnerability findings to JSON
+xelo plugin run vulnerability sbom.json --output findings.json
+
+# MITRE ATLAS annotation
+xelo plugin run atlas sbom.json --output atlas.json
+
+# SARIF export → GitHub Code Scanning
+xelo plugin run sarif sbom.json --output results.sarif
+
+# CycloneDX export
+xelo plugin run cyclonedx sbom.json --output bom.cdx.json
+
+# Human-readable Markdown report
+xelo plugin run markdown sbom.json --output report.md
+
+# Dependency analysis
+xelo plugin run dependency sbom.json
+
+# Licence compliance
+xelo plugin run license sbom.json --output license-report.json
+
+# Policy assessment (LLM required)
+xelo plugin run policy sbom.json \
+  --config policy_file=owasp_ai_top10.json \
+  --config llm_model=gpt-4o \
+  --config repo_path=./my-repo \
+  --output policy-report.json
+
+# Using a JSON config file
+xelo plugin run policy sbom.json --config-file policy-config.json --output policy-report.json
+
+# Upload SARIF to GitHub Advanced Security
+xelo plugin run ghas sbom.json \
+  --config token=ghp_... \
+  --config github_repo=owner/repo \
+  --config ref=refs/heads/main \
+  --config commit_sha=abc1234...
+
+# Push to AWS Security Hub
+xelo plugin run aws-security-hub sbom.json \
+  --config region=us-east-1 \
+  --config aws_account_id=123456789012
+
+# Submit to JFrog Xray
+xelo plugin run xray sbom.json \
+  --config url=https://acme.jfrog.io \
+  --config project=my-project \
+  --config token=eyJ... \
+  --config tenant_id=acme \
+  --config application_id=my-app
+```
+
+### Available Plugins
+
+| Class | Module | Network | Notes |
+| --- | --- | --- | --- |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, over-privileged agents |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2 techniques and mitigations |
+| `PolicyAssessmentPlugin` | `policy_assessment` | No* | Evaluates SBOM against a custom policy file; requires `policy_file` and `llm_model` config |
+| `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
+| `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |
+| `SarifExporterPlugin` | `sarif_exporter` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning compatible) |
+| `CycloneDxExporter` | `cyclonedx_exporter` | No | Exports nodes as CycloneDX 1.6 |
+| `MarkdownExporterPlugin` | `markdown_exporter` | No | Human-readable Markdown report |
+| `GhasUploaderPlugin` | `ghas_uploader` | Yes | Uploads SARIF to GitHub Advanced Security; requires `token`, `github_repo`, `ref`, `commit_sha` |
+| `AwsSecurityHubPlugin` | `aws_security_hub` | Yes | Pushes findings to AWS Security Hub; requires `boto3` + `region`, `aws_account_id` |
+| `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray; requires `url`, `project`, `token`, `tenant_id`, `application_id` |
+
+*`policy` uses an LLM for synthesis but does not require network for the SBOM inspection phase.
+
 
 ## Detected Component Types
 

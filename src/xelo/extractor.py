@@ -49,6 +49,14 @@ from .adapters.yaml_adapters import (
     LLMYAMLConfigAdapter,
     PromptFileAdapter,
 )
+from .adapters.iac import (
+    BicepAdapter,
+    CloudFormationAdapter,
+    GcpDeploymentManagerAdapter,
+    GitHubActionsAdapter,
+    K8sAdapter,
+    TerraformAdapter,
+)
 from .adapters.typescript._ts_regex import TSFrameworkAdapter
 from .config import AiSbomConfig
 from .core.application_summary import build_scan_summary
@@ -100,7 +108,10 @@ def _strip_notebook_outputs(content: str) -> str:
         return content
 
 
-_IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".yaml", ".yml", ".json"}
+_IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".jinja", ".yaml", ".yml", ".json"}
+# Bicep and Jinja IaC-specific extensions (not processed by the generic YAML phase)
+_BICEP_EXTENSIONS = {".bicep"}
+_JINJA_EXTENSIONS = {".jinja"}
 _DOCS_EXTENSIONS = {
     ".md",
     ".rst",
@@ -126,6 +137,14 @@ _DOCS_STEMS = {
     "roadmap",
     "security",
     "support",
+    # Dependency lock files — auto-generated, not meaningful for AI component detection
+    "pnpm-lock",
+    "package-lock",
+    "yarn",  # yarn.lock
+    "composer",  # composer.lock (PHP)
+    "gemfile-lock",  # Gemfile.lock (Ruby)
+    # Pre-commit / tooling configs — not AI application code
+    ".pre-commit-config",
 }
 
 
@@ -208,6 +227,7 @@ class AiSbomExtractor:
         yaml_adapters: tuple[Any, ...] | None = None,
         nginx_adapter: NginxAdapter | None = None,
         prompt_file_adapter: PromptFileAdapter | None = None,
+        iac_adapters: tuple[Any, ...] | None = None,
         load_plugins: bool = False,
     ) -> None:
         from .plugins import load_plugins as _load_plugins
@@ -238,6 +258,18 @@ class AiSbomExtractor:
         self.nginx_adapter = nginx_adapter if nginx_adapter is not None else NginxAdapter()
         self.prompt_file_adapter = (
             prompt_file_adapter if prompt_file_adapter is not None else PromptFileAdapter()
+        )
+        self.iac_adapters: tuple[Any, ...] = (
+            iac_adapters
+            if iac_adapters is not None
+            else (
+                K8sAdapter(),
+                TerraformAdapter(),
+                CloudFormationAdapter(),
+                BicepAdapter(),
+                GcpDeploymentManagerAdapter(),
+                GitHubActionsAdapter(),
+            )
         )
 
     # ------------------------------------------------------------------
@@ -402,6 +434,42 @@ class AiSbomExtractor:
                             "YAML adapter %r failed on %s: %s", yaml_adapter.name, rel_path, exc
                         )
 
+            # Phase 1g: IaC adapters (K8s, CFN, GCP DM for YAML/JSON;
+            #           Terraform for .tf/.tfvars; Bicep for .bicep; Jinja for .jinja)
+            _is_iac_file = (
+                suffix in {".yaml", ".yml", ".json", ".tf", ".tfvars"}
+                or suffix in _BICEP_EXTENSIONS
+                or suffix in _JINJA_EXTENSIONS
+            )
+            if _is_iac_file:
+                for iac_adapter in self.iac_adapters:
+                    # Gate each adapter to its relevant extensions to avoid
+                    # redundant YAML loading on non-matching files
+                    adapter_handles: bool
+                    if isinstance(iac_adapter, TerraformAdapter):
+                        adapter_handles = suffix in {".tf", ".tfvars"}
+                    elif isinstance(iac_adapter, BicepAdapter):
+                        adapter_handles = suffix in _BICEP_EXTENSIONS
+                    elif isinstance(iac_adapter, GcpDeploymentManagerAdapter):
+                        adapter_handles = suffix in {".yaml", ".yml", ".jinja"}
+                    elif isinstance(iac_adapter, GitHubActionsAdapter):
+                        # GitHub Actions workflows are YAML; content guard in adapter
+                        # also handles .github/workflows/**/*.yml naming convention
+                        adapter_handles = suffix in {".yaml", ".yml"}
+                    else:
+                        # K8sAdapter + CloudFormationAdapter handle YAML and JSON
+                        adapter_handles = suffix in {".yaml", ".yml", ".json"}
+                    if not adapter_handles:
+                        continue
+                    _log.debug("running IaC adapter %r on %s", iac_adapter.name, rel_path)
+                    try:
+                        for det in iac_adapter.scan(content, rel_path):
+                            self._merge_detection(node_map, det)
+                    except Exception as exc:
+                        _log.warning(
+                            "IaC adapter %r failed on %s: %s", iac_adapter.name, rel_path, exc
+                        )
+
             # Phase 2: Regex fallback
             # Skip documentation and shell-script files to eliminate CI/README FP floods.
             # For .ipynb files, strip cell outputs to avoid base64-encoded image data
@@ -414,14 +482,19 @@ class AiSbomExtractor:
             ):
                 # Adapters may declare path-scoped exclusions (e.g. privilege
                 # adapters skip test dirs and __init__.py to reduce FPs).
-                if getattr(rx_adapter, "skip_path_parts", None) or getattr(
-                    rx_adapter, "skip_init_py", False
+                if (
+                    getattr(rx_adapter, "skip_path_parts", None)
+                    or getattr(rx_adapter, "skip_init_py", False)
+                    or getattr(rx_adapter, "skip_extensions", None)
                 ):
                     _rel = Path(rel_path)
                     if getattr(rx_adapter, "skip_init_py", False) and _rel.name == "__init__.py":
                         continue
                     _skip_parts = getattr(rx_adapter, "skip_path_parts", None)
                     if _skip_parts and bool(set(_rel.parts) & _skip_parts):
+                        continue
+                    _skip_exts = getattr(rx_adapter, "skip_extensions", None)
+                    if _skip_exts and suffix in _skip_exts:
                         continue
                 detection = rx_adapter.detect(_regex_content)
                 if detection is None:
@@ -459,6 +532,14 @@ class AiSbomExtractor:
         # file — e.g. regex matches "gemini-2.0" while AST extracts the full
         # "gemini-2.0-flash" from an adjacent line of the same call.
         _dedup_by_name_prefix(node_map)
+
+        # For MODEL and DATASTORE, suppress nodes whose only evidence comes from
+        # docs-tier files (lock files, README mentions, shell scripts).  Lock
+        # files like pnpm-lock.yaml and semantic changelogs are classified as
+        # DOCS tier and produce noisy nodes when package names happen to look
+        # like model or datastore names.  IaC-tier detections (YAML/JSON config,
+        # Dockerfiles) are kept because they legitimately describe components.
+        _suppress_non_code_model_datastore(node_map)
 
         # Build nodes + edges
         for key in sorted(node_map.keys(), key=lambda v: (v[0].value, v[1])):
@@ -555,6 +636,61 @@ class AiSbomExtractor:
                 node.metadata.image_digest = acc.metadata.get("image_digest")
                 node.metadata.registry = acc.metadata.get("registry")
                 node.metadata.base_image = acc.metadata.get("base_image")
+                # Security signals annotated by DockerfileAdapter
+                _rar = acc.metadata.get("runs_as_root")
+                if _rar is not None:
+                    node.metadata.runs_as_root = bool(_rar)
+                _hc = acc.metadata.get("has_health_check")
+                if _hc is not None:
+                    node.metadata.has_health_check = bool(_hc)
+            # IaC security / resilience metadata (DEPLOYMENT nodes from IaC adapters)
+            if acc.component_type == ComponentType.DEPLOYMENT:
+                if acc.metadata.get("deployment_target"):
+                    node.metadata.deployment_target = str(acc.metadata["deployment_target"])
+                _cr = acc.metadata.get("cloud_region")
+                if _cr:
+                    node.metadata.cloud_region = str(_cr)
+                _az = acc.metadata.get("availability_zones")
+                if isinstance(_az, list) and _az:
+                    node.metadata.availability_zones = [str(z) for z in _az]
+                _ss = acc.metadata.get("secret_store")
+                if _ss:
+                    node.metadata.secret_store = str(_ss)
+                _enc = acc.metadata.get("encryption_at_rest")
+                if _enc is not None:
+                    node.metadata.encryption_at_rest = bool(_enc)
+                _ekr = acc.metadata.get("encryption_key_ref")
+                if _ekr:
+                    node.metadata.encryption_key_ref = str(_ekr)
+                _ha = acc.metadata.get("ha_mode")
+                if _ha:
+                    node.metadata.ha_mode = str(_ha)
+                _rar2 = acc.metadata.get("runs_as_root")
+                if _rar2 is not None:
+                    node.metadata.runs_as_root = bool(_rar2)
+                _hc2 = acc.metadata.get("has_health_check")
+                if _hc2 is not None:
+                    node.metadata.has_health_check = bool(_hc2)
+                _rl = acc.metadata.get("has_resource_limits")
+                if _rl is not None:
+                    node.metadata.has_resource_limits = bool(_rl)
+            # IAM node typed fields
+            if acc.component_type == ComponentType.IAM:
+                _it = acc.metadata.get("iam_type")
+                if _it:
+                    node.metadata.iam_type = str(_it)
+                _pr = acc.metadata.get("principal")
+                if _pr:
+                    node.metadata.principal = str(_pr)
+                _pm = acc.metadata.get("permissions")
+                if isinstance(_pm, list) and _pm:
+                    node.metadata.permissions = [str(p) for p in _pm[:20]]
+                _is = acc.metadata.get("iam_scope")
+                if _is:
+                    node.metadata.iam_scope = str(_is)
+                _tp = acc.metadata.get("trust_principals")
+                if isinstance(_tp, list) and _tp:
+                    node.metadata.trust_principals = [str(p) for p in _tp[:20]]
 
             node.evidence = list(acc.evidence)
             doc.nodes.append(node)
@@ -942,6 +1078,20 @@ class AiSbomExtractor:
                         )
                     )
 
+        # Structural edges: IAM → DEPLOYMENT (USES) — identity binds to infra
+        for iam_node in by_type.get(ComponentType.IAM, []):
+            for dep in by_type.get(ComponentType.DEPLOYMENT, []):
+                key = (iam_node.id, dep.id, "USES")
+                if key not in seen_edges:
+                    seen_edges.add(key)
+                    doc.edges.append(
+                        Edge(
+                            source=iam_node.id,
+                            target=dep.id,
+                            relationship_type=RelationshipType.USES,
+                        )
+                    )
+
         # Structural edges: AUTH → API_ENDPOINT (PROTECTS)
         for auth in by_type.get(ComponentType.AUTH, []):
             for ep in sorted(by_type.get(ComponentType.API_ENDPOINT, []), key=lambda n: n.name)[
@@ -1031,7 +1181,146 @@ class AiSbomExtractor:
                 llm_ctx, doc.nodes, files_sample, llm_client=client
             )
 
+        # Step 4: IaC security summary for security practitioners
+        # Only run when IaC/deployment nodes are present and budget remains.
+        try:
+            doc = await self._llm_summarize_iac(doc, client)
+        except Exception as exc:
+            _log.warning("iac-summary: unexpected error — continuing without: %s", exc)
+
         _log.info("llm enrichment complete: tokens_used=%d", client.tokens_used)
+        return doc
+
+    async def _llm_summarize_iac(
+        self,
+        doc: AiSbomDocument,
+        client: Any,
+    ) -> AiSbomDocument:
+        """Step 4: Generate a security-professional IaC summary via LLM.
+
+        Collects all DEPLOYMENT, CONTAINER_IMAGE, and IAM nodes, assembles a
+        structured JSON context, and asks the LLM to produce a concise
+        security briefing covering:
+        - Cloud/runtime deployment posture (providers, regions, availability zones)
+        - HA and resilience configuration
+        - Secret management and encryption posture
+        - IAM / least-privilege assessment
+        - CI/CD pipeline security (GitHub Actions, OIDC, runners)
+        - Container image security (rootless, health-checks, resource limits)
+
+        The result is stored in ``doc.summary.iac_security_summary``.
+        """
+        import json as _json
+
+        if doc.summary is None:
+            return doc
+
+        # Gather IaC-relevant nodes
+        iac_types = {ComponentType.DEPLOYMENT, ComponentType.CONTAINER_IMAGE, ComponentType.IAM}
+        iac_nodes = [n for n in doc.nodes if n.component_type in iac_types]
+        if not iac_nodes:
+            return doc
+
+        # Build a compact representation of each node for the LLM prompt
+        node_summaries: list[dict[str, Any]] = []
+        for n in iac_nodes:
+            meta = n.metadata
+            ns: dict[str, Any] = {
+                "type": n.component_type.value,
+                "name": n.name,
+            }
+            # DEPLOYMENT fields
+            if n.component_type == ComponentType.DEPLOYMENT:
+                for attr in (
+                    "deployment_target",
+                    "cloud_region",
+                    "availability_zones",
+                    "secret_store",
+                    "encryption_at_rest",
+                    "encryption_key_ref",
+                    "ha_mode",
+                    "has_health_check",
+                    "has_resource_limits",
+                    "runs_as_root",
+                ):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+                # GHA-specific extras
+                for key in (
+                    "workflow_triggers",
+                    "runners",
+                    "cloud_providers",
+                    "uses_oidc",
+                    "environments",
+                ):
+                    v = meta.extras.get(key)
+                    if v is not None:
+                        ns[key] = v
+            # CONTAINER_IMAGE fields
+            elif n.component_type == ComponentType.CONTAINER_IMAGE:
+                for attr in ("base_image", "runs_as_root", "has_health_check"):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+            # IAM fields
+            elif n.component_type == ComponentType.IAM:
+                for attr in (
+                    "iam_type",
+                    "principal",
+                    "permissions",
+                    "iam_scope",
+                    "trust_principals",
+                ):
+                    v = getattr(meta, attr, None)
+                    if v is not None:
+                        ns[attr] = v
+                cloud_provider = meta.extras.get("cloud_provider")
+                if cloud_provider:
+                    ns["cloud_provider"] = cloud_provider
+
+            node_summaries.append(ns)
+
+        # Pull top-level security aggregate fields from summary
+        aggregate: dict[str, Any] = {
+            "secret_stores": doc.summary.secret_stores,
+            "availability_zones": doc.summary.availability_zones,
+            "encryption_at_rest_coverage": doc.summary.encryption_at_rest_coverage,
+            "security_findings": doc.summary.security_findings,
+            "iam_principals": doc.summary.iam_principals,
+            "service_accounts": doc.summary.service_accounts,
+        }
+
+        user_prompt = (
+            "You are analysing an AI application's infrastructure configuration.\n\n"
+            "## Detected Infrastructure Nodes\n"
+            f"```json\n{_json.dumps(node_summaries, indent=2)}\n```\n\n"
+            "## Aggregate Security Signals\n"
+            f"```json\n{_json.dumps(aggregate, indent=2)}\n```\n\n"
+            "Write a concise (≤500 words) security briefing for a security engineer / DevSecOps "
+            "practitioner reviewing this AI application. Cover:\n"
+            "1. **Deployment posture** — cloud providers, regions, HA / resilience setup\n"
+            "2. **Secret management** — secret stores in use, any plaintext-secret risks\n"
+            "3. **Encryption** — encryption-at-rest coverage and key management\n"
+            "4. **IAM / least-privilege** — service accounts, OIDC trusts, "
+            "over-permissive policies\n"
+            "5. **CI/CD security** — GitHub Actions runners, OIDC config, "
+            "workflow trigger surface\n"
+            "6. **Container security** — root containers, missing health checks, "
+            "missing resource limits\n"
+            "7. **Key risks and recommendations** — top 3 prioritised actions\n\n"
+            "Respond in plain Markdown. Be specific; avoid generic statements."
+        )
+
+        system_prompt = (
+            "You are a cloud security architect producing IaC security briefings. "
+            "Use precise technical language. Do not hallucinate — only report what "
+            "the provided data shows."
+        )
+
+        raw, tokens = await client.complete_text(system_prompt, user_prompt)
+        _log.info("iac-summary: generated %d chars using %d tokens", len(raw), tokens)
+        doc.summary.iac_security_summary = raw.strip()
         return doc
 
     async def _annotate_mcp_nodes(
@@ -1211,6 +1500,13 @@ def _make_scan_summary(d: dict[str, Any]) -> ScanSummary:
         node_counts=d.get("node_type_counts") or {},
         data_classification=d.get("data_classification") or [],
         classified_tables=d.get("classified_tables") or [],
+        # IaC security / resilience aggregate fields
+        secret_stores=d.get("secret_stores") or [],
+        availability_zones=d.get("availability_zones") or [],
+        encryption_at_rest_coverage=bool(d.get("encryption_at_rest_coverage")),
+        security_findings=d.get("security_findings") or [],
+        iam_principals=d.get("iam_principals") or [],
+        service_accounts=d.get("service_accounts") or [],
     )
 
 
@@ -1309,6 +1605,37 @@ def _dedup_by_location(
 
     for k in keys_to_remove:
         del node_map[k]
+
+
+def _suppress_non_code_model_datastore(
+    node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+) -> None:
+    """Drop MODEL and DATASTORE nodes whose only evidence is from DOCS tier.
+
+    Detections from lock files (``pnpm-lock.yaml``, ``package-lock.json``),
+    README mentions, shell scripts, and plain-text files frequently produce
+    spurious MODEL/DATASTORE nodes.  These files are classified as DOCS tier;
+    IaC-tier detections (YAML configs, JSON configs, Dockerfiles) are kept
+    because they legitimately describe datastores and models in environment
+    definitions.
+
+    Only DOCS-tier-only nodes are dropped.  This does not affect AGENT, TOOL,
+    PROMPT, etc. which are typically harder to detect and worth surfacing from
+    any tier.
+    """
+    _suppressed_types = {ComponentType.MODEL, ComponentType.DATASTORE}
+    keys_to_drop = [
+        key
+        for key, acc in node_map.items()
+        if key[0] in _suppressed_types and acc.best_tier_rank >= _TIER_RANK[_TIER_DOCS]
+    ]
+    for key in keys_to_drop:
+        _log.debug(
+            "suppress_docs_only: dropped %s (best_tier_rank=%d)",
+            key,
+            node_map[key].best_tier_rank,
+        )
+        del node_map[key]
 
 
 def stable_id(value: str) -> str:
