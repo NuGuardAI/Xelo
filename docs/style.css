@@ -14,9 +14,9 @@
     --bg-card-alt: #21262d;
     --border: #30363d;
     --border-mute: #21262d;
-    --text: #e6edf3;
-    --text-muted: #8b949e;
-    --text-dim: #6e7681;
+    --text: #f5f9ff;
+    --text-muted: #c2cdd8;
+    --text-dim: #a4b0bb;
     --accent: #58c4dc;
     --accent-dim: #1f4f5c;
     --accent-glow: rgba(88, 196, 220, 0.15);
@@ -135,6 +135,28 @@ nav {
     font-weight: 600 !important;
     padding: 0.4rem 1rem !important;
     border-radius: var(--radius-sm);
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.nav-icon-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-muted);
+    transition: color 0.15s;
+    padding: 0.25rem;
+}
+
+.nav-icon-link:hover {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.icon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
 }
 
 .nav-cta:hover {

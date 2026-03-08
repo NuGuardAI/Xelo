@@ -1,0 +1,152 @@
+# Xelo — AI SBOM Generator by NuGuard AI
+
+Xelo is an open-source AI Bill of Materials (AI SBOM) generator for agentic and
+LLM-powered applications. It scans Python, TypeScript/JavaScript, Jupyter notebooks,
+SQL schemas, Dockerfiles, and IaC files to produce a structured graph of every AI
+component — agents, models, tools, prompts, datastores, guardrails, auth nodes,
+and deployment infrastructure. Output is a machine-readable JSON document you can
+validate, version-control, and feed into your security toolchain.
+
+Xelo is fully offline by default — no API key, no external calls, no data leaves
+your network. LLM enrichment is an optional third phase gated behind `--llm`.
+
+License: Apache-2.0 · Built by NuGuard AI (https://nuguard.ai/)
+
+---
+
+## What Xelo detects
+
+Xelo runs a 3-phase extraction pipeline:
+
+1. **AST-aware adapters** — language-specific parsers for Python (`ast`) and
+   TypeScript (tree-sitter) extract framework-specific components with high precision.
+2. **Regex fallbacks** — model names, auth keywords, secret patterns, datastores,
+   and IaC signals caught across all file types (SQL, YAML, Dockerfiles, Nginx, prompts).
+3. **LLM enrichment** (optional) — verifies uncertain detections, enriches node
+   descriptions, generates a use-case summary and IaC security briefing.
+
+**Component types detected:** AGENT, MODEL, TOOL, PROMPT, DATASTORE, GUARDRAIL,
+AUTH, DEPLOYMENT, CONTAINER, VECTOR_STORE, EMBEDDING, PIPELINE, CHAIN.
+
+**Supported AI frameworks (Python):** LangChain, LangGraph, OpenAI Agents SDK,
+CrewAI (code + YAML), AutoGen (code + YAML), Google ADK, LlamaIndex, Agno,
+AWS BedrockAgentCore, Azure AI Agent Service, Guardrails AI, MCP Server (FastMCP
+and low-level), Azure Semantic Kernel.
+
+**Supported AI frameworks (TypeScript/JavaScript):** LangChain.js, LangGraph.js,
+OpenAI Agents (TS), Azure AI Agents (TS), Agno (TS), MCP Server (TS).
+
+**Infrastructure & IaC:** Terraform, CloudFormation, Azure Bicep, Kubernetes
+manifests, GCP Deployment Manager, GitHub Actions, Dockerfiles, Nginx configs.
+
+**Data & Storage:** SQL schemas with PHI/PII classification, SQLAlchemy models,
+Django models, Pydantic models, prompt files (.txt / .md / .jinja).
+
+---
+
+## Security & compliance
+
+Xelo includes a structural vulnerability scanner (21 VLA rules) derived from
+OWASP AI Top 10, NIST AI RMF, HIPAA, and PCI-DSS — no network access required.
+
+Rule categories:
+- **AI graph rules (VLA-001–009):** missing guardrails, PHI to external LLMs,
+  voice + PHI exposure, prompt injection risk, auth coverage gaps.
+- **IaC / Encryption (VLA-010–013):** PHI workloads without encryption at rest,
+  no CMK/BYOK, secrets in env vars, missing secret management.
+- **IAM & Identity (VLA-014–017):** overly permissive IAM with PHI, cluster-scoped
+  roles without permission boundary, GHA without OIDC.
+- **Resilience (VLA-018–020):** single-AZ deployment with PHI, no health checks,
+  containers without resource limits.
+- **Container security (VLA-021):** containers running as root.
+
+---
+
+## Output formats
+
+- `json` — Xelo-native `AiSbomDocument` JSON (Pydantic v2, JSON Schema available)
+- `cyclonedx` — AI components as CycloneDX 1.6 BOM
+- `unified` — standard deps BOM merged with AI-BOM via `AiBomMerger`
+
+---
+
+## Toolbox plugins
+
+Run any plugin with: `xelo plugin run <name> sbom.json`
+
+| Plugin            | Purpose                                                   | Network? |
+|-------------------|-----------------------------------------------------------|----------|
+| vulnerability     | 21 structural VLA rules — fully offline                   | Offline  |
+| atlas             | Maps findings to MITRE ATLAS v2 techniques                | Offline  |
+| policy            | Evaluates against OWASP AI Top 10 / HIPAA / custom policy | Offline  |
+| sarif             | Exports findings as SARIF 2.1.0                           | Offline  |
+| cyclonedx         | Exports AI nodes as CycloneDX 1.6 BOM                     | Offline  |
+| markdown          | Human-readable Markdown report                            | Offline  |
+| license           | SPDX licence compliance check                             | Offline  |
+| dependency        | Dependency graph analysis and freshness scoring           | Offline  |
+| ghas              | Upload SARIF to GitHub Advanced Security                  | Network  |
+| aws-security-hub  | Push findings to AWS Security Hub (ASFF)                  | Network  |
+| xray              | Submit SBOM to JFrog Xray                                 | Network  |
+
+---
+
+## Platform & Overview
+
+- [Homepage](https://nuguard.ai/) — Product overview, hero demo, personas, and quickstart.
+- [Getting Started](https://nuguard.ai/doc.html?page=getting-started) — Install, first scan, LLM enrichment, supported frameworks.
+- [CLI Reference](https://nuguard.ai/doc.html?page=cli-reference) — Full command and flag matrix for `xelo scan`, `xelo validate`, `xelo schema`, `xelo plugin`.
+- [Developer Guide](https://nuguard.ai/doc.html?page=developer-guide) — Python library API, toolbox plugins, provider config examples.
+- [AI SBOM Schema](https://nuguard.ai/doc.html?page=aibom-schema) — Every field — node types, metadata, evidence, edges, data classification, ScanSummary.
+- [Vulnerability Scanning](https://nuguard.ai/doc.html?page=vulnerability-scanning) — All 21 VLA rules, remediation steps, and a worked healthcare voice agent example.
+- [Troubleshooting](https://nuguard.ai/doc.html?page=troubleshooting) — Common errors and remediation.
+- [Changelog](https://nuguard.ai/doc.html?page=CHANGELOG) — User-facing changes per release.
+
+---
+
+## Quickstart
+
+```bash
+# Install
+pip install xelo
+
+# Scan a local repository (fully offline)
+xelo scan ./my-ai-app --output sbom.json
+
+# Scan a remote repository
+xelo scan https://github.com/org/repo --ref main
+
+# Validate the output
+xelo validate sbom.json
+
+# Run structural security rules (21 VLA rules, no network)
+xelo plugin run vulnerability sbom.json
+
+# Export to CycloneDX 1.6
+xelo scan ./my-ai-app --format cyclonedx --output bom.cdx.json
+
+# Enable optional LLM enrichment
+xelo scan ./my-ai-app --llm --output sbom.json
+```
+
+Python API:
+
+```python
+from pathlib import Path
+from xelo import AiSbomConfig, AiSbomExtractor, AiSbomSerializer
+
+doc = AiSbomExtractor().extract_from_path(
+    path=Path("./my-ai-app"),
+    config=AiSbomConfig(),
+)
+print(f"nodes={len(doc.nodes)}, edges={len(doc.edges)}")
+json_str = AiSbomSerializer.to_json(doc)
+```
+
+---
+
+## Community & Support
+
+- [GitHub Repository](https://github.com/nuguard/xelo) — Source code, issues, and contributions.
+- [GitHub Issues](https://github.com/nuguard/xelo/issues) — Bug reports and feature requests.
+- [Discord Community](https://discord.gg/EF99Ck7a) — Ask questions, share feedback, connect with the team.
+- [NuGuard AI](https://nuguard.ai/) — Company behind Xelo.
