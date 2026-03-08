@@ -195,4 +195,4 @@ Apache-2.0. See [LICENSE](./LICENSE).
 
 ## Disclaimer
 
-See [XELO Disclaimer](./docs/XELO%20Disclaimer.md).
+See [XELO-Disclaimer.md](./docs/XELO-Disclaimer.md).
