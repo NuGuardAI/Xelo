@@ -28,20 +28,20 @@
         .doc-sidebar {
             width: 220px;
             flex-shrink: 0;
-        }
-
-        .doc-sidebar-inner {
+            align-self: flex-start;   /* don't stretch — required for sticky child */
             position: sticky;
             top: calc(var(--nav-h) + 1.5rem);
         }
 
+        .doc-sidebar-inner {
+            display: block;    /* explicit block so nothing flex-collapses it */
+        }
+
         .sidebar-back {
-            display: flex;
-            align-items: center;
-            gap: .4rem;
+            display: block;
             font-size: .8rem;
             color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .sidebar-back:hover {
@@ -50,21 +50,28 @@
         }
 
         .sidebar-section-title {
+            display: block;
             font-size: .7rem;
             font-weight: 600;
             letter-spacing: .08em;
             text-transform: uppercase;
             color: var(--text-dim);
-            margin-bottom: .6rem;
+            margin-bottom: .5rem;
+        }
+
+        .sidebar-nav {
+            display: block;
         }
 
         .sidebar-nav ul {
+            display: block;
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .sidebar-nav li+li {
+        .sidebar-nav li {
+            display: block;
             margin-top: .1rem;
         }
 
@@ -282,11 +289,7 @@
 
             .doc-sidebar {
                 width: 100%;
-            }
-
-            .doc-sidebar-inner {
                 position: static;
-                max-height: none;
             }
         }
     </style>
