@@ -87,21 +87,21 @@ nav {
 }
 
 .nav-logo {
-    height: 15px;
+    height: 36px;
     width: auto;
     display: block;
     flex-shrink: 0;
 }
 
 .hero-logo {
-    height: 26px;
+    height: 96px;
     width: auto;
     margin-bottom: 1.75rem;
     display: block;
 }
 
 .footer-logo {
-    height: 13px;
+    height: 28px;
     width: auto;
     display: block;
     opacity: 0.8;
