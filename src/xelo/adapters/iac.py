@@ -1328,7 +1328,7 @@ _GHA_ENV_NAME_RE = re.compile(r"^\s+environment\s*:", re.MULTILINE)
 
 def _gha_safe_on(data: dict[str, Any]) -> Any:
     """Return the 'on' trigger value, handling both ``on`` and ``'on'`` keys."""
-    return data.get("on") or data.get(True) or data.get("'on'") or data.get('"on"')
+    return data.get("on") or data.get(True) or data.get("'on'") or data.get('"on"')  # type: ignore[call-overload]
 
 
 def _gha_permissions(perm_obj: Any) -> list[str]:

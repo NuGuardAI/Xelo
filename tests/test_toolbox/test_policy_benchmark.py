@@ -738,7 +738,7 @@ class TestBenchmarkPlugins:
 
     def test_run_bench_plugins_no_policy_without_llm(self, tmp_path):
         """Policy step is skipped and an issue is recorded when llm_model is empty."""
-        from .evaluate import run_bench_plugins, NUGUARD_POLICIES_DIR
+        from .evaluate import run_bench_plugins
         from pathlib import Path
 
         minimal_sbom: dict = {
