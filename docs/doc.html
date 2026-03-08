@@ -418,7 +418,7 @@
             }
 
             // Fetch and render
-            fetch(page + '.md')
+            fetch(page + '.md?v=' + Date.now())
                 .then(function (res) {
                     if (!res.ok) throw new Error('HTTP ' + res.status);
                     return res.text();
