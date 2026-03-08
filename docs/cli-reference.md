@@ -45,6 +45,33 @@ xelo scan <path> --output <file> [options]
 | `--llm-budget-tokens <n>` | integer | No | from config/env (`XELO_LLM_BUDGET_TOKENS`, fallback `50000`) | Token budget for enrichment | Used when LLM enrichment is active |
 | `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
 | `--llm-api-base <url>` | string | No | from config/env/provider defaults | Base URL override (for hosted endpoints) | Common for Azure/provider proxies |
+| `--plugin <name>` | string | No | none | Run a toolbox plugin inline after scanning — no intermediate file needed | Accepts any name from `xelo plugin list` |
+| `--plugin-output <file>` | path | No | stdout | Output file for the plugin result | Only meaningful with `--plugin` |
+| `--plugin-config key=value` | string | No | — | Plugin config entry (repeatable) | Only meaningful with `--plugin`; same syntax as `--config` in `plugin run` |
+
+### Scan + Plugin in one command
+
+Passing `--plugin` runs the chosen toolbox plugin immediately after extraction using the in-memory SBOM — no intermediate file required.
+
+```bash
+# Scan and run the vulnerability plugin in a single command
+xelo scan ./my-ai-app \
+  --output sbom.json \
+  --plugin vulnerability \
+  --plugin-output findings.json
+```
+
+The SBOM is written to `sbom.json` first, then the vulnerability scanner runs against it and writes `findings.json`. Both steps share the same extraction result.
+
+`--plugin-config` passes options straight through to the plugin:
+
+```bash
+# Scan a remote repo and generate a Markdown report in one step
+xelo scan https://github.com/org/repo --ref main \
+  --output sbom.json \
+  --plugin markdown \
+  --plugin-output report.md
+```
 
 ## `scan repo` Reference
 

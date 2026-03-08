@@ -12,6 +12,9 @@ xelo scan <PATH|URL>
     --output <file>        Write to file (default: stdout)
     --llm                  Enable LLM enrichment for this run
     --ref <branch>         Branch/ref to clone when target is a URL
+    --plugin <name>        Run a toolbox plugin inline after scanning (no intermediate file needed)
+    --plugin-output <file> Plugin output file (default: stdout)
+    --plugin-config k=v    Plugin config entry, repeatable (same as --config in plugin run)
 
 xelo validate <FILE>
     Validate a Xelo-native JSON document against the schema.
@@ -293,6 +296,26 @@ def main() -> None:
         "--output", default="-", metavar="<file>", help="Output file (default: stdout)"
     )
     _add_llm_args(scan_p)
+    scan_p.add_argument(
+        "--plugin",
+        metavar="<name>",
+        dest="plugin",
+        default=None,
+        help="Run a toolbox plugin inline after scanning (no intermediate file needed).",
+    )
+    scan_p.add_argument(
+        "--plugin-output",
+        default="-",
+        metavar="<file>",
+        help="Plugin output file (default: stdout); only meaningful with --plugin.",
+    )
+    scan_p.add_argument(
+        "--plugin-config",
+        action="append",
+        metavar="key=value",
+        default=[],
+        help="Plugin config entry (repeatable); only meaningful with --plugin.",
+    )
 
     # ── validate ──────────────────────────────────────────────────────────
     validate_p = subparsers.add_parser("validate", help="Validate a Xelo-native JSON document")
@@ -480,6 +503,50 @@ def _handle_scan(args: argparse.Namespace) -> None:
 
     _log.info("extraction complete: %d nodes, %d edges", len(doc.nodes), len(doc.edges))
     _write_output(args, doc, local_root, args.output)
+
+    if getattr(args, "plugin", None):
+        _run_inline_plugin(args, doc)
+
+
+def _run_inline_plugin(args: argparse.Namespace, doc: AiSbomDocument) -> None:
+    """Run a toolbox plugin against the just-scanned doc (no temp file required)."""
+    plugin_name: str = args.plugin
+    plugin_output: str = args.plugin_output
+
+    plugin_config: dict[str, Any] = {}
+    if getattr(args, "plugin_config", None):
+        try:
+            plugin_config = _parse_config_pairs(args.plugin_config)
+        except ValueError as exc:
+            _die(str(exc), args)
+            return
+
+    try:
+        plugin = _load_plugin(plugin_name)
+    except (ValueError, RuntimeError) as exc:
+        _die(str(exc), args)
+        return
+
+    sbom = json.loads(AiSbomSerializer.to_json(doc))
+    _log.info("running plugin '%s' inline", plugin_name)
+    try:
+        result = plugin.run(sbom, plugin_config)
+    except Exception as exc:  # noqa: BLE001
+        _die(f"plugin '{plugin_name}' failed: {exc}", args)
+        return
+
+    if plugin_name in _PLUGIN_DICT_OUTPUT:
+        _emit(json.dumps(result.details, indent=2), plugin_output, args)
+    elif plugin_name in _PLUGIN_CONTENT_KEY:
+        content_key = _PLUGIN_CONTENT_KEY[plugin_name]
+        _emit(result.details.get(content_key, ""), plugin_output, args)
+    else:
+        _emit(json.dumps(result.model_dump(), indent=2), plugin_output, args)
+
+    if plugin_output != "-":
+        print(f"{result.status}: {result.message} → {plugin_output}")
+    else:
+        _log.info("plugin '%s' complete — %s", plugin_name, result.message)
 
 
 def _write_output(
