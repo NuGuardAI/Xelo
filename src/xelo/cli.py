@@ -28,7 +28,7 @@ xelo plugin list
 xelo plugin run <PLUGIN> <SBOM> [--output <file>] [--config key=value ...]
     Run a named toolbox plugin against an existing SBOM JSON file.
 
-    Available plugins: vulnerability, atlas, policy, license, dependency,
+    Available plugins: vulnerability, atlas, license, dependency,
                        sarif, cyclonedx, markdown, ghas, aws-security-hub, xray
 
 Logging
@@ -154,12 +154,6 @@ _PLUGIN_REGISTRY: dict[str, tuple[str, str, str, str]] = {
         "AtlasAnnotatorPlugin",
         "No",
         "Map findings to MITRE ATLAS v2 techniques and mitigations",
-    ),
-    "policy": (
-        "xelo.toolbox.plugins.policy_assessment",
-        "PolicyAssessmentPlugin",
-        "No*",
-        "Evaluate SBOM against a policy file (LLM required; --config policy_file=<path> llm_model=<model>)",
     ),
     "license": (
         "xelo.toolbox.plugins.license_checker",
@@ -357,7 +351,7 @@ def main() -> None:
         action="append",
         metavar="key=value",
         default=[],
-        help="Plugin config entry (repeatable, e.g. --config policy_file=owasp.json)",
+        help="Plugin config entry (repeatable, e.g. --config region=us-east-1)",
     )
     run_p.add_argument(
         "--config-file",
@@ -406,7 +400,6 @@ def _handle_plugin_list(_args: argparse.Namespace) -> None:
         print(f"  {name:<{name_w}}  {network:<8}  {desc}")
     print()
     print("Run 'xelo plugin run <name> <sbom> --help' for per-plugin flags.")
-    print("  * policy assessment requires an LLM — no network needed for the SBOM phase.")
 
 
 def _handle_plugin_run(args: argparse.Namespace) -> None:

@@ -123,7 +123,6 @@ Plugins live in `src/xelo/toolbox/plugins/` (13 files):
 | `cyclonedx_exporter.py` | Export nodes as CycloneDX 1.6 BOM |
 | `sarif_exporter.py` | Export findings as SARIF |
 | `markdown_exporter.py` | Human-readable Markdown report |
-| `policy_assessment.py` | OWASP AI Top 10 / HIPAA policy checks |
 | `vulnerability.py` | Dependency CVE lookup via Grype/OSV |
 | `dependency.py` | Dependency graph analysis |
 | `license_checker.py` | SPDX license compliance |
@@ -138,7 +137,6 @@ Benchmark and evaluation utilities live in `tests/test_toolbox/` and are **not**
 # Run directly from the tests directory
 from tests.test_toolbox.evaluate import evaluate_discovery
 from tests.test_toolbox.evaluate_risk import evaluate_risk_assessment
-from tests.test_toolbox.evaluate_policies import run_policy_benchmark
 ```
 
 ### Test fixtures
@@ -148,14 +146,11 @@ from tests.test_toolbox.evaluate_policies import run_policy_benchmark
 - `fixtures/<framework>/` — focused single-framework fixtures (langgraph_research_agent, openai_agents_triage, crewai_blog_team, llamaindex_rag)
 
 `tests/test_toolbox/` — benchmark evaluation utilities, integration tests, and ground-truth datasets:
-- `evaluate.py`, `evaluate_risk.py`, `evaluate_policies.py` — benchmark runner scripts
+- `evaluate.py`, `evaluate_risk.py` — benchmark runner scripts
 - `evaluate_streaming.py` — streaming evaluation runner
 - `schemas.py`, `schemas_risk.py` — Pydantic models for evaluation results
 - `fetcher.py` — GitHub repository fetching for live benchmark runs
 - `test_basic.py` — offline plugin smoke tests (run with `pytest tests/test_toolbox/test_basic.py`)
-- `test_policy_benchmark.py` — policy benchmark integration tests
-- `policies/`, `policies_ccd/` — policy definitions (OWASP AI Top 10, HIPAA, etc.)
-- `policy_ground_truth/` — expected policy evaluation results per repo
 - `fixtures/` — cached repo snapshots with `ground_truth.json` and `risk_ground_truth.json` per repo
 
 `tests/smoke/` — end-to-end tests requiring network + git; mark-gated with `pytest -m smoke`.

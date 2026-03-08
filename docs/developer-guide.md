@@ -136,9 +136,6 @@ xelo plugin list                                        # show all plugins
 xelo plugin run vulnerability sbom.json                 # VLA rules to stdout
 xelo plugin run sarif sbom.json --output results.sarif  # SARIF export
 xelo plugin run markdown sbom.json --output report.md   # Markdown report
-xelo plugin run policy sbom.json \
-  --config policy_file=owasp.json \
-  --config llm_model=gpt-4o
 ```
 
 **Python API (for pipeline integration or chaining):**
@@ -150,7 +147,6 @@ from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin
 from xelo.toolbox.plugins.atlas_annotator import AtlasAnnotatorPlugin
 from xelo.toolbox.plugins.sarif_exporter import SarifExporterPlugin
 from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
-from xelo.toolbox.plugins.policy_assessment import PolicyAssessmentPlugin
 
 sbom = doc.model_dump(mode="json")
 
@@ -165,10 +161,6 @@ atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for f in atlas.details["findings"]:
     for t in f["atlas"]["techniques"]:
         print(t["technique_id"], t["tactic_name"], t["confidence"])
-
-# Policy assessment against a custom policy file
-policy = PolicyAssessmentPlugin().run(sbom, {"policy_file": "owasp_ai_top10.json"})
-print(policy.status, policy.message)
 
 # SARIF export (for GitHub Code Scanning upload)
 # ToolResult.details IS the SARIF 2.1.0 dict
@@ -196,7 +188,6 @@ Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 | --- | --- | --- | --- |
 | `VulnerabilityScannerPlugin` | `vulnerability` | No | Offline, no network |
 | `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; runs VLA pass + native graph checks |
-| `PolicyAssessmentPlugin` | `policy_assessment` | No | Requires `policy_file` in config |
 | `LicenseCheckerPlugin` | `license_checker` | No | Offline |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Offline |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Offline |

@@ -57,8 +57,6 @@ logger = logging.getLogger(__name__)
 BENCHMARK_DIR = Path(__file__).parent
 REPOS_DIR = BENCHMARK_DIR / "fixtures"
 TEST_RESULTS_DIR = BENCHMARK_DIR.parent / "test-results"
-# NuGuard Standard policy files live in llm-runs/ at the workspace root
-NUGUARD_POLICIES_DIR = BENCHMARK_DIR.parent.parent / "llm-runs"
 
 # Default threshold for CI
 DEFAULT_F1_THRESHOLD = 0.80
@@ -1071,14 +1069,12 @@ async def evaluate_repo(
     evaluation_result.discovered_assets = discovered  # Store all discovered assets for CSV export
     evaluation_result.processing_time_ms = int((time.time() - start_time) * 1000)
 
-    # Always run toolbox plugins (Markdown always; policy when llm model provided)
+    # Always run toolbox plugins
     if sbom_dict:
-        _pol_files = list(NUGUARD_POLICIES_DIR.glob("*_nuguard_standard.json"))
         run_bench_plugins(
             sbom_dict,
             repo_name,
             TEST_RESULTS_DIR,
-            policy_files=_pol_files,
             plugin_llm_model=plugin_llm_model,
             plugin_llm_api_key=plugin_llm_api_key,
             plugin_llm_api_base=plugin_llm_api_base,
@@ -1259,29 +1255,21 @@ def run_bench_plugins(
     repo_name: str,
     output_dir: Path,
     *,
-    policy_files: Optional[List[Path]] = None,
     plugin_llm_model: str = "",
     plugin_llm_api_key: Optional[str] = None,
     plugin_llm_api_base: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Run toolbox plugins against *sbom* and write artefacts to *output_dir*.
 
-    Always runs the Markdown exporter.  Policy assessment is attempted only
-    when *policy_files* is non-empty **and** *plugin_llm_model* is set; if
-    the model is absent an issue of type ``no_llm_model`` is recorded instead.
+    Always runs the Markdown exporter.
 
     Returns a dict with keys:
       - ``markdown_saved``  (bool)
-      - ``policy_results``  (dict mapping policy stem → result dict)
       - ``issues``          (list of issue dicts)
     """
     from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
 
-    if policy_files is None:
-        policy_files = []
-
     issues: List[Dict[str, Any]] = []
-    policy_results: Dict[str, Any] = {}
 
     # ── Markdown report ──────────────────────────────────────────────────────
     repo_out = output_dir / repo_name
@@ -1293,38 +1281,8 @@ def run_bench_plugins(
     md_path.write_text(markdown_text, encoding="utf-8")
     markdown_saved = md_path.exists()
 
-    # ── Policy assessment ────────────────────────────────────────────────────
-    if policy_files:
-        if not plugin_llm_model:
-            issues.append({"type": "no_llm_model"})
-        else:
-            try:
-                from xelo.toolbox.plugins.policy_assessment import PolicyAssessmentPlugin
-
-                pa_plugin = PolicyAssessmentPlugin()
-                for pf in policy_files:
-                    pol_config: Dict[str, Any] = {
-                        "policy_file": str(pf),
-                        "llm_model": plugin_llm_model,
-                    }
-                    if plugin_llm_api_key:
-                        pol_config["llm_api_key"] = plugin_llm_api_key
-                    if plugin_llm_api_base:
-                        pol_config["llm_api_base"] = plugin_llm_api_base
-                    pa_result = pa_plugin.run(sbom, pol_config)
-                    policy_results[pf.stem] = pa_result.details
-                    # Write policy results to per-repo output file
-                    pol_out = repo_out / f"policy_{pf.stem}.json"
-                    pol_out.write_text(
-                        json.dumps(pa_result.details, indent=2, default=str),
-                        encoding="utf-8",
-                    )
-            except Exception as exc:  # noqa: BLE001
-                issues.append({"type": "policy_error", "detail": str(exc)})
-
     return {
         "markdown_saved": markdown_saved,
-        "policy_results": policy_results,
         "issues": issues,
     }
 

@@ -165,13 +165,6 @@ xelo plugin run markdown sbom.json --output report.md
 
 # CycloneDX export
 xelo plugin run cyclonedx sbom.json --output bom.cdx.json
-
-# Policy assessment (requires LLM)
-xelo plugin run policy sbom.json \
-  --config policy_file=owasp_ai_top10.json \
-  --config llm_model=gpt-4o \
-  --config repo_path=./my-repo \
-  --output policy-report.json
 ```
 
 Each plugin writes its output to `--output` (default: stdout). When `--output` is a file, xelo prints a one-line summary (`ok: ... → file.json`) to stdout.

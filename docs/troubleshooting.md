@@ -61,5 +61,5 @@ Before sharing logs or `.env` snippets:
 
 ## Escalation
 
-- General support: [SUPPORT.md](../SUPPORT.md)
-- Sensitive/security issues: [SECURITY.md](../SECURITY.md)
+- General support: [info@nuguard.ai](mailto:info@nuguard.ai)
+- Sensitive/security issues: [security@nuguard.ai](mailto:security@nuguard.ai)

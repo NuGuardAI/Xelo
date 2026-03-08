@@ -206,16 +206,6 @@ xelo plugin run dependency sbom.json
 # Licence compliance
 xelo plugin run license sbom.json --output license-report.json
 
-# Policy assessment (LLM required)
-xelo plugin run policy sbom.json \
-  --config policy_file=owasp_ai_top10.json \
-  --config llm_model=gpt-4o \
-  --config repo_path=./my-repo \
-  --output policy-report.json
-
-# Using a JSON config file
-xelo plugin run policy sbom.json --config-file policy-config.json --output policy-report.json
-
 # Upload SARIF to GitHub Advanced Security
 xelo plugin run ghas sbom.json \
   --config token=ghp_... \
@@ -243,7 +233,6 @@ xelo plugin run xray sbom.json \
 | --- | --- | --- | --- |
 | `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, over-privileged agents |
 | `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2 techniques and mitigations |
-| `PolicyAssessmentPlugin` | `policy_assessment` | No* | Evaluates SBOM against a custom policy file; requires `policy_file` and `llm_model` config |
 | `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning compatible) |
@@ -252,8 +241,6 @@ xelo plugin run xray sbom.json \
 | `GhasUploaderPlugin` | `ghas_uploader` | Yes | Uploads SARIF to GitHub Advanced Security; requires `token`, `github_repo`, `ref`, `commit_sha` |
 | `AwsSecurityHubPlugin` | `aws_security_hub` | Yes | Pushes findings to AWS Security Hub; requires `boto3` + `region`, `aws_account_id` |
 | `XrayPlugin` | `xray` | Yes | Pushes findings to JFrog Xray; requires `url`, `project`, `token`, `tenant_id`, `application_id` |
-
-*`policy` uses an LLM for synthesis but does not require network for the SBOM inspection phase.
 
 
 ## Detected Component Types

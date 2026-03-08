@@ -78,7 +78,6 @@ Run any plugin with: `xelo plugin run <name> sbom.json`
 |-------------------|-----------------------------------------------------------|----------|
 | vulnerability     | 21 structural VLA rules — fully offline                   | Offline  |
 | atlas             | Maps findings to MITRE ATLAS v2 techniques                | Offline  |
-| policy            | Evaluates against OWASP AI Top 10 / HIPAA / custom policy | Offline  |
 | sarif             | Exports findings as SARIF 2.1.0                           | Offline  |
 | cyclonedx         | Exports AI nodes as CycloneDX 1.6 BOM                     | Offline  |
 | markdown          | Human-readable Markdown report                            | Offline  |

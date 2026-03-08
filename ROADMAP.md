@@ -11,7 +11,7 @@ This roadmap communicates current priorities, not fixed dates.
 ## Next
 
 - Add richer relationship inference between AI components
-- Improve policy and quality gate workflows
+- Improve quality gate workflows
 - Expand CI coverage across more fixture projects
 
 ## Later

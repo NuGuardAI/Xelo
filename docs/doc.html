@@ -28,13 +28,15 @@
         .doc-sidebar {
             width: 220px;
             flex-shrink: 0;
-            align-self: flex-start;   /* don't stretch — required for sticky child */
+            align-self: flex-start;
+            /* don't stretch — required for sticky child */
             position: sticky;
             top: calc(var(--nav-h) + 1.5rem);
         }
 
         .doc-sidebar-inner {
-            display: block;    /* explicit block so nothing flex-collapses it */
+            display: block;
+            /* explicit block so nothing flex-collapses it */
         }
 
         .sidebar-back {

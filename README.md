@@ -105,19 +105,12 @@ xelo plugin run atlas sbom.json --output atlas.json       # MITRE ATLAS annotati
 xelo plugin run sarif sbom.json --output results.sarif    # SARIF 2.1.0
 xelo plugin run markdown sbom.json --output report.md     # Markdown report
 xelo plugin run cyclonedx sbom.json --output bom.cdx.json # CycloneDX 1.6
-
-# Policy assessment (LLM required)
-xelo plugin run policy sbom.json \
-  --config policy_file=owasp_ai_top10.json \
-  --config llm_model=gpt-4o \
-  --output policy-report.json
 ```
 
 | Plugin | CLI name | Network | What it does |
 | --- | --- | --- | --- |
 | `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, unprotected models, over-privileged agents |
 | `AtlasAnnotatorPlugin` | `atlas` | No | Maps every finding to MITRE ATLAS v2 techniques and mitigations |
-| `PolicyAssessmentPlugin` | `policy` | No* | Evaluates the AI SBOM against a custom policy file (OWASP AI Top 10, HIPAA, …) |
 | `LicenseCheckerPlugin` | `license` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness and flags outdated AI packages |
 | `SarifExporterPlugin` | `sarif` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning / GHAS compatible) |
