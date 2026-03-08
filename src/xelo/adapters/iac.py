@@ -27,6 +27,7 @@ All adapters return ``list[ComponentDetection]`` and follow the same pattern
 as ``DockerfileAdapter`` — no AST dependency, invoked directly by the
 extractor.
 """
+
 from __future__ import annotations
 
 import logging
@@ -43,9 +44,11 @@ _log = logging.getLogger(__name__)
 # Shared helpers
 # ---------------------------------------------------------------------------
 
+
 def _try_load_yaml(content: str) -> Any:
     try:
         import yaml  # type: ignore[import-untyped]
+
         return yaml.safe_load(content)
     except Exception:  # noqa: BLE001
         return None
@@ -54,6 +57,7 @@ def _try_load_yaml(content: str) -> Any:
 def _try_load_json(content: str) -> Any:
     try:
         import json
+
         return json.loads(content)
     except Exception:  # noqa: BLE001
         return None
@@ -99,7 +103,7 @@ def _make_det(
         canonical_name=canonical_name,
         display_name=display_name,
         adapter_name=adapter_name,
-        priority=8,          # IaC adapters — below framework adapters (1-7) but above regex-only
+        priority=8,  # IaC adapters — below framework adapters (1-7) but above regex-only
         confidence=confidence,
         metadata=metadata,
         file_path=file_path,
@@ -114,9 +118,7 @@ def _make_det(
 # ---------------------------------------------------------------------------
 
 #: Workload kinds that warrant a DEPLOYMENT node
-_K8S_WORKLOAD_KINDS = frozenset(
-    {"Deployment", "StatefulSet", "DaemonSet", "Job", "CronJob"}
-)
+_K8S_WORKLOAD_KINDS = frozenset({"Deployment", "StatefulSet", "DaemonSet", "Job", "CronJob"})
 #: RBAC kinds that warrant an IAM node
 _K8S_IAM_KINDS = frozenset(
     {
@@ -215,9 +217,9 @@ class K8sAdapter:
         replicas = spec.get("replicas")
         if isinstance(replicas, int) and replicas > 1:
             ha_mode = "replicated"
-        if spec.get("topologySpreadConstraints") or (
-            pod_spec.get("affinity") or {}
-        ).get("nodeAffinity"):
+        if spec.get("topologySpreadConstraints") or (pod_spec.get("affinity") or {}).get(
+            "nodeAffinity"
+        ):
             ha_mode = "multi-az"
 
         # Security context: runs as root?
@@ -240,10 +242,13 @@ class K8sAdapter:
                 runs_as_root = False
 
         # Health checks
-        has_health_check: bool | None = any(
-            (c or {}).get("livenessProbe") or (c or {}).get("readinessProbe")
-            for c in containers
-        ) or None
+        has_health_check: bool | None = (
+            any(
+                (c or {}).get("livenessProbe") or (c or {}).get("readinessProbe")
+                for c in containers
+            )
+            or None
+        )
         if has_health_check is None and containers:
             has_health_check = False  # containers exist but no probes
 
@@ -311,9 +316,7 @@ class K8sAdapter:
     # RBAC → IAM
     # ------------------------------------------------------------------
 
-    def _rbac(
-        self, data: dict[str, Any], content: str, file_path: str
-    ) -> list[ComponentDetection]:
+    def _rbac(self, data: dict[str, Any], content: str, file_path: str) -> list[ComponentDetection]:
         kind = str(data.get("kind", ""))
         name = _k8s_name(data)
         namespace = _k8s_namespace(data)
@@ -375,15 +378,17 @@ _TF_REGION_RE = re.compile(r'\bregion\s*=\s*"([^"]+)"')
 _TF_LOCATION_RE = re.compile(r'\blocation\s*=\s*"([^"]+)"')
 
 # AZs
-_TF_AZ_LIST_RE = re.compile(r'availability_zones\s*=\s*\[([^\]]+)\]')
+_TF_AZ_LIST_RE = re.compile(r"availability_zones\s*=\s*\[([^\]]+)\]")
 _TF_AZ_SINGLE_RE = re.compile(r'\bavailability_zone\s*=\s*"([^"]+)"')
-_TF_MULTI_AZ_RE = re.compile(r'\bmulti_az\s*=\s*true', re.IGNORECASE)
-_TF_MULTI_REGION_RE = re.compile(r'\bmulti_region\s*=\s*true', re.IGNORECASE)
+_TF_MULTI_AZ_RE = re.compile(r"\bmulti_az\s*=\s*true", re.IGNORECASE)
+_TF_MULTI_REGION_RE = re.compile(r"\bmulti_region\s*=\s*true", re.IGNORECASE)
 
 # Encryption
-_TF_ENCRYPTED_RE = re.compile(r'\b(?:encrypted|storage_encrypted)\s*=\s*true', re.IGNORECASE)
-_TF_DISK_ENC_RE = re.compile(r'\benable_disk_encryption\s*=\s*true', re.IGNORECASE)
-_TF_CMEK_RE = re.compile(r'\b(?:kms_key_id|disk_encryption_set_id|crypto_key_id|kms_key_name)\s*=\s*"([^"]+)"')
+_TF_ENCRYPTED_RE = re.compile(r"\b(?:encrypted|storage_encrypted)\s*=\s*true", re.IGNORECASE)
+_TF_DISK_ENC_RE = re.compile(r"\benable_disk_encryption\s*=\s*true", re.IGNORECASE)
+_TF_CMEK_RE = re.compile(
+    r'\b(?:kms_key_id|disk_encryption_set_id|crypto_key_id|kms_key_name)\s*=\s*"([^"]+)"'
+)
 
 # Secret stores
 _TF_SECRET_STORES: list[tuple[re.Pattern[str], str]] = [
@@ -391,25 +396,30 @@ _TF_SECRET_STORES: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r'resource\s+"aws_ssm_parameter"'), "aws_secrets_manager"),
     (re.compile(r'resource\s+"azurerm_key_vault"'), "azure_key_vault"),
     (re.compile(r'resource\s+"google_secret_manager_secret"'), "gcp_secret_manager"),
-    (re.compile(r'resource\s+"vault_(?:generic_secret|kv_secret|aws_auth_backend)"'), "hashicorp_vault"),
+    (
+        re.compile(r'resource\s+"vault_(?:generic_secret|kv_secret|aws_auth_backend)"'),
+        "hashicorp_vault",
+    ),
 ]
 
 # IAM resource blocks
 _TF_IAM_RESOURCE_RE = re.compile(
     r'resource\s+"'
-    r'(aws_iam_role|aws_iam_policy|aws_iam_user|aws_iam_group|aws_iam_instance_profile'
-    r'|google_service_account|google_project_iam_binding|google_project_iam_member'
-    r'|google_service_account_iam_binding|google_service_account_iam_member'
-    r'|azurerm_user_assigned_identity|azurerm_role_assignment|azurerm_service_principal'
-    r'|kubernetes_service_account|kubernetes_role|kubernetes_cluster_role'
-    r'|kubernetes_role_binding|kubernetes_cluster_role_binding'
+    r"(aws_iam_role|aws_iam_policy|aws_iam_user|aws_iam_group|aws_iam_instance_profile"
+    r"|google_service_account|google_project_iam_binding|google_project_iam_member"
+    r"|google_service_account_iam_binding|google_service_account_iam_member"
+    r"|azurerm_user_assigned_identity|azurerm_role_assignment|azurerm_service_principal"
+    r"|kubernetes_service_account|kubernetes_role|kubernetes_cluster_role"
+    r"|kubernetes_role_binding|kubernetes_cluster_role_binding"
     r')"\s+"([^"]+)"',
     re.IGNORECASE,
 )
 
-_TF_BLOCK_CONTENT_RE = re.compile(r'resource\s+"[^"]+"\s+"[^"]+"\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}', re.DOTALL)
+_TF_BLOCK_CONTENT_RE = re.compile(
+    r'resource\s+"[^"]+"\s+"[^"]+"\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}', re.DOTALL
+)
 _TF_PRINCIPAL_FROM_ARN_RE = re.compile(r'"principal"\s*:\s*\{[^}]*"AWS"\s*:\s*"([^"]+)"', re.DOTALL)
-_TF_MEMBERS_RE = re.compile(r'members\s*=\s*\[([^\]]+)\]')
+_TF_MEMBERS_RE = re.compile(r"members\s*=\s*\[([^\]]+)\]")
 _TF_ROLE_RE = re.compile(r'\brole\s*=\s*"([^"]+)"')
 _TF_PRINCIPAL_ID_RE = re.compile(r'\bprincipal_id\s*=\s*"([^"\$][^"]*)"')
 _TF_ACCOUNT_ID_RE = re.compile(r'\baccount_id\s*=\s*"([^"]+)"')
@@ -418,7 +428,13 @@ _TF_INLINE_PERMISSION_RE = re.compile(r'"([a-zA-Z0-9_*]+:[a-zA-Z0-9_*]+)"')
 
 
 def _tf_provider_to_target(provider: str) -> str:
-    mapping = {"aws": "aws", "azurerm": "azure", "google": "gcp", "vault": "hashicorp_vault", "kubernetes": "kubernetes"}
+    mapping = {
+        "aws": "aws",
+        "azurerm": "azure",
+        "google": "gcp",
+        "vault": "hashicorp_vault",
+        "kubernetes": "kubernetes",
+    }
     return mapping.get(provider.lower(), provider.lower())
 
 
@@ -477,9 +493,7 @@ class TerraformAdapter:
         az_list = _TF_AZ_LIST_RE.search(content)
         if az_list:
             availability_zones = [
-                z.strip().strip('"').strip("'")
-                for z in az_list.group(1).split(",")
-                if z.strip()
+                z.strip().strip('"').strip("'") for z in az_list.group(1).split(",") if z.strip()
             ]
         else:
             availability_zones = [m.group(1) for m in _TF_AZ_SINGLE_RE.finditer(content)]
@@ -492,7 +506,9 @@ class TerraformAdapter:
             ha_mode = "multi-az"
 
         # Encryption
-        encryption_at_rest = bool(_TF_ENCRYPTED_RE.search(content) or _TF_DISK_ENC_RE.search(content))
+        encryption_at_rest = bool(
+            _TF_ENCRYPTED_RE.search(content) or _TF_DISK_ENC_RE.search(content)
+        )
         enc_key_match = _TF_CMEK_RE.search(content)
         encryption_key_ref = enc_key_match.group(1) if enc_key_match else None
 
@@ -546,18 +562,18 @@ class TerraformAdapter:
             principal: str | None = resource_name
 
             # Actions from inline policy JSON
-            action_match = _TF_ACTION_RE.search(content[m.start(): m.start() + 2000])
+            action_match = _TF_ACTION_RE.search(content[m.start() : m.start() + 2000])
             if action_match:
                 raw = action_match.group(1) or action_match.group(2) or ""
                 permissions = _cap20([a.strip().strip('"') for a in raw.split(",") if a.strip()])
 
             # Trust policy principals (AWS)
-            tp_match = _TF_PRINCIPAL_FROM_ARN_RE.search(content[m.start(): m.start() + 2000])
+            tp_match = _TF_PRINCIPAL_FROM_ARN_RE.search(content[m.start() : m.start() + 2000])
             if tp_match:
                 trust_principals = [tp_match.group(1)]
 
             # GCP members list
-            members_match = _TF_MEMBERS_RE.search(content[m.start(): m.start() + 1000])
+            members_match = _TF_MEMBERS_RE.search(content[m.start() : m.start() + 1000])
             if members_match:
                 trust_principals = [
                     v.strip().strip('"').strip("'")
@@ -565,16 +581,16 @@ class TerraformAdapter:
                     if v.strip()
                 ]
                 if not permissions:
-                    role_m = _TF_ROLE_RE.search(content[m.start(): m.start() + 1000])
+                    role_m = _TF_ROLE_RE.search(content[m.start() : m.start() + 1000])
                     permissions = [role_m.group(1)] if role_m else None
 
             # Azure principal_id
-            pid_match = _TF_PRINCIPAL_ID_RE.search(content[m.start(): m.start() + 1000])
+            pid_match = _TF_PRINCIPAL_ID_RE.search(content[m.start() : m.start() + 1000])
             if pid_match:
                 principal = pid_match.group(1)
 
             # Accountid for service accounts
-            acct_match = _TF_ACCOUNT_ID_RE.search(content[m.start(): m.start() + 1000])
+            acct_match = _TF_ACCOUNT_ID_RE.search(content[m.start() : m.start() + 1000])
             if acct_match:
                 principal = acct_match.group(1)
 
@@ -652,9 +668,7 @@ def _is_cfn(data: Any) -> bool:
         return True
     resources = data.get("Resources") or data.get("resources")
     if isinstance(resources, dict):
-        return any(
-            str((v or {}).get("Type", "")).startswith("AWS::") for v in resources.values()
-        )
+        return any(str((v or {}).get("Type", "")).startswith("AWS::") for v in resources.values())
     return False
 
 
@@ -709,7 +723,9 @@ class CloudFormationAdapter:
         results.extend(self._iam(data, file_path))
         return results
 
-    def _deployment(self, data: dict[str, Any], content: str, file_path: str) -> list[ComponentDetection]:
+    def _deployment(
+        self, data: dict[str, Any], content: str, file_path: str
+    ) -> list[ComponentDetection]:
         resources: dict[str, Any] = data.get("Resources") or {}
 
         # Encryption
@@ -765,7 +781,7 @@ class CloudFormationAdapter:
 
         # Also check Metadata or Mappings for region hints
         if not cloud_region:
-            region_m = re.search(r'\b(us|eu|ap|sa|ca|af|me)[-_][a-z0-9-]+\b', content[:4000])
+            region_m = re.search(r"\b(us|eu|ap|sa|ca|af|me)[-_][a-z0-9-]+\b", content[:4000])
             if region_m:
                 cloud_region = region_m.group(0)
 
@@ -812,7 +828,9 @@ class CloudFormationAdapter:
             # Trust policy
             trust_principals: list[str] | None = None
             assume_doc = props.get("AssumeRolePolicyDocument") or {}
-            trust_stmts = (assume_doc if isinstance(assume_doc, dict) else {}).get("Statement") or []
+            trust_stmts = (assume_doc if isinstance(assume_doc, dict) else {}).get(
+                "Statement"
+            ) or []
             raw_trusts: list[str] = []
             for stmt in trust_stmts:
                 principal = (stmt or {}).get("Principal")
@@ -843,7 +861,9 @@ class CloudFormationAdapter:
                             permissions = actions
                             break
 
-            principal = props.get("RoleName") or props.get("UserName") or props.get("GroupName") or res_name
+            principal = (
+                props.get("RoleName") or props.get("UserName") or props.get("GroupName") or res_name
+            )
 
             canonical = f"iam:cfn:{res_type}:{res_name}".lower()[:128]
             meta: dict[str, Any] = {
@@ -913,7 +933,10 @@ _BICEP_SECRET_TYPES: list[tuple[str, str]] = [
 ]
 _BICEP_IAM_TYPES: dict[str, tuple[str, str]] = {
     # resource_type_fragment: (iam_type, description)
-    "microsoft.managedidentity/userassignedidentities": ("managed_identity", "User-Assigned Managed Identity"),
+    "microsoft.managedidentity/userassignedidentities": (
+        "managed_identity",
+        "User-Assigned Managed Identity",
+    ),
     "microsoft.authorization/roleassignments": ("role_binding", "Role Assignment"),
     "microsoft.authorization/policyassignments": ("policy", "Policy Assignment"),
     "microsoft.authorization/roledefinitions": ("role", "Role Definition"),
@@ -1038,7 +1061,7 @@ class BicepAdapter:
             line = content[: m.start()].count("\n") + 1
 
             # Props block — scan content after opening brace
-            rest = content[m.end():]
+            rest = content[m.end() :]
             principal: str | None = sym
             permissions: list[str] | None = None
 
@@ -1138,7 +1161,9 @@ class GcpDeploymentManagerAdapter:
         results.extend(self._iam(data, file_path))
         return results
 
-    def _deployment(self, data: dict[str, Any], content: str, file_path: str) -> list[ComponentDetection]:
+    def _deployment(
+        self, data: dict[str, Any], content: str, file_path: str
+    ) -> list[ComponentDetection]:
         resources: list[Any] = data.get("resources") or []
         regions: list[str] = []
         zones: list[str] = []
@@ -1448,9 +1473,7 @@ class GitHubActionsAdapter:
                     cloud_providers.append(provider)
                     # Extract region for AWS
                     if provider == "aws" and isinstance(step_with, dict):
-                        r = step_with.get("aws-region") or _GHA_AWS_REGION_RE.search(
-                            str(step_with)
-                        )
+                        r = step_with.get("aws-region") or _GHA_AWS_REGION_RE.search(str(step_with))
                         if isinstance(r, str):
                             cloud_region = r
                         elif r:
@@ -1472,10 +1495,7 @@ class GitHubActionsAdapter:
 
         # Workflow name — prefer explicit `name:` field or derive from filename
         workflow_name = str(data.get("name") or os.path.basename(file_path))
-        canonical = (
-            f"deployment:github-actions:{workflow_name}".lower()
-            .replace(" ", "-")[:128]
-        )
+        canonical = f"deployment:github-actions:{workflow_name}".lower().replace(" ", "-")[:128]
 
         meta: dict[str, Any] = {
             "iac_format": "github_actions",
@@ -1524,7 +1544,7 @@ class GitHubActionsAdapter:
         for job_id, job in jobs.items():
             if not isinstance(job, dict):
                 continue
-            for step in (job.get("steps") or []):
+            for step in job.get("steps") or []:
                 if not isinstance(step, dict):
                     continue
                 uses = str(step.get("uses") or "")
@@ -1542,10 +1562,7 @@ class GitHubActionsAdapter:
 
                     if provider == "aws":
                         if isinstance(step_with, dict):
-                            principal = (
-                                step_with.get("role-to-assume")
-                                or step_with.get("role_arn")
-                            )
+                            principal = step_with.get("role-to-assume") or step_with.get("role_arn")
                         iam_scope = "account"
 
                     elif provider == "gcp":

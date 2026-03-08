@@ -140,8 +140,8 @@ _DOCS_STEMS = {
     # Dependency lock files — auto-generated, not meaningful for AI component detection
     "pnpm-lock",
     "package-lock",
-    "yarn",          # yarn.lock
-    "composer",      # composer.lock (PHP)
+    "yarn",  # yarn.lock
+    "composer",  # composer.lock (PHP)
     "gemfile-lock",  # Gemfile.lock (Ruby)
     # Pre-commit / tooling configs — not AI application code
     ".pre-commit-config",
@@ -1232,16 +1232,28 @@ class AiSbomExtractor:
             # DEPLOYMENT fields
             if n.component_type == ComponentType.DEPLOYMENT:
                 for attr in (
-                    "deployment_target", "cloud_region", "availability_zones",
-                    "secret_store", "encryption_at_rest", "encryption_key_ref",
-                    "ha_mode", "has_health_check", "has_resource_limits", "runs_as_root",
+                    "deployment_target",
+                    "cloud_region",
+                    "availability_zones",
+                    "secret_store",
+                    "encryption_at_rest",
+                    "encryption_key_ref",
+                    "ha_mode",
+                    "has_health_check",
+                    "has_resource_limits",
+                    "runs_as_root",
                 ):
                     v = getattr(meta, attr, None)
                     if v is not None:
                         ns[attr] = v
                 # GHA-specific extras
-                for key in ("workflow_triggers", "runners", "cloud_providers",
-                            "uses_oidc", "environments"):
+                for key in (
+                    "workflow_triggers",
+                    "runners",
+                    "cloud_providers",
+                    "uses_oidc",
+                    "environments",
+                ):
                     v = meta.extras.get(key)
                     if v is not None:
                         ns[key] = v
@@ -1253,8 +1265,13 @@ class AiSbomExtractor:
                         ns[attr] = v
             # IAM fields
             elif n.component_type == ComponentType.IAM:
-                for attr in ("iam_type", "principal", "permissions",
-                             "iam_scope", "trust_principals"):
+                for attr in (
+                    "iam_type",
+                    "principal",
+                    "permissions",
+                    "iam_scope",
+                    "trust_principals",
+                ):
                     v = getattr(meta, attr, None)
                     if v is not None:
                         ns[attr] = v
