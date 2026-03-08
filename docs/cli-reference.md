@@ -1,5 +1,3 @@
-<img src="xelo-logo.png" alt="Xelo" height="20" />
-
 # CLI Reference
 
 Xelo CLI command entry points:
