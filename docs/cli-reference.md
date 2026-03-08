@@ -88,7 +88,16 @@ xelo scan <url> --output <file> [options]
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
 
-Same LLM flags as `scan path` are also accepted here with identical behavior.
+Same LLM flags and `--plugin` / `--plugin-output` / `--plugin-config` flags as `scan path` are accepted here with identical behavior.
+
+**Example — scan a GitHub repo and run the vulnerability plugin in one command:**
+
+```bash
+xelo scan https://github.com/org/my-ai-app --ref main \
+  --output sbom.json \
+  --plugin vulnerability \
+  --plugin-output findings.json
+```
 
 ## `validate` Reference
 
