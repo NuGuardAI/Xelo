@@ -192,3 +192,7 @@ python -m tests.test_toolbox.evaluate --all --mode local --verbose
 ## License
 
 Apache-2.0. See [LICENSE](./LICENSE).
+
+## Disclaimer
+
+See [XELO Disclaimer](./docs/XELO%20Disclaimer.md).
