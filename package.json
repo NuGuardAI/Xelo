@@ -1,0 +1,14 @@
+{
+  "name": "xelo-docs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite docs --port 8080 --host",
+    "build": "vite build docs",
+    "preview": "vite preview docs"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
