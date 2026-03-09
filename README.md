@@ -2,6 +2,8 @@
 
 Xelo is an open-source AI SBOM (Software Bill of Materials) generator for agentic and LLM-powered applications. It scans source code and configuration, produces a structured AI-BOM document, and supports CycloneDX export for security and compliance workflows.
 
+For official documentation, visit [https://nuguardai.github.io/Xelo](https://nuguardai.github.io/Xelo).
+
 ## What Xelo Does
 
 Xelo analyses a repository and produces an [AI SBOM](./docs/aibom-schema.md) — a machine-readable inventory of every AI component it can find:
