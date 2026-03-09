@@ -109,18 +109,15 @@
                     </div>
 
                     <h1>
-                        The <span class="accent">AI SBOM</span><br />
-                        generator for<br />
-                        AI-native apps
+                        The <span class="accent">AI SBOM</span> generator<br />
+                        for AI-native apps
                     </h1>
 
                     <p class="hero-sub">
-                        Xelo scans your codebase and produces a machine-readable inventory
-                        of every AI component — agents, models, tools, prompts, datastores,
-                        guardrails, and more.<br />
-                        Operate in deterministic (without LLM) and LLM modes. Wide range of
-                        plug-ins supported for vulnerability scanning, export, and integration with your security
-                        toolchain.
+                        Xelo scans your codebase and produces an inventory
+                        of every AI component — agents, models, tools, prompts, datastores, ...<br />
+                        Operate in without LLM and LLM modes. <br />
+                        Wide range of plug-ins supported for your security toolchain.
                     </p>
 
                     <div class="hero-actions">
@@ -233,15 +230,13 @@
                         and datastores that package managers cannot see.
                     </p>
                     <p>
-                        Xelo fills that gap. It analyses your Python, Jupyter, and TypeScript/JavaScript
-                        source code, infrastructure files, SQL schemas, and Dockerfiles to produce an
-                        <strong style="color: var(--text)">AI SBOM</strong> — a structured graph of every
-                        AI component it can find, complete with evidence, confidence scores, and
+                        Xelo fills that gap. It analyses your source code and config to produce an
+                        <strong style="color: var(--text)">AI SBOM</strong> complete with evidence, confidence scores,
+                        and
                         relationship edges.
                     </p>
                     <p>
-                        The output is a JSON document you can validate, version-control, feed into your
-                        vulnerability scanner, export to CycloneDX, or query with your own tooling. It
+                        The AI SBOM output export to your own tooling. It
                         answers questions that security teams actually need to ask:
                         <em style="color: var(--text)">Which AI agents touch PHI? Which datastores are connected with
                             the AI agents and with what privileges?</em>
@@ -295,8 +290,8 @@
                 <div class="card">
                     <div class="card-icon" style="background: rgba(88,196,220,0.12);">🤖</div>
                     <h3>Agents</h3>
-                    <p>Agentic orchestrators — LangGraph graphs, CrewAI crews, AutoGen agents, OpenAI Agents SDK, Google
-                        ADK, AWS BedrockAgentCore, Azure Semantic Kernel. Captures graph topology and tool wiring.</p>
+                    <p>Agentic orchestrators — LangGraph, CrewAI, AutoGen, OpenAI Agents SDK, Google
+                        ADK, AWS BedrockAgentCore, Azure Semantic Kernel, and more.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon" style="background: rgba(188,140,255,0.12);">🧠</div>
@@ -313,8 +308,8 @@
                 <div class="card">
                     <div class="card-icon" style="background: rgba(255,166,87,0.12);">📝</div>
                     <h3>Prompts</h3>
-                    <p>System instructions and prompt templates — full content preserved, injection risk scored,
-                        template variables that could be user-controlled identified.</p>
+                    <p>System instructions and prompt templates — full content preserved,
+                        template variables identified.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon" style="background: rgba(248,81,73,0.12);">🗄️</div>
@@ -338,7 +333,7 @@
                     <div class="card-icon" style="background: rgba(255,166,87,0.12);">☁️</div>
                     <h3>Deployment &amp; IaC</h3>
                     <p>Kubernetes manifests, Terraform, CloudFormation, GitHub Actions, Dockerfiles, Nginx configs.
-                        Cloud region, HA mode, OIDC, secret stores, IAM roles.</p>
+                        Cloud region, HA mode, secret stores, IAM roles.</p>
                 </div>
             </div>
         </div>
@@ -351,10 +346,10 @@
             <div class="vuln-header">
                 <div class="vuln-header-text">
                     <div class="section-label">Security rules</div>
-                    <h2>AI-native vulnerability scanning,<br />no network required</h2>
+                    <h2>AI-native vulnerability scanning</h2>
                     <p>
                         21 structural VLA rules fire purely on the AI SBOM — no manual attestation,
-                        no LLM call, no internet access. Rules are derived from OWASP AI Top 10,
+                        no LLM call. Rules are derived from OWASP AI Top 10,
                         NIST AI RMF, HIPAA, and PCI-DSS, adapted for the AI application layer.
                     </p>
                 </div>
@@ -383,7 +378,7 @@
                         <span class="rule-count-badge sev-critical">VLA-010 – 013</span>
                     </div>
                     <h4>IaC / Encryption</h4>
-                    <p>PHI workloads without encryption at rest, no CMK/BYOK, secrets in env vars, missing secret
+                    <p>PHI workloads without encryption at rest, secrets in env vars, missing secret
                         management service.</p>
                 </div>
                 <div class="rule-cat">
@@ -392,8 +387,8 @@
                         <span class="rule-count-badge sev-high">VLA-014 – 017</span>
                     </div>
                     <h4>IAM &amp; Identity</h4>
-                    <p>Overly permissive IAM with PHI, cluster-scoped roles without permission boundary, GHA without
-                        OIDC, GHA write + PHI.</p>
+                    <p>Overly permissive IAM with PHI, roles without permission boundary, GitHub Actions w/o strong
+                        authentication.</p>
                 </div>
                 <div class="rule-cat">
                     <div class="rule-cat-top">
@@ -419,12 +414,11 @@
                 <span style="font-size:1.1rem;flex-shrink:0;margin-top:0.05rem">ℹ️</span>
                 <span>
                     <strong>Framework integrations:</strong> findings export as
-                    <strong>SARIF 2.1.0</strong> (GitHub Code Scanning / GHAS),
+                    <strong>SARIF 2.1</strong> (GitHub Code Scanning / GHAS),
                     <strong>AWS Security Hub</strong> (ASFF), and
                     <strong>MITRE ATLAS v2</strong> technique mappings via the atlas plugin.
-                    See the <a href="doc.html?page=vulnerability-scanning">Vulnerability Scanning guide</a> for rule
-                    details,
-                    remediation steps, and a worked healthcare voice agent example.
+                    See the <a href="doc.html?page=vulnerability-scanning">Vulnerability Scanning guide</a> for
+                    details, and a healthcare voice agent example.
                 </span>
             </div>
 
@@ -442,8 +436,10 @@
             </p>
             <div class="personas-grid">
                 <div class="persona-card">
-                    <span class="persona-icon">🧑‍💻</span>
-                    <h3>AI Engineers</h3>
+                    <div class="persona-header">
+                        <span class="persona-icon">🧑‍💻</span>
+                        <h3>AI Engineers</h3>
+                    </div>
                     <ul>
                         <li>Reduce your workload answering security and compliance questions</li>
                         <li>Provide meta-data and artifacts automatically through CI pipeline</li>
@@ -451,8 +447,10 @@
                     </ul>
                 </div>
                 <div class="persona-card">
-                    <span class="persona-icon">🔍</span>
-                    <h3>Application Security Engineers</h3>
+                    <div class="persona-header">
+                        <span class="persona-icon">🔍</span>
+                        <h3>AppSec Engineers</h3>
+                    </div>
                     <ul>
                         <li>Find unguarded models and over-privileged agents in code review</li>
                         <li>Run 21 structural VLA rules with no network access</li>
@@ -461,8 +459,10 @@
                     </ul>
                 </div>
                 <div class="persona-card">
-                    <span class="persona-icon">⚙️</span>
-                    <h3>Platform &amp; DevSecOps Engineers</h3>
+                    <div class="persona-header">
+                        <span class="persona-icon">⚙️</span>
+                        <h3>DevSecOps Engineers</h3>
+                    </div>
                     <ul>
                         <li>Publish AI SBOM & artifacts into various platforms</li>
                         <li>Scan IaC for encryption, root containers, single-AZ exposures</li>
@@ -470,8 +470,10 @@
                     </ul>
                 </div>
                 <div class="persona-card">
-                    <span class="persona-icon">📋</span>
-                    <h3>Compliance &amp; Risk Teams</h3>
+                    <div class="persona-header">
+                        <span class="persona-icon">📋</span>
+                        <h3>Compliance &amp; Risk Teams</h3>
+                    </div>
                     <ul>
                         <li>Self-serve compliance and risk assessments w/o needing AI Engineers time</li>
                         <li>Generate human-readable Markdown reports for audit evidence</li>
@@ -771,22 +773,19 @@ jobs:
             </div>
             <ul class="footer-links">
                 <li><a href="doc.html?page=getting-started">Getting Started</a></li>
-                <li><a href="doc.html?page=cli-reference">CLI Reference</a></li>
-                <li><a href="doc.html?page=developer-guide">Developer Guide</a></li>
                 <li><a href="doc.html?page=vulnerability-scanning">Vulnerability Scanning</a></li>
                 <li><a href="https://github.com/NuguardAI/xelo" class="icon-link" aria-label="GitHub"><svg width="15"
                             height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                             <path
                                 d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                         </svg>GitHub</a></li>
-                <li><a href="https://github.com/NuguardAI/xelo/issues">Issues</a></li>
                 <li><a href="https://discord.gg/EF99Ck7a" class="icon-link" aria-label="Discord"><svg width="15"
                             height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                             <path
                                 d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" />
                         </svg>Discord</a></li>
             </ul>
-            <span class="footer-copy">Apache-2.0 · Built by NuGuard AI · <a href="doc.html?page=XELO-Disclaimer"
+            <span class="footer-copy"> · Built by NuGuard AI · <a href="doc.html?page=XELO-Disclaimer"
                     style="color:inherit;opacity:0.7;">Disclaimer</a></span>
         </div>
     </footer>
