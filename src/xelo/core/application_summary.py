@@ -268,7 +268,9 @@ def infer_modalities_support(
             " ".join(str(v).lower() for v in caps_raw) if isinstance(caps_raw, list) else ""
         )
         probe = f"{modality} {capabilities}"
-        voice = voice or any(k in probe for k in ("tts", "stt", "microphone", "twilio", "webrtc", "whisper"))
+        voice = voice or any(
+            k in probe for k in ("tts", "stt", "microphone", "twilio", "webrtc", "whisper")
+        )
         image = image or any(k in probe for k in ("vision", "ocr", "image_generation"))
         video = video or any(k in probe for k in ("webcam", "ffmpeg", "rtsp", "videocapture"))
 
