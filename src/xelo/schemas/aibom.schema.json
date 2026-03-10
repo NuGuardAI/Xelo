@@ -62,7 +62,7 @@
           "type": "number"
         },
         "detail": {
-          "description": "Detection description: '<adapter>: <snippet>' (up to 500 chars for most adapters; full content preserved for PROMPT nodes)",
+          "description": "Detection description: '<adapter>: <snippet>' (up to 500 chars)",
           "title": "Detail",
           "type": "string"
         },

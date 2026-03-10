@@ -192,7 +192,7 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
             # Instructions as PROMPT node
             if instructions and len(instructions) >= 40:
                 prompt_display = f"{agent_name} Instructions"
-                prompt_canon = canonicalize_text(f"openai_agents:prompt:{inst.line}")
+                prompt_canon = canonicalize_text(prompt_display.lower())
                 detected.append(
                     ComponentDetection(
                         component_type=ComponentType.PROMPT,
@@ -203,7 +203,6 @@ class OpenAIAgentsAdapter(FrameworkAdapter):
                         confidence=0.92,
                         metadata={
                             "role": "system",
-                            "content_preview": instructions[:500],
                             "content": instructions,
                             "char_count": len(instructions),
                             "is_template": bool(template_vars),

@@ -157,7 +157,6 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                         metadata={
                             "prompt_type": "instructions",
                             "role": "system",
-                            "content_preview": instructions[:500],
                             "content": instructions,
                             "language": "typescript",
                         },

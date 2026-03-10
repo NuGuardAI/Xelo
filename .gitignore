@@ -30,5 +30,6 @@ htmlcov/
 # tmp files
 output/
 tmp/
+llm-runs/
 # Generated eval run outputs
 tests/test-results/

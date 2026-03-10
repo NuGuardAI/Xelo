@@ -641,7 +641,7 @@ def _convert_aibom_nodes_to_discovered_assets(
             "purpose",
             "details",
             "asset_summary",
-            "content_preview",
+            "content",
         ):
             value = properties.get(field_name)
             if isinstance(value, str) and value.strip():
@@ -814,7 +814,7 @@ def convert_aibom_export_to_discovered_assets(
                 description = value.strip()
                 break
         if not description:
-            for fallback_field in ("asset_summary", "content_preview"):
+            for fallback_field in ("asset_summary", "content"):
                 value = props.get(fallback_field)
                 if isinstance(value, str) and value.strip():
                     description = value.strip()

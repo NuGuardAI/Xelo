@@ -175,7 +175,7 @@ class SemanticKernelAdapter(FrameworkAdapter):
                     .title()
                     or inst.class_name
                 )
-                canon = canonicalize_text(f"semantic_kernel:prompt:{inst.line}")
+                canon = canonicalize_text(display_name.lower())
                 detected.append(
                     ComponentDetection(
                         component_type=ComponentType.PROMPT,
@@ -185,7 +185,6 @@ class SemanticKernelAdapter(FrameworkAdapter):
                         priority=self.priority,
                         confidence=0.88,
                         metadata={
-                            "content_preview": template[:500] if template else "",
                             "content": template,
                             "char_count": len(template),
                             "framework": "semantic_kernel",
