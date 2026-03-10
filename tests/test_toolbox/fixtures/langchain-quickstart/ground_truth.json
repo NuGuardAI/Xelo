@@ -5601,6 +5601,72 @@
           }
         }
       ]
+    },
+    {
+      "id": "d4be38a5-62ef-422d-82c2-c7a21ad2e3a8",
+      "name": "message",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "message",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "PROMPT: message",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/chat.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "37bf5685-38e6-48d1-8b67-752910f3ca56",
+      "name": "other_",
+      "component_type": "PROMPT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "other_",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "PROMPT: other_",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/chat.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2af5cbb4-af88-4e5c-8a0a-12c8571b84ae",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/agent_toolkits/__init__.py"
+          }
+        }
+      ]
     }
   ],
   "edges": []

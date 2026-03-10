@@ -330,6 +330,28 @@
           }
         }
       ]
+    },
+    {
+      "id": "4f466836-4b6e-4253-ad61-6a201c727c4e",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "agent_grammar/agent.py"
+          }
+        }
+      ]
     }
   ],
   "edges": []

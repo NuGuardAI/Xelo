@@ -1325,6 +1325,28 @@
           "confidence": 0.85
         }
       ]
+    },
+    {
+      "id": "cd0d2be2-f889-4b2d-b10a-0da6baddd2f5",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "src/bedrock_agentcore/memory/__init__.py"
+          }
+        }
+      ]
     }
   ],
   "edges": []

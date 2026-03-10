@@ -331,6 +331,32 @@
           }
         }
       ]
+    },
+    {
+      "id": "8534029b-992a-46fd-b101-945486e71f72",
+      "name": "Bedrock",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Bedrock",
+          "adapter": "gt",
+          "synonyms": [
+            "bedrock",
+            "Bedrock"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: Bedrock",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py"
+          }
+        }
+      ]
     }
   ],
   "edges": [

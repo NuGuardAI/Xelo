@@ -124,7 +124,7 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         # - o-series: require word boundary or letter suffix to avoid hex
                         # - deepseek/qwen/phi: common open-weight families
                         # - <name>:<size_tag>: generic Ollama pull format (mistral:7b)
-                        r"\b(gpt-[\d][\w.-]*|claude-[\d][\w.-]*|gemini-[\d][\w.]*"
+                        r"\b(gpt-[\d][\w.-]*|claude-[\d][\w.-]*|claude-(?:sonnet|opus|haiku|instant)[\d-][\w.-]*|gemini-[\d][\w.]*"
                         r"|llama-[\d][\w.-]*|llama[\d][\w.]*:[a-z0-9]+"
                         r"|mistral-[\w.-]+|o\d(?:-[a-z][a-z0-9-]*)?\b"
                         r"|deepseek-[\w.-]+|qwen[\d][\w.-]*|phi[\d][\w.-]*"
@@ -136,20 +136,31 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         re.IGNORECASE,
                     ),
                     re.compile(
-                        # HuggingFace Hub org/model-id format.
+                        # HuggingFace Hub org/model-id format (non-high-FP orgs).
                         # Matches strings like "meta-llama/Llama-3.1-8B-Instruct",
-                        # "mistralai/Mistral-7B-v0.3", "google/gemma-2-27b-it".
+                        # "mistralai/Mistral-7B-v0.3".
                         # Anchored to known orgs to avoid matching arbitrary file paths.
-                        # Anchored to known HuggingFace / model-hub orgs.
-                        # Negative lookahead prevents matching GitHub URL fragments
-                        # like "google/langextract/blob/main/..."
-                        r"\b(?:meta-llama|mistralai|microsoft|google|HuggingFaceH4|facebook"
+                        # Negative lookbehind: skip matches inside URLs or npm @scope
+                        #   (e.g. "github.com/meta-llama/..." or "@eleutherai/...").
+                        # Negative lookahead: skip GitHub URL path fragments.
+                        r"(?<![/@])\b(?:meta-llama|mistralai|HuggingFaceH4|facebook"
                         r"|EleutherAI|tiiuae|databricks|Qwen|deepseek-ai|THUDM|bigscience"
                         r"|openchat|NousResearch|teknium|WizardLM|lmsys|stabilityai"
-                        r"|togethercomputer|codellama|sentence-transformers|openai|cohere"
+                        r"|togethercomputer|codellama|sentence-transformers|cohere"
                         r"|ai21labs|allenai|huggingface)"
                         r"/(?!(?:blob|tree|issues|pulls|commit|releases|compare|raw)/)"
                         r"[\w][\w./:-]*",
+                        re.IGNORECASE,
+                    ),
+                    re.compile(
+                        # High-FP orgs (google/microsoft/openai): require a digit
+                        # in the model ID to distinguish real model names like
+                        # "google/gemma-2-27b-it" from SDK/repo names like
+                        # "google/adk" or "openai/openai-cookbook".
+                        # Negative lookbehind: skip URL paths (/google/) and npm scopes.
+                        r"(?<![/@])\b(?:google|microsoft|openai)"
+                        r"/(?!(?:blob|tree|issues|pulls|commit|releases|compare|raw)/)"
+                        r"[\w][\w.-]*\d[\w./:-]*",
                         re.IGNORECASE,
                     ),
                     re.compile(

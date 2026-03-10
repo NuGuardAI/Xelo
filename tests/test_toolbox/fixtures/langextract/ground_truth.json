@@ -213,13 +213,18 @@
     },
     {
       "id": "9db8344c-164e-4fe2-95c6-cd33faf05b24",
-      "name": "llama-3.2-1b-instruct",
+      "name": "llama3.2:1b",
       "component_type": "MODEL",
       "confidence": 0.55,
       "metadata": {
         "extras": {
-          "canonical_name": "llama-3.2-1b-instruct",
-          "adapter": "gt"
+          "canonical_name": "llama3.2:1b",
+          "adapter": "gt",
+          "synonyms": [
+            "llama-3.2-1b-instruct",
+            "llama3.2:1b",
+            "llama3.2"
+          ]
         }
       },
       "evidence": [
@@ -253,6 +258,94 @@
           "location": {
             "path": "langextract/annotation.py",
             "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "6ef212f8-308a-4fb6-b2c3-dc9bb7d83f11",
+      "name": "llama3.2:3b",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "llama3.2:3b",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "MODEL: llama3.2:3b",
+          "location": {
+            "path": "examples/ollama/demo_ollama.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "f4e35ddf-b822-4235-8581-5478d6f0e001",
+      "name": "code_execution",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "code_execution",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "PRIVILEGE: code_execution",
+          "location": {
+            "path": "benchmarks/utils.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c734bb8c-766e-4733-bf94-3743647f33bc",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.62,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.62,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "benchmarks/benchmark.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "0ade8ec3-b195-42a4-a345-38b6ac3bce22",
+      "name": "network_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "network_out",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PRIVILEGE: network_out",
+          "location": {
+            "path": "benchmarks/utils.py"
           }
         }
       ]

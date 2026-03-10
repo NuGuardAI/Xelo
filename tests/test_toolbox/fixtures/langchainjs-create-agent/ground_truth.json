@@ -304,6 +304,28 @@
           }
         }
       ]
+    },
+    {
+      "id": "5b1df69a-d52b-48c5-a5ac-888e684ee19d",
+      "name": "Messages",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "Messages",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "PROMPT: Messages",
+          "location": {
+            "path": "createAgent/tools.ts"
+          }
+        }
+      ]
     }
   ],
   "edges": []

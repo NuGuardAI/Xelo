@@ -47,6 +47,14 @@
             "path": "backend/src/services/analyzers.py",
             "line": 115
           }
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "AUTH: generic (api key pattern)",
+          "location": {
+            "path": "backend/src/config.py"
+          }
         }
       ]
     },

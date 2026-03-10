@@ -329,6 +329,15 @@
           },
           "detail": "auth_generic: api_key",
           "confidence": 0.8500000000000001
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.75,
+          "detail": "auth_generic: load_dotenv",
+          "location": {
+            "path": "backend/debug.py",
+            "line": 24
+          }
         }
       ]
     },
@@ -425,79 +434,6 @@
           },
           "detail": "dockerfile: FROM python:3.12-slim",
           "confidence": 0.99
-        }
-      ]
-    },
-    {
-      "id": "6caa2c9c-16e6-49e2-b466-866f3fd5e0a8",
-      "component_type": "DATASTORE",
-      "name": "mongodb",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PII"
-        ],
-        "classified_tables": [
-          "ModelConfig",
-          "ModelResponse",
-          "Skill",
-          "SkillResponse",
-          "SubagentConfig",
-          "ToolConfig",
-          "ToolGroupConfig"
-        ],
-        "classified_fields": {
-          "ModelConfig": [
-            "display_name",
-            "name"
-          ],
-          "ToolGroupConfig": [
-            "name"
-          ],
-          "ToolConfig": [
-            "name"
-          ],
-          "ModelResponse": [
-            "display_name",
-            "name"
-          ],
-          "SkillResponse": [
-            "name"
-          ],
-          "Skill": [
-            "name"
-          ],
-          "SubagentConfig": [
-            "name"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "mongodb",
-          "adapter": "datastore_generic",
-          "evidence_count": 1,
-          "normalizer": "datastore"
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "frontend/pnpm-lock.yaml",
-            "line": 2437
-          },
-          "detail": "datastore_generic: mongodb",
-          "confidence": 0.7
         }
       ]
     },
@@ -1910,87 +1846,9 @@
       ]
     },
     {
-      "id": "f4edbdaf-4c0b-4dac-80b5-a2f5e0639de3",
-      "component_type": "MODEL",
-      "name": "o1",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o1",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "frontend/pnpm-lock.yaml",
-            "line": 315
-          },
-          "detail": "model_generic: O1",
-          "confidence": 0.6
-        }
-      ]
-    },
-    {
-      "id": "87916e07-54e4-40f4-91a3-8d58bec75152",
-      "component_type": "MODEL",
-      "name": "o2",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o2",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "frontend/public/demo/threads/ad76c455-5bf9-4335-8517-fc03834ab828/thread.json",
-            "line": 54
-          },
-          "detail": "model_generic: O2",
-          "confidence": 0.95
-        }
-      ]
-    },
-    {
       "id": "4a512b07-4c58-4e0a-8a71-180b917039a9",
       "component_type": "PRIVILEGE",
-      "name": "generic",
+      "name": "rbac",
       "metadata": {
         "framework": null,
         "model_name": null,
@@ -2009,9 +1867,13 @@
         "registry": null,
         "base_image": null,
         "extras": {
-          "canonical_name": "privilege_generic",
+          "canonical_name": "rbac",
           "adapter": "privilege_generic",
-          "evidence_count": 1
+          "evidence_count": 1,
+          "synonyms": [
+            "generic",
+            "rbac"
+          ]
         }
       },
       "evidence": [

@@ -620,6 +620,28 @@
           }
         }
       ]
+    },
+    {
+      "id": "7c7bfeca-9d4f-403c-ba50-e4bf9ee92618",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "multi-agent/router-knowledge-base.ts"
+          }
+        }
+      ]
     }
   ],
   "edges": []

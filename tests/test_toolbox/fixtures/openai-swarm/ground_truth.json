@@ -740,6 +740,14 @@
             "path": "examples/customer_service_streaming/configs/prompts.py",
             "line": 1
           }
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "PROMPT: TRIAGE_SYSTEM_PROMPT",
+          "location": {
+            "path": "examples/airline/data/routines/prompts.py"
+          }
         }
       ]
     },
@@ -786,30 +794,6 @@
           "detail": "PROMPT: LOCAL_PLANNER_PROMPT",
           "location": {
             "path": "examples/customer_service_streaming/configs/prompts.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "53ca126c-34bf-50d3-b84d-2b7dc4a635b2",
-      "name": "STARTER_PROMPT",
-      "component_type": "PROMPT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "starterprompt",
-          "adapter": "python_prompt_const",
-          "description": "Swarm airline routine starter instructions"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_constant",
-          "confidence": 0.85,
-          "detail": "PROMPT: STARTER_PROMPT",
-          "location": {
-            "path": "examples/airline/data/routines/prompts.py",
             "line": 1
           }
         }
@@ -864,25 +848,23 @@
       ]
     },
     {
-      "id": "9680d01b-62ef-58cc-9e59-7eeedebd2670",
-      "name": "STARTER_PROMPT",
-      "component_type": "PROMPT",
-      "confidence": 0.85,
+      "id": "414da0e4-463b-4e8a-ae42-9d016e504774",
+      "name": "text-embedding-3-large",
+      "component_type": "MODEL",
+      "confidence": 0.8,
       "metadata": {
         "extras": {
-          "canonical_name": "starterprompt",
-          "adapter": "python_prompt_const",
-          "description": "Swarm flight modification starter prompt"
+          "canonical_name": "text-embedding-3-large",
+          "adapter": "gt"
         }
       },
       "evidence": [
         {
-          "kind": "ast_constant",
-          "confidence": 0.85,
-          "detail": "PROMPT: STARTER_PROMPT",
+          "kind": "gt",
+          "confidence": 0.8,
+          "detail": "MODEL: text-embedding-3-large",
           "location": {
-            "path": "examples/airline/data/routines/flight_modification/policies.py",
-            "line": 1
+            "path": "examples/customer_service_streaming/prep_data.py"
           }
         }
       ]

@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from .adapters.base import (
+    AdapterMatch,
     ComponentDetection,
     DetectionAdapter,
     FrameworkAdapter,
@@ -617,12 +618,55 @@ class AiSbomExtractor:
                 detection = rx_adapter.detect(_regex_content)
                 if detection is None:
                     continue
+                # For MODEL adapter with per-match naming (canonical_name=None on
+                # the adapter), emit one node per distinct model name so that a
+                # single file containing multiple different models (e.g. a mock
+                # route.ts listing gpt-5, deepseek-v3.2, gemini-3-pro) gets a
+                # separate node for each instead of only the first match.
+                if (
+                    detection.component_type == ComponentType.MODEL
+                    and not rx_adapter.canonical_name
+                ):
+                    # Group matches by their normalised model name; keep first
+                    # occurrence as the representative match for location/snippet.
+                    _model_first: dict[str, AdapterMatch] = {}
+                    _model_count: dict[str, int] = {}
+                    for _m in detection.matches:
+                        _key = _m.snippet.strip().lower()
+                        if _key not in _model_first:
+                            _model_first[_key] = _m
+                            _model_count[_key] = 1
+                        else:
+                            _model_count[_key] += 1
+                    for _raw_lower, _first_match in _model_first.items():
+                        _raw_name = _first_match.snippet.strip()
+                        _cnt = _model_count[_raw_lower]
+                        _conf = min(0.95, 0.50 + 0.05 * _cnt)
+                        _comp_det = ComponentDetection(
+                            component_type=detection.component_type,
+                            canonical_name=canonicalize_text(_raw_name),
+                            display_name=_raw_name,
+                            adapter_name=detection.adapter_name,
+                            priority=detection.priority,
+                            confidence=_conf,
+                            metadata=dict(detection.metadata),
+                            file_path=rel_path,
+                            line=_first_match.line,
+                            snippet=_first_match.snippet,
+                            evidence_kind="regex",
+                        )
+                        self._merge_detection(node_map, _comp_det)
+                    continue
                 confidence = min(0.95, 0.50 + 0.05 * len(detection.matches))
                 canonical = canonicalize_text(detection.canonical_name)
-                # Use the full canonical name as display — do NOT strip the part
-                # before ":" because for Ollama-format models like "llama3.2:3b"
-                # the whole token is the model name.
-                display = detection.canonical_name
+                # For MODEL type, keep the full canonical name (e.g., "llama3.2:3b"
+                # must not be truncated to "3b"). For other types, strip any
+                # type-category prefix so "auth:generic" → "generic" and
+                # "privilege:email_out" → "email_out".
+                if detection.component_type == ComponentType.MODEL:
+                    display = detection.canonical_name
+                else:
+                    display = detection.canonical_name.split(":")[-1]
                 first = detection.matches[0]
                 comp_det = ComponentDetection(
                     component_type=detection.component_type,

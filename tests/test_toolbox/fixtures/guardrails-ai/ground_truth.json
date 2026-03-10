@@ -4703,6 +4703,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "73ca3da5-eb97-5faf-86c9-9d63f2ff2a01",
+      "name": "get_jwt_token",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "get_jwt_token",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: get_jwt_token",
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 26
+          }
+        }
+      ]
     }
   ],
   "edges": [],

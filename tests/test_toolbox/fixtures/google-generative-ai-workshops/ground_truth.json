@@ -237,6 +237,14 @@
             "path": "workshops/rag-ops/2.3_mvp_rag.ipynb",
             "line": 12
           }
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "DATASTORE: mlops-for-genai",
+          "location": {
+            "path": "workshops/rag-ops/2.2_mvp_chunk_embeddings.ipynb"
+          }
         }
       ]
     },
@@ -574,6 +582,50 @@
           "location": {
             "path": "workshops/ai-agents/ai_agents_for_engineers.ipynb",
             "line": 204
+          }
+        }
+      ]
+    },
+    {
+      "id": "53442dea-50c2-4257-b5a9-db8deae202f1",
+      "name": "generic",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: generic",
+          "location": {
+            "path": "workshops/rag-ops/2.3_mvp_rag.ipynb"
+          }
+        }
+      ]
+    },
+    {
+      "id": "3eaa707f-582a-4150-b95d-c903153a3c19",
+      "name": "prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {
+          "canonical_name": "prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "workshops/ai-agents/ai_agents_for_engineers.ipynb"
           }
         }
       ]

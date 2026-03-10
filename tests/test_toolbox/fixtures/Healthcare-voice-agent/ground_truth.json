@@ -345,6 +345,14 @@
             "path": "backend/main.py",
             "line": 55
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "auth_generic: api_key pattern",
+          "location": {
+            "path": "backend/config.py"
+          }
         }
       ]
     },
@@ -511,6 +519,28 @@
           "location": {
             "path": "src/gemini.js",
             "line": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "13e53ed8-32e2-490b-80d7-dcb8853c946f",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "package.json"
           }
         }
       ]

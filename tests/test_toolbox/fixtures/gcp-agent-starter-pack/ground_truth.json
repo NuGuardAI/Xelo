@@ -47,6 +47,14 @@
             "path": "agent_starter_pack/base_templates/go/.cloudbuild/staging.yaml",
             "line": 66
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "auth_generic: api_key",
+          "location": {
+            "path": "agent_starter_pack/agents/langgraph/app/agent.py"
+          }
         }
       ]
     },

@@ -47,6 +47,14 @@
             "path": "cookiecutter/openbb_cookiecutter/template/{{cookiecutter.project_tag}}/{{cookiecutter.package_name}}/providers/{{cookiecutter.provider_name}}/__init__.py",
             "line": 14
           }
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.6,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "cookiecutter/openbb_cookiecutter/template/{{cookiecutter.project_tag}}/{{cookiecutter.package_name}}/providers/{{cookiecutter.provider_name}}/models/example.py"
+          }
         }
       ]
     },
@@ -571,6 +579,28 @@
           "location": {
             "path": "openbb_platform/extensions/commodity/integration/test_commodity_api.py",
             "line": 158
+          }
+        }
+      ]
+    },
+    {
+      "id": "1d14da34-338d-4078-9898-e59e03bb146d",
+      "name": "prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "prompt",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "examples/openbb_vs_langchain.ipynb"
           }
         }
       ]

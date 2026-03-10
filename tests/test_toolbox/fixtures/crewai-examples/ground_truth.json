@@ -1061,54 +1061,6 @@
       ]
     },
     {
-      "id": "615743a1-be15-5ebf-b80a-bcbd7727cbc5",
-      "name": "blog_researcher",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "framework": "crewai",
-        "extras": {
-          "canonical_name": "blogresearcher",
-          "adapter": "crewai_yaml"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "yaml",
-          "confidence": 0.85,
-          "detail": "AGENT: blog_researcher",
-          "location": {
-            "path": "crews/blog_posts/src/blog_posts/config/agents.yaml",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
-      "id": "6f8e2ebb-b252-532f-bb63-0e40db8be2d8",
-      "name": "blog_writer",
-      "component_type": "AGENT",
-      "confidence": 0.85,
-      "metadata": {
-        "framework": "crewai",
-        "extras": {
-          "canonical_name": "blogwriter",
-          "adapter": "crewai_yaml"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "yaml",
-          "confidence": 0.85,
-          "detail": "AGENT: blog_writer",
-          "location": {
-            "path": "crews/blog_posts/src/blog_posts/config/agents.yaml",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
       "id": "ead18c40-b6a7-5dbe-ac8f-dcd64819702d",
       "name": "crewai",
       "component_type": "FRAMEWORK",
@@ -1432,6 +1384,103 @@
           "location": {
             "path": "crews/landing_page_generator/src/landing_page_generator/main.py",
             "line": 23
+          }
+        }
+      ]
+    },
+    {
+      "id": "1075537e-7208-4d8f-8ce9-022ff04f4264",
+      "name": "app",
+      "component_type": "AGENT",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "app",
+          "adapter": "gt"
+        },
+        "framework": "langgraph"
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "AGENT: app",
+          "location": {
+            "path": "integrations/CrewAI-LangGraph/src/graph.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "7339b2bd-fdcd-4dc2-a3e8-290c2241446e",
+      "name": "AzureChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "AzureChatOpenAI",
+          "adapter": "gt",
+          "synonyms": [
+            "azure_chat_openai",
+            "AzureChatOpenAI"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "MODEL: AzureChatOpenAI",
+          "location": {
+            "path": "integrations/azure_model/main.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13dadaf0-402d-406a-9563-8be096b7a9ce",
+      "name": "ChatOpenAI",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "ChatOpenAI",
+          "adapter": "gt",
+          "synonyms": [
+            "chat_openai",
+            "ChatOpenAI"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "MODEL: ChatOpenAI",
+          "location": {
+            "path": "crews/markdown_validator/src/markdown_validator/main.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06a2924c-76cf-4fb8-b78e-31eb22234446",
+      "name": "search_tool",
+      "component_type": "TOOL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {
+          "canonical_name": "search_tool",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.7,
+          "detail": "TOOL: search_tool",
+          "location": {
+            "path": "crews/starter_template/main.py"
           }
         }
       ]
