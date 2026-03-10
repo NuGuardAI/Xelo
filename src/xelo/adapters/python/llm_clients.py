@@ -328,7 +328,7 @@ class LLMClientsAdapter(FrameworkAdapter):
             (imp.module or "").startswith("google.cloud") for imp in parse_result.imports
         )
         if gcs_imported:
-            const_map: dict[str, str] = {
+            const_map = {
                 lit.context: lit.value
                 for lit in parse_result.string_literals
                 if lit.context and not lit.is_docstring and lit.value

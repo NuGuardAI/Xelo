@@ -636,7 +636,7 @@ class LangGraphAdapter(FrameworkAdapter):
                     },
                     file_path=file_path,
                     line=call.line,
-                    snippet=f"ChatPromptTemplate.from_messages(...)",
+                    snippet="ChatPromptTemplate.from_messages(...)",
                     evidence_kind="ast_call",
                 )
             )

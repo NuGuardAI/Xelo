@@ -625,7 +625,7 @@ class AiSbomExtractor:
                 # separate node for each instead of only the first match.
                 if (
                     detection.component_type == ComponentType.MODEL
-                    and not rx_adapter.canonical_name
+                    and not getattr(rx_adapter, "canonical_name", None)
                 ):
                     # Group matches by their normalised model name; keep first
                     # occurrence as the representative match for location/snippet.

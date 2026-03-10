@@ -241,7 +241,7 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             if call.function_name != "tool" and call.method_name != "tool":
                 continue
             args = call.resolved_arguments or call.arguments
-            explicit_name = self._clean(args.get("name"))
+            explicit_name: str | None = self._clean(args.get("name")) or None
             if not explicit_name:
                 explicit_name = self._assignment_name(source, call.line_start)
             if not explicit_name:
@@ -293,7 +293,7 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                     },
                     file_path=file_path,
                     line=call.line_start,
-                    snippet=call.source_snippet or f"createAgent({{...}})",
+                    snippet=call.source_snippet or "createAgent({...})",
                     evidence_kind="ast_call",
                 )
             )
