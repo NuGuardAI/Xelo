@@ -1034,7 +1034,12 @@ class AiSbomExtractor:
         tier = _classify_source_tier(det.file_path, det.adapter_name, det.evidence_kind)
         tier_rank = _TIER_RANK.get(tier, 2)
 
-        _detail = f"{det.adapter_name}: {det.snippet[:500]}"
+        if det.component_type == ComponentType.PROMPT:
+            # Content is already stored in metadata.extras["content"]; keep
+            # the evidence detail as a compact location label only.
+            _detail = f"{det.adapter_name}: {det.evidence_kind}"
+        else:
+            _detail = f"{det.adapter_name}: {det.snippet[:500]}"
         evidence = Evidence(
             kind=det.evidence_kind,
             confidence=det.confidence,

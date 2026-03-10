@@ -34,7 +34,11 @@ class Evidence(BaseModel):
         description="Evidence-level confidence [0, 1]",
     )
     detail: str = Field(
-        description="Detection description: '<adapter>: <snippet>' (up to 500 chars)"
+        description=(
+            "Detection description: '<adapter>: <evidence_kind>' for PROMPT nodes "
+            "(full content is in metadata.extras.content); "
+            "'<adapter>: <snippet>' (up to 500 chars) for all other node types."
+        )
     )
     location: SourceLocation
 
