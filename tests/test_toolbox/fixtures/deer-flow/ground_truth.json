@@ -1697,6 +1697,14 @@
           },
           "detail": "model_generic: gemini-3",
           "confidence": 0.55
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gemini-3",
+          "location": {
+            "path": "frontend/src/app/mock/api/models/route.ts"
+          }
         }
       ]
     },
@@ -1803,6 +1811,14 @@
           },
           "detail": "model_generic: GPT-4o",
           "confidence": 0.8
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-4o",
+          "location": {
+            "path": "config.example.yaml"
+          }
         }
       ]
     },
@@ -1842,48 +1858,14 @@
           },
           "detail": "model_generic: gpt-5",
           "confidence": 0.75
-        }
-      ]
-    },
-    {
-      "id": "4a512b07-4c58-4e0a-8a71-180b917039a9",
-      "component_type": "PRIVILEGE",
-      "name": "rbac",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "rbac",
-          "adapter": "privilege_generic",
-          "evidence_count": 1,
-          "synonyms": [
-            "generic",
-            "rbac"
-          ]
-        }
-      },
-      "evidence": [
+        },
         {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-5",
           "location": {
-            "path": "config.example.yaml",
-            "line": 100
-          },
-          "detail": "privilege_generic: access control",
-          "confidence": 0.55
+            "path": "frontend/public/demo/threads/fe3f7974-1bcb-4a01-a950-79673baafefd/thread.json"
+          }
         }
       ]
     },
@@ -2369,6 +2351,14 @@
             "path": "frontend/src/app/mock/api/models/route.ts",
             "line": 11
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: deepseek-v3.2",
+          "location": {
+            "path": "config.example.yaml"
+          }
         }
       ]
     },
@@ -2488,30 +2478,6 @@
           "location": {
             "path": "backend/src/community/aio_sandbox/remote_backend.py",
             "line": 90
-          }
-        }
-      ]
-    },
-    {
-      "id": "4e96aaba-b347-501f-a341-72febf860014",
-      "name": "rbac",
-      "component_type": "PRIVILEGE",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "rbac",
-          "adapter": "gt",
-          "description": "PRIVILEGE detected in deer-flow"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_call",
-          "confidence": 0.85,
-          "detail": "PRIVILEGE: rbac",
-          "location": {
-            "path": "config.example.yaml",
-            "line": 100
           }
         }
       ]
@@ -2923,6 +2889,143 @@
           }
         }
       ]
+    },
+    {
+      "id": "c9a1f490-1e12-4773-820e-7fc4219b919f",
+      "name": "claude-3-5-sonnet-20241022",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-3-5-sonnet-20241022",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "f7819f7d-3538-4ec9-86fc-334c166a0924",
+      "name": "claude-3-opus",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-3-opus",
+          "location": {
+            "path": "backend/src/gateway/routers/models.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "cd2797eb-85a1-4469-94e1-e113de875c57",
+      "name": "DeepSeek-R1",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: DeepSeek-R1",
+          "location": {
+            "path": "frontend/public/demo/threads/7cfa5f8f-a2f8-47ad-acbd-da7137baf990/thread.json",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "3cccbd08-f0e3-46db-973b-f05796859cca",
+      "name": "deepseek-reasoner",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: deepseek-reasoner",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "213b54d7-fc8e-481f-be6a-26fce5c76cd8",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4o-mini",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "e598d996-63c9-4e8a-baa6-f03c4dd96bc9",
+      "name": "rbac",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "PRIVILEGE: rbac",
+          "location": {
+            "path": "config.example.yaml"
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

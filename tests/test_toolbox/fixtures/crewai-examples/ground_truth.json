@@ -1218,6 +1218,14 @@
             "path": "integrations/azure_model/main.py",
             "line": 1
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "crews/instagram_post/main.py"
+          }
         }
       ]
     },

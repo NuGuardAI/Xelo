@@ -357,6 +357,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "911a6216-c640-4fb7-b1b2-45b77462bade",
+      "name": "claude-instant-v1",
+      "component_type": "MODEL",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "MODEL: claude-instant-v1",
+          "location": {
+            "path": "agent/lambda/agent-handler/lambda_function.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": [

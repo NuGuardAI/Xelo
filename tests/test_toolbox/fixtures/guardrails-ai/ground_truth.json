@@ -4726,6 +4726,175 @@
           }
         }
       ]
+    },
+    {
+      "id": "09a8e17f-9974-4727-9edb-c878537dd066",
+      "name": "gpt-3.5-turbo-0301",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-0301",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "142b62e9-985b-4247-9175-c11c71bc63f2",
+      "name": "gpt-3.5-turbo-16k-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-16k-0613",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "0615a276-80cc-4e7e-a809-a1e1d58bc7c0",
+      "name": "gpt-4-0314",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-0314",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "bc2d9720-02da-4542-8428-115ac0c396c6",
+      "name": "gpt-4-32k-0314",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-32k-0314",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "2e4a5a8e-bb2d-40ce-9345-95d0fc3c414e",
+      "name": "gpt-4-32k-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-32k-0613",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "25670bba-f5c1-41e6-803d-6a9d1e720a7b",
+      "name": "gpt-5",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-5",
+          "location": {
+            "path": "guardrails/llm_providers.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "42543c67-695e-4fc1-951e-26997e75d63e",
+      "name": "prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "synonyms": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb"
+          }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb"
+          }
+        }
+      ],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": [],

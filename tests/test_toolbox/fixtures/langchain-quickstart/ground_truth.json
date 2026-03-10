@@ -3856,7 +3856,10 @@
           "canonical_name": "gpt_4o_mini",
           "adapter": "model_generic",
           "evidence_count": 7,
-          "normalizer": "model-name"
+          "normalizer": "model-name",
+          "synonyms": [
+            "gpt-4o-mini-2024-07-18"
+          ]
         }
       },
       "evidence": [
@@ -4042,6 +4045,14 @@
           },
           "detail": "langgraph: SystemMessage(content=...)",
           "confidence": 0.8
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: System Message",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/qa_with_structure.py"
+          }
         }
       ]
     },
@@ -5667,6 +5678,98 @@
           }
         }
       ]
+    },
+    {
+      "id": "987825a2-115e-45c6-bc89-be1afd98e0a8",
+      "name": "claude-haiku-4-5-20251001",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-haiku-4-5-20251001",
+          "location": {
+            "path": "libs/core/langchain_core/callbacks/usage.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "94b8f1a9-0634-4434-bc96-ce186b524d24",
+      "name": "claude-opus-4-1",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-opus-4-1",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/tool_calling_agent/base.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "8fa63aa7-20a7-48fe-8245-78c1aee936a4",
+      "name": "claude-sonnet-4-5-20250929",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-sonnet-4-5-20250929",
+          "location": {
+            "path": "libs/core/langchain_core/rate_limiters.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "1e6e89d1-3b3c-455d-b65a-e3a2efb40cb5",
+      "name": "gpt-3.5-turbo-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-0613",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/base.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

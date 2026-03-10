@@ -334,6 +334,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "81227c32-54a4-4488-9985-98490e47cd9b",
+      "name": "o2",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: o2",
+          "location": {
+            "path": "static/js/index.js",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

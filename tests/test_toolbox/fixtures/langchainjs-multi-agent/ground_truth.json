@@ -293,7 +293,10 @@
           "canonical_name": "support_agent_system_prompt",
           "adapter": "gt",
           "synonyms": [
-            "System Prompt"
+            "System Prompt",
+            "systemPrompt",
+            "generic",
+            "system_prompt"
           ]
         }
       },

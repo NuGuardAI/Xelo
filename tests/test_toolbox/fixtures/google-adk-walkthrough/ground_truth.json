@@ -143,29 +143,6 @@
       ]
     },
     {
-      "id": "783dcb97-6ddb-4d08-b046-c1708bb1618b",
-      "name": "gemini-2.0",
-      "component_type": "MODEL",
-      "confidence": 0.6,
-      "metadata": {
-        "extras": {
-          "canonical_name": "gemini-2.0",
-          "adapter": "gt"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "gt",
-          "confidence": 0.6,
-          "detail": "MODEL: gemini-2.0",
-          "location": {
-            "path": "agent_grammar/agent.py",
-            "line": 21
-          }
-        }
-      ]
-    },
-    {
       "id": "7fc26c6f-bdaa-4adb-aa2a-ba68d220402d",
       "name": "add",
       "component_type": "TOOL",
@@ -220,7 +197,10 @@
         "extras": {
           "canonical_name": "gemini-2.0-flash-001",
           "adapter": "gt",
-          "description": "MODEL detected in google-adk-walkthrough"
+          "description": "MODEL detected in google-adk-walkthrough",
+          "synonyms": [
+            "gemini-2.0"
+          ]
         }
       },
       "evidence": [

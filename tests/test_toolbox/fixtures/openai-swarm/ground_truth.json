@@ -800,30 +800,6 @@
       ]
     },
     {
-      "id": "df124820-8b3a-56ac-a65e-ae70a9671919",
-      "name": "TRIAGE_SYSTEM_PROMPT",
-      "component_type": "PROMPT",
-      "confidence": 0.85,
-      "metadata": {
-        "extras": {
-          "canonical_name": "triagesystemprompt",
-          "adapter": "python_prompt_const",
-          "description": "Swarm airline triage system instructions"
-        }
-      },
-      "evidence": [
-        {
-          "kind": "ast_constant",
-          "confidence": 0.85,
-          "detail": "PROMPT: TRIAGE_SYSTEM_PROMPT",
-          "location": {
-            "path": "examples/airline/data/routines/prompts.py",
-            "line": 1
-          }
-        }
-      ]
-    },
-    {
       "id": "d8881533-8fd6-54de-adb6-1fd8ed03b4bd",
       "name": "STARTER_PROMPT",
       "component_type": "PROMPT",

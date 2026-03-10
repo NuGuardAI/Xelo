@@ -190,6 +190,14 @@
             "path": "src/react_agent/graph_without_config.py",
             "line": 8
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: openai/gpt-4.1-mini",
+          "location": {
+            "path": "src/react_agent/configuration.py"
+          }
         }
       ]
     },
@@ -417,6 +425,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "f11b6401-a57d-498e-a097-6e91fbdb098e",
+      "name": "claude-sonnet-4-20250514",
+      "component_type": "MODEL",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "MODEL: claude-sonnet-4-20250514",
+          "location": {
+            "path": "src/react_agent/configuration.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

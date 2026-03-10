@@ -205,7 +205,7 @@
           "confidence": 0.85,
           "detail": "DATASTORE: redis",
           "location": {
-            "path": "",
+            "path": "python/samples/core_streaming_handoffs_fastapi/app.py",
             "line": 1
           }
         }
@@ -726,6 +726,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "fd5af702-358d-4229-b2d1-8531f0c69ea9",
+      "name": "deepseek-r1",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: deepseek-r1",
+          "location": {
+            "path": "python/packages/agbench/benchmarks/GAIA/config.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ]
 }

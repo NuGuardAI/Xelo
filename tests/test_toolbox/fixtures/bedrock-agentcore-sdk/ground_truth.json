@@ -1347,6 +1347,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "28b00a1a-11ad-465a-9b1d-aaaf1ef44970",
+      "name": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "component_type": "MODEL",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {
+          "synonyms": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "MODEL: anthropic.claude-3-5-sonnet-20241022-v2:0",
+          "location": {
+            "path": "tests_integ/memory/test_devex.py"
+          }
+        }
+      ],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

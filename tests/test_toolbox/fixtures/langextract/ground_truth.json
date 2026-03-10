@@ -223,7 +223,8 @@
           "synonyms": [
             "llama-3.2-1b-instruct",
             "llama3.2:1b",
-            "llama3.2"
+            "llama3.2",
+            "Llama-3.2-1B-Instruct"
           ]
         }
       },
@@ -349,6 +350,282 @@
           }
         }
       ]
+    },
+    {
+      "id": "cfe87c2d-8fea-43e7-813f-365157aebf4a",
+      "name": "codegemma:7b",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: codegemma:7b",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "c16e4d49-17f3-422e-afbc-d74691309821",
+      "name": "codellama",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: codellama",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "6511fead-e91f-47bc-80cd-20530b060376",
+      "name": "command-r",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: command-r",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "a8fec0c4-5387-475c-bba3-1c1d3a8f29cf",
+      "name": "deepseek-ai",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: deepseek-ai",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "a68ecd1d-f266-4309-9a6f-410d69ba1b7d",
+      "name": "deepseek-coder-v2",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: deepseek-coder-v2",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "543f3e8c-6ba5-46c7-bad1-8469b4bd08a4",
+      "name": "gemini-2.0",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: gemini-2.0",
+          "location": {
+            "path": "langextract/progress.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "5b63763f-b5b0-4c9c-99c6-55829e0c3480",
+      "name": "gpt-5",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: gpt-5",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "93666fa7-6903-44db-9bca-eac668463fc0",
+      "name": "phi3",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: phi3",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "716fa271-265f-4dad-8754-522bbaf626a8",
+      "name": "starcoder",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: starcoder",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "6ad8243f-5239-4a8b-be3b-a9196274b2fc",
+      "name": "wizardcoder",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: wizardcoder",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "8b059069-edb3-4d0e-b4c5-d46cc07b4d97",
+      "name": "WizardLM",
+      "component_type": "MODEL",
+      "confidence": 0.6,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "MODEL: WizardLM",
+          "location": {
+            "path": "langextract/providers/patterns.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "3e61b8df-2b1c-43d3-a4ab-571d7eb8b4c8",
+      "name": "Llama-3.2-1B-Instruct",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "synonyms": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: Llama-3.2-1B-Instruct",
+          "location": {
+            "path": "langextract/providers/ollama.py"
+          }
+        }
+      ],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

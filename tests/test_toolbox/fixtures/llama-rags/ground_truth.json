@@ -219,7 +219,10 @@
       "metadata": {
         "extras": {
           "canonical_name": "gpt-4",
-          "adapter": "gt"
+          "adapter": "gt",
+          "synonyms": [
+            "gpt-4-vision-preview"
+          ]
         }
       },
       "evidence": [
