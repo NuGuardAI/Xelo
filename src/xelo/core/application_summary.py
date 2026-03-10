@@ -54,7 +54,10 @@ _IMAGE_PATTERN = re.compile(
     r"\b(vision|ocr|opencv|pillow|pil|cv2|dall.e|stable.diffusion|image.generation)\b",
     re.IGNORECASE,
 )
-_VIDEO_PATTERN = re.compile(r"\b(video|webcam|ffmpeg|hls|rtsp)\b", re.IGNORECASE)
+_VIDEO_PATTERN = re.compile(
+    r"\b(webcam|ffmpeg|hls|rtsp|VideoCapture|VideoWriter|VideoFileClip|gstreamer|libav)\b",
+    re.IGNORECASE,
+)
 _MODALITY_MATCH_THRESHOLD = 2
 
 _AGENTIC_FRAMEWORKS = {
@@ -266,7 +269,7 @@ def infer_modalities_support(
         probe = f"{modality} {capabilities}"
         voice = voice or any(k in probe for k in ("voice", "audio", "speech", "tts", "stt"))
         image = image or any(k in probe for k in ("vision", "ocr", "image_generation"))
-        video = video or any(k in probe for k in ("video", "webcam"))
+        video = video or any(k in probe for k in ("webcam", "ffmpeg", "rtsp", "videocapture"))
 
     return {"text": True, "voice": voice, "image": image, "video": video}
 
