@@ -145,7 +145,7 @@ json_str = AiSbomSerializer.to_json(doc)
 
 ## Community & Support
 
-- [GitHub Repository](https://github.com/nuguard/xelo) — Source code, issues, and contributions.
-- [GitHub Issues](https://github.com/nuguard/xelo/issues) — Bug reports and feature requests.
+- [GitHub Repository](https://github.com/NuGuardAI/xelo) — Source code, issues, and contributions.
+- [GitHub Issues](https://github.com/NuGuardAI/xelo/issues) — Bug reports and feature requests.
 - [Discord Community](https://discord.gg/EF99Ck7a) — Ask questions, share feedback, connect with the team.
 - [NuGuard AI](https://nuguard.ai/) — Company behind Xelo.
