@@ -48,7 +48,8 @@ _ENV_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _VOICE_PATTERN = re.compile(
-    r"\b(audio|voice|speech|twilio|webrtc|tts|stt|whisper|microphone)\b", re.IGNORECASE
+    r"\b(twilio|webrtc|tts|stt|whisper|microphone|pyaudio|sounddevice|vosk|speechrecognition|pyttsx)\b",
+    re.IGNORECASE,
 )
 _IMAGE_PATTERN = re.compile(
     r"\b(vision|ocr|opencv|pillow|pil|cv2|dall.e|stable.diffusion|image.generation)\b",
@@ -267,7 +268,7 @@ def infer_modalities_support(
             " ".join(str(v).lower() for v in caps_raw) if isinstance(caps_raw, list) else ""
         )
         probe = f"{modality} {capabilities}"
-        voice = voice or any(k in probe for k in ("voice", "audio", "speech", "tts", "stt"))
+        voice = voice or any(k in probe for k in ("tts", "stt", "microphone", "twilio", "webrtc", "whisper"))
         image = image or any(k in probe for k in ("vision", "ocr", "image_generation"))
         video = video or any(k in probe for k in ("webcam", "ffmpeg", "rtsp", "videocapture"))
 
