@@ -31,7 +31,8 @@ _log = logging.getLogger(__name__)
 # API call patterns that specify a model
 _MODEL_SPECIFYING_METHODS = re.compile(
     r"\b(chat\.completions\.create|completions\.create|messages\.create|generate_content"
-    r"|invoke_model|invoke_model_with_response_stream|converse|converse_stream)\b"
+    r"|invoke_model|invoke_model_with_response_stream|converse|converse_stream"
+    r"|from_pretrained)\b"
 )
 
 # Classes that are treated as model-specifying (even without explicit model arg)
@@ -105,6 +106,22 @@ class LLMClientsAdapter(FrameworkAdapter):
         detected: list[ComponentDetection] = [self._framework_node(file_path)]
         detected_providers: set[str] = set()
 
+        # Build a constant map from module-level string assignments for variable resolution
+        # e.g. MODEL_ID_FLASH = "gemini-2.0-flash" → {"MODEL_ID_FLASH": "gemini-2.0-flash"}
+        const_map: dict[str, str] = {
+            lit.context: lit.value
+            for lit in parse_result.string_literals
+            if lit.context and not lit.is_docstring and lit.value
+        }
+
+        def _resolve_model_val(raw: Any) -> str:
+            """Resolve a model value, following variable references via const_map."""
+            if not isinstance(raw, str):
+                return ""  # ignore lists, None, etc.
+            if raw.startswith("$"):
+                raw = const_map.get(raw[1:], "")
+            return self._clean_str(raw)
+
         # Determine which providers are imported
         for imp in parse_result.imports:
             module = imp.module or ""
@@ -136,17 +153,19 @@ class LLMClientsAdapter(FrameworkAdapter):
                                 raw_url,
                             )
 
-                model_name = self._clean_str(
+                model_name = _resolve_model_val(
                     args.get("model")
                     or args.get("model_name")
                     or args.get("model_id")  # LangChain Bedrock uses model_id=
                     or args.get("embedding_model")
-                    or (
-                        args.get("model_name")
-                        if inst.class_name in _MODEL_SPECIFYING_CLASSES
-                        else None
-                    )
                 )
+                # For model-specifying classes (e.g. GenerativeModel), fall back to first
+                # positional arg (e.g. GenerativeModel("gemini-2.0-flash"))
+                if not model_name and inst.class_name in _MODEL_SPECIFYING_CLASSES:
+                    for pa in inst.positional_args:
+                        model_name = _resolve_model_val(pa)
+                        if model_name:
+                            break
 
                 # Skip bare client objects without an explicit model,
                 # UNLESS the base_url resolved to a known provider — in that case
@@ -256,7 +275,7 @@ class LLMClientsAdapter(FrameworkAdapter):
             if not is_strong_call and not is_weak_call:
                 continue
 
-            model_name = self._clean_str(
+            model_name = _resolve_model_val(
                 args.get("model")
                 or args.get("model_name")
                 or args.get("modelId")  # boto3 Bedrock invoke_model uses modelId=
@@ -266,8 +285,8 @@ class LLMClientsAdapter(FrameworkAdapter):
                 # Only fall back to positional args for well-known LLM API calls
                 # to avoid false positives from unrelated generate_*/create_* functions
                 for pa in call.positional_args:
-                    if isinstance(pa, str) and not pa.startswith("$"):
-                        model_name = pa.strip("'\"")
+                    model_name = _resolve_model_val(pa)
+                    if model_name:
                         break
             if not model_name:
                 continue
@@ -302,6 +321,51 @@ class LLMClientsAdapter(FrameworkAdapter):
                     evidence_kind="ast_call",
                 )
             )
+
+        # GCS storage bucket → DATASTORE
+        # e.g. `bucket = storage_client.bucket(BUCKET_NAME)` where BUCKET_NAME = "mlops-for-genai"
+        gcs_imported = any(
+            (imp.module or "").startswith("google.cloud") for imp in parse_result.imports
+        )
+        if gcs_imported:
+            const_map = {
+                lit.context: lit.value
+                for lit in parse_result.string_literals
+                if lit.context and not lit.is_docstring and lit.value
+            }
+            for call in parse_result.function_calls:
+                if call.function_name != "bucket":
+                    continue
+                raw: str | None = None
+                if call.positional_args:
+                    first = call.positional_args[0]
+                    if isinstance(first, str) and not first.startswith("$"):
+                        raw = first.strip("'\"")
+                    elif isinstance(first, str) and first.startswith("$"):
+                        raw = const_map.get(first[1:])
+                bucket_name = raw or self._clean_str(
+                    call.args.get("bucket_name") or call.args.get("bucket")
+                )
+                if bucket_name:
+                    canon = canonicalize_text(f"gcs:datastore:{bucket_name}")
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.DATASTORE,
+                            canonical_name=canon,
+                            display_name=bucket_name,
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.85,
+                            metadata={
+                                "datastore_type": "object_storage",
+                                "provider": "gcs",
+                            },
+                            file_path=file_path,
+                            line=call.line,
+                            snippet=f"storage.bucket({bucket_name!r})",
+                            evidence_kind="ast_call",
+                        )
+                    )
 
         return detected
 

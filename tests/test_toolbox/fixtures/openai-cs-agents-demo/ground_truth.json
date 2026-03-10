@@ -601,6 +601,30 @@
           }
         }
       ]
+    },
+    {
+      "id": "bed08865-c531-59d0-a453-6d16de983c16",
+      "name": "db_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "db_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in openai-cs-agents-demo"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: db_write",
+          "location": {
+            "path": "python-backend/main.py",
+            "line": 161
+          }
+        }
+      ]
     }
   ],
   "edges": []

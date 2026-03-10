@@ -1325,6 +1325,51 @@
           "confidence": 0.85
         }
       ]
+    },
+    {
+      "id": "cd0d2be2-f889-4b2d-b10a-0da6baddd2f5",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "src/bedrock_agentcore/memory/__init__.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "28b00a1a-11ad-465a-9b1d-aaaf1ef44970",
+      "name": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+      "component_type": "MODEL",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {
+          "synonyms": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "MODEL: anthropic.claude-3-5-sonnet-20241022-v2:0",
+          "location": {
+            "path": "tests_integ/memory/test_devex.py"
+          }
+        }
+      ],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

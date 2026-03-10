@@ -329,6 +329,15 @@
           },
           "detail": "auth_generic: api_key",
           "confidence": 0.8500000000000001
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.75,
+          "detail": "auth_generic: load_dotenv",
+          "location": {
+            "path": "backend/debug.py",
+            "line": 24
+          }
         }
       ]
     },
@@ -425,79 +434,6 @@
           },
           "detail": "dockerfile: FROM python:3.12-slim",
           "confidence": 0.99
-        }
-      ]
-    },
-    {
-      "id": "6caa2c9c-16e6-49e2-b466-866f3fd5e0a8",
-      "component_type": "DATASTORE",
-      "name": "mongodb",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": [
-          "PII"
-        ],
-        "classified_tables": [
-          "ModelConfig",
-          "ModelResponse",
-          "Skill",
-          "SkillResponse",
-          "SubagentConfig",
-          "ToolConfig",
-          "ToolGroupConfig"
-        ],
-        "classified_fields": {
-          "ModelConfig": [
-            "display_name",
-            "name"
-          ],
-          "ToolGroupConfig": [
-            "name"
-          ],
-          "ToolConfig": [
-            "name"
-          ],
-          "ModelResponse": [
-            "display_name",
-            "name"
-          ],
-          "SkillResponse": [
-            "name"
-          ],
-          "Skill": [
-            "name"
-          ],
-          "SubagentConfig": [
-            "name"
-          ]
-        },
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "mongodb",
-          "adapter": "datastore_generic",
-          "evidence_count": 1,
-          "normalizer": "datastore"
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "frontend/pnpm-lock.yaml",
-            "line": 2437
-          },
-          "detail": "datastore_generic: mongodb",
-          "confidence": 0.7
         }
       ]
     },
@@ -1761,6 +1697,14 @@
           },
           "detail": "model_generic: gemini-3",
           "confidence": 0.55
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gemini-3",
+          "location": {
+            "path": "frontend/src/app/mock/api/models/route.ts"
+          }
         }
       ]
     },
@@ -1867,6 +1811,14 @@
           },
           "detail": "model_generic: GPT-4o",
           "confidence": 0.8
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-4o",
+          "location": {
+            "path": "config.example.yaml"
+          }
         }
       ]
     },
@@ -1906,122 +1858,14 @@
           },
           "detail": "model_generic: gpt-5",
           "confidence": 0.75
-        }
-      ]
-    },
-    {
-      "id": "f4edbdaf-4c0b-4dac-80b5-a2f5e0639de3",
-      "component_type": "MODEL",
-      "name": "o1",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o1",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
+        },
         {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: gpt-5",
           "location": {
-            "path": "frontend/pnpm-lock.yaml",
-            "line": 315
-          },
-          "detail": "model_generic: O1",
-          "confidence": 0.6
-        }
-      ]
-    },
-    {
-      "id": "87916e07-54e4-40f4-91a3-8d58bec75152",
-      "component_type": "MODEL",
-      "name": "o2",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "o2",
-          "adapter": "model_generic",
-          "evidence_count": 1,
-          "normalizer": "model-name"
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "frontend/public/demo/threads/ad76c455-5bf9-4335-8517-fc03834ab828/thread.json",
-            "line": 54
-          },
-          "detail": "model_generic: O2",
-          "confidence": 0.95
-        }
-      ]
-    },
-    {
-      "id": "4a512b07-4c58-4e0a-8a71-180b917039a9",
-      "component_type": "PRIVILEGE",
-      "name": "generic",
-      "metadata": {
-        "framework": null,
-        "model_name": null,
-        "datastore_type": null,
-        "auth_type": null,
-        "privilege_scope": null,
-        "endpoint": null,
-        "method": null,
-        "deployment_target": null,
-        "data_classification": null,
-        "classified_tables": null,
-        "classified_fields": null,
-        "image_name": null,
-        "image_tag": null,
-        "image_digest": null,
-        "registry": null,
-        "base_image": null,
-        "extras": {
-          "canonical_name": "privilege_generic",
-          "adapter": "privilege_generic",
-          "evidence_count": 1
-        }
-      },
-      "evidence": [
-        {
-          "location": {
-            "path": "config.example.yaml",
-            "line": 100
-          },
-          "detail": "privilege_generic: access control",
-          "confidence": 0.55
+            "path": "frontend/public/demo/threads/fe3f7974-1bcb-4a01-a950-79673baafefd/thread.json"
+          }
         }
       ]
     },
@@ -2461,6 +2305,727 @@
           "confidence": 0.65
         }
       ]
+    },
+    {
+      "id": "e2270e37-39a0-51f5-8c0b-b2f4ac3f7876",
+      "name": "neon",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "neon",
+          "adapter": "gt",
+          "description": "DATASTORE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "DATASTORE: neon",
+          "location": {
+            "path": "frontend/public/demo/threads/21cfea46-34bd-4aa6-9e1f-3009452fbeb9/thread.json",
+            "line": 186
+          }
+        }
+      ]
+    },
+    {
+      "id": "95b06ae1-7f1f-5e6f-8686-aebbc812cef0",
+      "name": "deepseek-v3.2",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "deepseek-v3.2",
+          "adapter": "gt",
+          "description": "MODEL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: deepseek-v3.2",
+          "location": {
+            "path": "frontend/src/app/mock/api/models/route.ts",
+            "line": 11
+          }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: deepseek-v3.2",
+          "location": {
+            "path": "config.example.yaml"
+          }
+        }
+      ]
+    },
+    {
+      "id": "df1a022f-8df8-594d-b641-92c7628df7ae",
+      "name": "deepseek-v3-2-251201",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "deepseek-v3-2-251201",
+          "adapter": "gt",
+          "description": "MODEL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: deepseek-v3-2-251201",
+          "location": {
+            "path": "frontend/public/demo/threads/21cfea46-34bd-4aa6-9e1f-3009452fbeb9/thread.json",
+            "line": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": "893b3e27-2ea2-51ec-8971-3c3d3be0e13f",
+      "name": "code_execution",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "code_execution",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: code_execution",
+          "location": {
+            "path": "backend/src/community/aio_sandbox/local_backend.py",
+            "line": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": "073918c8-c846-59b1-900a-a8fe5ef1567c",
+      "name": "db_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "db_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: db_write",
+          "location": {
+            "path": "backend/src/agents/memory/queue.py",
+            "line": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": "e8f28d42-c482-564c-b22e-51bd106fffd9",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "backend/src/client.py",
+            "line": 148
+          }
+        }
+      ]
+    },
+    {
+      "id": "8b2c252c-9d0b-5f75-9c31-b2c93ee70351",
+      "name": "network_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "network_out",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: network_out",
+          "location": {
+            "path": "backend/src/community/aio_sandbox/remote_backend.py",
+            "line": 90
+          }
+        }
+      ]
+    },
+    {
+      "id": "4eebd4d6-311a-5de5-a6ee-c3274d49df41",
+      "name": "social_media_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "social_media_out",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: social_media_out",
+          "location": {
+            "path": "frontend/public/demo/threads/d3e5adaf-084c-4dd5-9d29-94f1d6bccd98/thread.json",
+            "line": 979
+          }
+        }
+      ]
+    },
+    {
+      "id": "a313d47e-32f0-5f3d-918c-7e293a674d79",
+      "name": "FACT_EXTRACTION_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "fact_extraction_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: FACT_EXTRACTION_PROMPT",
+          "location": {
+            "path": "backend/src/agents/memory/prompt.py",
+            "line": 116
+          }
+        }
+      ]
+    },
+    {
+      "id": "e9095271-bf10-5cf6-85cc-c2de4d27390c",
+      "name": "MEMORY_UPDATE_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "memory_update_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: MEMORY_UPDATE_PROMPT",
+          "location": {
+            "path": "backend/src/agents/memory/prompt.py",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "63736ece-2f92-58e4-8cd8-211465a3a8dd",
+      "name": "ask_clarification_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "ask_clarification_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: ask_clarification_tool",
+          "location": {
+            "path": "backend/src/tools/builtins/clarification_tool.py",
+            "line": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "a94f2862-4849-5946-912f-015bc7681011",
+      "name": "bash_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "bash_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: bash_tool",
+          "location": {
+            "path": "backend/src/sandbox/tools.py",
+            "line": 232
+          }
+        }
+      ]
+    },
+    {
+      "id": "a7201706-dd18-5093-a8e5-8ab5e7123584",
+      "name": "image_search_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "image_search_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: image_search_tool",
+          "location": {
+            "path": "backend/src/community/image_search/tools.py",
+            "line": 77
+          }
+        }
+      ]
+    },
+    {
+      "id": "3818abd6-462e-5771-b398-f0f20706aeb6",
+      "name": "ls_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "ls_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: ls_tool",
+          "location": {
+            "path": "backend/src/sandbox/tools.py",
+            "line": 257
+          }
+        }
+      ]
+    },
+    {
+      "id": "781f75a6-63a3-5589-9ee1-73e0ee91facf",
+      "name": "present_file_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "present_file_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: present_file_tool",
+          "location": {
+            "path": "backend/src/tools/builtins/present_file_tool.py",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "d88bd6be-89f3-5d66-a71a-c0473e41fa9c",
+      "name": "read_file_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "read_file_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: read_file_tool",
+          "location": {
+            "path": "backend/src/sandbox/tools.py",
+            "line": 285
+          }
+        }
+      ]
+    },
+    {
+      "id": "fbb64836-fa8b-5b59-8828-7f9f514a3a6a",
+      "name": "str_replace_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "str_replace_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: str_replace_tool",
+          "location": {
+            "path": "backend/src/sandbox/tools.py",
+            "line": 360
+          }
+        }
+      ]
+    },
+    {
+      "id": "09e13d95-ebff-5933-8edf-959c3ff19e26",
+      "name": "task_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "task_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: task_tool",
+          "location": {
+            "path": "backend/src/tools/builtins/task_tool.py",
+            "line": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "81c57bd7-5740-5251-a883-cb24ebde2f90",
+      "name": "view_image_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "view_image_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: view_image_tool",
+          "location": {
+            "path": "backend/src/tools/builtins/view_image_tool.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "80a4f7bf-4cd4-5a18-be26-4f67179b01e3",
+      "name": "web_fetch_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "web_fetch_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: web_fetch_tool",
+          "location": {
+            "path": "backend/src/community/firecrawl/tools.py",
+            "line": 49
+          }
+        }
+      ]
+    },
+    {
+      "id": "c5a98d55-0cda-587e-b216-805da156443f",
+      "name": "web_search_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "web_search_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: web_search_tool",
+          "location": {
+            "path": "backend/src/community/firecrawl/tools.py",
+            "line": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": "44e1b7a0-b77c-5fe4-be20-d20fd1a7f48d",
+      "name": "write_file_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "write_file_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: write_file_tool",
+          "location": {
+            "path": "backend/src/sandbox/tools.py",
+            "line": 325
+          }
+        }
+      ]
+    },
+    {
+      "id": "21311f84-b301-59ef-86e5-6cca491f4792",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt",
+          "description": "TOOL detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "backend/src/config/tool_config.py",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "f0c4fc59-68a9-5bbd-b263-4675f59e22a9",
+      "name": "_agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "_agent",
+          "adapter": "gt",
+          "description": "AGENT detected in deer-flow"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "AGENT: _agent",
+          "location": {
+            "path": "backend/src/client.py",
+            "line": 211
+          }
+        }
+      ]
+    },
+    {
+      "id": "c9a1f490-1e12-4773-820e-7fc4219b919f",
+      "name": "claude-3-5-sonnet-20241022",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-3-5-sonnet-20241022",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "f7819f7d-3538-4ec9-86fc-334c166a0924",
+      "name": "claude-3-opus",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-3-opus",
+          "location": {
+            "path": "backend/src/gateway/routers/models.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "cd2797eb-85a1-4469-94e1-e113de875c57",
+      "name": "DeepSeek-R1",
+      "component_type": "MODEL",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "MODEL: DeepSeek-R1",
+          "location": {
+            "path": "frontend/public/demo/threads/7cfa5f8f-a2f8-47ad-acbd-da7137baf990/thread.json",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "3cccbd08-f0e3-46db-973b-f05796859cca",
+      "name": "deepseek-reasoner",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: deepseek-reasoner",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "213b54d7-fc8e-481f-be6a-26fce5c76cd8",
+      "name": "gpt-4o-mini",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4o-mini",
+          "location": {
+            "path": "config.example.yaml",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "e598d996-63c9-4e8a-baa6-f03c4dd96bc9",
+      "name": "rbac",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.75,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.75,
+          "detail": "PRIVILEGE: rbac",
+          "location": {
+            "path": "config.example.yaml"
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

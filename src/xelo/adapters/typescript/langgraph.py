@@ -9,6 +9,9 @@ Supports:
 - ChatOpenAI, ChatAnthropic, ChatGoogleGenerativeAI LLM wrappers
 - ToolNode detection
 - PromptTemplate, ChatPromptTemplate
+- createAgent() function-factory agent detection
+- tool() constructor tool detection (reads explicit name: config field)
+- InMemoryStore datastore detection
 """
 
 from __future__ import annotations
@@ -226,6 +229,100 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                     file_path=file_path,
                     line=inst.line_start,
                     snippet=inst.source_snippet or "",
+                    evidence_kind="ast_instantiation",
+                )
+            )
+
+        # --- tool() function-constructor calls → TOOL nodes ---
+        # Matches: const getTool = tool(async (...) => {...}, { name: "get_user_info", ... })
+        # Prefers the explicit `name` field in the config object; falls back to the
+        # assigned variable name, then to position-based sentinel.
+        for call in result.function_calls:
+            if call.function_name != "tool" and call.method_name != "tool":
+                continue
+            args = call.resolved_arguments or call.arguments
+            explicit_name: str | None = self._clean(args.get("name")) or None
+            if not explicit_name:
+                explicit_name = self._assignment_name(source, call.line_start)
+            if not explicit_name:
+                # Skip unlabelled tool() calls — they can't be uniquely identified
+                continue
+            tool_canon = canonicalize_text(explicit_name.lower())
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.TOOL,
+                    canonical_name=tool_canon,
+                    display_name=explicit_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "framework": "langchain-js",
+                        "description": self._clean(args.get("description")),
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=call.source_snippet or f"tool({{ name: {explicit_name!r} }})",
+                    evidence_kind="ast_call",
+                )
+            )
+
+        # --- createAgent() function-factory calls → AGENT nodes ---
+        # Matches: const myAgent = createAgent({ model: ..., tools: [...], ... })
+        for call in result.function_calls:
+            if call.function_name != "createAgent" and call.method_name != "createAgent":
+                continue
+            agent_name = (
+                self._assignment_name(source, call.line_start) or f"agent_{call.line_start}"
+            )
+            agent_canon = canonicalize_text(agent_name.lower())
+            graph_canonicals.append(agent_canon)
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.AGENT,
+                    canonical_name=agent_canon,
+                    display_name=agent_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "framework": "langchain-js",
+                        "factory_function": "createAgent",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=call.line_start,
+                    snippet=call.source_snippet or "createAgent({...})",
+                    evidence_kind="ast_call",
+                )
+            )
+
+        # --- InMemoryStore instantiations → DATASTORE nodes ---
+        for inst in result.instantiations:
+            if inst.class_name != "InMemoryStore":
+                continue
+            # Use the assigned variable name when available; fall back to the
+            # class name so the display value matches user expectations ("InMemoryStore").
+            store_name = self._assignment_name(source, inst.line_start) or inst.class_name
+            store_canon = canonicalize_text(f"langgraph-js:{store_name}".lower())
+            detected.append(
+                ComponentDetection(
+                    component_type=ComponentType.DATASTORE,
+                    canonical_name=store_canon,
+                    display_name=store_name,
+                    adapter_name=self.name,
+                    priority=self.priority,
+                    confidence=0.90,
+                    metadata={
+                        "framework": "langgraph-js",
+                        "datastore_type": "memory",
+                        "provider": "langgraph-js",
+                        "language": "typescript",
+                    },
+                    file_path=file_path,
+                    line=inst.line_start,
+                    snippet=inst.source_snippet or "new InMemoryStore()",
                     evidence_kind="ast_instantiation",
                 )
             )

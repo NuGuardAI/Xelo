@@ -25,6 +25,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import re
 import shutil
 import subprocess
 import tempfile
@@ -34,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 from .adapters.base import (
+    AdapterMatch,
     ComponentDetection,
     DetectionAdapter,
     FrameworkAdapter,
@@ -106,6 +108,108 @@ def _strip_notebook_outputs(content: str) -> str:
         return json.dumps(nb)
     except Exception:
         return content
+
+
+_PYTHON_COMMENT_LINE_RE = re.compile(r"^\s*#.*$", re.MULTILINE)
+
+
+def _strip_python_comments(content: str) -> str:
+    """Remove Python single-line comments before regex scanning.
+
+    Prevents regex adapters (e.g. ``model_generic``) from matching model names
+    that appear only in commented-out migration examples, like::
+
+        # llm = ChatOllama(model="llama3:8b")
+
+    Inline comments within code lines are not removed to preserve the rest of
+    the line for other pattern matching.
+    """
+    return _PYTHON_COMMENT_LINE_RE.sub("", content)
+
+
+# Pattern for variable names that explicitly indicate prompt content.
+# Intentionally conservative: matches only names ending with _PROMPT (case-insensitive).
+# Avoids: FORMAT_INSTRUCTIONS, EVAL_*, GROUNDTRUTH_*, etc.
+_PROMPT_CONST_NAME_RE = re.compile(
+    r"(?:^|_)PROMPT$",  # *_PROMPT or bare PROMPT (case-insensitive)
+    re.IGNORECASE,
+)
+# Keywords in variable names that indicate an evaluation/testing artifact rather
+# than a production AI prompt.  Names containing any of these are skipped.
+_PROMPT_CONST_SKIP_WORDS = frozenset(
+    {"EVAL", "EVALUATE", "EVALUATION", "GROUNDTRUTH", "GROUND_TRUTH", "TEST_PROMPT", "MOCK_PROMPT"}
+)
+_MIN_PROMPT_CONST_LENGTH = 80  # minimum char count to treat as a real prompt
+
+
+def _extract_python_prompt_constants(
+    parse_result: Any,
+    rel_path: str,
+) -> list["ComponentDetection"]:
+    """Emit PROMPT nodes for module-level ALL_CAPS prompt constants.
+
+    Runs on every Python file regardless of which framework adapters handled it,
+    so that prompt-only modules (no langchain/langgraph imports) are still
+    processed.  Examples that trigger this::
+
+        PARSER_PROMPT = \"\"\"You are a document parsing specialist...\"\"\"
+        ANALYST_PROMPT = \"\"\"You are a senior document analyst...\"\"\"
+
+    Only captures string literals whose ``context`` (variable name) matches the
+    ``_PROMPT_VAR_NAME_RE`` pattern and whose length exceeds
+    ``_MIN_PROMPT_CONST_LENGTH``.
+    """
+    from xelo.adapters.base import ComponentDetection
+    from xelo.normalization import canonicalize_text
+    from xelo.types import ComponentType
+
+    detections: list[ComponentDetection] = []
+    for lit in parse_result.string_literals:
+        if lit.is_docstring:
+            continue
+        # Only process literals that came from module-level variable assignments,
+        # not strings captured from inside function/class bodies.
+        if not lit.is_module_assignment:
+            continue
+        ctx = lit.context or ""
+        # Skip private/dunder names (e.g. _PYDANTIC_FORMAT_INSTRUCTIONS)
+        if ctx.startswith("_"):
+            continue
+        if not _PROMPT_CONST_NAME_RE.search(ctx):
+            continue
+        if len(lit.value) < _MIN_PROMPT_CONST_LENGTH:
+            continue
+        # Skip evaluation / testing prompts (not production AI prompts)
+        ctx_upper = ctx.upper()
+        if any(skip in ctx_upper for skip in _PROMPT_CONST_SKIP_WORDS):
+            continue
+        # Avoid duplicate with framework adapters by using a file-scoped canon
+        dname = ctx
+        canon = canonicalize_text(f"prompt:py_const:{ctx.lower()}")
+        template_vars = re.findall(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}", lit.value)
+        detections.append(
+            ComponentDetection(
+                component_type=ComponentType.PROMPT,
+                canonical_name=canon,
+                display_name=dname,
+                adapter_name="python_prompt_const",
+                priority=50,
+                confidence=0.80,
+                metadata={
+                    "role": "system" if "system" in ctx.lower() else "unspecified",
+                    "content_preview": lit.value[:160],
+                    "content": lit.value,
+                    "char_count": len(lit.value),
+                    "is_template": bool(template_vars),
+                    "template_variables": template_vars,
+                },
+                file_path=rel_path,
+                line=lit.line,
+                snippet=lit.value[:80] + ("..." if len(lit.value) > 80 else ""),
+                evidence_kind="ast_constant",
+            )
+        )
+    return detections
 
 
 _IAC_EXTENSIONS = {".tf", ".tfvars", ".hcl", ".bicep", ".jinja", ".yaml", ".yml", ".json"}
@@ -367,6 +471,13 @@ class AiSbomExtractor:
                                 else:
                                     self._merge_detection(node_map, det)
 
+                        # Phase 1a-prime: module-level Python prompt constants.
+                        # Runs on ALL .py files regardless of framework imports so that
+                        # prompt-only modules (e.g. prompts.py with no langchain imports)
+                        # are still processed.
+                        for det in _extract_python_prompt_constants(parse_result, rel_path):
+                            self._merge_detection(node_map, det)
+
             # Phase 1b: SQL schema — data classification
             elif is_sql:
                 _log.debug("running SQL data classification on %s", rel_path)
@@ -474,7 +585,15 @@ class AiSbomExtractor:
             # Skip documentation and shell-script files to eliminate CI/README FP floods.
             # For .ipynb files, strip cell outputs to avoid base64-encoded image data
             # producing false-positive model matches (e.g. 'o5'/'o7' in PNG base64).
-            _regex_content = _strip_notebook_outputs(content) if suffix == ".ipynb" else content
+            # For Python files, strip comment-only lines so that commented-out migration
+            # examples (e.g. `# llm = ChatOllama(model="llama3:8b")`) do not become
+            # false-positive model nodes.
+            if suffix == ".ipynb":
+                _regex_content = _strip_notebook_outputs(content)
+            elif suffix in _PYTHON_EXTENSIONS:
+                _regex_content = _strip_python_comments(content)
+            else:
+                _regex_content = content
             for rx_adapter in (
                 self.regex_adapters
                 if suffix not in _DOCS_EXTENSIONS and Path(rel_path).stem.lower() not in _DOCS_STEMS
@@ -499,13 +618,55 @@ class AiSbomExtractor:
                 detection = rx_adapter.detect(_regex_content)
                 if detection is None:
                     continue
+                # For MODEL adapter with per-match naming (canonical_name=None on
+                # the adapter), emit one node per distinct model name so that a
+                # single file containing multiple different models (e.g. a mock
+                # route.ts listing gpt-5, deepseek-v3.2, gemini-3-pro) gets a
+                # separate node for each instead of only the first match.
+                if (
+                    detection.component_type == ComponentType.MODEL
+                    and not getattr(rx_adapter, "canonical_name", None)
+                ):
+                    # Group matches by their normalised model name; keep first
+                    # occurrence as the representative match for location/snippet.
+                    _model_first: dict[str, AdapterMatch] = {}
+                    _model_count: dict[str, int] = {}
+                    for _m in detection.matches:
+                        _key = _m.snippet.strip().lower()
+                        if _key not in _model_first:
+                            _model_first[_key] = _m
+                            _model_count[_key] = 1
+                        else:
+                            _model_count[_key] += 1
+                    for _raw_lower, _first_match in _model_first.items():
+                        _raw_name = _first_match.snippet.strip()
+                        _cnt = _model_count[_raw_lower]
+                        _conf = min(0.95, 0.50 + 0.05 * _cnt)
+                        _comp_det = ComponentDetection(
+                            component_type=detection.component_type,
+                            canonical_name=canonicalize_text(_raw_name),
+                            display_name=_raw_name,
+                            adapter_name=detection.adapter_name,
+                            priority=detection.priority,
+                            confidence=_conf,
+                            metadata=dict(detection.metadata),
+                            file_path=rel_path,
+                            line=_first_match.line,
+                            snippet=_first_match.snippet,
+                            evidence_kind="regex",
+                        )
+                        self._merge_detection(node_map, _comp_det)
+                    continue
                 confidence = min(0.95, 0.50 + 0.05 * len(detection.matches))
                 canonical = canonicalize_text(detection.canonical_name)
-                display = (
-                    detection.canonical_name.split(":")[-1]
-                    if ":" in detection.canonical_name
-                    else detection.canonical_name
-                )
+                # For MODEL type, keep the full canonical name (e.g., "llama3.2:3b"
+                # must not be truncated to "3b"). For other types, strip any
+                # type-category prefix so "auth:generic" → "generic" and
+                # "privilege:email_out" → "email_out".
+                if detection.component_type == ComponentType.MODEL:
+                    display = detection.canonical_name
+                else:
+                    display = detection.canonical_name.split(":")[-1]
                 first = detection.matches[0]
                 comp_det = ComponentDetection(
                     component_type=detection.component_type,
@@ -532,6 +693,11 @@ class AiSbomExtractor:
         # file — e.g. regex matches "gemini-2.0" while AST extracts the full
         # "gemini-2.0-flash" from an adjacent line of the same call.
         _dedup_by_name_prefix(node_map)
+        # Suppress generic tech-name DATASTORE nodes emitted by regex adapters
+        # when the same file already has specific AST-detected ones for the same
+        # technology (e.g. "faiss" regex when "docs_index" / "tickets_index" AST
+        # nodes already exist in that file with provider="faiss").
+        _suppress_generic_tech_regex_datastore(node_map)
 
         # For MODEL and DATASTORE, suppress nodes whose only evidence comes from
         # docs-tier files (lock files, README mentions, shell scripts).  Lock
@@ -831,10 +997,19 @@ class AiSbomExtractor:
                 source = "".join(source)
             source = source.strip()
             if source:
-                # Strip IPython magic lines (e.g. %pip install, !command)
-                clean_lines = [
-                    ln for ln in source.splitlines() if not ln.lstrip().startswith(("%", "!"))
-                ]
+                # Strip IPython magic/shell lines (e.g. %pip install, !command), including
+                # any backslash-continuation lines that belong to the same command.
+                clean_lines: list[str] = []
+                skip_continuation = False
+                for ln in source.splitlines():
+                    if skip_continuation:
+                        skip_continuation = ln.rstrip().endswith("\\")
+                        continue
+                    if ln.lstrip().startswith(("%", "!")):
+                        skip_continuation = ln.rstrip().endswith("\\")
+                        continue
+                    skip_continuation = False
+                    clean_lines.append(ln)
                 cleaned = "\n".join(clean_lines).strip()
                 if cleaned:
                     parts.append(cleaned)
@@ -1579,6 +1754,10 @@ def _dedup_by_location(
                 if key not in loc_to_keys.get(loc, []):
                     loc_to_keys.setdefault(loc, []).append(key)
 
+    # Helper: does an accumulator have at least one regex-based evidence item?
+    def _has_regex_evidence(acc: _NodeAccumulator) -> bool:
+        return any(ev.kind == "regex" for ev in acc.evidence)
+
     keys_to_remove: set[tuple[ComponentType, str]] = set()
     for loc, keys in loc_to_keys.items():
         if len(keys) <= 1:
@@ -1592,6 +1771,12 @@ def _dedup_by_location(
         for loser in keys_sorted[1:]:
             if loser in keys_to_remove:
                 continue
+            # Only deduplicate when at least one node has regex evidence.
+            # Two AST-only nodes at the same line are distinct components (e.g.
+            # multiple imports on one line → multiple FAISS stores) and must
+            # both be kept.
+            if not (_has_regex_evidence(node_map[winner]) or _has_regex_evidence(node_map[loser])):
+                continue
             # Absorb evidence so the winner node reflects all source locations
             node_map[winner].evidence.extend(node_map[loser].evidence)
             keys_to_remove.add(loser)
@@ -1602,6 +1787,65 @@ def _dedup_by_location(
                 node_map[loser].confidence,
                 winner,
             )
+
+    for k in keys_to_remove:
+        del node_map[k]
+
+
+def _suppress_generic_tech_regex_datastore(
+    node_map: dict[tuple[ComponentType, str], _NodeAccumulator],
+) -> None:
+    """Suppress generic tech-name DATASTORE nodes emitted by regex adapters when
+    the same file already has specific AST-detected DATASTORE nodes for the same
+    underlying technology.
+
+    Example: a regex adapter emitting ``faiss`` from an import line in a file
+    where the AST adapter has already extracted specific named stores
+    (``docs_index``, ``tickets_index``, etc. with ``provider="faiss"``).  The
+    generic node is redundant and introduces false positives.
+
+    Only purely regex-evidence nodes whose ``display_name`` matches a known
+    vector-store / database technology shortname are candidates for suppression.
+    Suppression only fires when at least one specific (non-regex) DATASTORE node
+    shares the same source file AND has the same technology in its provider
+    metadata (or its display name starts with the tech name as a prefix).
+    """
+    keys_to_remove: set[tuple[ComponentType, str]] = set()
+
+    # Collect: file → set of tech names from specific (non-regex) DATASTORE nodes
+    file_to_specific_techs: dict[str, set[str]] = {}
+    for key, acc in node_map.items():
+        if key[0] != ComponentType.DATASTORE:
+            continue
+        if all(ev.kind == "regex" for ev in acc.evidence):
+            continue  # Skip — this is itself a regex-only node
+        provider = str(acc.metadata.get("provider", "")).lower().strip()
+        tech = provider or acc.display_name.lower()
+        for ev in acc.evidence:
+            if ev.location and ev.location.path:
+                file_to_specific_techs.setdefault(ev.location.path, set()).add(tech)
+
+    # Identify generic regex-only DATASTORE nodes that are covered by specific ones
+    for key, acc in node_map.items():
+        if key[0] != ComponentType.DATASTORE:
+            continue
+        if not all(ev.kind == "regex" for ev in acc.evidence):
+            continue  # Only suppress regex-only nodes
+        tech_name = acc.display_name.lower()
+        # Check whether any source file for this node already has a specific node
+        for ev in acc.evidence:
+            if ev.location and ev.location.path:
+                specific_techs = file_to_specific_techs.get(ev.location.path, set())
+                if tech_name in specific_techs:
+                    keys_to_remove.add(key)
+                    _log.debug(
+                        "suppress_generic_tech_regex: dropped generic %r"
+                        " (file %s already has specific %r nodes)",
+                        tech_name,
+                        ev.location.path,
+                        tech_name,
+                    )
+                    break
 
     for k in keys_to_remove:
         del node_map[k]

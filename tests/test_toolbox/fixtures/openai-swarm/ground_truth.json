@@ -694,6 +694,156 @@
           }
         }
       ]
+    },
+    {
+      "id": "832d26ac-dfb2-5074-9530-f262869cc333",
+      "name": "TRIAGE_MESSAGE_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "triagemessageprompt",
+          "adapter": "python_prompt_const",
+          "description": "Swarm customer service triage message template"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: TRIAGE_MESSAGE_PROMPT",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "b4bdf851-3c1d-51cf-b88c-eb5c11594fae",
+      "name": "TRIAGE_SYSTEM_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "triagesystemprompt",
+          "adapter": "python_prompt_const",
+          "description": "Swarm customer service triage system instructions"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: TRIAGE_SYSTEM_PROMPT",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/prompts.py",
+            "line": 1
+          }
+        },
+        {
+          "kind": "gt",
+          "confidence": 0.85,
+          "detail": "PROMPT: TRIAGE_SYSTEM_PROMPT",
+          "location": {
+            "path": "examples/airline/data/routines/prompts.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc1aadc7-a3fd-5fa9-a2d4-b32afa3ce45e",
+      "name": "ITERATE_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "iterateprompt",
+          "adapter": "python_prompt_const",
+          "description": "Swarm iteration control prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ITERATE_PROMPT",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "b50215e7-e9bb-568c-9993-71e3378d4275",
+      "name": "LOCAL_PLANNER_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "localplannerprompt",
+          "adapter": "python_prompt_const",
+          "description": "Swarm local planning agent prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: LOCAL_PLANNER_PROMPT",
+          "location": {
+            "path": "examples/customer_service_streaming/configs/prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "d8881533-8fd6-54de-adb6-1fd8ed03b4bd",
+      "name": "STARTER_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "starterprompt",
+          "adapter": "python_prompt_const",
+          "description": "Swarm baggage handling starter prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: STARTER_PROMPT",
+          "location": {
+            "path": "examples/airline/data/routines/baggage/policies.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "414da0e4-463b-4e8a-ae42-9d016e504774",
+      "name": "text-embedding-3-large",
+      "component_type": "MODEL",
+      "confidence": 0.8,
+      "metadata": {
+        "extras": {
+          "canonical_name": "text-embedding-3-large",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.8,
+          "detail": "MODEL: text-embedding-3-large",
+          "location": {
+            "path": "examples/customer_service_streaming/prep_data.py"
+          }
+        }
+      ]
     }
   ],
   "edges": [],

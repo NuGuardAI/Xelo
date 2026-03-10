@@ -3856,7 +3856,10 @@
           "canonical_name": "gpt_4o_mini",
           "adapter": "model_generic",
           "evidence_count": 7,
-          "normalizer": "model-name"
+          "normalizer": "model-name",
+          "synonyms": [
+            "gpt-4o-mini-2024-07-18"
+          ]
         }
       },
       "evidence": [
@@ -4042,6 +4045,14 @@
           },
           "detail": "langgraph: SystemMessage(content=...)",
           "confidence": 0.8
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: System Message",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/qa_with_structure.py"
+          }
         }
       ]
     },
@@ -4809,6 +4820,956 @@
           "confidence": 0.6
         }
       ]
+    },
+    {
+      "id": "b5bb88f0-5853-5136-bd48-df667449c2b9",
+      "name": "elasticsearch",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "elasticsearch",
+          "adapter": "gt",
+          "description": "DATASTORE detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "DATASTORE: elasticsearch",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/base.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "ccacba88-e13a-5e7d-b75a-c2a55dee610a",
+      "name": "ANSWER_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "answer_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: ANSWER_PROMPT",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 35
+          }
+        }
+      ]
+    },
+    {
+      "id": "7dd82faf-8a4a-55f5-9f7b-dae0f819030d",
+      "name": "Api Response Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "api_response_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Api Response Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/api/prompt.py",
+            "line": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": "f45ac379-02a4-5a58-9466-81a87585276e",
+      "name": "Api Url Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "api_url_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Api Url Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/api/prompt.py",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "7074c8e8-1f6e-5826-aabc-38bd45955e6b",
+      "name": "Arguana",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "arguana",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Arguana",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": "57bd0338-bf42-5517-ab61-5ab588943f6c",
+      "name": "base_prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "base_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: base_prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/xml/base.py",
+            "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "36a4e3ed-f003-5d36-8723-59bd35129139",
+      "name": "CHAT_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "chat_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: CHAT_PROMPT",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_generation/prompt.py",
+            "line": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "14a44518-07fb-5f3c-b7a5-92973f4986c6",
+      "name": "Check Assertions Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "check_assertions_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Check Assertions Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/llm_checker/prompt.py",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "822271e4-623e-59bf-8dee-85eebd725878",
+      "name": "CONDENSE_QUESTION_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "condense_question_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: CONDENSE_QUESTION_PROMPT",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/chat_vector_db/prompts.py",
+            "line": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "ea64aa5b-cc15-5e68-a0aa-46e3833f4af2",
+      "name": "Create Draft Answer Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "create_draft_answer_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Create Draft Answer Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/llm_checker/prompt.py",
+            "line": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "d623e1f0-5b0a-556b-bc56-1d6a12409b5d",
+      "name": "Critique Example",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "critique_example",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Critique Example",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/constitutional_ai/prompts.py",
+            "line": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "584cf9e7-d415-5ca6-b334-fb72765dccaf",
+      "name": "Dbpedia Entity",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "dbpedia_entity",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Dbpedia Entity",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 26
+          }
+        }
+      ]
+    },
+    {
+      "id": "3a3f65b6-4b4b-5feb-b98b-05e832fb244d",
+      "name": "DEFAULT_DOCUMENT_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "default_document_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: DEFAULT_DOCUMENT_PROMPT",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/combine_documents/base.py",
+            "line": 23
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1b53e13-e4ae-5ecf-acac-10079f559274",
+      "name": "Default Text Qa Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "default_text_qa_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Default Text Qa Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/refine_prompts.py",
+            "line": 30
+          }
+        }
+      ]
+    },
+    {
+      "id": "0841e410-5e5d-59d4-be67-187b6a35be4f",
+      "name": "DSL_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "dsl_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: DSL_PROMPT",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/elasticsearch_database/prompts.py",
+            "line": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "dd3e4e8f-725a-57ca-8d2c-a8c231f8d796",
+      "name": "Example Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "example_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Example Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/map_reduce_prompt.py",
+            "line": 51
+          }
+        }
+      ]
+    },
+    {
+      "id": "74f716f1-f748-5f91-b680-5b3a69882284",
+      "name": "Fiqa",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "fiqa",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Fiqa",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "ee656a83-ec39-50f6-af8d-d419cf2e46aa",
+      "name": "List Assertions Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "list_assertions_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: List Assertions Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/llm_checker/prompt.py",
+            "line": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "efd2a666-3c7f-58cc-aa28-4b99808ae147",
+      "name": "Mr Tydi",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "mr_tydi",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Mr Tydi",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 36
+          }
+        }
+      ]
+    },
+    {
+      "id": "902d05f2-7cec-5ef8-a674-b8c6cadafbb8",
+      "name": "Prompt 306",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "prompt_306",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Prompt 306",
+          "location": {
+            "path": "libs/core/langchain_core/messages/base.py",
+            "line": 306
+          }
+        }
+      ]
+    },
+    {
+      "id": "17f73d6d-88bb-516f-acd7-f91bef5313eb",
+      "name": "Qa Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "qa_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Qa Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/chat_vector_db/prompts.py",
+            "line": 17
+          }
+        }
+      ]
+    },
+    {
+      "id": "be4d39c1-0865-58da-b6a8-3b09a2a31cba",
+      "name": "Question Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "question_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Question Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/qa_with_sources/map_reduce_prompt.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "9b737529-f015-58eb-aca7-f728edc379eb",
+      "name": "Revised Answer Prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "revised_answer_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Revised Answer Prompt",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/llm_checker/prompt.py",
+            "line": 27
+          }
+        }
+      ]
+    },
+    {
+      "id": "2526870f-7a84-59d4-8bc6-3047a957149f",
+      "name": "Revision Example",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "revision_example",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Revision Example",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/constitutional_ai/prompts.py",
+            "line": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "44498ed4-0923-5057-a962-c14eb219b7d1",
+      "name": "Sci Fact",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "sci_fact",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Sci Fact",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "deb95e55-f0ed-5e10-b956-6c4995fdbf1e",
+      "name": "Trec Covid",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "trec_covid",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Trec Covid",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "6288ff94-a112-5607-ae9e-6ed26fe94361",
+      "name": "Trec News",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "trec_news",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Trec News",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": "397a2132-810c-5dbd-bf48-6af7a7427baa",
+      "name": "Web Search",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "web_search",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: Web Search",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/hyde/prompts.py",
+            "line": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "2322ba96-02a3-5bc9-8f89-aecef97a679a",
+      "name": "prompt_template",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "prompt_template",
+          "adapter": "gt",
+          "description": "PROMPT detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: prompt_template",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/chat.py",
+            "line": 1114
+          }
+        }
+      ]
+    },
+    {
+      "id": "0b5dc1e9-95ee-5a3b-8717-8ecb46f4e0bf",
+      "name": "qa_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "qa_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: qa_tool",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/agent_toolkits/vectorstore/toolkit.py",
+            "line": 46
+          }
+        }
+      ]
+    },
+    {
+      "id": "a7554fdc-6cd7-506f-91e6-5cb4f69471af",
+      "name": "qa_with_sources_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "qa_with_sources_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: qa_with_sources_tool",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/agent_toolkits/vectorstore/toolkit.py",
+            "line": 56
+          }
+        }
+      ]
+    },
+    {
+      "id": "f4564c5d-c93c-5bc4-8dce-4711be1b3c79",
+      "name": "search_tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "search_tool",
+          "adapter": "gt",
+          "description": "TOOL detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: search_tool",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/self_ask_with_search/base.py",
+            "line": 87
+          }
+        }
+      ]
+    },
+    {
+      "id": "269a6c60-e6c6-5f3c-ab45-df9d5b5bc45a",
+      "name": "Tool",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "tool",
+          "adapter": "gt",
+          "description": "TOOL detected in langchain-quickstart"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: Tool",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/react/base.py",
+            "line": 177
+          }
+        }
+      ]
+    },
+    {
+      "id": "d4be38a5-62ef-422d-82c2-c7a21ad2e3a8",
+      "name": "message",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "canonical_name": "message",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.65,
+          "detail": "PROMPT: message",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/chat.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "37bf5685-38e6-48d1-8b67-752910f3ca56",
+      "name": "other_",
+      "component_type": "PROMPT",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "other_",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "PROMPT: other_",
+          "location": {
+            "path": "libs/core/langchain_core/prompts/chat.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2af5cbb4-af88-4e5c-8a0a-12c8571b84ae",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/agent_toolkits/__init__.py"
+          }
+        }
+      ]
+    },
+    {
+      "id": "987825a2-115e-45c6-bc89-be1afd98e0a8",
+      "name": "claude-haiku-4-5-20251001",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-haiku-4-5-20251001",
+          "location": {
+            "path": "libs/core/langchain_core/callbacks/usage.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "94b8f1a9-0634-4434-bc96-ce186b524d24",
+      "name": "claude-opus-4-1",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-opus-4-1",
+          "location": {
+            "path": "libs/langchain/langchain_classic/agents/tool_calling_agent/base.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "8fa63aa7-20a7-48fe-8245-78c1aee936a4",
+      "name": "claude-sonnet-4-5-20250929",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: claude-sonnet-4-5-20250929",
+          "location": {
+            "path": "libs/core/langchain_core/rate_limiters.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "1e6e89d1-3b3c-455d-b65a-e3a2efb40cb5",
+      "name": "gpt-3.5-turbo-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-0613",
+          "location": {
+            "path": "libs/langchain/langchain_classic/chains/openai_functions/base.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": []

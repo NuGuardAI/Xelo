@@ -4199,6 +4199,702 @@
           "confidence": 0.95
         }
       ]
+    },
+    {
+      "id": "daa9854f-b44c-5ee7-8ca7-2dedcb2a5eea",
+      "name": "sqlite",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "sqlite",
+          "adapter": "gt",
+          "description": "DATASTORE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "DATASTORE: sqlite",
+          "location": {
+            "path": "docs/src/use_cases/text2sql/text2sql.ipynb",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "6e18eea7-fe87-5ee5-a0b3-529102da4755",
+      "name": "sqlite3",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "sqlite3",
+          "adapter": "gt",
+          "description": "DATASTORE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "DATASTORE: sqlite3",
+          "location": {
+            "path": "guardrails/cli/watch.py",
+            "line": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "b45359cd-a28d-51df-88fe-3d7ad2e244ff",
+      "name": "DetectPII",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "detectpii",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: DetectPII",
+          "location": {
+            "path": "docs/src/examples/check_for_pii.ipynb",
+            "line": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "9bf8a832-b5c9-55d7-a266-a7cc89983e39",
+      "name": "OneLine",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "oneline",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: OneLine",
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "9e5843fd-5afd-5d77-8152-716e2a4b2bd0",
+      "name": "ReadingTime",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "readingtime",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: ReadingTime",
+          "location": {
+            "path": "docs/src/examples/summarizer.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "98494e56-a684-55f9-815b-a45031418d24",
+      "name": "RestrictToTopic",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "restricttotopic",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: RestrictToTopic",
+          "location": {
+            "path": "docs/src/examples/response_is_on_topic.ipynb",
+            "line": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "95bd9a53-dd01-5812-85c9-53b348fb908a",
+      "name": "SimilarToDocument",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "similartodocument",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: SimilarToDocument",
+          "location": {
+            "path": "docs/src/examples/summarizer.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "ecfc5f01-f895-5424-9a2f-48e02481992c",
+      "name": "ToxicLanguage",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "toxiclanguage",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: ToxicLanguage",
+          "location": {
+            "path": "docs/src/examples/chatbot.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "f5a594e3-640e-54c2-9a65-753e61b095f4",
+      "name": "TwoWords",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "twowords",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: TwoWords",
+          "location": {
+            "path": "docs/src/examples/extracting_entities.ipynb",
+            "line": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "f9e027eb-ef17-554f-8fe2-96f9766033b2",
+      "name": "UpperCase",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "uppercase",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: UpperCase",
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "127ad0c5-d91f-5f24-8686-9d7d2d1905c7",
+      "name": "ValidatorModuleType",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "validatormoduletype",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: ValidatorModuleType",
+          "location": {
+            "path": "guardrails/hub/install.py",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "4d435094-8405-5bfb-9f5a-a74501c48aaa",
+      "name": "ValidLength",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "validlength",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: ValidLength",
+          "location": {
+            "path": "docs/src/examples/generate_structured_data.ipynb",
+            "line": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "f731cf09-9a24-58a9-83d6-42f6b4332796",
+      "name": "ValidRange",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "validrange",
+          "adapter": "gt",
+          "description": "GUARDRAIL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: ValidRange",
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb",
+            "line": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "907b420e-cc48-5528-a7e8-05cba184d258",
+      "name": "command-r-08-2024",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "command-r-08-2024",
+          "adapter": "gt",
+          "description": "MODEL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: command-r-08-2024",
+          "location": {
+            "path": "docs/src/examples/generate_structured_data_cohere.ipynb",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "13301b7e-3d28-5614-9bde-73b1c8e2642e",
+      "name": "databricks/databricks-dbrx-instruct",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "databricks/databricks-dbrx-instruct",
+          "adapter": "gt",
+          "description": "MODEL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: databricks/databricks-dbrx-instruct",
+          "location": {
+            "path": "docs/src/integrations/telemetry/mlflow-tracing.ipynb",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "2e9fae9d-cdc9-57e4-afae-7fd5bd58c6a2",
+      "name": "gpt2",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gpt2",
+          "adapter": "gt",
+          "description": "MODEL detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: gpt2",
+          "location": {
+            "path": "guardrails/utils/docs_utils.py",
+            "line": 47
+          }
+        }
+      ]
+    },
+    {
+      "id": "476f4f52-1d16-567d-a465-f9056385711f",
+      "name": "code_execution",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "code_execution",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: code_execution",
+          "location": {
+            "path": "guardrails/cli/hub/utils.py",
+            "line": 72
+          }
+        }
+      ]
+    },
+    {
+      "id": "41758ef5-1d7a-5908-b28e-c379c0f08e28",
+      "name": "db_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "db_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: db_write",
+          "location": {
+            "path": "guardrails/call_tracing/sqlite_trace_handler.py",
+            "line": 60
+          }
+        }
+      ]
+    },
+    {
+      "id": "e992301c-01f9-5be8-90cd-0862d5ea1d62",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "guardrails/cli/hub/create_validator.py",
+            "line": 179
+          }
+        }
+      ]
+    },
+    {
+      "id": "2589b4ae-eb6d-59bd-83fd-87077d55a18d",
+      "name": "network_out",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "network_out",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: network_out",
+          "location": {
+            "path": "guardrails/cli/server/hub_client.py",
+            "line": 184
+          }
+        }
+      ]
+    },
+    {
+      "id": "75dac3d0-304f-5921-a8c5-3faf41727a9f",
+      "name": "REASK_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "reask_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in guardrails-ai"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: REASK_PROMPT",
+          "location": {
+            "path": "guardrails/applications/text2sql.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "73ca3da5-eb97-5faf-86c9-9d63f2ff2a01",
+      "name": "get_jwt_token",
+      "component_type": "GUARDRAIL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "get_jwt_token",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "GUARDRAIL: get_jwt_token",
+          "location": {
+            "path": "guardrails/validator_base.py",
+            "line": 26
+          }
+        }
+      ]
+    },
+    {
+      "id": "09a8e17f-9974-4727-9edb-c878537dd066",
+      "name": "gpt-3.5-turbo-0301",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-0301",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "142b62e9-985b-4247-9175-c11c71bc63f2",
+      "name": "gpt-3.5-turbo-16k-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-3.5-turbo-16k-0613",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "0615a276-80cc-4e7e-a809-a1e1d58bc7c0",
+      "name": "gpt-4-0314",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-0314",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "bc2d9720-02da-4542-8428-115ac0c396c6",
+      "name": "gpt-4-32k-0314",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-32k-0314",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "2e4a5a8e-bb2d-40ce-9345-95d0fc3c414e",
+      "name": "gpt-4-32k-0613",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-4-32k-0613",
+          "location": {
+            "path": "guardrails/utils/openai_utils/streaming_utils.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "25670bba-f5c1-41e6-803d-6a9d1e720a7b",
+      "name": "gpt-5",
+      "component_type": "MODEL",
+      "confidence": 0.7,
+      "metadata": {
+        "extras": {}
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.7,
+          "detail": "MODEL: gpt-5",
+          "location": {
+            "path": "guardrails/llm_providers.py",
+            "line": 1
+          }
+        }
+      ],
+      "synonyms": [],
+      "alt_file_paths": [],
+      "relationships": null
+    },
+    {
+      "id": "42543c67-695e-4fc1-951e-26997e75d63e",
+      "name": "prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.65,
+      "metadata": {
+        "extras": {
+          "synonyms": []
+        }
+      },
+      "evidence": [
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "docs/src/examples/langchain_integration.ipynb"
+          }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.65,
+          "detail": "PROMPT: prompt",
+          "location": {
+            "path": "docs/src/concepts/streaming_structured_data.ipynb"
+          }
+        }
+      ],
+      "alt_file_paths": [],
+      "relationships": null
     }
   ],
   "edges": [],

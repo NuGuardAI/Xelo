@@ -345,6 +345,14 @@
             "path": "backend/main.py",
             "line": 55
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.6,
+          "detail": "auth_generic: api_key pattern",
+          "location": {
+            "path": "backend/config.py"
+          }
         }
       ]
     },
@@ -463,6 +471,76 @@
           "location": {
             "path": "backend/main.py",
             "line": 50
+          }
+        }
+      ]
+    },
+    {
+      "id": "3ed5d02e-507a-5936-a48d-161b14d0e696",
+      "name": "System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "system_message",
+          "adapter": "gt",
+          "description": "PROMPT detected in Healthcare-voice-agent"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: System Message",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 148
+          }
+        }
+      ]
+    },
+    {
+      "id": "e46b0666-93a9-5f20-8e74-47e51bccd469",
+      "name": "System Instruction",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "system_instruction",
+          "adapter": "gt",
+          "description": "PROMPT detected in Healthcare-voice-agent"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: System Instruction",
+          "location": {
+            "path": "src/gemini.js",
+            "line": 19
+          }
+        }
+      ]
+    },
+    {
+      "id": "13e53ed8-32e2-490b-80d7-dcb8853c946f",
+      "name": "generic",
+      "component_type": "TOOL",
+      "confidence": 0.55,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "gt",
+          "confidence": 0.55,
+          "detail": "TOOL: generic",
+          "location": {
+            "path": "package.json"
           }
         }
       ]

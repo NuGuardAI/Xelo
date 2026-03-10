@@ -766,11 +766,6 @@ p {
     margin-bottom: 0;
 }
 
-.persona-card ul li {
-    font-size: 1.05rem;
-    margin-bottom: 0.5rem;
-}
-
 .persona-card ul {
     list-style: none;
     display: flex;
@@ -779,7 +774,7 @@ p {
 }
 
 .persona-card ul li {
-    font-size: 0.83rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
     display: flex;
     align-items: baseline;

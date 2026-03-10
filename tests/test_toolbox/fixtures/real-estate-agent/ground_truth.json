@@ -187,6 +187,30 @@
           }
         }
       ]
+    },
+    {
+      "id": "a99e2eec-0ac3-55b6-8664-cfc34656a3e7",
+      "name": "agent",
+      "component_type": "AGENT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "agent",
+          "adapter": "gt",
+          "description": "AGENT detected in real-estate-agent"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "AGENT: agent",
+          "location": {
+            "path": "agent.py",
+            "line": 45
+          }
+        }
+      ]
     }
   ]
 }
