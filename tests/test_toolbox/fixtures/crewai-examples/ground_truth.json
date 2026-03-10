@@ -1315,6 +1315,126 @@
           }
         }
       ]
+    },
+    {
+      "id": "2ddca45d-cccf-5e0d-8d31-69ddec2d2711",
+      "name": "create_draft",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "create_draft",
+          "adapter": "gt",
+          "description": "TOOL detected in crewai-examples"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: create_draft",
+          "location": {
+            "path": "flows/email_auto_responder_flow/src/email_auto_responder_flow/tools/create_draft.py",
+            "line": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "9cbbbd2c-db6c-54fb-bb24-157f6b5106b8",
+      "name": "draft",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "draft",
+          "adapter": "gt",
+          "description": "TOOL detected in crewai-examples"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: draft",
+          "location": {
+            "path": "flows/email_auto_responder_flow/src/email_auto_responder_flow/tools/create_draft.py",
+            "line": 18
+          }
+        }
+      ]
+    },
+    {
+      "id": "4bc0429a-dd73-5a5b-b3db-4bf8c33909a2",
+      "name": "gmail",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gmail",
+          "adapter": "gt",
+          "description": "TOOL detected in crewai-examples"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: gmail",
+          "location": {
+            "path": "flows/email_auto_responder_flow/src/email_auto_responder_flow/crews/email_filter_crew/email_filter_crew.py",
+            "line": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": "7827982a-972d-5cbd-bb64-9bc1ed4d583b",
+      "name": "search",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "search",
+          "adapter": "gt",
+          "description": "TOOL detected in crewai-examples"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: search",
+          "location": {
+            "path": "flows/email_auto_responder_flow/src/email_auto_responder_flow/utils/emails.py",
+            "line": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "35b8e7de-d990-500a-8855-aa3dd449297f",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in crewai-examples"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "crews/landing_page_generator/src/landing_page_generator/main.py",
+            "line": 23
+          }
+        }
+      ]
     }
   ]
 }

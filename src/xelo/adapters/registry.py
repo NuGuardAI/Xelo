@@ -129,7 +129,10 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         r"|mistral-[\w.-]+|o\d(?:-[a-z][a-z0-9-]*)?\b"
                         r"|deepseek-[\w.-]+|qwen[\d][\w.-]*|phi[\d][\w.-]*"
                         r"|command-(?:r|light|nightly|a\d)[\w.-]*"
-                        r"|[\w.-]+:(?:7b|13b|70b|3b|8b|14b|32b|mini|latest|instruct|chat)\b)\b",
+                        # Ollama colon-tag format: require a meaningful prefix containing
+                        # at least one letter, and omit 'latest' (too generic — it just
+                        # means "pull the newest image" and is not a real model name).
+                        r"|[\w.-]+:(?:7b|13b|70b|3b|1b|8b|14b|32b|mini|instruct|chat)\b)\b",
                         re.IGNORECASE,
                     ),
                     re.compile(
@@ -137,11 +140,17 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                         # Matches strings like "meta-llama/Llama-3.1-8B-Instruct",
                         # "mistralai/Mistral-7B-v0.3", "google/gemma-2-27b-it".
                         # Anchored to known orgs to avoid matching arbitrary file paths.
+                        # Anchored to known HuggingFace / model-hub orgs.
+                        # Negative lookahead prevents matching GitHub URL fragments
+                        # like "google/langextract/blob/main/..."
                         r"\b(?:meta-llama|mistralai|microsoft|google|HuggingFaceH4|facebook"
                         r"|EleutherAI|tiiuae|databricks|Qwen|deepseek-ai|THUDM|bigscience"
                         r"|openchat|NousResearch|teknium|WizardLM|lmsys|stabilityai"
                         r"|togethercomputer|codellama|sentence-transformers|openai|cohere"
-                        r"|ai21labs|allenai|huggingface)/[\w][\w./:-]*",
+                        r"|ai21labs|allenai|huggingface)"
+                        r"/(?!(?:blob|tree|issues|pulls|commit|releases|compare|raw)/)"
+                        r"[\w][\w./:-]*",
+                        re.IGNORECASE,
                     ),
                     re.compile(
                         # HuggingFace-origin standalone model families not covered above.
@@ -203,6 +212,36 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                 canonical_name="s3",
                 metadata={"normalizer": "datastore"},
             ),
+            # Auth — two-tier approach:
+            # Tier 1 (priority 135): executable runtime credential access patterns.
+            #   Matches os.getenv("OPENAI_API_KEY"), load_dotenv(), etc. in code.
+            #   Higher priority than the generic adapter so runtime evidence wins.
+            RegexAdapter(
+                name="auth_runtime",
+                component_type=ComponentType.AUTH,
+                priority=135,
+                patterns=(
+                    # os.getenv for API/auth key names
+                    re.compile(
+                        r"""os\.(?:getenv|environ\.get)\s*\(\s*['"][^'"]*(?:API_KEY|SECRET|TOKEN|PASSWORD|CREDENTIAL)[^'"]*['"]\s*\)""",
+                        re.IGNORECASE,
+                    ),
+                    # load_dotenv() — explicit runtime .env loading
+                    re.compile(r"\bload_dotenv\s*\(", re.IGNORECASE),
+                    # Framework API-key constructor kwargs — e.g. openai.OpenAI(api_key=...)
+                    re.compile(
+                        r"\bapi_key\s*=\s*(?:os\.(?:getenv|environ)|[\w.]+\.get\s*\()",
+                        re.IGNORECASE,
+                    ),
+                ),
+                canonical_name="auth:generic",
+                # Exclude synthetic data-generator folders — they may reference
+                # credential env-var names in config/template prose, not runtime access.
+                skip_path_parts=frozenset({"data-generators", "data_generators", "generators"}),
+            ),
+            # Tier 2 (priority 140): broader auth keyword patterns.
+            #   Excluded from non-runtime paths (YAML configs, data-generator dirs)
+            #   to reduce false positives.
             RegexAdapter(
                 name="auth_generic",
                 component_type=ComponentType.AUTH,
@@ -223,6 +262,7 @@ def default_registry() -> tuple[DetectionAdapter, ...]:
                     ),
                 ),
                 canonical_name="auth:generic",
+                skip_path_parts=frozenset({"data-generators", "data_generators", "generators"}),
             ),
             *privilege_adapters(),
             RegexAdapter(

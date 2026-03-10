@@ -236,6 +236,78 @@
           }
         }
       ]
+    },
+    {
+      "id": "5e6efea9-7d82-5630-bb73-7730b352efe8",
+      "name": "code_execution",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "code_execution",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in gcp-agent-starter-pack"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: code_execution",
+          "location": {
+            "path": "agent_starter_pack/cli/utils/command.py",
+            "line": 109
+          }
+        }
+      ]
+    },
+    {
+      "id": "bc6ee789-4379-50da-a553-6a5ede795392",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in gcp-agent-starter-pack"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "agent_starter_pack/data_ingestion/data_ingestion_pipeline/submit_pipeline.py",
+            "line": 228
+          }
+        }
+      ]
+    },
+    {
+      "id": "2ea5424e-b4dd-5342-9428-8fd22a184772",
+      "name": "format_docs",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "format_docs",
+          "adapter": "gt",
+          "description": "PROMPT detected in gcp-agent-starter-pack"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: format_docs",
+          "location": {
+            "path": "agent_starter_pack/agents/agentic_rag/app/templates.py",
+            "line": 19
+          }
+        }
+      ]
     }
   ],
   "edges": []

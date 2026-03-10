@@ -166,6 +166,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "4a5212ff-08c9-5917-abc7-6c66ab9deb47",
+      "name": "generic",
+      "component_type": "AUTH",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "generic",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "AUTH: generic",
+          "location": {
+            "path": "enterprise_functions.py",
+            "line": 67
+          }
+        }
+      ]
     }
   ],
   "edges": [],

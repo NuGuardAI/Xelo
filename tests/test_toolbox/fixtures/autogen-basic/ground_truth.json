@@ -486,6 +486,246 @@
           }
         }
       ]
+    },
+    {
+      "id": "6c95555b-9704-5f0a-ac4a-aa08a4191067",
+      "name": "ORCHESTRATOR_TASK_LEDGER_FACTS_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratortaskledgerfactsprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_TASK_LEDGER_FACTS_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "55594d19-083c-5802-9f5e-73e669ced697",
+      "name": "ORCHESTRATOR_TASK_LEDGER_PLAN_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratortaskledgerplanprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_TASK_LEDGER_PLAN_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "827bfaf1-6f27-533b-8794-f97951c93304",
+      "name": "ORCHESTRATOR_TASK_LEDGER_FULL_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratortaskledgerfullprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_TASK_LEDGER_FULL_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "8f48b1a2-acaf-5d5b-81da-46b5b8b872dd",
+      "name": "ORCHESTRATOR_PROGRESS_LEDGER_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratorprogressledgerprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_PROGRESS_LEDGER_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "3c8f5bd3-6e93-518a-9222-a7206cf04f46",
+      "name": "ORCHESTRATOR_TASK_LEDGER_FACTS_UPDATE_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratortaskledgerfactsupdateprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_TASK_LEDGER_FACTS_UPDATE_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "9057b7d3-07a7-5afe-995c-fe60b92ba219",
+      "name": "ORCHESTRATOR_TASK_LEDGER_PLAN_UPDATE_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratortaskledgerplanupdateprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_TASK_LEDGER_PLAN_UPDATE_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "f3d4bbac-508f-5a24-8723-f64089e06e24",
+      "name": "ORCHESTRATOR_FINAL_ANSWER_PROMPT",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "orchestratorfinalanswerprompt",
+          "adapter": "python_prompt_const",
+          "description": "MagenticOne orchestrator prompt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_constant",
+          "confidence": 0.85,
+          "detail": "PROMPT: ORCHESTRATOR_FINAL_ANSWER_PROMPT",
+          "location": {
+            "path": "python/packages/autogen-agentchat/src/autogen_agentchat/teams/_group_chat/_magentic_one/_prompts.py",
+            "line": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "118d14d6-95d6-5082-88d4-d246dd620982",
+      "name": "sqlite",
+      "component_type": "DATASTORE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "sqlite",
+          "adapter": "gt",
+          "description": "DATASTORE detected in autogen-basic"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "DATASTORE: sqlite",
+          "location": {
+            "path": "python/packages/autogen-studio/autogenstudio/web/config.py",
+            "line": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "c196017c-5bb6-575b-ae6b-a0fc32e145f8",
+      "name": "code_execution",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "code_execution",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in autogen-basic"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: code_execution",
+          "location": {
+            "path": "python/samples/gitty/src/gitty/_config.py",
+            "line": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "ba1f7409-5735-53d4-aadd-20a2bb3c7af9",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in autogen-basic"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "python/samples/agentchat_graphrag/app.py",
+            "line": 44
+          }
+        }
+      ]
     }
   ]
 }

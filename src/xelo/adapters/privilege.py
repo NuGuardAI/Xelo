@@ -69,6 +69,11 @@ _PRIV_SKIP_PARTS = frozenset(
         "libs",  # library source trees (e.g. langchain/libs/core/...)
         # Frontend / UI code — privilege patterns here are UI state, not agent caps
         "desktop",  # Electron / desktop UI code
+        # Synthetic data-generation scripts — privilege keywords here appear inside
+        # generated prose/templates, not in executable agent logic.
+        "data-generators",
+        "data_generators",
+        "generators",
         # Documentation directories — prose mentions of file I/O / subprocess
         # are not agent capability grants.  Intentionally NOT skipping examples/,
         # samples/, demo/ — those often contain runnable agent code.

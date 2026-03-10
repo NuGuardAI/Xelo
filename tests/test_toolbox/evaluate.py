@@ -144,6 +144,20 @@ def _convert_xelo_ground_truth_to_legacy(repo_name: str, payload: Dict[str, Any]
         for rel, targets in relationships.items():
             relationship_value[rel] = targets[0] if len(targets) == 1 else targets
 
+        # Collect all file paths from every evidence entry (for multi-path matching)
+        all_ev_paths: List[str] = []
+        for ev in evidence:
+            if not isinstance(ev, dict):
+                continue
+            ev_loc = ev.get("location", {})
+            if not isinstance(ev_loc, dict):
+                continue
+            ev_path = str(ev_loc.get("path", "")).strip()
+            if ev_path and ev_path not in all_ev_paths:
+                all_ev_paths.append(ev_path)
+        # Primary path is first entry; alt paths are the remainder
+        alt_paths = all_ev_paths[1:] if len(all_ev_paths) > 1 else []
+
         asset = {
             "asset_type": mapped_type,
             "name": str(node.get("name", "")).strip(),
@@ -160,6 +174,7 @@ def _convert_xelo_ground_truth_to_legacy(repo_name: str, payload: Dict[str, Any]
             "synonyms": extras.get("synonyms", [])
             if isinstance(extras.get("synonyms"), list)
             else [],
+            "alt_file_paths": alt_paths,
             "relationships": relationship_value or None,
         }
         assets.append(asset)
@@ -449,6 +464,19 @@ def assets_match(
 
     # Get synonyms from ground truth
     gt_synonyms = ground_truth.synonyms if hasattr(ground_truth, "synonyms") else []
+
+    # Also check alt file paths (secondary evidence locations)
+    gt_alt_paths = ground_truth.alt_file_paths if hasattr(ground_truth, "alt_file_paths") else []
+    if not paths_match and gt_alt_paths:
+        for alt_path in gt_alt_paths:
+            if fuzzy_paths:
+                if path_matches_fuzzy(disc_path, alt_path):
+                    paths_match = True
+                    break
+            else:
+                if normalize_path(disc_path) == normalize_path(alt_path):
+                    paths_match = True
+                    break
 
     # Phase 1: Name match (normalized + synonyms + substring) + path match
     if names_match(discovered.name, ground_truth.name, gt_synonyms):

@@ -210,6 +210,126 @@
           }
         }
       ]
+    },
+    {
+      "id": "d5c59cf7-51e7-5696-a40a-4cbf39baa240",
+      "name": "gemini-2.0-flash-001",
+      "component_type": "MODEL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "gemini-2.0-flash-001",
+          "adapter": "gt",
+          "description": "MODEL detected in google-adk-walkthrough"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "MODEL: gemini-2.0-flash-001",
+          "location": {
+            "path": "agent_grammar/agent.py",
+            "line": 171
+          }
+        }
+      ]
+    },
+    {
+      "id": "b9955e79-89ef-5d28-a885-dcdc891c1652",
+      "name": "summary_instruction_prompt",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "summary_instruction_prompt",
+          "adapter": "gt",
+          "description": "PROMPT detected in google-adk-walkthrough"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: summary_instruction_prompt",
+          "location": {
+            "path": "agent_summary/agent.py",
+            "line": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "384d9b55-8ede-526b-8fab-aa63e9083ab7",
+      "name": "divide",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "divide",
+          "adapter": "gt",
+          "description": "TOOL detected in google-adk-walkthrough"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: divide",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 113
+          }
+        }
+      ]
+    },
+    {
+      "id": "0d295f44-ea0f-5afb-a470-28df5735c20a",
+      "name": "multiply",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "multiply",
+          "adapter": "gt",
+          "description": "TOOL detected in google-adk-walkthrough"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: multiply",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 113
+          }
+        }
+      ]
+    },
+    {
+      "id": "f0c81887-d53f-5b64-a61c-d552bbdcec6b",
+      "name": "subtract",
+      "component_type": "TOOL",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "subtract",
+          "adapter": "gt",
+          "description": "TOOL detected in google-adk-walkthrough"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "TOOL: subtract",
+          "location": {
+            "path": "agent_maths/agent.py",
+            "line": 113
+          }
+        }
+      ]
     }
   ],
   "edges": []

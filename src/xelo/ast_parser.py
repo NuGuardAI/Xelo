@@ -8,6 +8,7 @@ to provide rich context for framework-specific adapters.
 from __future__ import annotations
 
 import ast
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -47,6 +48,10 @@ class ParsedStringLiteral:
     line: int
     context: str | None  # enclosing function/class name
     is_docstring: bool
+    # True when this literal was captured from a module-level assignment
+    # (visit_Assign with empty scope_stack), False for function-body literals
+    # whose context is the enclosing func/class name, not the variable name.
+    is_module_assignment: bool = False
 
 
 @dataclass
@@ -201,6 +206,31 @@ class _AstExtractor(ast.NodeVisitor):
 
     visit_AsyncFunctionDef = visit_FunctionDef  # type: ignore[assignment]
 
+    def visit_Return(self, node: ast.Return) -> None:
+        """Capture large f-strings returned from functions as string literals.
+
+        Enables detection of prompt-factory functions where the function body
+        returns a large f-string template (e.g. get_context_precision_prompt).
+        """
+        if node.value and isinstance(node.value, ast.JoinedStr):
+            parts: list[str] = []
+            for part in node.value.values:
+                if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                    parts.append(part.value)
+                else:
+                    parts.append("{\u2026}")
+            text = "".join(parts)
+            if len(text) >= 100:
+                self.string_literals.append(
+                    ParsedStringLiteral(
+                        value=text,
+                        line=node.lineno,
+                        context=self._scope_stack[-1] if self._scope_stack else None,
+                        is_docstring=False,
+                    )
+                )
+        self.generic_visit(node)
+
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         self._scope_stack.append(node.name)
         self.generic_visit(node)
@@ -219,6 +249,13 @@ class _AstExtractor(ast.NodeVisitor):
         elif isinstance(node.value, ast.Await) and isinstance(node.value.value, ast.Call):
             # Handle `result = await Runner.run(...)` patterns
             self._visit_call(node.value.value, assigned_to=assigned_to)
+        elif isinstance(node.value, ast.List):
+            # List assignment: visit each element to capture class instantiations.
+            # e.g. `tools = [ToolA(), ToolB()]` → ToolA and ToolB register as instantiations
+            # so framework adapters can detect them without needing an explicit assigned_to.
+            for elt in node.value.elts:
+                if isinstance(elt, ast.Call):
+                    self._visit_call(elt, assigned_to=None)
         elif (
             isinstance(node.value, ast.Constant)
             and isinstance(node.value.value, str)
@@ -228,13 +265,17 @@ class _AstExtractor(ast.NodeVisitor):
             # Capture module-level string constants with the variable name as context
             # so adapters can find them by name (e.g. BILLING_INSTRUCTIONS = "...")
             val = node.value.value
-            if len(val) >= 40:
+            # Always capture ALL_CAPS constants (e.g. MODEL_ID, BUCKET_NAME, API_KEY);
+            # otherwise require 40+ chars to avoid low-signal noise.
+            is_constant_name = bool(assigned_to and re.match(r"^[A-Z][A-Z0-9_]{1,}$", assigned_to))
+            if is_constant_name or len(val) >= 40:
                 self.string_literals.append(
                     ParsedStringLiteral(
                         value=val,
                         line=node.value.lineno,
                         context=assigned_to,
                         is_docstring=False,
+                        is_module_assignment=True,
                     )
                 )
         self.generic_visit(node)
@@ -283,10 +324,35 @@ class _AstExtractor(ast.NodeVisitor):
     # Core call dispatch
     # ------------------------------------------------------------------
 
+    # Fluent builder methods that wrap a core call without changing identity.
+    # When `graph = builder.compile(...).with_config(...)`, propagate `assigned_to`
+    # through with_config so that compile() records `assigned_to="graph"`.
+    _FLUENT_PASS_THROUGH = frozenset(
+        {
+            "with_config",
+            "with_retry",
+            "with_fallbacks",
+            "bind_tools",
+            "bind",
+            "configurable_fields",
+            "configurable_alternatives",
+        }
+    )
+
     def _visit_call(self, node: ast.Call, assigned_to: str | None) -> None:
         func_name = self._get_call_name(node)
         if not func_name:
             return
+
+        # Propagate assigned_to through fluent wrapper methods so that the core
+        # call (e.g. compile()) records the outer variable name.
+        # e.g. graph = builder.compile(name=...).with_config({...})
+        if (
+            isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Call)
+            and func_name.split(".")[-1] in self._FLUENT_PASS_THROUGH
+        ):
+            self._visit_call(node.func.value, assigned_to=assigned_to)
 
         receiver = self._get_receiver(node)
         positional = [v for v in (self._extract_value(a) for a in node.args) if v is not None]

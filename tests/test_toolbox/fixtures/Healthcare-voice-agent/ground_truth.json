@@ -466,6 +466,54 @@
           }
         }
       ]
+    },
+    {
+      "id": "3ed5d02e-507a-5936-a48d-161b14d0e696",
+      "name": "System Message",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "system_message",
+          "adapter": "gt",
+          "description": "PROMPT detected in Healthcare-voice-agent"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: System Message",
+          "location": {
+            "path": "backend/langgraph_llm_agents.py",
+            "line": 148
+          }
+        }
+      ]
+    },
+    {
+      "id": "e46b0666-93a9-5f20-8e74-47e51bccd469",
+      "name": "System Instruction",
+      "component_type": "PROMPT",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "system_instruction",
+          "adapter": "gt",
+          "description": "PROMPT detected in Healthcare-voice-agent"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PROMPT: System Instruction",
+          "location": {
+            "path": "src/gemini.js",
+            "line": 19
+          }
+        }
+      ]
     }
   ]
 }

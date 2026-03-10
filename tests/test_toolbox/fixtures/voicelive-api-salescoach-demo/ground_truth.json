@@ -302,6 +302,30 @@
           }
         }
       ]
+    },
+    {
+      "id": "3b3f42e4-c35a-532e-a9ef-288cbd7d6a34",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in voicelive-api-salescoach-demo"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "backend/src/services/analyzers.py",
+            "line": 332
+          }
+        }
+      ]
     }
   ],
   "edges": []

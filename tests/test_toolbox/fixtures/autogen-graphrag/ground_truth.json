@@ -162,6 +162,15 @@
             "path": "utils/openai_embeddings_llm.py",
             "line": 38
           }
+        },
+        {
+          "kind": "regex",
+          "confidence": 0.8,
+          "detail": "MODEL: nomic-embed-text (alt path)",
+          "location": {
+            "path": "utils/embedding.py",
+            "line": 70
+          }
         }
       ]
     },
@@ -184,6 +193,29 @@
           "location": {
             "path": "appUI.py",
             "line": 54
+          }
+        }
+      ]
+    },
+    {
+      "id": "fa205a4d-f2ba-5a28-9c1a-28ad38e19124",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "utils/pdf_to_markdown.py",
+            "line": 75
           }
         }
       ]

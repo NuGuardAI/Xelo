@@ -46,6 +46,11 @@ class GroundTruthAsset(BaseModel):
         description="Alternate names the discovery pipeline might extract for this asset "
         "(e.g. variable names like 'llm' for a model named 'OpenAIChat_GPT4o')",
     )
+    alt_file_paths: List[str] = Field(
+        default_factory=list,
+        description="Alternate file paths where this asset may be detected "
+        "(e.g. secondary evidence entries from a multi-evidence ground truth node)",
+    )
     relationships: Optional[Dict[str, str | List[str]]] = Field(
         default=None, description="Relationships to other assets (uses_model, uses_tools, etc.)"
     )

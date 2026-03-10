@@ -371,6 +371,30 @@
           }
         }
       ]
+    },
+    {
+      "id": "88b36017-8866-5d67-ab36-a6b41523b84b",
+      "name": "filesystem_write",
+      "component_type": "PRIVILEGE",
+      "confidence": 0.85,
+      "metadata": {
+        "extras": {
+          "canonical_name": "filesystem_write",
+          "adapter": "gt",
+          "description": "PRIVILEGE detected in llama-rags"
+        }
+      },
+      "evidence": [
+        {
+          "kind": "ast_call",
+          "confidence": 0.85,
+          "detail": "PRIVILEGE: filesystem_write",
+          "location": {
+            "path": "core/agent_builder/registry.py",
+            "line": 27
+          }
+        }
+      ]
     }
   ],
   "edges": []
