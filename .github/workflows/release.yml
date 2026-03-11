@@ -1,6 +1,15 @@
 name: Release & Publish to PyPI
 
 on:
+  # Automatic: fires on every push/merge to main (skips version-bump commits)
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - ".github/workflows/jekyll-gh-pages.yml"
+
+  # Manual: choose release type explicitly from the Actions UI
   workflow_dispatch:
     inputs:
       release_type:
@@ -19,27 +28,68 @@ jobs:
       contents: write   # push version-bump commit + tag
 
     steps:
+      # Skip if this push was itself a version-bump commit (avoid infinite loop)
+      - name: Check commit message
+        id: guard
+        run: |
+          MSG="${{ github.event.head_commit.message }}"
+          if [[ "$MSG" == chore:\ bump\ version* ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.guard.outputs.skip == 'false'
         with:
           fetch-depth: 0
-          # Use PAT or default token; GITHUB_TOKEN is enough for same-repo pushes
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-python@v5
+        if: steps.guard.outputs.skip == 'false'
         with:
           python-version: "3.11"
 
       - name: Install build tools
+        if: steps.guard.outputs.skip == 'false'
         run: pip install build
 
-      # ── 1. Bump version in pyproject.toml ───────────────────────────────
+      # ── 1. Detect release type (auto from commit msgs, or manual input) ──
+      - name: Detect release type
+        if: steps.guard.outputs.skip == 'false'
+        id: detect
+        run: |
+          # Manual workflow_dispatch takes priority
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "release_type=${{ github.event.inputs.release_type }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Scan commits since last tag for conventional commit keywords
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [[ -n "$LAST_TAG" ]]; then
+            LOG=$(git log "${LAST_TAG}..HEAD" --pretty=format:"%s")
+          else
+            LOG=$(git log --pretty=format:"%s")
+          fi
+
+          if echo "$LOG" | grep -qiE "^(feat|feature)(\(.+\))?!:|BREAKING.CHANGE"; then
+            echo "release_type=major" >> "$GITHUB_OUTPUT"
+          elif echo "$LOG" | grep -qiE "^(feat|feature)(\(.+\))?:"; then
+            echo "release_type=minor" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_type=patch" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ── 2. Bump version in pyproject.toml ───────────────────────────────
       - name: Bump version
+        if: steps.guard.outputs.skip == 'false'
         id: versioning
         run: |
           python3 - <<'PYEOF'
           import re, sys, os
 
-          release_type = "${{ github.event.inputs.release_type }}"
+          release_type = "${{ steps.detect.outputs.release_type }}"
 
           with open("pyproject.toml") as f:
               content = f.read()
@@ -71,11 +121,12 @@ jobs:
           with open(os.environ["GITHUB_OUTPUT"], "a") as out:
               out.write(f"new_version={new_version}\n")
 
-          print(f"Bumped version to {new_version}")
+          print(f"Bumped {release_type} → {new_version}")
           PYEOF
 
-      # ── 2. Commit the bump and push a version tag ────────────────────────
+      # ── 3. Commit the bump and push a version tag ────────────────────────
       - name: Commit and tag
+        if: steps.guard.outputs.skip == 'false'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
