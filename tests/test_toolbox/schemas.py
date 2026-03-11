@@ -139,6 +139,7 @@ class DiscoveredAsset(BaseModel):
     asset_type: str
     name: str
     file_path: str
+    alt_file_paths: List[str] = Field(default_factory=list)  # Other evidence file paths
     line_start: Optional[int] = None
     line_end: Optional[int] = None
     description: Optional[str] = None
