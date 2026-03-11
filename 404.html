@@ -5,10 +5,14 @@
     <meta charset="utf-8">
     <title>Xelo – redirecting…</title>
     <script>
-        // GitHub Pages doesn't redirect /xelo → /xelo/ automatically in all cases.
-        // This 404 page catches that and sends visitors to the right place.
+        // Redirect /Xelo/... → /xelo/... (case-insensitive, preserves deep links)
+        // Also handles bare /xelo → /xelo/docs/
         var path = window.location.pathname;
-        if (path === '/xelo' || path === '/xelo/') {
+        var lower = path.toLowerCase();
+        if (lower !== path && lower.indexOf('/xelo') === 0) {
+            // e.g. /Xelo/docs/getting-started → /xelo/docs/getting-started
+            window.location.replace(lower + window.location.search + window.location.hash);
+        } else if (lower === '/xelo' || lower === '/xelo/') {
             window.location.replace('/xelo/docs/');
         } else {
             window.location.replace('/xelo/docs/');
