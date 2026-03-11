@@ -1,34 +1,96 @@
-name: Release
+name: Release & Publish to PyPI
+
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: "Release type"
+        required: true
+        type: choice
+        options:
+          - patch   # bug fix / hotfix  →  x.y.Z
+          - minor   # feature release   →  x.Y.0
+          - major   # breaking change   →  X.0.0
 
 jobs:
-  build:
+  bump-version-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # push version-bump commit + tag
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use PAT or default token; GITHUB_TOKEN is enough for same-repo pushes
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install build
-      - run: python -m build
-      - uses: actions/upload-artifact@v4
-        with:
-          name: python-dist
-          path: dist/
 
-  publish:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write
-    environment:
-      name: pypi
-    steps:
-      - uses: actions/download-artifact@v4
+      - name: Install build tools
+        run: pip install build
+
+      # ── 1. Bump version in pyproject.toml ───────────────────────────────
+      - name: Bump version
+        id: versioning
+        run: |
+          python3 - <<'PYEOF'
+          import re, sys, os
+
+          release_type = "${{ github.event.inputs.release_type }}"
+
+          with open("pyproject.toml") as f:
+              content = f.read()
+
+          m = re.search(r'^version\s*=\s*"(\d+)\.(\d+)\.(\d+)"', content, re.MULTILINE)
+          if not m:
+              sys.exit("ERROR: could not find version = \"x.y.z\" in pyproject.toml")
+
+          major, minor, patch = int(m.group(1)), int(m.group(2)), int(m.group(3))
+
+          if release_type == "major":
+              major, minor, patch = major + 1, 0, 0
+          elif release_type == "minor":
+              minor, patch = minor + 1, 0
+          else:
+              patch += 1
+
+          new_version = f"{major}.{minor}.{patch}"
+          new_content = re.sub(
+              r'^(version\s*=\s*)"[\d.]+"',
+              f'\\1"{new_version}"',
+              content,
+              flags=re.MULTILINE,
+          )
+
+          with open("pyproject.toml", "w") as f:
+              f.write(new_content)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"new_version={new_version}\n")
+
+          print(f"Bumped version to {new_version}")
+          PYEOF
+
+      # ── 2. Commit the bump and push a version tag ────────────────────────
+      - name: Commit and tag
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml
+          git commit -m "chore: bump version to ${{ steps.versioning.outputs.new_version }}"
+          git tag "v${{ steps.versioning.outputs.new_version }}"
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin "v${{ steps.versioning.outputs.new_version }}"
+
+      # ── 3. Build source distribution + wheel ────────────────────────────
+      - name: Build package
+        run: python -m build
+
+      # ── 4. Publish to PyPI ───────────────────────────────────────────────
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          name: python-dist
-          path: dist/
-      - uses: pypa/gh-action-pypi-publish@release/v1
+          password: ${{ secrets.PYPI_API_TOKEN }}
