@@ -465,7 +465,7 @@ def assets_match(
     # Get synonyms from ground truth
     gt_synonyms = ground_truth.synonyms if hasattr(ground_truth, "synonyms") else []
 
-    # Also check alt file paths (secondary evidence locations)
+    # Also check alt file paths (secondary evidence locations) from GT
     gt_alt_paths = ground_truth.alt_file_paths if hasattr(ground_truth, "alt_file_paths") else []
     if not paths_match and gt_alt_paths:
         for alt_path in gt_alt_paths:
@@ -475,6 +475,26 @@ def assets_match(
                     break
             else:
                 if normalize_path(disc_path) == normalize_path(alt_path):
+                    paths_match = True
+                    break
+
+    # Also check discovered asset's alt evidence paths against GT path
+    disc_alt_paths = getattr(discovered, "alt_file_paths", [])
+    if not paths_match and disc_alt_paths:
+        for alt_path in disc_alt_paths:
+            if fuzzy_paths:
+                if path_matches_fuzzy(alt_path, gt_path):
+                    paths_match = True
+                    break
+                if not paths_match and gt_alt_paths:
+                    for gt_alt in gt_alt_paths:
+                        if path_matches_fuzzy(alt_path, gt_alt):
+                            paths_match = True
+                            break
+                if paths_match:
+                    break
+            else:
+                if normalize_path(alt_path) == normalize_path(gt_path):
                     paths_match = True
                     break
 
@@ -641,7 +661,7 @@ def _convert_aibom_nodes_to_discovered_assets(
             "purpose",
             "details",
             "asset_summary",
-            "content_preview",
+            "content",
         ):
             value = properties.get(field_name)
             if isinstance(value, str) and value.strip():
@@ -814,7 +834,7 @@ def convert_aibom_export_to_discovered_assets(
                 description = value.strip()
                 break
         if not description:
-            for fallback_field in ("asset_summary", "content_preview"):
+            for fallback_field in ("asset_summary", "content"):
                 value = props.get(fallback_field)
                 if isinstance(value, str) and value.strip():
                     description = value.strip()
@@ -911,16 +931,21 @@ def _convert_xelo_nodes_to_discovered_assets(
         if not name:
             continue
 
-        # Extract file path and line from first evidence entry
+        # Extract file path and line from first evidence entry; collect all paths
         evidence = getattr(node, "evidence", []) or []
         file_path = ""
         line_start = None
-        if evidence:
-            first_ev = evidence[0]
-            location = getattr(first_ev, "location", None)
+        all_ev_paths: List[str] = []
+        for ev in evidence:
+            location = getattr(ev, "location", None)
             if location:
-                file_path = str(getattr(location, "path", "") or "").strip()
-                line_start = getattr(location, "line", None)
+                ev_path = str(getattr(location, "path", "") or "").strip()
+                if ev_path and ev_path not in all_ev_paths:
+                    all_ev_paths.append(ev_path)
+        if all_ev_paths:
+            file_path = all_ev_paths[0]
+            line_start = getattr(getattr(evidence[0], "location", None), "line", None)
+        alt_paths = all_ev_paths[1:] if len(all_ev_paths) > 1 else []
 
         key = (mapped_type, normalize_name(name), normalize_path(file_path))
         if key in seen:
@@ -943,6 +968,7 @@ def _convert_xelo_nodes_to_discovered_assets(
                 asset_type=mapped_type,
                 name=name,
                 file_path=file_path or "",
+                alt_file_paths=alt_paths,
                 line_start=line_start,
                 line_end=line_start,
                 description=None,

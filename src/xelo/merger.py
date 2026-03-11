@@ -346,9 +346,9 @@ class AiBomMerger:
             props.append({"name": "aibom:agentFramework", "value": str(extras["adapter"])})
 
         if node.component_type == ComponentType.PROMPT:
-            preview = extras.get("content_preview", "")
-            if preview:
-                props.append({"name": "aibom:promptHash", "value": _prompt_hash(preview)})
+            content = extras.get("content", "")
+            if content:
+                props.append({"name": "aibom:promptHash", "value": _prompt_hash(content)})
 
         if node.component_type == ComponentType.TOOL:
             risk_cat = _infer_tool_risk(node.name)

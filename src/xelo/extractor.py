@@ -185,7 +185,7 @@ def _extract_python_prompt_constants(
             continue
         # Avoid duplicate with framework adapters by using a file-scoped canon
         dname = ctx
-        canon = canonicalize_text(f"prompt:py_const:{ctx.lower()}")
+        canon = canonicalize_text(ctx.lower())
         template_vars = re.findall(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}", lit.value)
         detections.append(
             ComponentDetection(
@@ -197,7 +197,6 @@ def _extract_python_prompt_constants(
                 confidence=0.80,
                 metadata={
                     "role": "system" if "system" in ctx.lower() else "unspecified",
-                    "content_preview": lit.value[:160],
                     "content": lit.value,
                     "char_count": len(lit.value),
                     "is_template": bool(template_vars),
@@ -623,9 +622,8 @@ class AiSbomExtractor:
                 # single file containing multiple different models (e.g. a mock
                 # route.ts listing gpt-5, deepseek-v3.2, gemini-3-pro) gets a
                 # separate node for each instead of only the first match.
-                if (
-                    detection.component_type == ComponentType.MODEL
-                    and not getattr(rx_adapter, "canonical_name", None)
+                if detection.component_type == ComponentType.MODEL and not getattr(
+                    rx_adapter, "canonical_name", None
                 ):
                     # Group matches by their normalised model name; keep first
                     # occurrence as the representative match for location/snippet.
@@ -858,7 +856,7 @@ class AiSbomExtractor:
                 if isinstance(_tp, list) and _tp:
                     node.metadata.trust_principals = [str(p) for p in _tp[:20]]
 
-            node.evidence = list(acc.evidence)
+            node.evidence = sorted(acc.evidence, key=lambda e: e.confidence, reverse=True)
             doc.nodes.append(node)
 
         self._resolve_edges(doc, node_map)
@@ -1036,10 +1034,10 @@ class AiSbomExtractor:
         tier = _classify_source_tier(det.file_path, det.adapter_name, det.evidence_kind)
         tier_rank = _TIER_RANK.get(tier, 2)
 
-        # For PROMPT nodes, embed the full prompt text in the detail field so
-        # readers of the AI SBOM can see the complete prompt without truncation.
-        if det.component_type == ComponentType.PROMPT and det.metadata.get("content"):
-            _detail = f"{det.adapter_name}: {det.metadata['content']}"
+        if det.component_type == ComponentType.PROMPT:
+            # Content is already stored in metadata.extras["content"]; keep
+            # the evidence detail as a compact location label only.
+            _detail = f"{det.adapter_name}: {det.evidence_kind}"
         else:
             _detail = f"{det.adapter_name}: {det.snippet[:500]}"
         evidence = Evidence(

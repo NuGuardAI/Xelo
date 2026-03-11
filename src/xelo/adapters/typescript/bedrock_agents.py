@@ -100,7 +100,7 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
 
         input_text = self._clean(args.get("inputText", ""))
         if len(input_text) > 5:
-            prompt_canon = canonicalize_text(f"{agent_name}_input")
+            prompt_canon = canonicalize_text(f"{agent_name} input")
             rels.append(
                 RelationshipHint(
                     source_canonical=agent_canon,
@@ -121,7 +121,6 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     metadata={
                         "prompt_type": "agent_input",
                         "role": "user",
-                        "content_preview": input_text[:500],
                         "content": input_text,
                         "language": "typescript",
                     },
@@ -201,7 +200,7 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
 
         instruction = self._clean(args.get("instruction", ""))
         if len(instruction) > 5:
-            prompt_canon = canonicalize_text(f"{agent_name}_instruction")
+            prompt_canon = canonicalize_text(f"{agent_name} instructions")
             rels.append(
                 RelationshipHint(
                     source_canonical=agent_canon,
@@ -222,13 +221,12 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     metadata={
                         "prompt_type": "instruction",
                         "role": "system",
-                        "content_preview": instruction[:500],
                         "content": instruction,
                         "language": "typescript",
                     },
                     file_path=file_path,
                     line=line,
-                    snippet=instruction[:80],
+                    snippet=instruction[:80] + ("..." if len(instruction) > 80 else ""),
                     evidence_kind="ast_instantiation",
                 )
             )

@@ -120,7 +120,7 @@ Usage:
 xelo schema [--output <file>]
 ```
 
-Emits the Xelo JSON schema (JSON Schema 2020-12, `$id` `https://nuguard.ai/schemas/aibom/1.1.0/aibom.schema.json`).
+Emits the Xelo JSON schema (JSON Schema 2020-12, `$id` `https://nuguard.ai/schemas/aibom/1.3.0/aibom.schema.json`).
 
 | Flag | Type | Required | Default | Behavior |
 | --- | --- | --- | --- | --- |

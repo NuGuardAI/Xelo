@@ -113,10 +113,10 @@ class TestResearchAssistant:
         enriched = [
             p
             for p in prompts
-            if p.metadata.extras.get("content_preview") or p.metadata.extras.get("char_count")
+            if p.metadata.extras.get("content") or p.metadata.extras.get("char_count")
         ]
         assert enriched, (
-            "Expected at least one PROMPT with content_preview or char_count; "
+            "Expected at least one PROMPT with content or char_count; "
             f"got prompts: {[p.metadata.extras for p in prompts]}"
         )
 

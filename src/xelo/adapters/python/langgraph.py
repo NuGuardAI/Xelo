@@ -578,9 +578,8 @@ class LangGraphAdapter(FrameworkAdapter):
             dname = _prompt_display_name(
                 content_val, inst.assigned_to or inst.class_name, inst.line
             )
-            # Use a stable canonical based on assigned variable name when available
-            canon_key = inst.assigned_to if inst.assigned_to else f"line:{inst.line}"
-            canon = canonicalize_text(f"langchain:prompt:{canon_key}")
+            # Canonical matches the display name for clean, readable output
+            canon = canonicalize_text(dname.lower())
             detected.append(
                 ComponentDetection(
                     component_type=ComponentType.PROMPT,
@@ -592,7 +591,6 @@ class LangGraphAdapter(FrameworkAdapter):
                     metadata={
                         "message_type": inst.class_name,
                         "role": role,
-                        "content_preview": content_val[:500] if content_val else "",
                         "content": content_val,
                         "char_count": len(content_val),
                         "is_template": bool(template_vars),
@@ -616,7 +614,13 @@ class LangGraphAdapter(FrameworkAdapter):
             # Use the exact variable name as display — it's already a meaningful
             # snake_case identifier (e.g. "retrieval_prompt", "fallback_prompt").
             dname = prompt_var
-            canon = canonicalize_text(f"langchain:prompt:{prompt_var}")
+            canon = canonicalize_text(dname.lower())
+            content, role, template_vars = _extract_messages_content(call)
+            snippet = (
+                content[:80] + ("..." if len(content) > 80 else "")
+                if content
+                else f"ChatPromptTemplate.{call.function_name}(...)"
+            )
             detected.append(
                 ComponentDetection(
                     component_type=ComponentType.PROMPT,
@@ -627,16 +631,15 @@ class LangGraphAdapter(FrameworkAdapter):
                     confidence=0.82,
                     metadata={
                         "message_type": "ChatPromptTemplate",
-                        "role": "system",
-                        "content_preview": "",
-                        "content": "",
-                        "char_count": 0,
-                        "is_template": True,
-                        "template_variables": [],
+                        "role": role,
+                        "content": content,
+                        "char_count": len(content),
+                        "is_template": bool(template_vars),
+                        "template_variables": template_vars,
                     },
                     file_path=file_path,
                     line=call.line,
-                    snippet="ChatPromptTemplate.from_messages(...)",
+                    snippet=snippet,
                     evidence_kind="ast_call",
                 )
             )
@@ -736,7 +739,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 continue
             template_vars = _TEMPLATE_VAR_RE.findall(lit.value)
             dname = _prompt_display_name(lit.value, lit.context or "", lit.line)
-            canon = canonicalize_text(f"langchain:prompt:str:{lit.line}")
+            canon = canonicalize_text(dname.lower())
             detected.append(
                 ComponentDetection(
                     component_type=ComponentType.PROMPT,
@@ -747,7 +750,6 @@ class LangGraphAdapter(FrameworkAdapter):
                     confidence=0.60,
                     metadata={
                         "role": _detect_role_from_content(lit.value),
-                        "content_preview": lit.value[:500],
                         "content": lit.value,
                         "char_count": len(lit.value),
                         "is_template": bool(template_vars),
@@ -766,6 +768,35 @@ class LangGraphAdapter(FrameworkAdapter):
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+
+def _extract_messages_content(call: Any) -> tuple[str, str, list[str]]:
+    """Extract (content, role, template_vars) from a from_messages/from_template call.
+
+    For ``from_template`` the single string arg is returned as content.
+    For ``from_messages`` the positional list of ``[role, text]`` tuples is joined;
+    system/ai messages set the primary role.
+    """
+    if call.function_name == "from_template":
+        raw = call.positional_args[0] if call.positional_args else ""
+        text = raw if isinstance(raw, str) and not raw.startswith("$") else ""
+        tvars = _TEMPLATE_VAR_RE.findall(text)
+        return text, _detect_role_from_content(text) or "system", tvars
+
+    # from_messages: positional_args[0] is list[list[role, text]]
+    if not call.positional_args or not isinstance(call.positional_args[0], list):
+        return "", "system", []
+
+    parts: list[str] = []
+    for msg in call.positional_args[0]:
+        if isinstance(msg, list) and len(msg) == 2:
+            msg_text = msg[1] if isinstance(msg[1], str) and not str(msg[1]).startswith("$") else ""
+            if msg_text:
+                parts.append(msg_text)
+
+    content = "\n".join(parts)
+    tvars = _TEMPLATE_VAR_RE.findall(content)
+    return content, _detect_role_from_content(content) or "system", tvars
 
 
 def _clean(value: Any) -> str:

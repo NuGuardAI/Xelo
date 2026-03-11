@@ -145,18 +145,18 @@ class AutoGenAdapter(FrameworkAdapter):
 
                 # System message → PROMPT
                 if system_msg and len(system_msg) >= 30:
-                    prompt_canon = canonicalize_text(f"autogen:prompt:{inst.line}")
+                    prompt_display = f"{agent_name} System Message"
+                    prompt_canon = canonicalize_text(prompt_display.lower())
                     detected.append(
                         ComponentDetection(
                             component_type=ComponentType.PROMPT,
                             canonical_name=prompt_canon,
-                            display_name=f"{agent_name} System Message",
+                            display_name=prompt_display,
                             adapter_name=self.name,
                             priority=self.priority,
                             confidence=0.90,
                             metadata={
                                 "role": "system",
-                                "content_preview": system_msg[:500],
                                 "content": system_msg,
                                 "char_count": len(system_msg),
                             },

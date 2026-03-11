@@ -536,8 +536,7 @@ class PromptFileAdapter:
     - Files named ``*_prompt.txt``, ``*_system.txt``, ``system_*.txt``,
       ``*_template.txt``
 
-    Emits one PROMPT node per file.  The ``content_preview`` field holds the
-    first 160 characters; ``is_template`` is True when ``{variable}``
+    Emits one PROMPT node per file.  ``is_template`` is True when ``{variable}``
     placeholders are found.
 
     This adapter is called from the extractor *before* the docs-tier skip so
@@ -578,14 +577,13 @@ class PromptFileAdapter:
         return [
             ComponentDetection(
                 component_type=ComponentType.PROMPT,
-                canonical_name=f"prompt_file:{canonicalize_text(stem)}",
+                canonical_name=canonicalize_text(stem),
                 display_name=stem,
                 adapter_name=self.name,
                 priority=self.priority,
                 confidence=0.75,
                 metadata={
                     "source": "prompt_file",
-                    "content_preview": preview,
                     "content": stripped,
                     "is_template": is_template,
                     "template_variables": template_vars,

@@ -143,6 +143,34 @@ All typed metadata fields are optional (null when not applicable). Fields releva
 | `iam_scope` | Scope of the binding: `"project"`, `"subscription"`, `"cluster"`, `"namespace"`, `"resource"` |
 | `trust_principals` | Principals trusted to assume this role — AWS trust policy subjects or K8s binding subjects |
 
+**For PROMPT nodes:**
+
+| Field | Description |
+| --- | --- |
+| `extras.content` | Full prompt text (may contain `{variable}` placeholders) |
+| `extras.role` | Detected role — `"system"`, `"user"`, `"assistant"`, or `"unspecified"` |
+| `extras.char_count` | Character length of the content |
+| `extras.is_template` | `true` when `{variable}` placeholders are present |
+| `extras.template_variables` | List of variable names found in the template, e.g. `["query", "context"]` |
+| `extras.message_type` | Source class — e.g. `"ChatPromptTemplate"`, `"SystemMessage"`, `"PromptTemplate"` |
+| `extras.injection_risk_score` | Float 0–1 estimating prompt-injection risk (TypeScript adapter only) |
+
+**For MODEL nodes:**
+
+| Field | Description |
+| --- | --- |
+| `extras.provider` | Cloud/API provider — `"openai"`, `"anthropic"`, `"google"`, `"bedrock"`, etc. |
+| `extras.model_family` | Normalised family — `"gpt-4"`, `"claude-3"`, `"gemini"` |
+
+**For all nodes (when LLM enrichment is enabled with `--llm`):**
+
+| Field | Description |
+| --- | --- |
+| `extras.llm_verified` | `true` when the LLM verification pass confirmed the detection |
+| `extras.llm_verification_reason` | One-sentence justification from the LLM |
+| `extras.llm_confidence` | LLM-assigned confidence score [0, 1], replacing the original if higher |
+| `extras.confidence_breakdown` | Object with keys `"ast"` and `"llm"` showing pre/post-enrichment scores |
+
 **For all nodes:**
 
 | Field | Description |
@@ -167,7 +195,7 @@ Each node carries one or more evidence items explaining why Xelo detected it:
 | --- | --- |
 | `kind` | Detection method: `"ast"`, `"ast_instantiation"`, `"regex"`, `"config"`, `"iac"`, `"inferred"` |
 | `confidence` | Evidence-level confidence [0, 1] |
-| `detail` | Human-readable description — adapter name plus the matched code snippet (up to 500 chars; full content for PROMPT nodes) |
+| `detail` | `"<adapter>: <evidence_kind>"` for PROMPT nodes (full content is in `metadata.extras.content`); `"<adapter>: <snippet>"` (up to 500 chars) for all other node types |
 | `location.path` | Repo-relative file path |
 | `location.line` | 1-based line number, if known |
 

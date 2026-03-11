@@ -204,7 +204,7 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             if inst.class_name not in _PROMPT_CLASSES:
                 continue
             template = self._resolve(inst, "template", "0") or ""
-            # Use assigned variable name or class name as display; put template in content_preview
+            # Use assigned variable name or class name as display
             raw_name = (
                 self._assignment_name(result.source or "", inst.line_start) or inst.class_name
             )
@@ -221,7 +221,6 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                     metadata={
                         "framework": "langchain-js",
                         "prompt_class": inst.class_name,
-                        "content_preview": template[:500],
                         "content": template,
                         "char_count": len(template),
                         "language": "typescript",
