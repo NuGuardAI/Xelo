@@ -132,6 +132,7 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.85,
                     metadata={
+                        "framework": "google-adk",
                         "class": inst.class_name,
                         "provider": "google",
                         "language": "typescript",
@@ -176,7 +177,11 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                         adapter_name=self.name,
                         priority=self.priority,
                         confidence=0.90,
-                        metadata={"provider": "google", "language": "typescript"},
+                        metadata={
+                            "framework": "google-adk",
+                            "provider": "google",
+                            "language": "typescript",
+                        },
                         file_path=file_path,
                         line=inst.line_start,
                         snippet=f"model={model_val!r}",
@@ -184,7 +189,6 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                     )
                 )
 
-            # Tools list
             tools_val = (inst.resolved_arguments or inst.arguments).get("tools")
             if tools_val:
                 refs = (
@@ -209,6 +213,7 @@ class GoogleADKAdapter(TSFrameworkAdapter):
 
             # Instruction → PROMPT
             instruction = self._resolve(inst, "instruction", "system_instruction")
+            instruction_tvars = self._template_vars(instruction) if instruction else []
             if len(instruction) > 10:
                 prompt_name = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(prompt_name.lower())
@@ -230,9 +235,13 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                         priority=self.priority,
                         confidence=0.92,
                         metadata={
+                            "framework": "google-adk",
                             "prompt_type": "instruction",
                             "role": "system",
                             "content": instruction,
+                            "char_count": len(instruction),
+                            "is_template": bool(instruction_tvars),
+                            "template_variables": instruction_tvars,
                             "language": "typescript",
                         },
                         file_path=file_path,
@@ -254,6 +263,16 @@ class GoogleADKAdapter(TSFrameworkAdapter):
                         "class": inst.class_name,
                         "agent_type": _agent_subtype(inst.class_name),
                         "framework": "google-adk",
+                        "has_instructions": len(instruction) > 10,
+                        **(
+                            {
+                                "instructions_preview": instruction[:500],
+                                "is_template": bool(instruction_tvars),
+                                "template_variables": instruction_tvars,
+                            }
+                            if len(instruction) > 10
+                            else {}
+                        ),
                         "language": "typescript",
                     },
                     file_path=file_path,

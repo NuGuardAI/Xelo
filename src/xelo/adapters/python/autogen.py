@@ -10,12 +10,16 @@ Detects usage of Microsoft AutoGen (``autogen``, ``pyautogen``, ``autogen_agentc
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from xelo.adapters.base import ComponentDetection, FrameworkAdapter, RelationshipHint
 from xelo.adapters.models_kb import get_model_details, infer_provider
 from xelo.normalization import canonicalize_text
 from xelo.types import ComponentType
+
+_TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+_MIN_PROMPT_LENGTH = 30
 
 _AGENT_CLASSES = {
     "ConversableAgent",
@@ -114,16 +118,33 @@ class AutoGenAdapter(FrameworkAdapter):
                         )
                     )
 
+                template_vars = _TEMPLATE_VAR_RE.findall(system_msg) if system_msg else []
                 meta: dict[str, Any] = {
                     "class_name": inst.class_name,
                     "framework": "autogen",
+                    "has_instructions": bool(system_msg),
                 }
                 if model_name:
                     meta["model"] = model_name
                     details = get_model_details(model_name, infer_provider(model_name))
                     meta.update({k: v for k, v in details.items() if v is not None})
                 if system_msg:
-                    meta["system_message_preview"] = system_msg[:500]
+                    meta["instructions_preview"] = system_msg[:500]
+                    meta["is_template"] = bool(template_vars)
+                    meta["template_variables"] = template_vars
+
+                prompt_display = f"{agent_name} System Message"
+                prompt_canon = canonicalize_text(prompt_display.lower())
+                if system_msg and len(system_msg) >= _MIN_PROMPT_LENGTH:
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=prompt_canon,
+                            target_type=ComponentType.PROMPT,
+                            relationship_type="USES",
+                        )
+                    )
 
                 detected.append(
                     ComponentDetection(
@@ -144,9 +165,7 @@ class AutoGenAdapter(FrameworkAdapter):
                 agent_canonicals.append(canon)
 
                 # System message → PROMPT
-                if system_msg and len(system_msg) >= 30:
-                    prompt_display = f"{agent_name} System Message"
-                    prompt_canon = canonicalize_text(prompt_display.lower())
+                if system_msg and len(system_msg) >= _MIN_PROMPT_LENGTH:
                     detected.append(
                         ComponentDetection(
                             component_type=ComponentType.PROMPT,
@@ -159,6 +178,8 @@ class AutoGenAdapter(FrameworkAdapter):
                                 "role": "system",
                                 "content": system_msg,
                                 "char_count": len(system_msg),
+                                "is_template": bool(template_vars),
+                                "template_variables": template_vars,
                             },
                             file_path=file_path,
                             line=inst.line,
@@ -181,6 +202,7 @@ class AutoGenAdapter(FrameworkAdapter):
                             priority=self.priority,
                             confidence=0.88,
                             metadata={
+                                "framework": "autogen",
                                 "provider": provider,
                                 **{k: v for k, v in details.items() if v is not None},
                             },

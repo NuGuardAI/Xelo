@@ -11,12 +11,15 @@ Detects usage of Microsoft Semantic Kernel (``semantic_kernel``):
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from xelo.adapters.base import ComponentDetection, FrameworkAdapter, RelationshipHint
 from xelo.adapters.models_kb import get_model_details
 from xelo.normalization import canonicalize_text
 from xelo.types import ComponentType
+
+_TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
 
 _SERVICE_CLASSES = {
     "OpenAIChatCompletion": "openai",
@@ -185,8 +188,11 @@ class SemanticKernelAdapter(FrameworkAdapter):
                         priority=self.priority,
                         confidence=0.88,
                         metadata={
+                            "role": "system",
                             "content": template,
                             "char_count": len(template),
+                            "is_template": bool(_TEMPLATE_VAR_RE.findall(template)),
+                            "template_variables": _TEMPLATE_VAR_RE.findall(template),
                             "framework": "semantic_kernel",
                         },
                         file_path=file_path,

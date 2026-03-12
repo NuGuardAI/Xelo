@@ -11,11 +11,16 @@ Detects usage of the Azure AI Projects / Agents SDK:
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
-from xelo.adapters.base import ComponentDetection, FrameworkAdapter
+from xelo.adapters.base import ComponentDetection, FrameworkAdapter, RelationshipHint
+from xelo.adapters.models_kb import get_model_details, infer_provider
 from xelo.normalization import canonicalize_text
 from xelo.types import ComponentType
+
+_TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+_MIN_PROMPT_LENGTH = 40
 
 # Main client class names that confirm the Azure AI Agent Service SDK is in use
 _FRAMEWORK_INIT_CLASSES = {
@@ -159,7 +164,60 @@ class AzureAIAgentsAdapter(FrameworkAdapter):
                     if model:
                         break
 
+                instructions = _clean((call.args or {}).get("instructions", ""))
+                template_vars = _TEMPLATE_VAR_RE.findall(instructions) if instructions else []
+
                 canon = canonicalize_text(f"azure_ai:agent:{agent_name}")
+                rels: list[RelationshipHint] = []
+
+                # MODEL node + AGENT→MODEL relationship
+                if model:
+                    provider = infer_provider(model)
+                    model_canon = canonicalize_text(model.lower())
+                    details = get_model_details(model, provider)
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=model_canon,
+                            target_type=ComponentType.MODEL,
+                            relationship_type="USES",
+                        )
+                    )
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.MODEL,
+                            canonical_name=model_canon,
+                            display_name=model,
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.88,
+                            metadata={
+                                "framework": "azure_ai_agent_service",
+                                "provider": provider,
+                                **{k: v for k, v in details.items() if v is not None},
+                            },
+                            file_path=file_path,
+                            line=call.line,
+                            snippet=f"{call.receiver}.{call.function_name}(model={model!r})",
+                            evidence_kind="ast_method_call",
+                        )
+                    )
+
+                # PROMPT node for instructions=
+                prompt_display = f"{agent_name} Instructions"
+                prompt_canon = canonicalize_text(f"azure_ai:{prompt_display.lower()}")
+                if instructions and len(instructions) >= _MIN_PROMPT_LENGTH:
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=prompt_canon,
+                            target_type=ComponentType.PROMPT,
+                            relationship_type="USES",
+                        )
+                    )
+
                 detected.append(
                     ComponentDetection(
                         component_type=ComponentType.AGENT,
@@ -171,12 +229,46 @@ class AzureAIAgentsAdapter(FrameworkAdapter):
                         metadata={
                             "framework": "azure_ai_agent_service",
                             "model": model or None,
+                            "has_instructions": bool(instructions),
+                            **(
+                                {
+                                    "instructions_preview": instructions[:500],
+                                    "is_template": bool(template_vars),
+                                    "template_variables": template_vars,
+                                }
+                                if instructions
+                                else {}
+                            ),
                         },
                         file_path=file_path,
                         line=call.line,
                         snippet=f"{call.receiver}.{call.function_name}(...)",
                         evidence_kind="ast_method_call",
+                        relationships=rels,
                     )
                 )
+
+                if instructions and len(instructions) >= _MIN_PROMPT_LENGTH:
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.PROMPT,
+                            canonical_name=prompt_canon,
+                            display_name=prompt_display,
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.88,
+                            metadata={
+                                "role": "system",
+                                "content": instructions,
+                                "char_count": len(instructions),
+                                "is_template": bool(template_vars),
+                                "template_variables": template_vars,
+                            },
+                            file_path=file_path,
+                            line=call.line,
+                            snippet=instructions[:80],
+                            evidence_kind="ast_method_call",
+                        )
+                    )
 
         return detected

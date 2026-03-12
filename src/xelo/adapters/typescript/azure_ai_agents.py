@@ -182,6 +182,45 @@ class AzureAIAgentsTSAdapter(TSFrameworkAdapter):
                         )
                     )
 
+                # instructions → PROMPT
+                instructions = self._resolve(call, "instructions")
+                instr_tvars = self._template_vars(instructions) if instructions else []
+                if len(instructions) > 10:
+                    prompt_canon = canonicalize_text(f"{agent_name} instructions")
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=agent_canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=prompt_canon,
+                            target_type=ComponentType.PROMPT,
+                            relationship_type="USES",
+                        )
+                    )
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.PROMPT,
+                            canonical_name=prompt_canon,
+                            display_name=f"{agent_name} Instructions",
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.90,
+                            metadata={
+                                "framework": "azure-ai-agents",
+                                "prompt_type": "instructions",
+                                "role": "system",
+                                "content": instructions,
+                                "char_count": len(instructions),
+                                "is_template": bool(instr_tvars),
+                                "template_variables": instr_tvars,
+                                "language": "typescript",
+                            },
+                            file_path=file_path,
+                            line=call.line_start,
+                            snippet=instructions[:80],
+                            evidence_kind="ast_call",
+                        )
+                    )
+
                 detected.append(
                     ComponentDetection(
                         component_type=ComponentType.AGENT,
@@ -193,6 +232,7 @@ class AzureAIAgentsTSAdapter(TSFrameworkAdapter):
                         metadata={
                             "framework": "azure-ai-agents",
                             "model": model_name or None,
+                            "has_instructions": len(instructions) > 10,
                             "language": "typescript",
                         },
                         file_path=file_path,

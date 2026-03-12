@@ -124,7 +124,11 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                         adapter_name=self.name,
                         priority=self.priority,
                         confidence=0.90,
-                        metadata={"provider": "openai", "language": "typescript"},
+                        metadata={
+                            "framework": "openai-agents-sdk",
+                            "provider": "openai",
+                            "language": "typescript",
+                        },
                         file_path=file_path,
                         line=inst.line_start,
                         snippet=f"model={model_name!r}",
@@ -134,6 +138,7 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
 
             # Instructions → PROMPT
             instructions = self._resolve(inst, "instructions", "system_prompt")
+            template_vars = self._template_vars(instructions) if instructions else []
             if len(instructions) > 10:
                 prompt_name = f"{agent_name} Instructions"
                 prompt_canon = canonicalize_text(prompt_name.lower())
@@ -155,9 +160,13 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                         priority=self.priority,
                         confidence=0.92,
                         metadata={
+                            "framework": "openai-agents-sdk",
                             "prompt_type": "instructions",
                             "role": "system",
                             "content": instructions,
+                            "char_count": len(instructions),
+                            "is_template": bool(template_vars),
+                            "template_variables": template_vars,
                             "language": "typescript",
                         },
                         file_path=file_path,
@@ -201,6 +210,16 @@ class OpenAIAgentsTSAdapter(TSFrameworkAdapter):
                     metadata={
                         "class": inst.class_name,
                         "framework": "openai-agents-sdk",
+                        "has_instructions": len(instructions) > 10,
+                        **(
+                            {
+                                "instructions_preview": instructions[:500],
+                                "is_template": bool(template_vars),
+                                "template_variables": template_vars,
+                            }
+                            if len(instructions) > 10
+                            else {}
+                        ),
                         "language": "typescript",
                     },
                     file_path=file_path,

@@ -198,6 +198,7 @@ class LLMClientsAdapter(FrameworkAdapter):
                 details = get_model_details(display, "azure" if is_azure else provider, args)
 
                 meta: dict[str, Any] = {
+                    "framework": base_url_provider or ("azure_openai" if is_azure else provider),
                     "client_class": inst.class_name,
                     "provider": "azure" if is_azure else provider,
                     "is_async": inst.class_name.startswith("Async"),
@@ -250,6 +251,7 @@ class LLMClientsAdapter(FrameworkAdapter):
                         priority=self.priority,
                         confidence=0.90,
                         metadata={
+                            "framework": provider,
                             "class_name": inst.class_name,
                             "provider": provider,
                             **{k: v for k, v in details.items() if v is not None},
@@ -310,6 +312,7 @@ class LLMClientsAdapter(FrameworkAdapter):
                     priority=self.priority,
                     confidence=0.95,
                     metadata={
+                        "framework": provider,
                         "source": "api_call",
                         "api_method": func,
                         "provider": provider,
