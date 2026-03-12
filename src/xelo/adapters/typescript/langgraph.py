@@ -210,6 +210,7 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
             )
             name = raw_name.replace("_", " ").title()
             canon = canonicalize_text(name.lower())
+            tvars = self._template_vars(template)
             detected.append(
                 ComponentDetection(
                     component_type=ComponentType.PROMPT,
@@ -221,8 +222,11 @@ class LangGraphTSAdapter(TSFrameworkAdapter):
                     metadata={
                         "framework": "langchain-js",
                         "prompt_class": inst.class_name,
+                        "role": "system",
                         "content": template,
                         "char_count": len(template),
+                        "is_template": bool(tvars),
+                        "template_variables": tvars,
                         "language": "typescript",
                     },
                     file_path=file_path,

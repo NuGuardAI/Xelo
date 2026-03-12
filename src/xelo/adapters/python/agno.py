@@ -6,6 +6,9 @@ Detects usage of the ``agno`` library:
 - Model class instantiations (``OpenAIChat``, ``Gemini``, ``Claude``, etc.)
   with an ``id=`` keyword argument → MODEL nodes
 - Tool references from ``tools=[...]`` → TOOL nodes
+- Agent ``instructions=`` / ``description=`` keyword arguments → PROMPT nodes
+  (NuGuard patch: mirrors the openai_agents adapter behaviour so that Agno
+  system-prompt text is surfaced as first-class PROMPT assets)
 """
 
 from __future__ import annotations
@@ -48,6 +51,10 @@ _AGNO_MODEL_CLASSES: dict[str, str] = {
 }
 
 _TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+
+# Minimum instruction length to emit a PROMPT node (avoids noise from very
+# short placeholder strings like "Be helpful.").
+_MIN_INSTRUCTION_LENGTH = 40
 
 
 def _clean(val: Any) -> str:
@@ -167,7 +174,29 @@ class AgnoAdapter(FrameworkAdapter):
                             )
                         )
 
+            # Extract system instructions — Agno uses either `instructions=` or
+            # `description=` as the agent's system prompt parameter.
             instructions = _clean(args.get("instructions") or args.get("description", ""))
+            template_vars = _TEMPLATE_VAR_RE.findall(instructions) if instructions else []
+
+            # Pre-compute PROMPT canonical name so it can be referenced in both
+            # the RelationshipHint (added to the AGENT) and the PROMPT node.
+            prompt_display = f"{agent_name} Instructions"
+            prompt_canon = canonicalize_text(f"agno:{prompt_display.lower()}")
+
+            # Wire an explicit USES edge from the agent to its prompt so that
+            # xelo's relationship-building stage creates the agent_uses_prompt edge.
+            if instructions and len(instructions) >= _MIN_INSTRUCTION_LENGTH:
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=prompt_canon,
+                        target_type=ComponentType.PROMPT,
+                        relationship_type="USES",
+                    )
+                )
+
             meta: dict[str, Any] = {
                 "framework": "agno",
                 "agent_class": inst.class_name,
@@ -191,6 +220,33 @@ class AgnoAdapter(FrameworkAdapter):
                 )
             )
             agent_canonicals.append(canon)
+
+            # Emit a PROMPT node for the agent's system instructions.
+            # Mirrors the openai_agents adapter pattern so that Agno instruction
+            # text is surfaced as a first-class PROMPT asset in the AIBOM.
+            if instructions and len(instructions) >= _MIN_INSTRUCTION_LENGTH:
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.PROMPT,
+                        canonical_name=prompt_canon,
+                        display_name=prompt_display,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.92,
+                        metadata={
+                            "framework": "agno",
+                            "role": "system",
+                            "content": instructions,
+                            "char_count": len(instructions),
+                            "is_template": bool(template_vars),
+                            "template_variables": template_vars,
+                        },
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=instructions[:80],
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         # Pass 3: @agent.tool decorated functions → TOOL nodes
         for call in parse_result.function_calls:

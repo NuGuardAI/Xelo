@@ -427,6 +427,7 @@ class LangGraphAdapter(FrameworkAdapter):
                 # Lower confidence when falling back to class name alone
                 confidence=0.75 if class_name_fallback else 0.90,
                 metadata={
+                    "framework": "langchain",
                     "class_name": inst.class_name,
                     "provider": provider,
                     **{k: v for k, v in details.items() if v is not None},
@@ -589,6 +590,7 @@ class LangGraphAdapter(FrameworkAdapter):
                     priority=self.priority,
                     confidence=0.80,
                     metadata={
+                        "framework": "langchain",
                         "message_type": inst.class_name,
                         "role": role,
                         "content": content_val,
@@ -630,6 +632,7 @@ class LangGraphAdapter(FrameworkAdapter):
                     priority=self.priority,
                     confidence=0.82,
                     metadata={
+                        "framework": "langchain",
                         "message_type": "ChatPromptTemplate",
                         "role": role,
                         "content": content,
@@ -749,6 +752,7 @@ class LangGraphAdapter(FrameworkAdapter):
                     priority=self.priority,
                     confidence=0.60,
                     metadata={
+                        "framework": "langchain",
                         "role": _detect_role_from_content(lit.value),
                         "content": lit.value,
                         "char_count": len(lit.value),

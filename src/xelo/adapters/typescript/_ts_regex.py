@@ -104,3 +104,20 @@ class TSFrameworkAdapter(FrameworkAdapter):
             lines[line - 1],
         )
         return m.group(1) if m else None
+
+    @staticmethod
+    def _template_vars(text: str) -> list[str]:
+        """Extract unique template variable names from {var}, ${var}, and {{var}} patterns."""
+        vars_: list[str] = []
+        seen: set[str] = set()
+        for pat in (
+            r"\$\{([a-zA-Z_]\w*)\}",  # ${var} — JS template literals
+            r"\{\{([a-zA-Z_]\w*)\}\}",  # {{var}} — Handlebars / Jinja2
+            r"(?<!\$)\{([a-zA-Z_]\w*)\}",  # {var}  — Python-style templates
+        ):
+            for m in re.finditer(pat, text):
+                v = m.group(1)
+                if v not in seen:
+                    seen.add(v)
+                    vars_.append(v)
+        return vars_

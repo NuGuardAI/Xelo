@@ -6,16 +6,21 @@ Detects usage of the ``crewai`` library:
 - ``Crew(agents=[...], tasks=[...])`` → orchestrator AGENT node
 - ``llm`` / ``llm_config`` arguments → MODEL references
 - ``tools=[...]`` argument → TOOL references
+- ``backstory=`` / ``goal=`` long text → PROMPT nodes
 """
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from xelo.adapters.base import ComponentDetection, FrameworkAdapter, RelationshipHint
 from xelo.adapters.models_kb import get_model_details, infer_provider
 from xelo.normalization import canonicalize_text
 from xelo.types import ComponentType
+
+_TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+_MIN_PROMPT_LENGTH = 40
 
 
 class CrewAIAdapter(FrameworkAdapter):
@@ -87,6 +92,7 @@ class CrewAIAdapter(FrameworkAdapter):
                             priority=self.priority,
                             confidence=0.85,
                             metadata={
+                                "framework": "crewai",
                                 "provider": provider,
                                 **{k: v for k, v in details.items() if v is not None},
                             },
@@ -117,11 +123,34 @@ class CrewAIAdapter(FrameworkAdapter):
                     "role": role,
                     "has_goal": bool(goal),
                     "has_backstory": bool(backstory),
+                    "has_instructions": bool(backstory or goal),
                 }
                 if goal:
                     meta["goal_preview"] = goal[:200]
                 if backstory:
                     meta["backstory_preview"] = backstory[:200]
+                    template_vars = _TEMPLATE_VAR_RE.findall(backstory)
+                    meta["is_template"] = bool(template_vars)
+                    meta["template_variables"] = template_vars
+                elif goal:
+                    template_vars = _TEMPLATE_VAR_RE.findall(goal)
+                    meta["is_template"] = bool(template_vars)
+                    meta["template_variables"] = template_vars
+
+                # Backstory is CrewAI's system prompt — emit as a PROMPT node
+                system_text = backstory or goal
+                prompt_display = f"{agent_name} Backstory" if backstory else f"{agent_name} Goal"
+                prompt_canon = canonicalize_text(f"crewai:{prompt_display.lower()}")
+                if system_text and len(system_text) >= _MIN_PROMPT_LENGTH:
+                    rels.append(
+                        RelationshipHint(
+                            source_canonical=canon,
+                            source_type=ComponentType.AGENT,
+                            target_canonical=prompt_canon,
+                            target_type=ComponentType.PROMPT,
+                            relationship_type="USES",
+                        )
+                    )
 
                 # Require behavioral evidence; bare role-only agents are low-signal
                 has_behavioral_evidence = bool(llm_ref or goal or backstory or tools_raw)
@@ -147,6 +176,31 @@ class CrewAIAdapter(FrameworkAdapter):
                     )
                 )
                 agent_canonicals.append(canon)
+
+                # Emit the backstory / goal as a first-class PROMPT node
+                if system_text and len(system_text) >= _MIN_PROMPT_LENGTH:
+                    prompt_tvars = _TEMPLATE_VAR_RE.findall(system_text)
+                    detected.append(
+                        ComponentDetection(
+                            component_type=ComponentType.PROMPT,
+                            canonical_name=prompt_canon,
+                            display_name=prompt_display,
+                            adapter_name=self.name,
+                            priority=self.priority,
+                            confidence=0.88,
+                            metadata={
+                                "role": "system",
+                                "content": system_text,
+                                "char_count": len(system_text),
+                                "is_template": bool(prompt_tvars),
+                                "template_variables": prompt_tvars,
+                            },
+                            file_path=file_path,
+                            line=inst.line,
+                            snippet=system_text[:80],
+                            evidence_kind="ast_instantiation",
+                        )
+                    )
 
             # ---- Task ----
             elif inst.class_name == "Task":

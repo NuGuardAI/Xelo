@@ -10,12 +10,16 @@ Detects usage of the ``google.adk`` Python SDK:
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from xelo.adapters.base import ComponentDetection, FrameworkAdapter, RelationshipHint
 from xelo.adapters.models_kb import get_model_details, infer_provider
 from xelo.normalization import canonicalize_text
 from xelo.types import ComponentType
+
+_TEMPLATE_VAR_RE = re.compile(r"\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+_MIN_PROMPT_LENGTH = 40
 
 _AGENT_CLASSES = {
     "Agent",
@@ -208,6 +212,34 @@ class GoogleADKPythonAdapter(FrameworkAdapter):
                             )
                         )
 
+            # instruction= / description= argument → PROMPT node
+            instruction_raw = args.get("instruction") or args.get("description", "")
+            instruction = _resolve_const(instruction_raw, const_map)
+            prompt_display = f"{agent_name} Instructions"
+            prompt_canon = canonicalize_text(f"google_adk:{prompt_display.lower()}")
+            if instruction and len(instruction) >= _MIN_PROMPT_LENGTH:
+                rels.append(
+                    RelationshipHint(
+                        source_canonical=canon,
+                        source_type=ComponentType.AGENT,
+                        target_canonical=prompt_canon,
+                        target_type=ComponentType.PROMPT,
+                        relationship_type="USES",
+                    )
+                )
+
+            agent_meta: dict[str, Any] = {
+                "framework": "google-adk",
+                "agent_subtype": _agent_subtype(inst.class_name),
+                "has_instructions": bool(instruction),
+                **({"model": model_val} if model_val else {}),
+            }
+            if instruction:
+                template_vars = _TEMPLATE_VAR_RE.findall(instruction)
+                agent_meta["instructions_preview"] = instruction[:500]
+                agent_meta["is_template"] = bool(template_vars)
+                agent_meta["template_variables"] = template_vars
+
             detected.append(
                 ComponentDetection(
                     component_type=ComponentType.AGENT,
@@ -216,11 +248,7 @@ class GoogleADKPythonAdapter(FrameworkAdapter):
                     adapter_name=self.name,
                     priority=self.priority,
                     confidence=0.92,
-                    metadata={
-                        "framework": "google-adk",
-                        "agent_subtype": _agent_subtype(inst.class_name),
-                        **({"model": model_val} if model_val else {}),
-                    },
+                    metadata=agent_meta,
                     file_path=file_path,
                     line=inst.line,
                     snippet=f"{inst.class_name}(name={agent_name!r})",
@@ -228,6 +256,30 @@ class GoogleADKPythonAdapter(FrameworkAdapter):
                     relationships=rels,
                 )
             )
+
+            if instruction and len(instruction) >= _MIN_PROMPT_LENGTH:
+                template_vars = _TEMPLATE_VAR_RE.findall(instruction)
+                detected.append(
+                    ComponentDetection(
+                        component_type=ComponentType.PROMPT,
+                        canonical_name=prompt_canon,
+                        display_name=prompt_display,
+                        adapter_name=self.name,
+                        priority=self.priority,
+                        confidence=0.88,
+                        metadata={
+                            "role": "system",
+                            "content": instruction,
+                            "char_count": len(instruction),
+                            "is_template": bool(template_vars),
+                            "template_variables": template_vars,
+                        },
+                        file_path=file_path,
+                        line=inst.line,
+                        snippet=instruction[:80],
+                        evidence_kind="ast_instantiation",
+                    )
+                )
 
         return detected
 

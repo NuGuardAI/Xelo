@@ -278,6 +278,7 @@ class LLMClientTSAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.90,
                     metadata={
+                        "framework": effective_provider,
                         "client_class": inst.class_name,
                         "provider": effective_provider,
                         "is_azure": is_azure,
@@ -327,6 +328,7 @@ class LLMClientTSAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.88,
                     metadata={
+                        "framework": provider,
                         "api_call": fn,
                         "provider": provider,
                         "model_card_url": _MODEL_CARD_URLS.get(provider),

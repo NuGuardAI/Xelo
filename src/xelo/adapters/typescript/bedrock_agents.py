@@ -119,9 +119,13 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.85,
                     metadata={
+                        "framework": "aws-bedrock",
                         "prompt_type": "agent_input",
                         "role": "user",
                         "content": input_text,
+                        "char_count": len(input_text),
+                        "is_template": bool(self._template_vars(input_text)),
+                        "template_variables": self._template_vars(input_text),
                         "language": "typescript",
                     },
                     file_path=file_path,
@@ -185,6 +189,7 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.90,
                     metadata={
+                        "framework": "aws-bedrock",
                         "model_id": fm,
                         "provider": info.get("provider", "aws"),
                         "family": info.get("family"),
@@ -199,6 +204,7 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
             )
 
         instruction = self._clean(args.get("instruction", ""))
+        instr_tvars = self._template_vars(instruction) if instruction else []
         if len(instruction) > 5:
             prompt_canon = canonicalize_text(f"{agent_name} instructions")
             rels.append(
@@ -219,9 +225,13 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     priority=self.priority,
                     confidence=0.92,
                     metadata={
+                        "framework": "aws-bedrock",
                         "prompt_type": "instruction",
                         "role": "system",
                         "content": instruction,
+                        "char_count": len(instruction),
+                        "is_template": bool(instr_tvars),
+                        "template_variables": instr_tvars,
                         "language": "typescript",
                     },
                     file_path=file_path,
@@ -243,6 +253,7 @@ class BedrockAgentsTSAdapter(TSFrameworkAdapter):
                     "framework": "aws-bedrock",
                     "command": "InvokeInlineAgentCommand",
                     "is_inline": True,
+                    "has_instructions": len(instruction) > 5,
                     "language": "typescript",
                 },
                 file_path=file_path,
