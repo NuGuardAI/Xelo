@@ -87,7 +87,7 @@ nav {
 }
 
 .nav-logo {
-    height: 54px;
+    height: 40px;
     width: auto;
     display: block;
     flex-shrink: 0;
@@ -373,7 +373,8 @@ p {
     line-height: 1.1;
 }
 
-.hero h1 .accent {
+.hero h1 .accent,
+.accent {
     color: var(--accent);
 }
 
@@ -383,6 +384,35 @@ p {
     line-height: 1.75;
     margin-bottom: 2rem;
     max-width: 620px;
+}
+
+.hero-list {
+    list-style: none;
+    margin: 0 auto 2.5rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: left;
+    width: fit-content;
+}
+
+.hero-list li {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.hero-list li::before {
+    content: "✓";
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.hero-list li strong {
+    color: var(--text);
+    font-weight: 600;
 }
 
 .hero-actions {
