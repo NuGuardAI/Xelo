@@ -164,6 +164,17 @@ Path("findings.md").write_text(vuln_md.details["markdown"], encoding="utf-8")
 vuln_all = VulnerabilityScannerPlugin().run(sbom, {"provider": "osv", "format": "markdown"})
 Path("findings-osv.md").write_text(vuln_all.details["markdown"], encoding="utf-8")
 
+# Vulnerability scan — all providers + LLM executive summary + Markdown
+vuln_llm = VulnerabilityScannerPlugin().run(sbom, {
+    "provider": "all",
+    "llm": True,
+    "llm_model": "vertex_ai/gemini-2.0-flash",
+    # key auto-read from GEMINI_API_KEY env var
+    "format": "markdown",
+})
+Path("findings-full.md").write_text(vuln_llm.details["markdown"], encoding="utf-8")
+print(vuln_llm.details.get("llm_summary"))  # executive summary string
+
 # MITRE ATLAS annotation — static (offline)
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for f in atlas.details["findings"]:
