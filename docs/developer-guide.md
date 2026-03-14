@@ -154,11 +154,27 @@ print(vuln.status, vuln.message)
 for f in vuln.details["findings"]:
     print(f["rule_id"], f["severity"], f["title"])
 
-# MITRE ATLAS annotation (offline)
+# MITRE ATLAS annotation — static (offline)
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for f in atlas.details["findings"]:
-    for t in f["atlas"]["techniques"]:
+    for t in f.get("atlas", {}).get("techniques", []):
         print(t["technique_id"], t["tactic_name"], t["confidence"])
+
+# MITRE ATLAS annotation — Markdown output (no LLM required)
+atlas_md = AtlasAnnotatorPlugin().run(sbom, {"format": "markdown"})
+Path("atlas-report.md").write_text(atlas_md.details["markdown"], encoding="utf-8")
+
+# MITRE ATLAS annotation — LLM-enriched with Gemini (OSV/Grype CVEs + narratives)
+import os
+atlas_llm = AtlasAnnotatorPlugin().run(sbom, {
+    "llm": True,
+    "llm_model": "vertex_ai/gemini-3.1-flash-lite-preview",
+    # key auto-read from GEMINI_API_KEY env var; or pass explicitly:
+    # "llm_api_key": os.environ["GEMINI_API_KEY"],
+    "format": "markdown",
+})
+Path("atlas-llm-report.md").write_text(atlas_llm.details["markdown"], encoding="utf-8")
+print(atlas_llm.details.get("llm_summary"))   # executive summary string
 
 # SARIF export (for GitHub Code Scanning upload)
 # ToolResult.details IS the SARIF 2.1.0 dict
@@ -185,7 +201,7 @@ Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 | Class | Module | Network | Notes |
 | --- | --- | --- | --- |
 | `VulnerabilityScannerPlugin` | `vulnerability` | No | Offline, no network |
-| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; runs VLA pass + native graph checks |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; VLA pass + native graph checks; `format=markdown` for Markdown output; `llm=True` for CVE context + LLM narratives (OSV network required) |
 | `LicenseCheckerPlugin` | `license_checker` | No | Offline |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Offline |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Offline |
@@ -248,8 +264,9 @@ Path("ai-sbom.json").write_text(AiSbomSerializer.to_json(doc), encoding="utf-8")
 # 3. Analyse
 sbom = doc.model_dump(mode="json")
 vuln = VulnerabilityScannerPlugin().run(sbom, {})
-atlas = AtlasAnnotatorPlugin().run(sbom, {})
+atlas = AtlasAnnotatorPlugin().run(sbom, {"format": "markdown"})
 print(f"{vuln.message}  |  {atlas.message}")
+Path("atlas-report.md").write_text(atlas.details["markdown"], encoding="utf-8")
 ```
 
 ## Notes
