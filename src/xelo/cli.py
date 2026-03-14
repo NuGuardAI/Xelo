@@ -213,6 +213,7 @@ _PLUGIN_DICT_OUTPUT: frozenset[str] = frozenset({"sarif", "cyclonedx"})
 _PLUGIN_CONTENT_KEY: dict[str, str] = {
     "markdown": "markdown",  # str — Markdown text
     "atlas": "markdown",  # str — Markdown text (only when --config format=markdown)
+    "vulnerability": "markdown",  # str — Markdown text (only when --config format=markdown)
 }
 
 

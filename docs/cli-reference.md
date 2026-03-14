@@ -180,11 +180,22 @@ xelo plugin run <plugin> <sbom> [--output <file>] [--config key=value ...] [--co
 **Examples:**
 
 ```bash
-# Structural vulnerability scan (findings to stdout)
+# Structural vulnerability scan (findings to stdout, JSON)
 xelo plugin run vulnerability sbom.json
 
 # Write vulnerability findings to JSON
 xelo plugin run vulnerability sbom.json --output findings.json
+
+# Write vulnerability findings as Markdown (human-readable)
+xelo plugin run vulnerability sbom.json \
+  --config format=markdown \
+  --output findings.md
+
+# Full scan (structural + OSV + Grype) as Markdown
+xelo plugin run vulnerability sbom.json \
+  --config provider=all \
+  --config format=markdown \
+  --output findings.md
 
 # MITRE ATLAS annotation — static JSON (offline)
 xelo plugin run atlas sbom.json --output atlas.json
@@ -247,7 +258,7 @@ xelo plugin run xray sbom.json \
 
 | Class | Module | Network | Notes |
 | --- | --- | --- | --- |
-| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, over-privileged agents |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules + OSV/Grype dep advisories; `--config format=markdown` for Markdown output |
 | `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2; `--config format=markdown` for Markdown output; `--config llm=true` for CVE context + LLM narratives |
 | `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |
