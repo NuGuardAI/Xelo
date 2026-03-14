@@ -6,7 +6,7 @@ weakness:
 
 Pass 1 — VLA signal mapping
   Runs the VulnerabilityScannerPlugin with ``provider=xelo-rules`` (offline,
-  no network required).  Every VLA-xxx finding is enriched with an ``atlas``
+  no network required).  Every XELO-xxx finding is enriched with an ``atlas``
   block containing matching techniques from the static VLA → ATLAS mapping
   table in ``_atlas_data.py``.
 
@@ -52,7 +52,7 @@ Output ``details`` schema::
       "llm_summary":         "...executive narrative...",  # only in LLM mode
       "findings": [
         {
-          "rule_id":     "VLA-001",
+          "rule_id":     "XELO-001",
           "severity":    "CRITICAL",
           "title":       "...",
           "description": "...",

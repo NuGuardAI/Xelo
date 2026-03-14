@@ -1,6 +1,6 @@
 """AWS Security Hub findings push plugin.
 
-Translates Xelo SBOM vulnerability findings (VLA-xxx structural rules and
+Translates Xelo SBOM vulnerability findings (XELO-xxx structural rules and
 CVE advisories) into Amazon Security Finding Format (ASFF) and imports them
 into AWS Security Hub via ``boto3``.
 

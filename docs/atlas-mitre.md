@@ -18,7 +18,7 @@ The `atlas` plugin annotates every finding in your AI SBOM with [MITRE ATLAS v2]
 
 Both modes run the same two static passes before any LLM work:
 
-- **Pass 1 — VLA signal mapping**: runs the structural VLA rules and maps each `VLA-xxx` finding to one or more ATLAS techniques via a static lookup table.
+- **Pass 1 — VLA signal mapping**: runs the structural VLA rules and maps each `XELO-xxx` finding to one or more ATLAS techniques via a static lookup table.
 - **Pass 2 — Native ATLAS graph checks**: inspects the SBOM node/edge graph directly for patterns that map to ATLAS techniques but aren't covered by a single VLA rule (NC-001 through NC-004).
 
 ---
@@ -107,7 +107,7 @@ These structural checks run against the SBOM graph on every invocation, regardle
     "llm_summary": "…executive narrative… (LLM mode only)",
     "findings": [
       {
-        "rule_id": "VLA-002",
+        "rule_id": "XELO-002",
         "severity": "CRITICAL",
         "title": "…",
         "affected": ["gpt-4.1-mini"],
@@ -179,13 +179,13 @@ warning: 4 ATLAS-annotated finding(s) across 2 unique technique(s) → atlas-rep
 
 ## Findings
 
-### VLA-002 🔴 CRITICAL — PHI/PII data handled by external LLM providers
+### XELO-002 🔴 CRITICAL — PII/PHI data handled by external LLM providers
 
 **Affected:** `gpt-4.1-mini`  
 
 **Description:** The SBOM contains PII data (2 classified table(s)) and calls external LLM
-provider(s): gpt-4.1-mini. Patient data may be transmitted outside your trust boundary
-in violation of HIPAA/GDPR.
+provider(s): gpt-4.1-mini. Regulated data (PII/PHI) may be transmitted outside your trust boundary,
+potentially violating applicable data protection regulations.
 
 #### ATLAS Techniques
 
@@ -201,26 +201,26 @@ in violation of HIPAA/GDPR.
 - [AML.M0004](https://atlas.mitre.org/mitigations/AML.M0004) Restrict Number of ML Model Queries
 - [AML.M0002](https://atlas.mitre.org/mitigations/AML.M0002) Passive ML Output Obfuscation
 
-**Remediation:** Ensure PHI is stripped or anonymised before being included in prompts
-sent to external providers. Consider a self-hosted model for PHI workloads or obtain
-a HIPAA BAA from each provider.
+**Remediation:** Ensure regulated data is stripped or anonymised before being included in prompts
+sent to external providers. Consider a self-hosted model for sensitive workloads or establish
+a data processing agreement (DPA) with each provider.
 
 ---
 
-### VLA-010 🔴 CRITICAL — PHI/PII workload — no encryption at rest
+### XELO-010 🔴 CRITICAL — Regulated data workload — no encryption at rest
 
 **Affected:** `generic`, `Deploy to Azure`  
 
 **Description:** The SBOM contains PII data across 2 deployment resource(s), but no IaC
-resource has encryption-at-rest enabled. HIPAA §164.312(a)(2)(iv) requires encryption
-of ePHI at rest.
+resource has encryption-at-rest enabled. Applicable data protection regulations require
+encryption of regulated data at rest.
 
 **Remediation:** Enable storage/disk encryption: set 'encrypted = true' in Terraform
 (aws_db_instance, aws_ebs_volume, etc.).
 
 ---
 
-### VLA-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
+### XELO-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
 
 **Affected:** `Deploy to Azure`  
 
@@ -232,13 +232,13 @@ static credentials rather than OIDC token exchange.
 
 ---
 
-### VLA-018 🟠 HIGH — Single-AZ deployment for AI service handling PHI
+### XELO-018 🟠 HIGH — Single-AZ deployment for AI service handling regulated data
 
 **Affected:** `generic`, `Deploy to Azure`  
 
 **Description:** 2 deployment resource(s) have no multi-AZ configuration or HA mode
-detected. HIPAA §164.312(a)(2)(ii) requires a contingency plan ensuring availability
-of ePHI.
+detected. Data protection regulations require contingency plans ensuring availability
+of regulated data.
 
 **Remediation:** Configure multi-AZ deployment.
 
@@ -249,12 +249,12 @@ of ePHI.
 
 | Rule | Severity | ATLAS Technique(s) | Tactic |
 |---|---|---|---|
-| VLA-002 | CRITICAL | AML.T0037, AML.T0024 | Collection, Exfiltration |
-| VLA-010 | CRITICAL | — (no ATLAS mapping) | — |
-| VLA-016 | HIGH | — (no ATLAS mapping) | — |
-| VLA-018 | HIGH | — (no ATLAS mapping) | — |
+| XELO-002 | CRITICAL | AML.T0037, AML.T0024 | Collection, Exfiltration |
+| XELO-010 | CRITICAL | — (no ATLAS mapping) | — |
+| XELO-016 | HIGH | — (no ATLAS mapping) | — |
+| XELO-018 | HIGH | — (no ATLAS mapping) | — |
 
-> VLA-010, VLA-016, and VLA-018 are compliance and infrastructure findings that do not yet have direct ATLAS technique mappings. They still appear in the output with full remediation guidance.
+> XELO-010, XELO-016, and XELO-018 are compliance and infrastructure findings that do not yet have direct ATLAS technique mappings. They still appear in the output with full remediation guidance.
 
 ---
 
@@ -315,13 +315,13 @@ integrity and resilience.
 
 ## Findings
 
-### VLA-002 🔴 CRITICAL — PHI/PII data handled by external LLM providers
+### XELO-002 🔴 CRITICAL — PII/PHI data handled by external LLM providers
 
 **Affected:** `gpt-4.1-mini`  
 
 **Description:** The SBOM contains PII data (2 classified table(s)) and calls external
-LLM provider(s): gpt-4.1-mini. Patient data may be transmitted outside your trust
-boundary in violation of HIPAA/GDPR.
+LLM provider(s): gpt-4.1-mini. Regulated data (PII/PHI) may be transmitted outside your
+trust boundary, potentially violating applicable data protection regulations.
 
 #### ATLAS Techniques
 
@@ -359,17 +359,17 @@ exploited to intercept or exfiltrate this data. Remediation must prioritize impl
 strict data sanitization or local model deployment to ensure privacy, followed by
 immediate patching of the identified dependency vulnerabilities.
 
-**Remediation:** Ensure PHI is stripped or anonymised before being included in prompts
+**Remediation:** Ensure regulated data is stripped or anonymised before being included in prompts
 sent to external providers.
 
 ---
 
-### VLA-010 🔴 CRITICAL — PHI/PII workload — no encryption at rest
+### XELO-010 🔴 CRITICAL — Regulated data workload — no encryption at rest
 
 **Affected:** `generic`, `Deploy to Azure`  
 
 #### CVE Context
-_(same top-10 CVE table as VLA-002)_
+_(same top-10 CVE table as XELO-002)_
 
 #### Analysis
 
@@ -383,7 +383,7 @@ exploited to gain unauthorized access to the unencrypted data.
 
 ---
 
-### VLA-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
+### XELO-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
 
 **Affected:** `Deploy to Azure`  
 
@@ -401,7 +401,7 @@ project's critical dependency vulnerabilities such as GHSA-9qr9-h5gf-34mp.
 
 ---
 
-### VLA-018 🟠 HIGH — Single-AZ deployment for AI service handling PHI
+### XELO-018 🟠 HIGH — Single-AZ deployment for AI service handling regulated data
 
 **Affected:** `generic`, `Deploy to Azure`  
 
@@ -410,8 +410,8 @@ _(same top-10 CVE table)_
 
 #### Analysis
 
-The deployment of AI services handling PHI in a single availability zone creates a
-critical single point of failure that violates HIPAA contingency requirements. This
+The deployment of AI services handling regulated data in a single availability zone creates a
+critical single point of failure that may violate data protection contingency requirements. This
 lack of redundancy is compounded by vulnerabilities such as CVE-2021-32677 and
 CVE-2020-7694, which could be exploited to disrupt service availability.
 

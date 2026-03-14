@@ -46,19 +46,19 @@ Django models, Pydantic models, prompt files (.txt / .md / .jinja).
 
 ## Security & compliance
 
-Xelo includes a structural vulnerability scanner (21 VLA rules) derived from
-OWASP AI Top 10, NIST AI RMF, HIPAA, and PCI-DSS — no network access required.
+Xelo includes a structural vulnerability scanner (21 XELO rules) derived from
+OWASP AI Top 10, NIST AI RMF, and data protection frameworks — no network access required.
 
 Rule categories:
-- **AI graph rules (VLA-001–009):** missing guardrails, PHI to external LLMs,
-  voice + PHI exposure, prompt injection risk, auth coverage gaps.
-- **IaC / Encryption (VLA-010–013):** PHI workloads without encryption at rest,
+- **AI graph rules (XELO-001–009):** missing guardrails, regulated data to external LLMs,
+  voice + regulated data exposure, prompt injection risk, auth coverage gaps.
+- **IaC / Encryption (XELO-010–013):** regulated data workloads without encryption at rest,
   no CMK/BYOK, secrets in env vars, missing secret management.
-- **IAM & Identity (VLA-014–017):** overly permissive IAM with PHI, cluster-scoped
+- **IAM & Identity (XELO-014–017):** overly permissive IAM with regulated data in scope, cluster-scoped
   roles without permission boundary, GHA without OIDC.
-- **Resilience (VLA-018–020):** single-AZ deployment with PHI, no health checks,
+- **Resilience (XELO-018–020):** single-AZ deployment with regulated data, no health checks,
   containers without resource limits.
-- **Container security (VLA-021):** containers running as root.
+- **Container security (XELO-021):** containers running as root.
 
 ---
 

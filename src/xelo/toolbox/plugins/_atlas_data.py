@@ -245,44 +245,44 @@ TECHNIQUES: dict[str, dict[str, object]] = {
 # ---------------------------------------------------------------------------
 
 VLA_TO_ATLAS: dict[str, list[tuple[str, str]]] = {
-    "VLA-001": [
+    "XELO-001": [
         ("AML.T0051", "HIGH"),    # LLM Jailbreak — no guardrail means no jailbreak detection
         ("AML.T0054", "HIGH"),    # LLM Prompt Injection — unfiltered input reaches model
         ("AML.T0015", "HIGH"),    # Evade ML Model — no output validation in the path
         ("AML.T0047", "HIGH"),    # Erode ML Model Integrity — unguarded model output
     ],
-    "VLA-002": [
+    "XELO-002": [
         ("AML.T0037", "HIGH"),    # Data from Information Repositories — PHI exits trust boundary
         ("AML.T0024", "HIGH"),    # Exfiltration via ML Inference API — PHI → external LLM
     ],
-    "VLA-003": [
+    "XELO-003": [
         ("AML.T0040", "HIGH"),    # ML Model Inference API Access — PHI API with weak auth
         ("AML.T0037", "HIGH"),    # Data from Information Repositories — PHI exposed via API
         ("AML.T0000", "MEDIUM"),  # Active Scanning — discoverable unauthenticated endpoint
         ("AML.T0016", "MEDIUM"),  # Verify Victim ML Model — weak auth enables probing
     ],
-    "VLA-004": [
+    "XELO-004": [
         ("AML.T0047", "HIGH"),    # Erode ML Model Integrity — privileged actions unguarded
         ("AML.T0036", "MEDIUM"),  # Develop Capabilities — privileged tool reachable by agent
     ],
-    "VLA-005": [
+    "XELO-005": [
         ("AML.T0024", "HIGH"),    # Exfiltration via ML Inference API — PHI in voice data
         ("AML.T0037", "HIGH"),    # Data from Information Repositories — audio contains PHI
     ],
-    "VLA-006": [
+    "XELO-006": [
         ("AML.T0051", "HIGH"),    # LLM Jailbreak — no output filter
         ("AML.T0015", "HIGH"),    # Evade ML Model — adversarial output passes unchecked
         ("AML.T0047", "MEDIUM"),  # Erode ML Model Integrity — unvalidated output propagates
     ],
-    "VLA-007": [
+    "XELO-007": [
         ("AML.T0054", "HIGH"),    # LLM Prompt Injection — template variables inject adversarial input
         ("AML.T0051", "HIGH"),    # LLM Jailbreak — injection can escalate to jailbreak
     ],
-    "VLA-008": [
+    "XELO-008": [
         ("AML.T0024", "HIGH"),    # Exfiltration via ML Inference API — PHI to multiple providers
         ("AML.T0010", "MEDIUM"),  # Acquire Public ML Artifacts — multiple external providers
     ],
-    "VLA-009": [
+    "XELO-009": [
         ("AML.T0040", "HIGH"),    # ML Model Inference API Access — endpoints lack auth
         ("AML.T0000", "MEDIUM"),  # Active Scanning — unauthenticated query surface
     ],

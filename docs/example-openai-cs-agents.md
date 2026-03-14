@@ -369,31 +369,32 @@ warning: Found 4 finding(s): 2 CRITICAL, 2 HIGH → vuln-structural.md
 
 ## Structural Findings (VLA Rules)
 
-### VLA-002 🔴 CRITICAL — PHI/PII data handled by external LLM providers
+### XELO-002 🔴 CRITICAL — PII/PHI data handled by external LLM providers
 
 **Affected:** `gpt-4.1-mini`  
 
 **Description:** The SBOM contains PII data (2 classified table(s)) and calls external LLM provider(s):
-gpt-4.1-mini. Data may be transmitted outside your trust boundary in violation of HIPAA/GDPR.
+gpt-4.1-mini. Data may be transmitted outside your trust boundary, potentially violating applicable
+data protection regulations.
 
-**Remediation:** Ensure PII is stripped or anonymised before inclusion in prompts sent to external
-providers. Consider a self-hosted model for PII workloads or obtain a HIPAA BAA from each provider.
+**Remediation:** Ensure regulated data is stripped or anonymised before inclusion in prompts sent to external
+providers. Consider a self-hosted model for sensitive workloads or establish a data processing agreement (DPA) with each provider.
 
 ---
 
-### VLA-010 🔴 CRITICAL — PHI/PII workload — no encryption at rest
+### XELO-010 🔴 CRITICAL — Regulated data workload — no encryption at rest
 
 **Affected:** `generic`, `Deploy to Azure`  
 
 **Description:** The SBOM contains PII data across 2 deployment resource(s), but no IaC resource has
-encryption-at-rest enabled. HIPAA §164.312(a)(2)(iv) requires encryption of ePHI at rest.
+encryption-at-rest enabled. Applicable data protection regulations require encryption of regulated data at rest.
 
 **Remediation:** Enable storage/disk encryption in Terraform ('encrypted = true'), Azure Disk CMEK,
 or equivalent IaC controls.
 
 ---
 
-### VLA-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
+### XELO-016 🟠 HIGH — GitHub Actions workflow accesses cloud without OIDC federation
 
 **Affected:** `Deploy to Azure`  
 
@@ -405,12 +406,12 @@ federated identity. Set 'permissions: id-token: write' at the job level.
 
 ---
 
-### VLA-018 🟠 HIGH — Single-AZ deployment for AI service handling PHI
+### XELO-018 🟠 HIGH — Single-AZ deployment for AI service handling regulated data
 
 **Affected:** `generic`, `Deploy to Azure`  
 
 **Description:** 2 deployment resource(s) have no multi-AZ configuration or HA mode detected.
-HIPAA §164.312(a)(2)(ii) requires a contingency plan ensuring availability of ePHI.
+Data protection regulations require contingency plans ensuring availability of regulated data.
 
 **Remediation:** Configure multi-AZ via 'availability_zones' in Terraform, K8s
 'topologySpreadConstraints', or equivalent IaC controls.
@@ -422,12 +423,12 @@ HIPAA §164.312(a)(2)(ii) requires a contingency plan ensuring availability of e
 
 | Rule | Severity | Title | Affected |
 |---|---|---|---|
-| VLA-002 | CRITICAL | PII to external LLM provider | `gpt-4.1-mini` |
-| VLA-010 | CRITICAL | No encryption at rest | Azure deployment, generic |
-| VLA-016 | HIGH | GitHub Actions without OIDC | `Deploy to Azure` workflow |
-| VLA-018 | HIGH | Single-AZ deployment with PII | Azure deployment, generic |
+| XELO-002 | CRITICAL | PII to external LLM provider | `gpt-4.1-mini` |
+| XELO-010 | CRITICAL | No encryption at rest | Azure deployment, generic |
+| XELO-016 | HIGH | GitHub Actions without OIDC | `Deploy to Azure` workflow |
+| XELO-018 | HIGH | Single-AZ deployment with PII | Azure deployment, generic |
 
-Rules fired here are derived from **OWASP AI Top 10**, **NIST AI RMF**, and **HIPAA**. See the [Structural rule catalogue](./vulnerability-scanning.md) for all 21 rules, conditions, and remediation guidance.
+Rules fired here are derived from **OWASP AI Top 10**, **NIST AI RMF**, and applicable **data protection frameworks**. See the [Structural rule catalogue](./vulnerability-scanning.md) for all 21 rules, conditions, and remediation guidance.
 
 ---
 

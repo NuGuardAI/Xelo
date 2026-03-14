@@ -52,7 +52,7 @@ _GRYPE_FINDING: dict[str, Any] = {
 }
 
 _VLA_FINDING: dict[str, Any] = {
-    "rule_id": "VLA-001",
+    "rule_id": "XELO-001",
     "severity": "CRITICAL",
     "title": "No guardrails protecting AI models",
     "description": "...",
