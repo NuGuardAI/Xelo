@@ -212,6 +212,8 @@ _PLUGIN_DICT_OUTPUT: frozenset[str] = frozenset({"sarif", "cyclonedx"})
 # For content-exporter plugins that store a raw string inside ToolResult.details.
 _PLUGIN_CONTENT_KEY: dict[str, str] = {
     "markdown": "markdown",  # str — Markdown text
+    "atlas": "markdown",  # str — Markdown text (only when --config format=markdown)
+    "vulnerability": "markdown",  # str — Markdown text (only when --config format=markdown)
 }
 
 
@@ -456,9 +458,14 @@ def _handle_plugin_run(args: argparse.Namespace) -> None:
         _emit(json.dumps(result.details, indent=2), output, args)
     elif plugin_name in _PLUGIN_CONTENT_KEY:
         # Exporter plugins: write the raw content string directly.
+        # Fall back to full JSON when the content key is absent (e.g. atlas
+        # without --config format=markdown).
         content_key = _PLUGIN_CONTENT_KEY[plugin_name]
         raw = result.details.get(content_key, "")
-        _emit(raw, output, args)
+        if raw:
+            _emit(raw, output, args)
+        else:
+            _emit(json.dumps(result.model_dump(), indent=2), output, args)
     else:
         # Analysis / upload plugins: emit full ToolResult as JSON.
         _emit(json.dumps(result.model_dump(), indent=2), output, args)

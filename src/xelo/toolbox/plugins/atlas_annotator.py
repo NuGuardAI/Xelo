@@ -6,7 +6,7 @@ weakness:
 
 Pass 1 — VLA signal mapping
   Runs the VulnerabilityScannerPlugin with ``provider=xelo-rules`` (offline,
-  no network required).  Every VLA-xxx finding is enriched with an ``atlas``
+  no network required).  Every XELO-xxx finding is enriched with an ``atlas``
   block containing matching techniques from the static VLA → ATLAS mapping
   table in ``_atlas_data.py``.
 
@@ -19,18 +19,40 @@ Pass 2 — Native ATLAS graph checks
   ATLAS-NC-003  MODEL–DEPLOYMENT path without AUTH node       → AML.T0035
   ATLAS-NC-004  AGENT or TOOL with outbound external-API capability → AML.T0036
 
+Pass 3 — LLM enrichment (optional, ``config["llm"] = True``)
+  Activated when the caller passes ``config={"llm": True}``.  Three extra
+  steps run after the static passes:
+
+  * OSV dependency CVE scan: ``VulnerabilityScannerPlugin(provider=osv)``
+    runs against the SBOM deps and the resulting CVE findings are collected.
+  * Grype CVE scan: ``VulnerabilityScannerPlugin(provider=grype)`` is run
+    in parallel (skipped silently if grype is not on PATH).  Combined with
+    OSV results and attached as ``cve_context`` on each ATLAS finding.
+  * LLM summarisation: for every ATLAS finding a ``atlas.llm_summary``
+    narrative is generated that relates the structural weakness to the
+    project's specific CVE exposure.  A top-level ``details.llm_summary``
+    executive summary is also produced.
+
+  Supported config keys (all optional):
+    ``llm``             – truthy value to activate (required)
+    ``llm_model``       – litellm model string (default ``gpt-4o-mini``)
+    ``llm_api_key``     – API key for the LLM provider
+    ``llm_api_base``    – base URL override (e.g. Azure AI Foundry)
+    ``llm_budget_tokens`` – max tokens across all LLM calls (default 50000)
+
 Output ``details`` schema::
 
     {
       "atlas_version":       "v2",
-      "basis":               "static",
+      "basis":               "static",   # or "llm" when LLM enrichment ran
       "total_findings":      12,
       "techniques_identified": ["AML.T0051", ...],
       "tactics_covered":     ["Defense Evasion", ...],
       "confidence_breakdown": {"HIGH": 5, "MEDIUM": 4, "LOW": 1},
+      "llm_summary":         "...executive narrative...",  # only in LLM mode
       "findings": [
         {
-          "rule_id":     "VLA-001",
+          "rule_id":     "XELO-001",
           "severity":    "CRITICAL",
           "title":       "...",
           "description": "...",
@@ -57,6 +79,21 @@ Output ``details`` schema::
                 ]
               }
             ]
+          },
+          # only present in LLM mode:
+          "cve_context": [
+            {
+              "cve_ids":  ["CVE-2024-xxxxx"],
+              "package":  "langchain-core",
+              "severity": "HIGH",
+              "summary":  "...",
+              "url":      "https://osv.dev/..."
+            }
+          ],
+          "atlas": {
+            "atlas_version": "v2",
+            "llm_summary":   "...per-finding narrative...",  # only in LLM mode
+            "techniques": [ ... ]
           }
         },
         ...
@@ -66,6 +103,7 @@ Output ``details`` schema::
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import Any, cast
 
@@ -94,10 +132,13 @@ class AtlasAnnotatorPlugin(ToolPlugin):
     # Public API                                                           #
     # ------------------------------------------------------------------ #
 
-    def run(self, sbom: dict[str, Any], config: dict[str, Any]) -> ToolResult:  # noqa: ARG002
+    def run(self, sbom: dict[str, Any], config: dict[str, Any]) -> ToolResult:
         """Annotate *sbom* with ATLAS technique mappings.
 
-        *config* is currently unused (all analysis is static and offline).
+        When ``config["llm"]`` is truthy an additional OSV dependency CVE scan
+        runs and the LLM enriches each finding with a ``atlas.llm_summary``
+        narrative and produces a top-level ``details.llm_summary`` executive
+        summary.  All other analysis is static and offline.
         """
         _log.info("ATLAS annotation starting (atlas_version=%s, basis=static)", ATLAS_VERSION)
 
@@ -115,6 +156,27 @@ class AtlasAnnotatorPlugin(ToolPlugin):
 
         all_findings = vla_findings + native_findings
         _log.info("ATLAS annotation complete: %d total finding(s)", len(all_findings))
+
+        # ------------------------------------------------------------------
+        # Pass 3 — optional LLM enrichment (CVE correlation + summarisation)
+        # ------------------------------------------------------------------
+        use_llm = bool(config.get("llm") or config.get("enable_llm"))
+        overall_llm_summary: str | None = None
+        if use_llm:
+            _log.info("Pass 3: LLM enrichment enabled")
+            osv_findings = self._run_osv_pass(sbom)
+            grype_findings = self._run_grype_pass(sbom)
+            cve_findings = osv_findings + grype_findings
+            _log.debug(
+                "Pass 3: %d CVE finding(s) total (osv=%d grype=%d)",
+                len(cve_findings),
+                len(osv_findings),
+                len(grype_findings),
+            )
+            all_findings = self._enrich_with_cve_context(all_findings, cve_findings)
+            all_findings, overall_llm_summary = self._run_llm_enrichment(
+                all_findings, cve_findings, sbom, config
+            )
 
         # ------------------------------------------------------------------
         # Aggregate statistics
@@ -144,19 +206,26 @@ class AtlasAnnotatorPlugin(ToolPlugin):
             else "No ATLAS findings detected"
         )
 
+        details: dict[str, Any] = {
+            "atlas_version": ATLAS_VERSION,
+            "basis": "llm" if use_llm else "static",
+            "total_findings": len(all_findings),
+            "techniques_identified": technique_ids,
+            "tactics_covered": tactic_names,
+            "confidence_breakdown": confidence_breakdown,
+            "findings": all_findings,
+        }
+        if overall_llm_summary:
+            details["llm_summary"] = overall_llm_summary
+
+        if str(config.get("format", "")).lower() == "markdown":
+            details["markdown"] = _render_atlas_markdown(details)
+
         return ToolResult(
             status=status,
             tool=self.name,
             message=message,
-            details={
-                "atlas_version": ATLAS_VERSION,
-                "basis": "static",
-                "total_findings": len(all_findings),
-                "techniques_identified": technique_ids,
-                "tactics_covered": tactic_names,
-                "confidence_breakdown": confidence_breakdown,
-                "findings": all_findings,
-            },
+            details=details,
         )
 
     # ------------------------------------------------------------------ #
@@ -190,6 +259,206 @@ class AtlasAnnotatorPlugin(ToolPlugin):
             annotated.append(finding)
 
         return annotated
+
+    # ------------------------------------------------------------------ #
+    # Pass 3 helpers — OSV + Grype CVE scans + LLM enrichment            #
+    # ------------------------------------------------------------------ #
+
+    def _run_osv_pass(self, sbom: dict[str, Any]) -> list[dict[str, Any]]:
+        """Run OSV dependency CVE scan; return findings (empty list on network error)."""
+        from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin  # noqa: PLC0415
+
+        try:
+            result = VulnerabilityScannerPlugin().run(sbom, {"provider": "osv"})
+            return [f for f in (result.details.get("findings") or []) if f.get("source") == "osv"]
+        except Exception as exc:  # network errors, etc.
+            _log.warning("OSV scan skipped during ATLAS LLM enrichment: %s", exc)
+            return []
+
+    def _run_grype_pass(self, sbom: dict[str, Any]) -> list[dict[str, Any]]:
+        """Run Grype CVE scan; return findings (empty list when grype is not on PATH)."""
+        from xelo.toolbox.plugins.vulnerability import VulnerabilityScannerPlugin  # noqa: PLC0415
+
+        try:
+            result = VulnerabilityScannerPlugin().run(sbom, {"provider": "grype"})
+            return [f for f in (result.details.get("findings") or []) if f.get("source") == "grype"]
+        except Exception as exc:  # grype not installed, etc.
+            _log.warning("Grype scan skipped during ATLAS LLM enrichment: %s", exc)
+            return []
+
+    def _enrich_with_cve_context(
+        self,
+        findings: list[dict[str, Any]],
+        cve_findings: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """Attach the top CVE findings as ``cve_context`` on every ATLAS finding."""
+        if not cve_findings:
+            return findings
+
+        _sev = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
+        top_cves = sorted(cve_findings, key=lambda f: _sev.get(f.get("severity", "LOW"), 99))[:10]
+        cve_context = [
+            {
+                "cve_ids": f.get("cve_ids") or [f.get("rule_id", "")],
+                "package": (f.get("affected") or ["?"])[0],
+                "severity": f.get("severity", "UNKNOWN"),
+                "summary": f.get("title", ""),
+                "url": f.get("advisory_url", ""),
+            }
+            for f in top_cves
+        ]
+
+        return [{**f, "cve_context": cve_context} for f in findings]
+
+    def _run_llm_enrichment(
+        self,
+        findings: list[dict[str, Any]],
+        cve_findings: list[dict[str, Any]],
+        sbom: dict[str, Any],
+        config: dict[str, Any],
+    ) -> tuple[list[dict[str, Any]], str]:
+        """Synchronous entry point for LLM enrichment; falls back gracefully."""
+        try:
+            return asyncio.run(self._async_llm_enrichment(findings, cve_findings, sbom, config))
+        except Exception as exc:
+            _log.warning("LLM enrichment failed, falling back to static output: %s", exc)
+            return findings, ""
+
+    async def _async_llm_enrichment(
+        self,
+        findings: list[dict[str, Any]],
+        cve_findings: list[dict[str, Any]],
+        sbom: dict[str, Any],
+        config: dict[str, Any],
+    ) -> tuple[list[dict[str, Any]], str]:
+        """Build per-finding llm_summary + overall executive summary."""
+        import os  # noqa: PLC0415
+
+        from xelo.llm_client import LLMClient  # noqa: PLC0415
+
+        model = config.get("llm_model") or "gpt-4o-mini"
+        # For vertex_ai/* models the LLMClient uses a dedicated google_api_key
+        # parameter to bypass litellm and call the Vertex AI REST API directly.
+        # Fall back to GEMINI_API_KEY env var (set by xelo's .env convention).
+        is_vertex = str(model).startswith("vertex_ai/")
+        raw_key = config.get("llm_api_key") or None
+        google_api_key: str | None = (
+            (raw_key or os.environ.get("GEMINI_API_KEY") or None) if is_vertex else None
+        )
+        api_key: str | None = None if is_vertex else raw_key
+
+        client = LLMClient(
+            model=model,
+            api_key=api_key,
+            api_base=config.get("llm_api_base") or None,
+            budget_tokens=int(config.get("llm_budget_tokens") or 50_000),
+            google_api_key=google_api_key,
+        )
+
+        enriched: list[dict[str, Any]] = []
+        for finding in findings:
+            try:
+                summary = await self._summarize_finding(client, finding, cve_findings)
+                atlas = {**finding.get("atlas", {}), "llm_summary": summary}
+                finding = {**finding, "atlas": atlas}
+            except Exception as exc:
+                _log.debug("Per-finding LLM summary failed for %s: %s", finding.get("rule_id"), exc)
+            enriched.append(finding)
+
+        overall = ""
+        try:
+            overall = await self._summarize_overall(client, enriched, cve_findings, sbom)
+        except Exception as exc:
+            _log.debug("Overall LLM summary failed: %s", exc)
+
+        return enriched, overall
+
+    async def _summarize_finding(
+        self,
+        client: Any,
+        finding: dict[str, Any],
+        cve_findings: list[dict[str, Any]],
+    ) -> str:
+        """Generate a concise LLM narrative for one ATLAS finding."""
+        technique_ids = [
+            t.get("technique_id") for t in (finding.get("atlas", {}).get("techniques") or [])
+        ]
+        _sev = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
+        top_cves = sorted(cve_findings, key=lambda f: _sev.get(f.get("severity", "LOW"), 99))[:5]
+        cve_lines = "\n".join(
+            f"- {(f.get('cve_ids') or [f.get('rule_id', '')])[:1][0]}: "
+            f"{f.get('title', '')} ({f.get('severity', '')})"
+            for f in top_cves
+        )
+
+        system = (
+            "You are a security analyst specializing in AI/ML system risk assessment. "
+            "Summarize a single MITRE ATLAS finding in 2-4 plain sentences. "
+            "Mention specific CVEs only when they directly amplify the stated risk. "
+            "Focus on attacker impact and remediation priority. No markdown."
+        )
+        user = (
+            f"ATLAS Finding:\n"
+            f"  ID: {finding.get('rule_id')}\n"
+            f"  Title: {finding.get('title')}\n"
+            f"  Techniques: {', '.join(str(t) for t in technique_ids)}\n"
+            f"  Affected components: {', '.join(finding.get('affected', []))}\n"
+            f"  Description: {finding.get('description', '')}\n"
+        )
+        if cve_lines:
+            user += f"\nKnown CVEs in project dependencies:\n{cve_lines}\n"
+        user += (
+            "\nProvide a concise security summary connecting this ATLAS finding "
+            "to the project's specific risk posture."
+        )
+        text: str
+        text, _ = await client.complete_text(system, user)
+        return text.strip()
+
+    async def _summarize_overall(
+        self,
+        client: Any,
+        findings: list[dict[str, Any]],
+        cve_findings: list[dict[str, Any]],
+        sbom: dict[str, Any],
+    ) -> str:
+        """Generate an executive summary across all ATLAS findings and CVEs."""
+        finding_lines = (
+            "\n".join(
+                f"- {f.get('rule_id')}: {f.get('title')} (severity={f.get('severity')})"
+                for f in findings
+            )
+            or "(none)"
+        )
+        _sev = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
+        top_cves = sorted(cve_findings, key=lambda f: _sev.get(f.get("severity", "LOW"), 99))[:8]
+        cve_lines = (
+            "\n".join(
+                f"- {(f.get('cve_ids') or [f.get('rule_id', '')])[:1][0]}: "
+                f"{f.get('title', '')} ({f.get('severity', '')})"
+                for f in top_cves
+            )
+            or "(none)"
+        )
+
+        sbom_summary = sbom.get("summary") or {}
+        frameworks = ", ".join(sbom_summary.get("frameworks") or []) or "unknown"
+
+        system = (
+            "You are a senior AI security analyst. Write a concise executive summary "
+            "of MITRE ATLAS findings for an AI system. Highlight the highest-impact "
+            "risks, reference relevant CVEs where they compound the risk, and close "
+            "with the top 3 remediation priorities. 3-5 sentences, no markdown headers."
+        )
+        user = (
+            f"AI system frameworks: {frameworks}\n\n"
+            f"ATLAS Findings ({len(findings)} total):\n{finding_lines}\n\n"
+            f"Known vulnerable dependencies ({len(cve_findings)} CVEs found):\n{cve_lines}\n\n"
+            "Write a concise executive summary of the AI security posture and top priorities."
+        )
+        text: str
+        text, _ = await client.complete_text(system, user)
+        return text.strip()
 
     # ------------------------------------------------------------------ #
     # Pass 2 helpers                                                       #
@@ -456,3 +725,154 @@ def _max_severity(technique_tuples: list[tuple[str, str]]) -> str:
     best = min(technique_tuples, key=lambda t: order.get(t[1], 99))
     # Map confidence to a finding severity
     return {"HIGH": "HIGH", "MEDIUM": "MEDIUM", "LOW": "LOW"}.get(best[1], "LOW")
+
+
+# ---------------------------------------------------------------------------
+# Markdown renderer
+# ---------------------------------------------------------------------------
+
+_SEV_EMOJI = {"CRITICAL": "🔴", "HIGH": "🟠", "MEDIUM": "🟡", "LOW": "🟢"}
+
+
+def _render_atlas_markdown(details: dict[str, Any]) -> str:
+    """Render ATLAS annotation details as a human-readable Markdown report."""
+    lines: list[str] = []
+    basis = details.get("basis", "static")
+    total = details.get("total_findings", 0)
+    techniques = details.get("techniques_identified") or []
+    tactics = details.get("tactics_covered") or []
+    cb = details.get("confidence_breakdown") or {}
+
+    # ── Header ──────────────────────────────────────────────────────────
+    lines += [
+        "# MITRE ATLAS Annotation Report",
+        "",
+        f"**ATLAS version:** {details.get('atlas_version', 'v2')}  ",
+        f"**Basis:** {basis}  ",
+        "",
+    ]
+
+    # ── Executive summary (LLM mode) ────────────────────────────────────
+    if details.get("llm_summary"):
+        lines += [
+            "## Executive Summary",
+            "",
+            details["llm_summary"],
+            "",
+        ]
+
+    # ── Summary table ───────────────────────────────────────────────────
+    lines += ["## Summary", ""]
+    summary_rows = [
+        ["Total findings", str(total)],
+        ["Techniques identified", ", ".join(techniques) if techniques else "\u2014"],
+        ["Tactics covered", ", ".join(tactics) if tactics else "\u2014"],
+        ["Confidence — HIGH", str(cb.get("HIGH", 0))],
+        ["Confidence — MEDIUM", str(cb.get("MEDIUM", 0))],
+        ["Confidence — LOW", str(cb.get("LOW", 0))],
+    ]
+    lines += [
+        "| Field | Value |",
+        "| --- | --- |",
+    ]
+    for k, v in summary_rows:
+        lines.append(f"| {k} | {v} |")
+    lines.append("")
+
+    # ── Findings ────────────────────────────────────────────────────────
+    findings: list[dict[str, Any]] = list(details.get("findings") or [])
+    if not findings:
+        lines += ["## Findings", "", "_No ATLAS findings detected._", ""]
+        return "\n".join(lines)
+
+    lines += ["## Findings", ""]
+
+    for finding in findings:
+        rule_id = finding.get("rule_id", "")
+        sev = finding.get("severity", "")
+        title = finding.get("title", "")
+        emoji = _SEV_EMOJI.get(sev, "")
+        affected = finding.get("affected") or []
+        description = finding.get("description", "")
+        remediation = finding.get("remediation", "")
+        atlas_block = finding.get("atlas") or {}
+        cve_context = finding.get("cve_context") or []
+
+        lines += [
+            f"### {rule_id} {emoji} {sev} — {title}",
+            "",
+        ]
+        if affected:
+            affected_str = ", ".join(f"`{a}`" for a in affected)
+            lines += [f"**Affected:** {affected_str}  ", ""]
+        if description:
+            lines += [f"**Description:** {description}", ""]
+
+        # ATLAS techniques table
+        techniques_list: list[dict[str, Any]] = list(atlas_block.get("techniques") or [])
+        if techniques_list:
+            lines += [
+                "#### ATLAS Techniques",
+                "",
+                "| Technique | Name | Tactic | Confidence |",
+                "| --- | --- | --- | --- |",
+            ]
+            for tech in techniques_list:
+                tid = tech.get("technique_id", "")
+                tname = tech.get("technique_name", "")
+                tactic = tech.get("tactic_name", "")
+                conf = tech.get("confidence", "")
+                url = tech.get("atlas_url", "")
+                tid_link = f"[{tid}]({url})" if url else tid
+                lines.append(f"| {tid_link} | {tname} | {tactic} | {conf} |")
+            lines.append("")
+
+            # Mitigations
+            mitigations: list[dict[str, Any]] = []
+            for tech in techniques_list:
+                for m in tech.get("mitigations") or []:
+                    if m not in mitigations:
+                        mitigations.append(m)
+            if mitigations:
+                lines += ["**Mitigations:**", ""]
+                for m in mitigations:
+                    mid = m.get("mitigation_id", "")
+                    mname = m.get("mitigation_name", "")
+                    murl = m.get("mitigation_url", "")
+                    mid_link = f"[{mid}]({murl})" if murl else mid
+                    lines.append(f"- {mid_link} {mname}")
+                lines.append("")
+
+        # CVE context (LLM mode)
+        if cve_context:
+            lines += [
+                "#### CVE Context",
+                "",
+                "| Package | CVE(s) | Severity |",
+                "| --- | --- | --- |",
+            ]
+            for cve in cve_context:
+                pkg = cve.get("package", "")
+                cve_ids = ", ".join(cve.get("cve_ids") or [])
+                sev_cve = cve.get("severity", "")
+                url_cve = cve.get("url", "")
+                cve_link = f"[{cve_ids}]({url_cve})" if url_cve and cve_ids else cve_ids
+                lines.append(f"| `{pkg}` | {cve_link} | {sev_cve} |")
+            lines.append("")
+
+        # LLM per-finding summary
+        if atlas_block.get("llm_summary"):
+            lines += [
+                "#### Analysis",
+                "",
+                atlas_block["llm_summary"],
+                "",
+            ]
+
+        if remediation:
+            lines += ["**Remediation:** " + remediation, ""]
+
+        lines.append("---")
+        lines.append("")
+
+    return "\n".join(lines)

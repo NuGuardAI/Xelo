@@ -131,7 +131,9 @@ Xelo ships with analysis plugins in `xelo.toolbox.plugins`. They can be run from
 
 ```bash
 xelo plugin list                                        # show all plugins
-xelo plugin run vulnerability sbom.json                 # VLA rules to stdout
+xelo plugin run vulnerability sbom.json                 # VLA rules to stdout (JSON)
+xelo plugin run vulnerability sbom.json \
+  --config format=markdown --output findings.md         # Markdown report
 xelo plugin run sarif sbom.json --output results.sarif  # SARIF export
 xelo plugin run markdown sbom.json --output report.md   # Markdown report
 ```
@@ -148,17 +150,52 @@ from xelo.toolbox.plugins.markdown_exporter import MarkdownExporterPlugin
 
 sbom = doc.model_dump(mode="json")
 
-# Structural vulnerability rules (offline)
+# Structural vulnerability rules (offline, JSON)
 vuln = VulnerabilityScannerPlugin().run(sbom, {})
 print(vuln.status, vuln.message)
 for f in vuln.details["findings"]:
     print(f["rule_id"], f["severity"], f["title"])
 
-# MITRE ATLAS annotation (offline)
+# Vulnerability scan — Markdown report (offline, no LLM required)
+vuln_md = VulnerabilityScannerPlugin().run(sbom, {"format": "markdown"})
+Path("findings.md").write_text(vuln_md.details["markdown"], encoding="utf-8")
+
+# Vulnerability scan — all providers + Markdown
+vuln_all = VulnerabilityScannerPlugin().run(sbom, {"provider": "osv", "format": "markdown"})
+Path("findings-osv.md").write_text(vuln_all.details["markdown"], encoding="utf-8")
+
+# Vulnerability scan — all providers + LLM executive summary + Markdown
+vuln_llm = VulnerabilityScannerPlugin().run(sbom, {
+    "provider": "all",
+    "llm": True,
+    "llm_model": "vertex_ai/gemini-2.0-flash",
+    # key auto-read from GEMINI_API_KEY env var
+    "format": "markdown",
+})
+Path("findings-full.md").write_text(vuln_llm.details["markdown"], encoding="utf-8")
+print(vuln_llm.details.get("llm_summary"))  # executive summary string
+
+# MITRE ATLAS annotation — static (offline)
 atlas = AtlasAnnotatorPlugin().run(sbom, {})
 for f in atlas.details["findings"]:
-    for t in f["atlas"]["techniques"]:
+    for t in f.get("atlas", {}).get("techniques", []):
         print(t["technique_id"], t["tactic_name"], t["confidence"])
+
+# MITRE ATLAS annotation — Markdown output (no LLM required)
+atlas_md = AtlasAnnotatorPlugin().run(sbom, {"format": "markdown"})
+Path("atlas-report.md").write_text(atlas_md.details["markdown"], encoding="utf-8")
+
+# MITRE ATLAS annotation — LLM-enriched with Gemini (OSV/Grype CVEs + narratives)
+import os
+atlas_llm = AtlasAnnotatorPlugin().run(sbom, {
+    "llm": True,
+    "llm_model": "vertex_ai/gemini-3.1-flash-lite-preview",
+    # key auto-read from GEMINI_API_KEY env var; or pass explicitly:
+    # "llm_api_key": os.environ["GEMINI_API_KEY"],
+    "format": "markdown",
+})
+Path("atlas-llm-report.md").write_text(atlas_llm.details["markdown"], encoding="utf-8")
+print(atlas_llm.details.get("llm_summary"))   # executive summary string
 
 # SARIF export (for GitHub Code Scanning upload)
 # ToolResult.details IS the SARIF 2.1.0 dict
@@ -184,8 +221,8 @@ Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 
 | Class | Module | Network | Notes |
 | --- | --- | --- | --- |
-| `VulnerabilityScannerPlugin` | `vulnerability` | No | Offline, no network |
-| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; runs VLA pass + native graph checks |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules + OSV/Grype dep advisories; `format=markdown` for Markdown output |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Offline; VLA pass + native graph checks; `format=markdown` for Markdown output; `llm=True` for CVE context + LLM narratives (OSV network required) |
 | `LicenseCheckerPlugin` | `license_checker` | No | Offline |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Offline |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Offline |
@@ -247,9 +284,11 @@ Path("ai-sbom.json").write_text(AiSbomSerializer.to_json(doc), encoding="utf-8")
 
 # 3. Analyse
 sbom = doc.model_dump(mode="json")
-vuln = VulnerabilityScannerPlugin().run(sbom, {})
-atlas = AtlasAnnotatorPlugin().run(sbom, {})
+vuln = VulnerabilityScannerPlugin().run(sbom, {"format": "markdown"})
+atlas = AtlasAnnotatorPlugin().run(sbom, {"format": "markdown"})
 print(f"{vuln.message}  |  {atlas.message}")
+Path("findings.md").write_text(vuln.details["markdown"], encoding="utf-8")
+Path("atlas-report.md").write_text(atlas.details["markdown"], encoding="utf-8")
 ```
 
 ## Notes

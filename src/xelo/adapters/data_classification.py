@@ -79,7 +79,7 @@ _FIELD_PATTERNS: list[tuple[re.Pattern[str], list[str]]] = [
     # ── Technical / auth PII ────────────────────────────────────────────────
     (re.compile(r"\b(?:ip_?address|mac_?address|device_?id|cookie)\b"), ["PII"]),
     (re.compile(r"\b(?:password|passwd|secret(?:_key)?|private_?key|credential)\b"), ["PII"]),
-    # ── HIPAA PHI (clinical) ─────────────────────────────────────────────────
+    # ── PHI / health data (clinical) ─────────────────────────────────────────
     (
         re.compile(r"\b(?:diagnosis|diagnoses|past_?diagnos\w*|medical_?condition|condition)\b"),
         ["PHI"],

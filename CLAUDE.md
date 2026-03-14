@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Xelo is an AI SBOM generator for agentic and LLM-powered applications. The project is security-centric by design — prefer deterministic extraction, explicit evidence, strict validation, and small reviewable changes.
+
 ## Package identity
 
 The Python package is `xelo` (under `src/xelo/`). CLI entry points: `xelo` (primary) and `ai-sbom` (legacy alias), both pointing to `xelo.cli:main`. The PyPI distribution name is `xelo`.
@@ -36,6 +38,24 @@ xelo scan https://github.com/org/repo --ref main --output sbom.json
 xelo validate sbom.json
 xelo schema
 ```
+
+## Working style
+
+- Keep changes focused. One logical behavior change per edit set.
+- Preserve the existing documentation tone: concise, direct, and operational.
+- Default to Python 3.11-compatible code.
+- Match existing style constraints: Ruff line length 100, `mypy` strict mode, Pydantic v2 models and typed APIs.
+- Prefer extending existing adapters, models, and serializers over introducing parallel abstractions.
+- Avoid speculative refactors unless they are required to complete the task safely.
+
+## Security expectations
+
+- Treat all inputs as untrusted: repository paths, remote repository URLs, config files, prompt files, manifests, and plugin config.
+- Do not log, commit, or echo secrets, tokens, credentials, or private data.
+- Preserve deterministic defaults. LLM enrichment must remain opt-in.
+- Prefer offline, auditable behavior over network-dependent behavior unless the task explicitly requires network access.
+- For security-sensitive changes, verify failure modes as carefully as success paths.
+- Do not weaken validation, schema guarantees, or evidence tracking without an explicit reason and corresponding tests.
 
 ## Architecture
 
@@ -188,3 +208,26 @@ schema['\$schema'] = 'https://json-schema.org/draft/2020-12/schema'
 with open('src/xelo/schemas/aibom.schema.json','w') as f: json.dump(schema,f,indent=2); f.write('\n')
 "
 ```
+
+## Change guidance
+
+- New framework support should usually land as an adapter plus focused fixture coverage.
+- Changes to `src/xelo/models.py` or output structure should include schema and serialization validation.
+- CLI changes should keep defaults stable and help text explicit.
+- Plugin changes should document network requirements, credentials, and output contracts.
+- Detection improvements should favor high-confidence evidence and avoid broad regexes that inflate false positives.
+- If behavior changes are user-visible, update the relevant documentation in `README.md` or `docs/`.
+
+## Testing expectations
+
+- Add or update tests for every behavior change.
+- Prefer the smallest fixture or test file that proves the behavior.
+- When fixing false positives or false negatives, add a regression test that would have failed before the change.
+- Do not edit files in `tests/test_toolbox/fixtures/` — they are ground-truth benchmark data.
+- If you cannot run a relevant validation command, state that clearly in your handoff.
+
+## Notes
+
+- `AGENTS.md` and `CLAUDE.md` are intentionally skipped by the extractor and will not affect scan output.
+- Do not edit generated artifacts or release files unless the task requires it.
+- Do not remove unrelated user changes from the working tree.

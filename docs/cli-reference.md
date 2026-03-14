@@ -180,14 +180,43 @@ xelo plugin run <plugin> <sbom> [--output <file>] [--config key=value ...] [--co
 **Examples:**
 
 ```bash
-# Structural vulnerability scan (findings to stdout)
+# Structural vulnerability scan (findings to stdout, JSON)
 xelo plugin run vulnerability sbom.json
 
 # Write vulnerability findings to JSON
 xelo plugin run vulnerability sbom.json --output findings.json
 
-# MITRE ATLAS annotation
+# Write vulnerability findings as Markdown (human-readable)
+xelo plugin run vulnerability sbom.json \
+  --config format=markdown \
+  --output findings.md
+
+# Full scan (structural + OSV + Grype) as Markdown
+xelo plugin run vulnerability sbom.json \
+  --config provider=all \
+  --config format=markdown \
+  --output findings.md
+
+# MITRE ATLAS annotation — static JSON (offline)
 xelo plugin run atlas sbom.json --output atlas.json
+
+# MITRE ATLAS annotation — static Markdown (offline, human-readable)
+xelo plugin run atlas sbom.json \
+  --config format=markdown \
+  --output atlas-report.md
+
+# MITRE ATLAS annotation — LLM-enriched JSON (OSV/Grype CVEs + narrative summaries)
+xelo plugin run atlas sbom.json \
+  --config llm=true \
+  --config llm_model=vertex_ai/gemini-3.1-flash-lite-preview \
+  --output atlas-llm.json
+
+# MITRE ATLAS annotation — LLM-enriched Markdown
+xelo plugin run atlas sbom.json \
+  --config llm=true \
+  --config llm_model=vertex_ai/gemini-3.1-flash-lite-preview \
+  --config format=markdown \
+  --output atlas-llm-report.md
 
 # SARIF export → GitHub Code Scanning
 xelo plugin run sarif sbom.json --output results.sarif
@@ -229,8 +258,8 @@ xelo plugin run xray sbom.json \
 
 | Class | Module | Network | Notes |
 | --- | --- | --- | --- |
-| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules — missing guardrails, over-privileged agents |
-| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2 techniques and mitigations |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules + OSV/Grype dep advisories; `--config format=markdown` for Markdown output |
+| `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2; `--config format=markdown` for Markdown output; `--config llm=true` for CVE context + LLM narratives |
 | `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Exports findings as SARIF 2.1.0 (GitHub Code Scanning compatible) |
