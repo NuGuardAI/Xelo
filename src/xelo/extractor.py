@@ -768,7 +768,9 @@ class AiSbomExtractor:
                 port = acc.metadata.get("port", "")
                 transport = acc.metadata.get("transport", "")
                 if host or port:
-                    node.metadata.endpoint = f"{host}:{port}" if (host and port) else (host or port)
+                    node.metadata.endpoint = (
+                        f"{host}:{port}" if (host and port) else str(host or port)
+                    )
                 if transport:
                     node.metadata.transport = str(transport)
                 if acc.metadata.get("server_name"):
