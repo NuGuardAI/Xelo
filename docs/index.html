@@ -103,22 +103,16 @@
             <div class="hero-inner">
 
                 <div class="hero-copy">
-                    <div class="hero-badge">
-                        <span class="dot"></span>
-                        Open source · Apache-2.0
-                    </div>
+                    <h2>
+                        Improve the safety & security of your AI Application
+                    </h2>
 
-                    <h1>
-                        The <span class="accent">AI SBOM</span> generator<br />
-                        for AI-native apps
-                    </h1>
-
-                    <p class="hero-sub">
-                        Xelo scans your codebase and produces an inventory
-                        of every AI component — agents, models, tools, prompts, datastores, and more.<br />
-                        Operate without LLM or with LLM modes. <br />
-                        Wide range of plug-ins supported for your security toolchain.
-                    </p>
+                    <ul class="hero-list">
+                        <li><strong class="accent">Deep Visibility</strong> agents, models, MCP tools, prompts, and more</li>
+                        <li><strong class="accent">Vulnerability Scanning</strong> PII/PHI detection, security analysis</li>                       
+                        <li><strong class="accent">Offline</strong> operation with optional LLM modes</li>
+                        <li><strong class="accent">Integrate</strong> with your security toolchain via plugins</li>
+                    </ul>
 
                     <div class="hero-actions">
                         <a href="doc.html?page=getting-started" class="btn-primary">Get started →</a>
@@ -153,37 +147,123 @@
                 <div class="glow-ring"></div>
                 <div class="code-window">
                     <div class="code-titlebar">
-                        <div class="dots">
-                            <span class="dot-red"></span>
-                            <span class="dot-yellow"></span>
-                            <span class="dot-green"></span>
-                        </div>
-                        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-dim)">xelo scan ·
-                            healthcare-voice-agent</span>
+                        <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-dim)">xelo-report ·
+                            openai-cs-demo.md</span>
                         <span></span>
                     </div>
-                    <pre><span class="hl-prompt">$ </span><span class="hl-cmd">xelo scan ./healthcare-voice-agent --output sbom.json</span>
+                    <pre style="margin:0"><span class="hl-prompt">$ </span><span class="hl-cmd">xelo scan https://github.com/NuGuardAI/openai-cs-agents-demo \
+    --format unified --output sbom.json \
+    --plugin markdown --plugin-output report.md</span>
+  29 nodes · 28 deps · 36 edges → sbom.json
+  ok: Markdown report generated (29 node(s)) → report.md
 
-  scanning 47 files…
-
-<span class="hl-ok">  ✓</span> AGENT         normalize_agent, prognosis_agent +3
-<span class="hl-ok">  ✓</span> MODEL         gpt-4 (openai), gemini-2.0-flash (google)
-<span class="hl-ok">  ✓</span> DATASTORE     patient_records  <span class="hl-warn">[PHI · PII]</span>
-<span class="hl-ok">  ✓</span> PRIVILEGE     db_write · network_out
-<span class="hl-ok">  ✓</span> DEPLOYMENT    k8s:production (no encryption-at-rest)
-<span class="hl-ok">  ✓</span> CONTAINER     node:20  <span class="hl-warn">[runs-as-root]</span>
-
-  16 nodes · 22 edges → sbom.json
-
-<span class="hl-prompt">$ </span><span class="hl-cmd">xelo plugin run vulnerability sbom.json</span>
-
-<span class="hl-crit">  CRITICAL</span>  XELO-001  No guardrails on 5 agents
-<span class="hl-crit">  CRITICAL</span>  XELO-002  PHI to external LLM (OpenAI, Google)
-<span class="hl-crit">  CRITICAL</span>  XELO-010  PHI workload — no encryption at rest
-<span class="hl-warn">  HIGH    </span>  XELO-004  Privileged agents without guardrails
-<span class="hl-warn">  HIGH    </span>  XELO-021  Container running as root
-
-  5 findings (3 critical, 2 high) — see findings.json</pre>
+<span class="hl-prompt">$ </span><span class="hl-cmd">code report.md</span>
+<span style="color:var(--text-dim);font-style:italic"># Opening Markdown Preview...</span></pre>
+                    <div
+                        style="border:1px solid #333;border-radius:0 0 4px 4px;background:#1e1e1e;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.5;padding:0.8rem 1rem;color:#ccc;font-size:0.78rem">
+                        <div style="color:#888;font-size:0.72rem;margin-bottom:0.6rem"><strong
+                                style="color:#ccc">Generated:</strong> 2026-03-14T22:08:05Z<br><strong
+                                style="color:#ccc">Schema version:</strong> 1.3.0</div>
+                        <h2 style="color:#e0e0e0;font-size:1.05rem;margin:0 0 0.4rem;font-weight:600">Summary</h2>
+                        <table style="width:100%;border-collapse:collapse;font-size:0.78rem;color:#ccc">
+                            <tr style="border-bottom:1px solid #444">
+                                <th style="text-align:left;padding:5px 8px 5px 0;color:#999;font-weight:600">Field</th>
+                                <th style="text-align:left;padding:5px 0;color:#999;font-weight:600">Value</th>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">AI nodes</td>
+                                <td style="padding:5px 0">29</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Dependencies</td>
+                                <td style="padding:5px 0">28</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Data classification</td>
+                                <td style="padding:5px 0">PII</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Classified tables</td>
+                                <td style="padding:5px 0">AirlineAgentContext, GuardrailCheck</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0;vertical-align:top">Use case</td>
+                                <td style="padding:5px 0">This application implements an agentic AI workflow with 5
+                                    agent(s), 6 tool integration(s), and 2 guardrail control(s). Detected use cases
+                                    include FAQ question answering, request triage and routing.</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Frameworks</td>
+                                <td style="padding:5px 0">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Modalities</td>
+                                <td style="padding:5px 0">TEXT</td>
+                            </tr>
+                        </table>
+                        <h2 style="color:#e0e0e0;font-size:1.05rem;margin:0.8rem 0 0.4rem;font-weight:600">AI Components
+                        </h2>
+                        <table style="width:100%;border-collapse:collapse;font-size:0.78rem;color:#ccc">
+                            <tr style="border-bottom:1px solid #444">
+                                <th style="text-align:left;padding:5px 8px 5px 0;color:#999;font-weight:600;width:30%">
+                                    Name</th>
+                                <th style="text-align:left;padding:5px 8px 5px 0;color:#999;font-weight:600;width:20%">
+                                    Type</th>
+                                <th style="text-align:left;padding:5px 8px 5px 0;color:#999;font-weight:600;width:12%">
+                                    Confidence</th>
+                                <th style="text-align:left;padding:5px 0;color:#999;font-weight:600">Details</th>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Cancellation Agent</td>
+                                <td style="padding:5px 8px 5px 0">AGENT</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">FAQ Agent</td>
+                                <td style="padding:5px 8px 5px 0">AGENT</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Triage Agent</td>
+                                <td style="padding:5px 8px 5px 0">AGENT</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Deploy to Azure</td>
+                                <td style="padding:5px 8px 5px 0">DEPLOYMENT</td>
+                                <td style="padding:5px 8px 5px 0">95%</td>
+                                <td style="padding:5px 0;color:#888">github-actions</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Jailbreak Guardrail</td>
+                                <td style="padding:5px 8px 5px 0">GUARDRAIL</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Relevance Guardrail</td>
+                                <td style="padding:5px 8px 5px 0">GUARDRAIL</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">openai_agents</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">gpt-4.1-mini</td>
+                                <td style="padding:5px 8px 5px 0">MODEL</td>
+                                <td style="padding:5px 8px 5px 0">90%</td>
+                                <td style="padding:5px 0;color:#888">openai</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #2d2d2d">
+                                <td style="padding:5px 8px 5px 0">Triage Agent Instructions</td>
+                                <td style="padding:5px 8px 5px 0">PROMPT</td>
+                                <td style="padding:5px 8px 5px 0">92%</td>
+                                <td style="padding:5px 0;color:#888">"You are a helpful triaging agent…" · role=system
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

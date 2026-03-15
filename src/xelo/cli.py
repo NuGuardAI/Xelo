@@ -12,6 +12,7 @@ xelo scan <PATH|URL>
     --output <file>        Write to file (default: stdout)
     --llm                  Enable LLM enrichment for this run
     --ref <branch>         Branch/ref to clone when target is a URL
+    --token <token>        Git token for private repo access (or GH_TOKEN / GITHUB_TOKEN env)
     --plugin <name>        Run a toolbox plugin inline after scanning (no intermediate file needed)
     --plugin-output <file> Plugin output file (default: stdout)
     --plugin-config k=v    Plugin config entry, repeatable (same as --config in plugin run)
@@ -48,6 +49,7 @@ import sys
 import traceback
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse, urlunparse
 
 from .config import AiSbomConfig
 from .extractor import AiSbomExtractor
@@ -291,6 +293,12 @@ def main() -> None:
     scan_p.add_argument(
         "--output", default="-", metavar="<file>", help="Output file (default: stdout)"
     )
+    scan_p.add_argument(
+        "--token",
+        metavar="<token>",
+        default=None,
+        help=("Git auth token for private repos. Falls back to GH_TOKEN / GITHUB_TOKEN env vars."),
+    )
     _add_llm_args(scan_p)
     scan_p.add_argument(
         "--plugin",
@@ -479,6 +487,26 @@ def _handle_plugin_run(args: argparse.Namespace) -> None:
 # ── scan ──────────────────────────────────────────────────────────────────────
 
 
+def _inject_token(url: str, token: str) -> str:
+    """Embed a token into an HTTPS git URL for private-repo authentication."""
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        return url
+    # Replace or set the userinfo portion: https://TOKEN@host/...
+    netloc = f"{token}@{parsed.hostname}"
+    if parsed.port:
+        netloc += f":{parsed.port}"
+    return urlunparse(parsed._replace(netloc=netloc))
+
+
+def _resolve_token(args: argparse.Namespace) -> str | None:
+    """Return the git token from --token flag or environment variables."""
+    token: str | None = getattr(args, "token", None)
+    if token:
+        return token
+    return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or None
+
+
 def _handle_scan(args: argparse.Namespace) -> None:
     extractor = AiSbomExtractor()
     config = _build_extraction_config(args)
@@ -486,8 +514,15 @@ def _handle_scan(args: argparse.Namespace) -> None:
 
     try:
         if "://" in target:
+            token = _resolve_token(args)
+            clone_url = _inject_token(target, token) if token else target
             _log.info("cloning %s @ %s", target, args.ref)
-            doc = extractor.extract_from_repo(target, ref=args.ref, config=config)
+            doc = extractor.extract_from_repo(
+                clone_url,
+                ref=args.ref,
+                config=config,
+                source_ref=target,
+            )
             local_root = Path(".")
         else:
             local_root = Path(target).resolve()

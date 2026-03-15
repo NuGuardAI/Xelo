@@ -43,33 +43,29 @@ xelo scan <path> --output <file> [options]
 | `--llm-budget-tokens <n>` | integer | No | from config/env (`XELO_LLM_BUDGET_TOKENS`, fallback `50000`) | Token budget for enrichment | Used when LLM enrichment is active |
 | `--llm-api-key <key>` | string | No | from config/env/provider defaults | Direct API key override | Sensitive; do not log/share |
 | `--llm-api-base <url>` | string | No | from config/env/provider defaults | Base URL override (for hosted endpoints) | Common for Azure/provider proxies |
+| `--token <token>` | string | No | `GH_TOKEN` or `GITHUB_TOKEN` env | Git auth token for cloning private repos | Only used when target is a URL |
 | `--plugin <name>` | string | No | none | Run a toolbox plugin inline after scanning — no intermediate file needed | Accepts any name from `xelo plugin list` |
 | `--plugin-output <file>` | path | No | stdout | Output file for the plugin result | Only meaningful with `--plugin` |
 | `--plugin-config key=value` | string | No | — | Plugin config entry (repeatable) | Only meaningful with `--plugin`; same syntax as `--config` in `plugin run` |
 
 ### Scan + Plugin in one command
 
-Passing `--plugin` runs the chosen toolbox plugin immediately after extraction using the in-memory SBOM — no intermediate file required.
+Passing `--plugin` runs the chosen toolbox plugin immediately after extraction using the in-memory SBOM — no intermediate file required. `--plugin-config` passes options straight through to the plugin.
 
 ```bash
-# Scan and run the vulnerability plugin in a single command
-xelo scan ./my-ai-app \
+# Scan a private healthcare agent repo with full vulnerability scan (Markdown output)
+xelo scan https://github.com/org/healthcare-agent.git --ref main \
+  --token ghp_abc123... \
   --output sbom.json \
   --plugin vulnerability \
-  --plugin-output findings.json
+  --plugin-config provider=all \
+  --plugin-config format=markdown \
+  --plugin-output findings.md
 ```
 
-The SBOM is written to `sbom.json` first, then the vulnerability scanner runs against it and writes `findings.json`. Both steps share the same extraction result.
+The SBOM is written to `sbom.json` first, then the vulnerability scanner runs against it (structural + OSV + Grype) and writes `findings.md`. Both steps share the same extraction result.
 
-`--plugin-config` passes options straight through to the plugin:
-
-```bash
-# Scan a remote repo and generate a Markdown report in one step
-xelo scan https://github.com/org/repo --ref main \
-  --output sbom.json \
-  --plugin markdown \
-  --plugin-output report.md
-```
+The `--token` flag injects the token into the clone URL automatically. When omitted, the CLI falls back to `GH_TOKEN` or `GITHUB_TOKEN` environment variables.
 
 ## `scan repo` Reference
 
@@ -83,19 +79,12 @@ xelo scan <url> --output <file> [options]
 | --- | --- | --- | --- | --- | --- |
 | `<url>` | string (git URL) | Yes | none | Repository URL to clone and scan | Requires `git` on `PATH` |
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
+| `--token <token>` | string | No | `GH_TOKEN` or `GITHUB_TOKEN` env | Git auth token for cloning private repos | Injected into clone URL automatically |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
 | `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
 
 Same LLM flags and `--plugin` / `--plugin-output` / `--plugin-config` flags as `scan path` are accepted here with identical behavior.
 
-**Example — scan a GitHub repo and run the vulnerability plugin in one command:**
-
-```bash
-xelo scan https://github.com/org/my-ai-app --ref main \
-  --output sbom.json \
-  --plugin vulnerability \
-  --plugin-output findings.json
-```
 
 ## `validate` Reference
 
@@ -178,10 +167,6 @@ xelo plugin run <plugin> <sbom> [--output <file>] [--config key=value ...] [--co
 | All others | Full `ToolResult` JSON (`{status, tool, message, details}`) |
 
 **Examples:**
-
-```bash
-# Structural vulnerability scan (findings to stdout, JSON)
-xelo plugin run vulnerability sbom.json
 
 # Write vulnerability findings to JSON
 xelo plugin run vulnerability sbom.json --output findings.json
@@ -391,7 +376,7 @@ Remote repo scan:
 xelo scan https://github.com/example/project.git --ref main --format json --output sbom.json
 ```
 
-Unified output (auto-generates standard CycloneDX BOM):
+Unified output (Extends CycloneDX BOM to capture AI components):
 
 ```bash
 xelo scan ./my-repo --format unified --output unified-bom.json

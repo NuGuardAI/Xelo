@@ -28,6 +28,23 @@ Scan a remote GitHub repository directly:
 xelo scan https://github.com/org/repo --ref main --output sbom.json
 ```
 
+Scan a **private** GitHub repository using a personal access token:
+
+```bash
+xelo scan https://github.com/org/private-repo.git --ref main \
+  --token ghp_abc123... \
+  --output sbom.json
+```
+
+The `--token` flag injects the token into the clone URL automatically. When omitted, the CLI falls back to `GH_TOKEN` or `GITHUB_TOKEN` environment variables:
+
+```bash
+export GITHUB_TOKEN=ghp_abc123...
+xelo scan https://github.com/org/private-repo.git --ref main --output sbom.json
+```
+
+> **Note:** The token is used only for `git clone` and is never stored in the SBOM output.
+
 A successful scan prints:
 
 ```text
@@ -74,6 +91,13 @@ By default Xelo uses only AST parsing and regex patterns. This is fast, determin
 4. **Richer output for downstream consumers.** Tools like the vulnerability scanner and ATLAS annotator produce better results when node metadata is more complete. LLM enrichment fills gaps (e.g. model family, provider context) that affect which VLA rules fire.
 
 **Cost is controlled.** Token usage is capped by `XELO_LLM_BUDGET_TOKENS` (default 50 000). A typical medium-size repo uses 5 000–15 000 tokens — a few cents with GPT-4o-mini or free with Gemini Flash.
+
+**Your source code is not sent wholesale.** Xelo never sends entire files to the LLM. Instead, the enrichment pipeline sends only small, targeted context:
+
+- **Verification** — only nodes with uncertain confidence (0.60–0.85) are sent, and each prompt includes just a 20-line code snippet around the detection site, not the full file.
+- **Gap-fill discovery** — searches for component types missing from deterministic results using summarised context, not raw source.
+- **Use-case summary** — receives a sample of file paths and node metadata, not file contents.
+- **Budget enforcement** — all LLM calls share a single token budget that halts enrichment when exhausted.
 
 ### Enabling LLM Enrichment
 

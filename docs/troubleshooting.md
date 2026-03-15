@@ -59,7 +59,7 @@ Before sharing logs or `.env` snippets:
 - Remove `XELO_LLM_API_KEY` and any provider API keys
 - Remove internal URLs/tokens/secrets
 
-## Escalation
+## Contacts
 
-- General support: [info@nuguard.ai](mailto:info@nuguard.ai)
+- General inquiries: [info@nuguard.ai](mailto:info@nuguard.ai)
 - Sensitive/security issues: [security@nuguard.ai](mailto:security@nuguard.ai)
