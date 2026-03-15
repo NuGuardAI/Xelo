@@ -908,11 +908,12 @@ class AiSbomExtractor:
         ref: str,
         config: AiSbomConfig,
         cache_dir: str | Path | None = None,
+        source_ref: str | None = None,
     ) -> AiSbomDocument:
         """Clone a git repository and extract an SBOM from it.
 
         Args:
-            url: Git repository URL to clone.
+            url: Git repository URL to clone (may contain auth tokens).
             ref: Branch, tag, or commit to check out.
             config: Extraction configuration.
             cache_dir: Optional path where the cloned repository should be
@@ -925,6 +926,9 @@ class AiSbomExtractor:
                 use the files for downstream processing.  When *None*
                 (default) a temporary directory is used and cleaned up
                 automatically.
+            source_ref: Display URL stored in the SBOM ``target`` field.
+                Defaults to *url* when not supplied.  Use this to avoid
+                leaking auth tokens embedded in *url*.
 
         Returns:
             The extracted :class:`AiSbomDocument`.
@@ -941,18 +945,19 @@ class AiSbomExtractor:
                 print(f)
         """
         app_name = url.rstrip("/").rsplit("/", 1)[-1].removesuffix(".git") or "repo"
+        display_url = source_ref or url
 
         if cache_dir is not None:
             repo_dir = Path(cache_dir) / "repo" / app_name
             repo_dir.mkdir(parents=True, exist_ok=True)
             self._clone_repo(url=url, ref=ref, dest=repo_dir)
-            return self.extract_from_path(repo_dir, config, source_ref=url, branch=ref)
+            return self.extract_from_path(repo_dir, config, source_ref=display_url, branch=ref)
 
         with tempfile.TemporaryDirectory(prefix="xelo_") as temp_dir:
             repo_dir = Path(temp_dir) / "repo" / app_name
             repo_dir.mkdir(parents=True, exist_ok=True)
             self._clone_repo(url=url, ref=ref, dest=repo_dir)
-            return self.extract_from_path(repo_dir, config, source_ref=url, branch=ref)
+            return self.extract_from_path(repo_dir, config, source_ref=display_url, branch=ref)
 
     # ------------------------------------------------------------------
     # Internal helpers

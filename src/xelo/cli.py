@@ -517,7 +517,12 @@ def _handle_scan(args: argparse.Namespace) -> None:
             token = _resolve_token(args)
             clone_url = _inject_token(target, token) if token else target
             _log.info("cloning %s @ %s", target, args.ref)
-            doc = extractor.extract_from_repo(clone_url, ref=args.ref, config=config)
+            doc = extractor.extract_from_repo(
+                clone_url,
+                ref=args.ref,
+                config=config,
+                source_ref=target,
+            )
             local_root = Path(".")
         else:
             local_root = Path(target).resolve()
