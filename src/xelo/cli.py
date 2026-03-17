@@ -7,8 +7,9 @@ xelo scan <PATH|URL>
     Target is treated as a URL when it contains ``://``.
 
     --format json          Xelo-native JSON (default)
-    --format cyclonedx     AI components only as CycloneDX 1.6
-    --format unified       Standard deps BOM + AI-BOM merged (CycloneDX 1.6)
+    --format cyclonedx     Package dependencies only as CycloneDX 1.6 (AI SBOM details not included)
+    --format cyclonedx-ext Standard deps BOM + AI-BOM merged (CycloneDX 1.6, extended with AI components)
+    --format spdx          AI components as SPDX 3.0.1 JSON-LD (optional: pip install xelo[spdx])
     --output <file>        Write to file (default: stdout)
     --llm                  Enable LLM enrichment for this run
     --ref <branch>         Branch/ref to clone when target is a URL
@@ -30,7 +31,7 @@ xelo plugin run <PLUGIN> <SBOM> [--output <file>] [--config key=value ...]
     Run a named toolbox plugin against an existing SBOM JSON file.
 
     Available plugins: vulnerability, atlas, license, dependency,
-                       sarif, cyclonedx, markdown, ghas, aws-security-hub, xray
+                       sarif, cyclonedx, spdx, markdown, ghas, aws-security-hub, xray
 
 Logging
 -------
@@ -181,6 +182,12 @@ _PLUGIN_REGISTRY: dict[str, tuple[str, str, str, str]] = {
         "No",
         "Export nodes as CycloneDX 1.6 BOM",
     ),
+    "spdx": (
+        "xelo.toolbox.plugins.spdx_exporter",
+        "SpdxExporter",
+        "No",
+        "Export nodes as SPDX 3.0.1 JSON-LD (install xelo[spdx] for spdx-tools validation)",
+    ),
     "markdown": (
         "xelo.toolbox.plugins.markdown_exporter",
         "MarkdownExporterPlugin",
@@ -209,7 +216,7 @@ _PLUGIN_REGISTRY: dict[str, tuple[str, str, str, str]] = {
 
 # Plugins whose ToolResult.details IS the output dict (serialised as JSON when emitting).
 # For these plugins the full details dict becomes the file content.
-_PLUGIN_DICT_OUTPUT: frozenset[str] = frozenset({"sarif", "cyclonedx"})
+_PLUGIN_DICT_OUTPUT: frozenset[str] = frozenset({"sarif", "cyclonedx", "spdx"})
 
 # For content-exporter plugins that store a raw string inside ToolResult.details.
 _PLUGIN_CONTENT_KEY: dict[str, str] = {
@@ -286,9 +293,9 @@ def main() -> None:
     )
     scan_p.add_argument(
         "--format",
-        choices=["json", "cyclonedx", "unified"],
+        choices=["json", "cyclonedx", "cyclonedx-ext", "spdx"],
         default="json",
-        help="Output format: json (default), cyclonedx, unified",
+        help="Output format: json (default), cyclonedx, cyclonedx-ext, spdx",
     )
     scan_p.add_argument(
         "--output", default="-", metavar="<file>", help="Output file (default: stdout)"
@@ -596,7 +603,9 @@ def _write_output(
             content = AiSbomSerializer.to_json(doc)
         elif fmt == "cyclonedx":
             content = AiSbomSerializer.dump_cyclonedx_json(doc)
-        else:
+        elif fmt == "spdx":
+            content = _build_spdx(doc)
+        else:  # cyclonedx-ext
             content = _build_unified(args, root, doc)
     except (PermissionError, OSError) as exc:
         _die(f"I/O error: {exc}", args)
@@ -619,6 +628,13 @@ def _build_unified(args: argparse.Namespace, root: Path, ai_doc: AiSbomDocument)
     merger = AiBomMerger()
     unified = merger.merge(std_bom, ai_doc, generator_method=method)
     return json.dumps(unified, indent=2)
+
+
+def _build_spdx(doc: AiSbomDocument) -> str:
+    from .toolbox.plugins.spdx_exporter import _to_spdx3
+
+    payload = _to_spdx3(doc)
+    return json.dumps(payload, indent=2)
 
 
 def _emit(content: str, output: str, args: argparse.Namespace) -> None:

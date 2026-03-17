@@ -327,7 +327,7 @@ class AiSbomDocument(BaseModel):
         description="AIBOM schema version (semver); bump when format changes",
     )
     generated_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(timezone.utc).replace(microsecond=0),
         description="ISO 8601 UTC timestamp when this document was generated",
     )
     generator: str = Field(

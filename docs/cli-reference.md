@@ -37,7 +37,7 @@ xelo scan <path> --output <file> [options]
 | --- | --- | --- | --- | --- | --- |
 | `<path>` | path | Yes | none | Local directory to scan | Fails if missing or not a directory |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
-| `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
+| `--format <json\|cyclonedx\|cyclonedx-ext\|spdx>` | enum | No | `json` | Output format selection | `cyclonedx` outputs package deps only (no AI SBOM details); `cyclonedx-ext` merges a standard deps BOM with AI components; `spdx` generates SPDX 3.0.1 JSON-LD |
 | `--llm` | boolean | No | `false` | Enables LLM enrichment for this run | When omitted, deterministic extraction is used |
 | `--llm-model <model>` | string | No | from config/env (`XELO_LLM_MODEL`, fallback `gpt-4o-mini`) | LLM model identifier | Used when LLM enrichment is active |
 | `--llm-budget-tokens <n>` | integer | No | from config/env (`XELO_LLM_BUDGET_TOKENS`, fallback `50000`) | Token budget for enrichment | Used when LLM enrichment is active |
@@ -81,7 +81,7 @@ xelo scan <url> --output <file> [options]
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
 | `--token <token>` | string | No | `GH_TOKEN` or `GITHUB_TOKEN` env | Git auth token for cloning private repos | Injected into clone URL automatically |
 | `--output <file>` | path | Yes | none | Output file path | Required for all formats |
-| `--format <json\|cyclonedx\|unified>` | enum | No | `json` | Output format selection | `unified` generates a standard CycloneDX BOM and merges AI-BOM data |
+| `--format <json\|cyclonedx\|cyclonedx-ext\|spdx>` | enum | No | `json` | Output format selection | `cyclonedx` outputs package deps only (no AI SBOM details); `cyclonedx-ext` merges a standard deps BOM with AI components; `spdx` generates SPDX 3.0.1 JSON-LD |
 
 Same LLM flags and `--plugin` / `--plugin-output` / `--plugin-config` flags as `scan path` are accepted here with identical behavior.
 
@@ -121,8 +121,10 @@ Emits the Xelo JSON schema (JSON Schema 2020-12, `$id` `https://nuguard.ai/schem
 
 - CLI flags override environment-backed defaults from runtime config.
 - `--llm` is the scan-time switch for enrichment; when omitted, scans run deterministic-only.
-- Unified mode always generates a standard CycloneDX BOM automatically before merging AI-BOM data.
-- If `cyclonedx-py` is unavailable, unified generation can fall back to a shallow dependency scanner.
+- `--format cyclonedx` outputs **package dependencies only** as a CycloneDX 1.6 BOM; AI SBOM node details (agents, models, tools, prompts, etc.) are not included.
+- `--format cyclonedx-ext` (extended) generates a full standard CycloneDX deps BOM and merges the AI-BOM data into it, preserving all AI component details.
+- If `cyclonedx-py` is unavailable, `cyclonedx-ext` generation can fall back to a shallow dependency scanner.
+- `--format spdx` does not require any optional dependencies to generate output. Install `xelo[spdx]` (`pip install xelo[spdx]`) to enable SHACL validation via the `spdx_export` plugin `validate` config key.
 - Dependency manifests (`requirements.txt`, `pyproject.toml`, `package.json`) are discovered recursively at any depth in the project tree; virtual-environment and build directories (`.venv`, `node_modules`, `dist`, etc.) are excluded automatically.
 
 ## Toolbox Plugins
@@ -163,6 +165,7 @@ xelo plugin run <plugin> <sbom> [--output <file>] [--config key=value ...] [--co
 | --- | --- |
 | `sarif` | SARIF 2.1.0 JSON document |
 | `cyclonedx` | CycloneDX 1.6 BOM JSON |
+| `spdx_export` | SPDX 3.0.1 JSON-LD document |
 | `markdown` | Markdown text |
 | All others | Full `ToolResult` JSON (`{status, tool, message, details}`) |
 
@@ -205,6 +208,14 @@ xelo plugin run atlas sbom.json \
 
 # SARIF export → GitHub Code Scanning
 xelo plugin run sarif sbom.json --output results.sarif
+
+# SPDX 3.0.1 JSON-LD export
+xelo plugin run spdx_export sbom.json --output bom.spdx.json
+
+# SPDX 3.0.1 export with optional SHACL validation (requires xelo[spdx])
+xelo plugin run spdx_export sbom.json \
+  --config validate=true \
+  --output bom.spdx.json
 
 # CycloneDX export
 xelo plugin run cyclonedx sbom.json --output bom.cdx.json
@@ -376,15 +387,30 @@ Remote repo scan:
 xelo scan https://github.com/example/project.git --ref main --format json --output sbom.json
 ```
 
-Unified output (Extends CycloneDX BOM to capture AI components):
+CycloneDX (package deps only — AI SBOM details not included):
 
 ```bash
-xelo scan ./my-repo --format unified --output unified-bom.json
+xelo scan ./my-repo --format cyclonedx --output sbom.cdx.json
+```
+
+CycloneDX Extended (standard CycloneDX BOM merged with Xelo specific AI components):
+
+```bash
+xelo scan ./my-repo --format cyclonedx-ext --output sbom-ext.cdx.json
+```
+
+SPDX 3.0.1 JSON-LD:
+
+```bash
+xelo scan ./my-repo --format spdx --output sbom.spdx.json
+
+# Same for a remote repo
+xelo scan https://github.com/org/project --format spdx --output sbom.spdx.json
 ```
 
 ## Constraints
 
 - `scan repo` requires `git` available on `PATH`.
 - LLM enrichment requires optional dependency support (`litellm`) and provider credentials.
-- Best standard dependency BOM fidelity in unified mode requires `cyclonedx-py` availability.
+- Best standard dependency BOM fidelity in `cyclonedx-ext` mode requires `cyclonedx-py` availability.
 - Repositories with no package manifest files (no `requirements.txt`, `pyproject.toml`, or `package.json` anywhere in the tree) will produce `deps: []` in output — this is expected for documentation-only or walkthrough repos.

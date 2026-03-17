@@ -116,11 +116,19 @@ from xelo import AiSbomSerializer
 # Xelo-native JSON (schema v1.1.0)
 json_text = AiSbomSerializer.to_json(doc)
 
-# CycloneDX 1.6 JSON string
+# CycloneDX 1.6 JSON string — package dependencies only
+# Note: AI SBOM node details (agents, models, tools, etc.) are NOT included in this format.
+# Use cyclonedx-ext (via CLI) or AiBomMerger (via API) to include AI components.
 cdx_text = AiSbomSerializer.dump_cyclonedx_json(doc)
 
 # CycloneDX as a Python dict
 cdx_dict = AiSbomSerializer.to_cyclonedx(doc)
+
+# SPDX 3.0.1 JSON-LD dict
+from xelo.toolbox.plugins.spdx_exporter import _to_spdx3
+spdx_dict = _to_spdx3(doc)
+spdx_text = json.dumps(spdx_dict, indent=2)
+Path("sbom.spdx.json").write_text(spdx_text, encoding="utf-8")
 ```
 
 ## Toolbox Plugins
@@ -207,6 +215,21 @@ Path("results.sarif").write_text(
 # Markdown report
 md = MarkdownExporterPlugin().run(sbom, {})
 Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
+
+# SPDX 3.0.1 JSON-LD export — ToolResult.details IS the SPDX document dict
+from xelo.toolbox.plugins.spdx_exporter import SpdxExporter
+spdx = SpdxExporter().run(sbom, {})
+Path("bom.spdx.json").write_text(
+    json.dumps(spdx.details, indent=2), encoding="utf-8"
+)
+
+# SPDX 3.0.1 export with SHACL validation (requires pip install xelo[spdx])
+spdx_validated = SpdxExporter().run(sbom, {"validate": True})
+print(spdx_validated.details.get("_xelo_validation"))  # {"conforms": True/False, "report": "..."}
+Path("bom.spdx.json").write_text(
+    json.dumps({k: v for k, v in spdx_validated.details.items() if not k.startswith("_xelo")}, indent=2),
+    encoding="utf-8",
+)
 ```
 
 `ToolResult` fields:
@@ -226,6 +249,7 @@ Path("report.md").write_text(md.details["markdown"], encoding="utf-8")
 | `LicenseCheckerPlugin` | `license_checker` | No | Offline |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Offline |
 | `SarifExporterPlugin` | `sarif_exporter` | No | Offline |
+| `SpdxExporter` | `spdx_export` | No | Offline; SPDX 3.0.1 JSON-LD; `validate=True` enables SHACL validation (requires `xelo[spdx]`) |
 | `CycloneDxExporter` | `cyclonedx_exporter` | No | Offline |
 | `MarkdownExporterPlugin` | `markdown_exporter` | No | Offline |
 | `GhasUploaderPlugin` | `ghas_uploader` | Yes | Requires `GITHUB_TOKEN` env var |

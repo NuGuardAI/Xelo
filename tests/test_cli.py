@@ -21,7 +21,9 @@ def _parse(argv: list[str]) -> object:
     scan_p.add_argument("target", metavar="<path|url>")
     scan_p.add_argument("--ref", default="main")
     scan_p.add_argument("--token", default=None)
-    scan_p.add_argument("--format", choices=["json", "cyclonedx", "unified"], default="json")
+    scan_p.add_argument(
+        "--format", choices=["json", "cyclonedx", "cyclonedx-ext", "spdx"], default="json"
+    )
     scan_p.add_argument("--output", default="-")
     _add_llm_args(scan_p)
 
@@ -34,10 +36,10 @@ def _parse(argv: list[str]) -> object:
     return parser.parse_args(argv)
 
 
-def test_scan_unified_parses() -> None:
-    args = _parse(["scan", "./repo", "--format", "unified", "--output", "unified-bom.json"])
-    assert args.format == "unified"
-    assert args.output == "unified-bom.json"
+def test_scan_cyclonedx_ext_parses() -> None:
+    args = _parse(["scan", "./repo", "--format", "cyclonedx-ext", "--output", "sbom-ext.cdx.json"])
+    assert args.format == "cyclonedx-ext"
+    assert args.output == "sbom-ext.cdx.json"
 
 
 def test_scan_defaults_to_stdout() -> None:
@@ -52,7 +54,7 @@ def test_scan_rejects_unknown_format() -> None:
 
 def test_scan_rejects_cdx_bom_flag() -> None:
     with pytest.raises(SystemExit):
-        _parse(["scan", "./repo", "--format", "unified", "--cdx-bom", "standard-bom.json"])
+        _parse(["scan", "./repo", "--format", "cyclonedx-ext", "--cdx-bom", "standard-bom.json"])
 
 
 def test_scan_rejects_enable_llm_flag() -> None:
