@@ -53,9 +53,15 @@ xelo scan <path> --output <file> [options]
 Passing `--plugin` runs the chosen toolbox plugin immediately after extraction using the in-memory SBOM — no intermediate file required. `--plugin-config` passes options straight through to the plugin.
 
 ```bash
-# Scan a private healthcare agent repo with full vulnerability scan (Markdown output)
-xelo scan https://github.com/org/healthcare-agent.git --ref main \
-  --token ghp_abc123... \
+# Scan and run the vulnerability plugin — no SBOM file saved
+xelo scan https://github.com/org/healthcare-agent.git \
+  --plugin vulnerability \
+  --plugin-config provider=all \
+  --plugin-config format=markdown \
+  --plugin-output findings.md
+
+# Keep the SBOM too
+xelo scan https://github.com/org/healthcare-agent.git \
   --output sbom.json \
   --plugin vulnerability \
   --plugin-config provider=all \
@@ -63,7 +69,7 @@ xelo scan https://github.com/org/healthcare-agent.git --ref main \
   --plugin-output findings.md
 ```
 
-The SBOM is written to `sbom.json` first, then the vulnerability scanner runs against it (structural + OSV + Grype) and writes `findings.md`. Both steps share the same extraction result.
+When `--output` is omitted and `--plugin` is set, the SBOM is silently discarded (`/dev/null`) and only the plugin result is written. Both steps share the same in-memory extraction result.
 
 The `--token` flag injects the token into the clone URL automatically. When omitted, the CLI falls back to `GH_TOKEN` or `GITHUB_TOKEN` environment variables.
 
@@ -80,7 +86,7 @@ xelo scan <url> --output <file> [options]
 | `<url>` | string (git URL) | Yes | none | Repository URL to clone and scan | Requires `git` on `PATH` |
 | `--ref <ref>` | string | No | `main` | Git ref/branch/tag to scan | Invalid refs fail clone/checkout |
 | `--token <token>` | string | No | `GH_TOKEN` or `GITHUB_TOKEN` env | Git auth token for cloning private repos | Injected into clone URL automatically |
-| `--output <file>` | path | Yes | none | Output file path | Required for all formats |
+| `--output <file>` | path | No | stdout; `/dev/null` when `--plugin` is set | Output file path for the SBOM | Omit when using `--plugin` to discard the intermediate SBOM |
 | `--format <json\|cyclonedx\|cyclonedx-ext\|spdx>` | enum | No | `json` | Output format selection | `cyclonedx` outputs package deps only (no AI SBOM details); `cyclonedx-ext` merges a standard deps BOM with AI components; `spdx` generates SPDX 3.0.1 JSON-LD |
 
 Same LLM flags and `--plugin` / `--plugin-output` / `--plugin-config` flags as `scan path` are accepted here with identical behavior.

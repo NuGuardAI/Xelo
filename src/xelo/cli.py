@@ -298,7 +298,13 @@ def main() -> None:
         help="Output format: json (default), cyclonedx, cyclonedx-ext, spdx",
     )
     scan_p.add_argument(
-        "--output", default="-", metavar="<file>", help="Output file (default: stdout)"
+        "--output",
+        default=None,
+        metavar="<file>",
+        help=(
+            "Output file for the SBOM (default: stdout, or /dev/null when --plugin is used "
+            "and no output path is specified)"
+        ),
     )
     scan_p.add_argument(
         "--token",
@@ -544,7 +550,8 @@ def _handle_scan(args: argparse.Namespace) -> None:
         return
 
     _log.info("extraction complete: %d nodes, %d edges", len(doc.nodes), len(doc.edges))
-    _write_output(args, doc, local_root, args.output)
+    sbom_output: str = args.output or (os.devnull if getattr(args, "plugin", None) else "-")
+    _write_output(args, doc, local_root, sbom_output)
 
     if getattr(args, "plugin", None):
         _run_inline_plugin(args, doc)
