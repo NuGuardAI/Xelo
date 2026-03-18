@@ -254,7 +254,7 @@ xelo plugin run xray sbom.json \
 
 | Class | Module | Network | Notes |
 | --- | --- | --- | --- |
-| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules (XELO-001–XELO-004) + OSV/Grype dep advisories; `--config format=markdown` for Markdown output |
+| `VulnerabilityScannerPlugin` | `vulnerability` | No | Structural VLA rules (XELO-001–XELO-005) + OSV/Grype dep advisories; `--config format=markdown` for Markdown output |
 | `AtlasAnnotatorPlugin` | `atlas_annotator` | No | Maps findings to MITRE ATLAS v2; `--config format=markdown` for Markdown output; `--config llm=true` for CVE context + LLM narratives |
 | `LicenseCheckerPlugin` | `license_checker` | No | Checks dependency licence compliance |
 | `DependencyAnalyzerPlugin` | `dependency` | No | Scores dependency freshness; flags outdated AI packages |

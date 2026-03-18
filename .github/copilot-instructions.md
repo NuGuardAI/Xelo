@@ -14,7 +14,7 @@ Read it before making any changes. Key sections:
 
 ## Quick reminders
 
-- Next available structural rule ID: **XELO-005**
+- Next available structural rule ID: **XELO-006**
 - After editing `models.py`, regenerate `src/xelo/schemas/aibom.schema.json` (command in CLAUDE.md)
 - New adapters go in `adapters/python/` (Python) or `adapters/typescript/` (TS/JS)
 - New toolbox plugins go in `src/xelo/toolbox/plugins/`
