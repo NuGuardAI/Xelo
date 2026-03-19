@@ -613,7 +613,7 @@ def _write_output(
         elif fmt == "spdx":
             content = _build_spdx(doc)
         else:  # cyclonedx-ext
-            content = _build_unified(args, root, doc)
+            content = _build_cyclonedx_ext(args, root, doc)
     except (PermissionError, OSError) as exc:
         _die(f"I/O error: {exc}", args)
         return
@@ -626,15 +626,15 @@ def _write_output(
         _log.info("done — %d nodes, %d edges", len(doc.nodes), len(doc.edges))
 
 
-def _build_unified(args: argparse.Namespace, root: Path, ai_doc: AiSbomDocument) -> str:
+def _build_cyclonedx_ext(args: argparse.Namespace, root: Path, ai_doc: AiSbomDocument) -> str:
     from .cdx_tools import CycloneDxGenerator
     from .merger import AiBomMerger
 
     gen = CycloneDxGenerator()
     std_bom, method = gen.generate(root)
     merger = AiBomMerger()
-    unified = merger.merge(std_bom, ai_doc, generator_method=method)
-    return json.dumps(unified, indent=2)
+    cyclonedx_ext = merger.merge(std_bom, ai_doc, generator_method=method)
+    return json.dumps(cyclonedx_ext, indent=2)
 
 
 def _build_spdx(doc: AiSbomDocument) -> str:
