@@ -288,10 +288,6 @@
                     <div class="stat-label">Component types detected</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">21</div>
-                    <div class="stat-label">Structural security rules</div>
-                </div>
-                <div class="stat">
                     <div class="stat-value">11</div>
                     <div class="stat-label">Toolbox plugins</div>
                 </div>
@@ -434,15 +430,15 @@
                     <div class="section-label">Security rules</div>
                     <h2>AI-native vulnerability scanning</h2>
                     <p>
-                        21 structural XELO rules fire purely on the AI SBOM — no manual attestation,
-                        no LLM call. Rules are derived from OWASP AI Top 10,
-                        NIST AI RMF, and data protection frameworks, adapted for the AI application layer.
+                        Five structural XELO rules fire purely on the AI SBOM with no manual attestation
+                        and no LLM call. They focus on regulated data exposure, missing output validation,
+                        insecure secret handling, root containers, and AI workloads without resource limits.
                     </p>
                 </div>
                 <div class="vuln-meta">
-                    <span class="vuln-stat-pill"><strong>21</strong> rules total</span>
-                    <span class="vuln-stat-pill"><strong>17</strong> offline rules</span>
-                    <span class="vuln-stat-pill"><strong style="color:var(--red)">4</strong> CRITICAL severity</span>
+                    <span class="vuln-stat-pill"><strong>5</strong> offline structural rules</span>
+                    <span class="vuln-stat-pill"><strong style="color:var(--red)">1</strong> CRITICAL severity</span>
+                    <span class="vuln-stat-pill"><strong>2</strong> HIGH severity</span>
                     <span class="vuln-stat-pill" style="font-family:var(--mono);font-size:0.78rem;">xelo plugin run
                         vulnerability sbom.json</span>
                 </div>
@@ -451,48 +447,43 @@
             <div class="rule-categories">
                 <div class="rule-cat">
                     <div class="rule-cat-top">
-                        <span class="rule-cat-icon">🤖</span>
-                        <span class="rule-count-badge sev-critical">XELO-001 – 009</span>
+                        <span class="rule-cat-icon">🧬</span>
+                        <span class="rule-count-badge sev-critical">XELO-001</span>
                     </div>
-                    <h4>AI graph rules</h4>
-                    <p>Missing guardrails, PHI to external LLMs, voice + PHI exposure, prompt injection risk, auth
-                        coverage gaps.</p>
+                    <h4>Regulated data exposure</h4>
+                    <p>Flags PII or PHI flowing to external LLM providers outside your trust boundary.</p>
                 </div>
                 <div class="rule-cat">
                     <div class="rule-cat-top">
-                        <span class="rule-cat-icon">🔒</span>
-                        <span class="rule-count-badge sev-critical">XELO-010 – 013</span>
+                        <span class="rule-cat-icon">🛡️</span>
+                        <span class="rule-count-badge sev-medium">XELO-002</span>
                     </div>
-                    <h4>IaC / Encryption</h4>
-                    <p>PHI workloads without encryption at rest, secrets in env vars, missing secret
-                        management service.</p>
+                    <h4>Output validation</h4>
+                    <p>Detects LLM models with no connected guardrail or output-validation step in the graph.</p>
                 </div>
                 <div class="rule-cat">
                     <div class="rule-cat-top">
-                        <span class="rule-cat-icon">🪪</span>
-                        <span class="rule-count-badge sev-high">XELO-014 – 017</span>
+                        <span class="rule-cat-icon">🔑</span>
+                        <span class="rule-count-badge sev-high">XELO-003</span>
                     </div>
-                    <h4>IAM &amp; Identity</h4>
-                    <p>Overly permissive IAM with PHI, roles without permission boundary, GitHub Actions w/o strong
-                        authentication.</p>
-                </div>
-                <div class="rule-cat">
-                    <div class="rule-cat-top">
-                        <span class="rule-cat-icon">♻️</span>
-                        <span class="rule-count-badge sev-high">XELO-018 – 020</span>
-                    </div>
-                    <h4>Resilience</h4>
-                    <p>Single-AZ deployment with PHI, AI workloads without health checks, containers without resource
-                        limits.</p>
+                    <h4>Secret handling</h4>
+                    <p>Finds secrets in environment variables or deployments with no dedicated secret store.</p>
                 </div>
                 <div class="rule-cat">
                     <div class="rule-cat-top">
                         <span class="rule-cat-icon">🐳</span>
-                        <span class="rule-count-badge sev-high">XELO-021</span>
+                        <span class="rule-count-badge sev-high">XELO-004</span>
                     </div>
                     <h4>Container security</h4>
-                    <p>Containers running as root — detected from Dockerfile USER instructions and K8s pod security
-                        context.</p>
+                    <p>Reports deployment or container image nodes that run as root.</p>
+                </div>
+                <div class="rule-cat">
+                    <div class="rule-cat-top">
+                        <span class="rule-cat-icon">📈</span>
+                        <span class="rule-count-badge sev-low">XELO-005</span>
+                    </div>
+                    <h4>Resource limits</h4>
+                    <p>Highlights AI workloads that do not declare CPU or memory resource limits.</p>
                 </div>
             </div>
 
@@ -539,7 +530,7 @@
                     </div>
                     <ul>
                         <li>Find unguarded models and over-privileged agents in code review</li>
-                        <li>Run 21 structural VLA rules with no network access</li>
+                        <li>Run 5 structural XELO rules with no network access</li>
                         <li>Export findings into GitHub Code Scanning / GHAS</li>
                         <li>Map detections to MITRE ATLAS techniques automatically</li>
                     </ul>
@@ -701,11 +692,9 @@ jobs:
             <div class="plugin-grid">
                 <div class="plugin-chip">
                     <span class="plugin-name">vulnerability</span>
-                    <span class="plugin-desc">21 structural XELO rules — missing guardrails, over-privileged agents,
-                        regulated data (PII/PHI)
-                        to external LLMs, IaC / encryption / IAM / resilience / container security findings. Works with
-                        OWASP AI Top 10, NIST AI RMF, and data protection frameworks. Fully offline — no CVE feed, no
-                        internet. Also runs in air-gapped environments.</span>
+                    <span class="plugin-desc">5 structural XELO rules for regulated data exposure, missing output validation,
+                        insecure secret handling, root containers, and missing resource limits. Fully offline with no
+                        CVE feed or internet access required, and works in air-gapped environments.</span>
                     <span class="plugin-badge badge-offline">Offline</span>
                 </div>
                 <div class="plugin-chip">
