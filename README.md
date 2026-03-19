@@ -84,7 +84,7 @@ CLI alias: `ai-sbom`. Run `xelo --help` for all flags.
 | --- | --- |
 | `--format json` (default) | Xelo-native AI SBOM (see [schema docs](./docs/aibom-schema.md)) |
 | `--format cyclonedx` | CycloneDX 1.6 JSON (AI components only) |
-| `--format unified` | CycloneDX merged with standard dependency SBOM |
+| `--format cyclonedx-ext` | CycloneDX merged with standard dependency SBOM |
 
 Validate a produced document:
 
