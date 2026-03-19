@@ -134,11 +134,25 @@ Other providers work through [litellm](https://docs.litellm.ai/docs/providers) â
 # Default: Xelo-native AI SBOM JSON
 xelo scan ./my-repo --output sbom.json
 
-# CycloneDX 1.6 (AI components only)
+# CycloneDX 1.6 â€” package dependencies only
+# Note: AI SBOM details (agents, models, tools, etc.) are NOT included.
 xelo scan ./my-repo --format cyclonedx --output sbom.cdx.json
 
-# Unified: AI SBOM merged with standard dependency BOM
-xelo scan ./my-repo --format unified --output sbom.unified.json
+# CycloneDX Extended: standard dependency BOM merged with AI components
+xelo scan ./my-repo --format cyclonedx-ext --output sbom-ext.cdx.json
+
+# SPDX 3.0.1 JSON-LD
+xelo scan ./my-repo --format spdx --output sbom.spdx.json
+
+# SPDX from a remote repo
+xelo scan https://github.com/org/project --format spdx --output sbom.spdx.json
+```
+
+The SPDX output follows the SPDX 3.0.1 JSON-LD format with `SPDXRef-` identifiers, a shared blank-node `CreationInfo`, and xelo: extension properties for AI-security metadata. No extra dependencies are required to generate SPDX output. Install `xelo[spdx]` to enable optional SHACL validation:
+
+```bash
+pip install "xelo[spdx]"
+xelo plugin run spdx_export sbom.json --config validate=true --output bom.spdx.json
 ```
 
 ## Validating and Inspecting the Schema

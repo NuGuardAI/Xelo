@@ -52,17 +52,17 @@ _GRYPE_FINDING: dict[str, Any] = {
 _VLA_FINDING: dict[str, Any] = {
     "rule_id": "XELO-001",
     "severity": "CRITICAL",
-    "title": "No guardrails protecting AI models",
+    "title": "PII/PHI data handled by external LLM providers",
     "description": "...",
     "affected": ["gpt-4o"],
-    "remediation": "Add guardrails.",
+    "remediation": "Establish a DPA with each provider.",
     "source": "xelo-rules",
     "atlas": {
         "atlas_version": "v2",
         "techniques": [
             {
-                "technique_id": "AML.T0051",
-                "technique_name": "LLM Jailbreak",
+                "technique_id": "AML.T0057",
+                "technique_name": "LLM Data Leakage",
                 "confidence": "HIGH",
                 "basis": "static",
             }
